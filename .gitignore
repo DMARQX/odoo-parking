@@ -1,0 +1,9 @@
+addons.tar.gz
+final_db.dump
+*.dump
+*.tar.gz
+filestore/
+Final_filestore/
+sessions/
+etc/filestore/
+etc/odoo-server.log

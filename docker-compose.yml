@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15
+    user: root
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo18@2024
+      - POSTGRES_DB=postgres
+    restart: always
+    volumes:
+      - odoo_db_data:/var/lib/postgresql/data
+    networks:
+      custom_net:
+        ipv4_address: 172.20.0.10
+  odoo18:
+    image: odoo:18
+    user: root
+    depends_on:
+      - db
+    ports:
+      - "10018:8069"
+      - "20018:8072"
+    tty: true
+    command: --
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo18@2024
+    volumes:
+      - /opt/odoo-mazakelastol/addons:/mnt/extra-addons
+      - /opt/odoo-mazakelastol/etc:/etc/odoo
+    restart: always
+    networks:
+      custom_net:
+        ipv4_address: 172.20.0.11
+networks:
+  custom_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+volumes:
+  odoo_db_data:
+    external: true
