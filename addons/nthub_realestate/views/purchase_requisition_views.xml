@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- PURCHASE REQUISITION VIEWS -->
+
+        <!-- List View -->
+        <record id="maintenance_purchase_requisition_list" model="ir.ui.view">
+            <field name="name">maintenance.purchase.requisition.list</field>
+            <field name="model">maintenance.purchase.requisition</field>
+            <field name="arch" type="xml">
+                <list string="Purchase Requisitions" sample="1">
+                    <field name="name"/>
+                    <field name="job_order_id"/>
+                    <field name="product_id"/>
+                    <field name="estimated_qty"/>
+                    <field name="estimated_amount" sum="Total Amount"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="maintenance_purchase_requisition_form" model="ir.ui.view">
+            <field name="name">maintenance.purchase.requisition.form</field>
+            <field name="model">maintenance.purchase.requisition</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Requisition">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary"/>
+                        <button name="action_approve_level1" string="Approve Level 1" type="object" class="btn-primary"/>
+                        <button name="action_approve_level2" string="Approve Level 2" type="object" class="btn-primary"/>
+                        <button name="action_approve_level3" string="Approve Level 3" type="object" class="btn-primary"/>
+                        <button name="action_reject" string="Reject" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,level1_approved,level2_approved,level3_approved,po_created,closed"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="True"/>
+                                <field name="job_order_id"/>
+                                <field name="product_id"/>
+                            </group>
+                            <group>
+                                <field name="estimated_qty"/>
+                                <field name="estimated_unit_price"/>
+                                <field name="estimated_amount" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <separator string="Approvers"/>
+                        <group>
+                            <group>
+                                <field name="approver1_id"/>
+                                <field name="approver1_date" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="approver2_id"/>
+                                <field name="approver2_date" readonly="True"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="approver3_id"/>
+                                <field name="approver3_date" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="required_approval_levels" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <separator string="Purchase Information"/>
+                        <group>
+                            <group>
+                                <field name="vendor_id"/>
+                                <field name="actual_amount" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="requested_delivery_date"/>
+                                <field name="po_id" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <separator string="Notes"/>
+                        <field name="last_rejection_reason" nolabel="1" colspan="2"/>
+                    </sheet>
+                    <chatter>
+
+                    </chatter>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="maintenance_purchase_requisition_search" model="ir.ui.view">
+            <field name="name">maintenance.purchase.requisition.search</field>
+            <field name="model">maintenance.purchase.requisition</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Requisition">
+                    <field name="name" string="Requisition Number"/>
+                    <field name="job_order_id" string="Job Order"/>
+                    <field name="product_id" string="Product"/>
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="submitted" string="Submitted" domain="[('state', '=', 'submitted')]"/>
+                    <filter name="approved" string="Approved" domain="[('state', 'in', ['level1_approved', 'level2_approved', 'level3_approved'])]"/>
+                    <filter name="po_created" string="PO Created" domain="[('state', '=', 'po_created')]"/>
+                    <filter name="closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_maintenance_purchase_requisition" model="ir.actions.act_window">
+            <field name="name">Purchase Requisitions</field>
+            <field name="res_model">maintenance.purchase.requisition</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="maintenance_purchase_requisition_search"/>
+            <field name="help">Manage purchase requisitions with multi-level approval workflow</field>
+        </record>
+
+        <!-- VENDOR QUOTE VIEWS -->
+
+        <!-- Vendor Quote List -->
+        <record id="maintenance_vendor_quote_list" model="ir.ui.view">
+            <field name="name">maintenance.vendor.quote.list</field>
+            <field name="model">maintenance.vendor.quote</field>
+            <field name="arch" type="xml">
+                <list string="Vendor Quotes" sample="1">
+                    <field name="requisition_id"/>
+                    <field name="vendor_id"/>
+                    <field name="total_amount" sum="Total"/>
+                    <field name="delivery_days"/>
+                    <field name="is_selected" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Vendor Quote Form -->
+        <record id="maintenance_vendor_quote_form" model="ir.ui.view">
+            <field name="name">maintenance.vendor.quote.form</field>
+            <field name="model">maintenance.vendor.quote</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Quote">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="requisition_id" readonly="True"/>
+                                <field name="vendor_id"/>
+                                <field name="total_amount"/>
+                            </group>
+                            <group>
+                                <field name="delivery_days"/>
+                                <field name="payment_terms"/>
+                                <field name="is_selected"/>
+                            </group>
+                        </group>
+                        <separator string="Notes"/>
+                        <field name="notes" nolabel="1"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

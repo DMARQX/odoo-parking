@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Email template for sending quotation to customer -->
+        <record id="email_template_quotation_send" model="mail.template">
+            <field name="name">Rental Quotation - Send to Customer</field>
+            <field name="model_id" ref="model_rental_quotation"/>
+            <field name="subject">Rental Quotation ${object.name} - ${object.partner_id.name}</field>
+            <field name="email_from">${(object.salesperson_id.email or object.company_id.email)|safe}</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear ${object.partner_id.name},</p>
+                    
+                    <p>Thank you for your interest in our rental properties. Please find attached our rental quotation for your consideration.</p>
+                    
+                    <h3>Quotation Details:</h3>
+                    <ul>
+                        <li><strong>Quotation Number:</strong> ${object.name}</li>
+                        <li><strong>Date:</strong> ${object.quotation_date}</li>
+                        <li><strong>Valid Until:</strong> ${object.validity_date}</li>
+                        <li><strong>Total Amount:</strong> ${object.total_amount} ${object.company_id.currency_id.symbol}</li>
+                    </ul>
+                    
+                    <h3>Properties Included:</h3>
+                    <table border="1" style="border-collapse: collapse; width: 100%;">
+                        <tr style="background-color: #f0f0f0;">
+                            <th style="padding: 8px;">Property</th>
+                            <th style="padding: 8px;">Area</th>
+                            <th style="padding: 8px;">Monthly Rent</th>
+                        </tr>
+                        % for line in object.quotation_line_ids:
+                        <tr>
+                            <td style="padding: 8px;">${line.property_id.name} (${line.property_code})</td>
+                            <td style="padding: 8px;">${line.property_area} m²</td>
+                            <td style="padding: 8px;">${line.total_price} ${object.company_id.currency_id.symbol}</td>
+                        </tr>
+                        % endfor
+                    </table>
+                    
+                    <p>This quotation is valid until ${object.validity_date}. Please contact us if you have any questions or would like to proceed with this offer.</p>
+                    
+                    <p>Best regards,<br/>
+                    ${object.salesperson_id.name}<br/>
+                    ${object.company_id.name}<br/>
+                    Phone: ${object.salesperson_id.phone or object.company_id.phone}<br/>
+                    Email: ${object.salesperson_id.email or object.company_id.email}</p>
+                </div>
+            </field>
+            <!-- <field name="report_template" ref="action_report_rental_quotation"/> -->
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email template for approval notifications -->
+        <record id="email_template_approval_notification" model="mail.template">
+            <field name="name">Rental Quotation - Approval Required</field>
+            <field name="model_id" ref="model_rental_quotation"/>
+            <field name="subject">Approval Required: Quotation ${object.name}</field>
+            <field name="email_from">${(object.salesperson_id.email or object.company_id.email)|safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <h3>Approval Required</h3>
+                    
+                    <p>A rental quotation requires your approval:</p>
+                    
+                    <ul>
+                        <li><strong>Quotation Number:</strong> ${object.name}</li>
+                        <li><strong>Customer:</strong> ${object.partner_id.name}</li>
+                        <li><strong>Salesperson:</strong> ${object.salesperson_id.name}</li>
+                        <li><strong>Total Amount:</strong> ${object.total_amount} ${object.company_id.currency_id.symbol}</li>
+                        <li><strong>Discount:</strong> ${object.discount_amount} ${object.company_id.currency_id.symbol}</li>
+                        <li><strong>Current Level:</strong> ${object.current_approval_level + 1}</li>
+                    </ul>
+                    
+                    <p>Please review and approve this quotation in the system.</p>
+                    
+                    <p><a href="/web#id=${object.id}&amp;view_type=form&amp;model=rental.quotation" style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View Quotation</a></p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email template for quotation approved -->
+        <record id="email_template_quotation_approved" model="mail.template">
+            <field name="name">Rental Quotation - Approved</field>
+            <field name="model_id" ref="model_rental_quotation"/>
+            <field name="subject">Quotation Approved: ${object.name}</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="email_to">${object.salesperson_id.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <h3>Quotation Approved</h3>
+                    
+                    <p>Your rental quotation has been approved and is ready to send to the customer:</p>
+                    
+                    <ul>
+                        <li><strong>Quotation Number:</strong> ${object.name}</li>
+                        <li><strong>Customer:</strong> ${object.partner_id.name}</li>
+                        <li><strong>Total Amount:</strong> ${object.total_amount} ${object.company_id.currency_id.symbol}</li>
+                    </ul>
+                    
+                    <p>You can now send this quotation to the customer.</p>
+                    
+                    <p><a href="/web#id=${object.id}&amp;view_type=form&amp;model=rental.quotation" style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View Quotation</a></p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Quotation Report Action -->
+        <record id="action_report_rental_quotation" model="ir.actions.report">
+            <field name="name">Rental Quotation</field>
+            <field name="model">rental.quotation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">rental_quotation.report_rental_quotation_template</field>
+            <field name="report_file">rental_quotation.report_rental_quotation_template</field>
+            <field name="print_report_name">'Quotation - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_rental_quotation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Quotation Report Template -->
+        <template id="report_rental_quotation_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h2>Rental Quotation</h2>
+                                    <p>
+                                        <strong>Number:</strong> <span t-field="doc.name"/><br/>
+                                        <strong>Date:</strong> <span t-field="doc.quotation_date"/><br/>
+                                        <strong>Valid Until:</strong> <span t-field="doc.valid_until"/>
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <h3>Customer Information</h3>
+                                    <address t-field="doc.partner_id" 
+                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"]}'/>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h3>Quotation Details</h3>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Property</th>
+                                                <th>Unit</th>
+                                                <th>Description</th>
+                                                <th class="text-right">Rental Amount</th>
+                                                <th class="text-right">Quantity</th>
+                                                <th class="text-right">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="doc.quotation_line_ids" t-as="line">
+                                                <td><span t-field="line.property_id.name"/></td>
+                                                <td><span t-field="line.unit_id.name"/></td>
+                                                <td><span t-field="line.description"/></td>
+                                                <td class="text-right">
+                                                    <span t-field="line.rental_amount" 
+                                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </td>
+                                                <td class="text-right"><span t-field="line.quantity"/></td>
+                                                <td class="text-right">
+                                                    <span t-field="line.subtotal" 
+                                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <t t-if="doc.notes">
+                                        <h4>Notes</h4>
+                                        <p t-field="doc.notes"/>
+                                    </t>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Subtotal:</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.subtotal_amount" 
+                                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr t-if="doc.discount_amount">
+                                            <td><strong>Discount:</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.discount_amount" 
+                                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td><strong>Total:</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.total_amount" 
+                                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4" t-if="doc.approval_history_ids">
+                                <div class="col-12">
+                                    <h4>Approval History</h4>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Approver</th>
+                                                <th>Action</th>
+                                                <th>Comments</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="doc.approval_history_ids" t-as="approval">
+                                                <td><span t-field="approval.approval_date"/></td>
+                                                <td><span t-field="approval.approver_id.name"/></td>
+                                                <td><span t-field="approval.action"/></td>
+                                                <td><span t-field="approval.comments"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <p>Thank you for choosing our rental services!</p>
+                                    <p>For any questions, please contact us at <span t-field="doc.company_id.phone"/> or <span t-field="doc.company_id.email"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

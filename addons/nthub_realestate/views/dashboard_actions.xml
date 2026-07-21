@@ -1,0 +1,49 @@
+<odoo>
+  <data>
+    <!-- 1. Project Graph -->
+    <record id="act_ownership_state" model="ir.actions.act_window">
+      <field name="name">OwnerShip Contract</field>
+      <field name="res_model">sub.property</field>
+      <field name="view_mode">graph</field>
+      <field name="view_id" ref="nthub_realestate.view_ownership_graph"/>
+    </record>
+
+    <!-- 2. Rental Calendar -->
+    <record id="act_calender" model="ir.actions.act_window">
+      <field name="name">Calender</field>
+      <field name="res_model">rental.contract.line</field>
+      <field name="view_mode">calendar</field>
+      <field name="view_id" ref="nthub_realestate.view_rental_calendar"/>
+      <field name="context">{'default_make_stat_paid':True}</field>
+      <field name="domain">[('make_stat_paid', '=', True)]</field>
+    </record>
+
+    <!-- 3. Total Sold Out -->
+    <record id="act_total_amount" model="ir.actions.act_window">
+      <field name="name">Total Sold Out</field>
+      <field name="res_model">rs.project</field>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="nthub_realestate.view_rs_project_dashboard_list"/>
+    </record>
+
+    <!-- 4. Delay Ownership -->
+    <record id="act_delay_state" model="ir.actions.act_window">
+      <field name="name">Delay State</field>
+      <field name="res_model">ownership.contract.line</field>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="nthub_realestate.ownership_contract_line_list_view"/>
+      <field name="context">{'default_delay_state':'draft','default_invoice_state':'posted'}</field>
+      <field name="domain">[('delay_state', '=', 'draft'),('invoice_state', '=', 'posted')]</field>
+    </record>
+
+    <!-- 5. Ownership Calendar -->
+    <record id="act_owner_t_calender" model="ir.actions.act_window">
+      <field name="name">Calender</field>
+      <field name="res_model">ownership.contract.line</field>
+      <field name="view_mode">calendar</field>
+      <field name="view_id" ref="nthub_realestate.view_owner_ship_calendar"/>
+      <field name="context">{'default_delay_state':'draft','default_invoice_state':'posted'}</field>
+      <field name="domain">[('delay_state', '=', 'draft'),('invoice_state', '=', 'posted')]</field>
+    </record>
+  </data>
+</odoo>

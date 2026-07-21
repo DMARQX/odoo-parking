@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Stock Picking Type for Maintenance -->
+    <record id="picking_type_maintenance" model="stock.picking.type">
+        <field name="name">Maintenance Materials</field>
+        <field name="code">outgoing</field>        <field name="sequence_code">DO/MAINT/</field>        <field name="warehouse_id" ref="stock.warehouse0"/>
+        <field name="use_create_lots">True</field>
+        <field name="use_existing_lots">True</field>
+    </record>
+
+    <!-- Sequences -->
+    <record id="seq_maint_material_request" model="ir.sequence">
+        <field name="name">Maintenance Material Request</field>
+        <field name="code">maint.material.request</field>
+        <field name="prefix">MAT/</field>
+        <field name="padding">5</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="seq_maint_purchase_req" model="ir.sequence">
+        <field name="name">Maintenance Purchase Requisition</field>
+        <field name="code">maint.purchase.req</field>
+        <field name="prefix">REQ/</field>
+        <field name="padding">5</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="seq_job_defect" model="ir.sequence">
+        <field name="name">Job Order Defect Report</field>
+        <field name="code">job.order.defect</field>
+        <field name="prefix">DEF/</field>
+        <field name="padding">5</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>

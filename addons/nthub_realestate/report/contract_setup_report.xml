@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Report Declaration -->
+        <record id="action_report_contract_setup" model="ir.actions.report">
+            <field name="name">Contract Setup Report</field>
+            <field name="model">contract.setup</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.report_contract_setup_document</field>
+            <field name="report_file">nthub_realestate.report_contract_setup_document</field>
+            <field name="print_report_name">'Contract Setup - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_contract_setup"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="report_contract_setup_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                    <main style="direction: rtl; font-family: 'Traditional Arabic', Arial, sans-serif;">
+                        <div class="page">
+                        
+                        <!-- العنوان الرئيسي -->
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <h2 style="font-weight: bold; border-bottom: 2px solid #000; display: inline-block; padding: 10px;">
+                                معلومات خاصة بإعداد عقد ( <span t-field="doc.project_id.name"/> )
+                            </h2>
+                        </div>
+
+                        <!-- التاريخ -->
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <strong>التاريخ: </strong>
+                            <span t-field="doc.date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>م
+                        </div>
+
+                        <!-- الجدول الأساسي -->
+                        <table class="table table-bordered" style="width: 100%; margin-top: 20px; border: 2px solid #000;">
+                            
+                            <!-- رقم 1: اسم المنشأة -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">1</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">اسم المنشاة</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.company_name"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 2: الرقم الموحد -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">2</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">الرقم الموحد</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.unified_number"/> – رقم المنشأة <span t-field="doc.establishment_number"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 3: مصدر السجل التجاري -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">3</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">مصـدر السجل التجاري</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.commercial_register_source"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 4: تاريخ السجل التجاري -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">4</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">تاريـخ السجل التجاري</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.commercial_register_date"/> هـ
+                                </td>
+                            </tr>
+
+                            <!-- رقم 5: عنوان المركز الرئيسي -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">5</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">عـنوان المركز الرئـيـسـي</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.main_address"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 6: العنوان البريدي -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">6</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">العـنوان البـريـدي</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.postal_code"/>
+                                    <span style="margin: 0 20px;">المدينة: <span t-field="doc.city"/></span>
+                                    <span>الرمز <span t-field="doc.zip_code"/></span>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 7: رقم الهاتف -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">7</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">رقم الهاتف</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.phone"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 8: رقم الفاكس -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">8</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">رقـم الفاكـس</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.fax"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 9: اسم المفوض بالتوقيع -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">9</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">اسـم المفوض بالتـوقـيـع</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.authorized_signatory"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 10: الجنسية -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">10</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">جنسيته</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.nationality"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 11: الصفة التعاقدية -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">11</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">صفته التعاقدية</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.contractual_status"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 12: رقم الهوية / جواز السفر -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">12</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">رقم الهوية / جواز السفر</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.id_passport_number"/>
+                                    <span style="margin-right: 50px;">مكان إصدارها: <span t-field="doc.id_issue_place"/></span>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 13: رقم الجوال -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">13</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">رقم الجوال</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    رقم جوال أبشر : <span t-field="doc.absher_mobile"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 14: رقم العين / المكتب -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">14</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">رقم العين / المكتب رقم</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    مكتب رقم <span t-field="doc.unit_id.name"/>
+                                    <span style="margin-right: 30px;">المساحة: <span t-field="doc.unit_id.rs_project_area"/> م²</span>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 15: النشاط -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">15</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">النشاط</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.activity"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 16: الإسم التجاري -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">16</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">الإسم التجاري / الماركة</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.trade_name"/>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 17: القيمة الإيجارية -->
+                            <tr style="background-color: #f0e68c;">
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">17</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">القيمة الإيجارية</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0e68c; width: 15%;"></td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 10%;">VAT</td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 15%;">
+                                                <span t-field="doc.vat_amount"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 15%;">إجمالي</td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 15%;">
+                                                <span t-field="doc.total_value"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 15%;">الخدمات</td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: white; width: 15%;">
+                                                <span t-field="doc.services_value"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 18: مدة العقد -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">18</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">مدة العقد</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <span t-field="doc.contract_duration"/> تبدأ من تاريخ  
+                                    <span t-field="doc.contract_start_date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                                </td>
+                            </tr>
+
+                            <!-- الصفوف الفارغة -->
+                            <tr><td colspan="3" style="height: 20px; border: 1px solid #000;"></td></tr>
+                            <tr><td style="text-align: center; border: 1px solid #000; font-weight: bold;">21</td><td colspan="2" style="height: 20px; border: 1px solid #000;"></td></tr>
+                            <tr><td style="text-align: center; border: 1px solid #000; font-weight: bold;">22</td><td colspan="2" style="height: 20px; border: 1px solid #000;"></td></tr>
+                            <tr><td style="text-align: center; border: 1px solid #000; font-weight: bold;">23</td><td colspan="2" style="height: 20px; border: 1px solid #000;"></td></tr>
+
+                            <!-- رقم 24: ملاحظات أخرى -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; border: 1px solid #000; padding: 8px; font-weight: bold;">24</td>
+                                <td style="width: 30%; text-align: right; border: 1px solid #000; padding: 8px; font-weight: bold;">ملاحظات أخرى</td>
+                                <td style="width: 65%; text-align: right; border: 1px solid #000; padding: 8px;">
+                                    <t t-if="doc.notes_1">1- <span t-field="doc.notes_1"/><br/></t>
+                                    <t t-if="doc.notes_2">2- <span t-field="doc.notes_2"/></t>
+                                </td>
+                            </tr>
+
+                            <!-- رقم 25: فارغ -->
+                            <tr><td style="text-align: center; border: 1px solid #000; font-weight: bold;">25</td><td colspan="2" style="height: 20px; border: 1px solid #000;"></td></tr>
+
+                        </table>
+
+                        <!-- المسؤول والتوقيع -->
+                        <div style="margin-top: 30px;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: right; width: 50%;">
+                                        اسم مسئول المبيعات / <span t-field="doc.sales_manager"/>
+                                    </td>
+                                    <td style="text-align: center; width: 50%;">
+                                         التوقيع /
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        </div>
+                    </main>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

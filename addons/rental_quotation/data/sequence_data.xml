@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sequence for Rental Quotation Numbers -->
+        <record id="seq_rental_quotation" model="ir.sequence">
+            <field name="name">Rental Quotation</field>
+            <field name="code">rental.quotation</field>
+            <field name="prefix">RQ</field>
+            <field name="suffix"></field>
+            <field name="padding">4</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+    </data>
+</odoo>

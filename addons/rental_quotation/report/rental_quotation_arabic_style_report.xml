@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Arabic Rental Quotation Report Action -->
+    <record id="action_report_rental_quotation_arabic_style" model="ir.actions.report">
+        <field name="name">Arabic Rental Quotation / عرض السعر العربي</field>
+        <field name="model">rental.quotation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_quotation.report_rental_quotation_arabic_style_document</field>
+        <field name="report_file">rental_quotation.report_rental_quotation_arabic_style_document</field>
+        <field name="binding_model_id" ref="rental_quotation.model_rental_quotation"/>
+        <field name="binding_type">report</field>
+    </record>
+    
+    <!-- English Rental Quotation Report Action -->
+    <record id="action_report_rental_quotation_english_style" model="ir.actions.report">
+        <field name="name">English Rental Quotation</field>
+        <field name="model">rental.quotation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_quotation.report_rental_quotation_english_style_document</field>
+        <field name="report_file">rental_quotation.report_rental_quotation_english_style_document</field>
+        <field name="binding_model_id" ref="rental_quotation.model_rental_quotation"/>
+        <field name="binding_type">report</field>
+    </record>
+    
+    <!-- Arabic Rental Quotation Report Template -->
+    <template id="report_rental_quotation_arabic_style_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+                <main>
+                    <div class="page" style="direction: rtl; text-align: right; font-family: 'Traditional Arabic', Arial, sans-serif; font-size: 12px;">
+                        
+                        <!-- Document Header -->
+                        <div class="row" style="text-align: center; margin-bottom: 15px;">
+                            <div class="col-12">
+                                <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                                    عرض سعر
+                            </h2>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Information -->
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-12">
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                                <tr>
+                                    <td style="width: 15%; padding: 5px; border: none; font-weight: bold;">
+                                        السادة /
+                                    </td>
+                                    <td style="width: 50%; padding: 5px; border: none;">
+                                        <span t-if="doc.partner_id and doc.partner_id.name" t-esc="doc.partner_id.name"/>
+                                        <span t-if="not doc.partner_id or not doc.partner_id.name">العميل</span>
+                                    </td>
+                                    <td style="width: 20%; padding: 5px; border: none; font-weight: bold;">
+                                        المحترمين
+                                    </td>
+                                </tr>
+                                <tr t-if="doc.contact_person_name">
+                                    <td style="width: 15%; padding: 5px; border: none; font-weight: bold;">
+                                        الأستــاذ /
+                                    </td>
+                                    <td style="width: 50%; padding: 5px; border: none;">
+                                        <span t-esc="doc.contact_person_name"/>
+                                    </td>
+                                    <td style="width: 20%; padding: 5px; border: none; font-weight: bold;">
+                                        المحترم
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Subject -->
+                    <div class="row" style="margin-bottom: 8px;">
+                        <div class="col-12">
+                            <p style="margin: 0; padding: 5px 0;">
+                                <span style="font-weight: bold;">الموضوع: </span>
+                                <span t-if="doc.quotation_subject">
+                                    <span t-esc="doc.quotation_subject"/>
+                                </span>
+                                <span t-else="">تأجير مكتب</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Greeting -->
+                    <t t-if="doc.salutation_html">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-12">
+                                <div style="line-height: 1.4;">
+                                    <t t-raw="doc.salutation_html"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <!-- Default Greeting if no template selected -->
+                        <div class="row" style="margin-bottom: 8px;">
+                            <div class="col-12">
+                                <p style="margin: 0; padding: 5px 0;">
+                                    السلام عليكم و رحمة الله و بركاته ،،،
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Introduction -->
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-12">
+                                <p style="margin: 0; padding: 5px 0; line-height: 1.4;">
+                                    بناءً على رغبتكم في استئجار مكتب في 
+                                    <span t-if="doc.quotation_subject">
+                                        <span t-esc="doc.quotation_subject"/>
+                                    </span>
+                                    <span t-else="">المشروع</span>
+                                    <span t-if="doc.quotation_subject and 'جدة' not in doc.quotation_subject"> بجدة</span>،
+                                    فإنه يسعدنا أن نعرض لكم خدماتنا المُتمثلة في الوساطة لتأجير المكاتب المذكور أدناه 
+                                    فيما بينكم وبين المالك، آملين أن ينال استحسانكم و قبولكم.
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <!-- Office Details Table -->
+                    <div class="row" style="margin: 10px 0;">
+                        <div class="col-12">
+                            <table style="width: 100%; border-collapse: collapse; border: 2px solid #000;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                            رقم المكتب
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                            الدور
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                            النشاط
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                            المساحة
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                            الإيجار السنوي شامل الخدمات
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.quotation_line_ids" t-as="line">
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-if="line.property_id.name" t-esc="line.property_id.name"/>
+                                                <span t-if="not line.property_id.name and line.property_id.unit_number" t-esc="line.property_id.unit_number"/>
+                                                <span t-if="not line.property_id.name and not line.property_id.unit_number">-</span>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-if="line.property_id.floor_id and line.property_id.floor_id.name" t-esc="line.property_id.floor_id.name"/>
+                                                <span t-if="not line.property_id.floor_id or not line.property_id.floor_id.name">-</span>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-if="line.property_id.ptype and line.property_id.ptype.name" t-esc="line.property_id.ptype.name"/>
+                                                <span t-if="not line.property_id.ptype or not line.property_id.ptype.name">تجاري</span>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-esc="'{:.2f}'.format(line.property_area)"/>م²
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-esc="'{:,.0f}'.format(line.total_price)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <!-- Total Row -->
+                                    <tr style="font-weight: bold;">
+                                        <td colspan="3" style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                            المجموع
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                            <span t-esc="'{:.2f}'.format(sum(doc.quotation_line_ids.mapped('property_area')))"/>م²
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                            <span t-esc="'{:,.0f}'.format(doc.subtotal)"/>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Service Fees Row -->
+                                    <tr t-if="doc.service_fees">
+                                        <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                            رسوم الخدمة
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                            <span t-esc="'{:,.0f}'.format(doc.service_fees)"/>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Discount Row -->
+                                    <tr t-if="doc.discount_amount">
+                                        <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                            الخصم
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                            <span t-esc="'{:,.0f}'.format(doc.discount_amount)"/>-
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Total Amount Row -->
+                                    <tr style="font-weight: bold;">
+                                        <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #e0e0e0;">
+                                            الإجمالي النهائي
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #e0e0e0;">
+                                            <span t-esc="'{:,.0f}'.format(doc.total_amount)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Terms / Lease Requirements -->
+                    <t t-if="doc.lease_requirements_html">
+                        <div class="row" style="margin: 10px 0;">
+                            <div class="col-12">
+                                <div style="line-height: 1.4; font-size: 10px;">
+                                    <t t-raw="doc.lease_requirements_html"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <!-- Default Payment Terms if no template selected -->
+                        <div class="row" style="margin: 10px 0;">
+                            <div class="col-12">
+                                <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 11px;">
+                                    علماً بأنه وفي حال موافقتكم على العرض المُقدم، يرجى التكرم بسداد المبالغ التالية:
+                                </p>
+                                
+                                <div style="line-height: 1.4; margin-right: 15px; font-size: 10px;">
+                                    <p style="margin: 5px 0;">
+                                        • إصدار شيك مصرفي أو حوالة بنكية قيمة 50% 
+                                        من إجمالي القيمة الإيجارية المتفق عليه لأمر صاحب السمو الملكي الأمير/ سعود بن فهد بن عبدالعزيز آل سعود.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • يتعين على المستأجر سداد مبلغ الضمان بقيمة 5% 
+                                        من إجمالي القيمة الإيجارية المتفق عليها، لمحفظة إيجار قبل توثيق العقد.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • رسوم استهلاك الكهرباء و التكييف تبلغ 105 
+                                        ريال للمتر المربع سنوياً تدفع على دفعتين متساويتين سنوية، 
+                                        الأولى عند توقيع العقد و الثانية بعد ستة أشهر.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • إصدار شيك مصرفي أو حوالة بنكية لأمر السادة / شركة سقيفة الصفا المحدودة، 
+                                        بنسبة 2.50% 
+                                        من إجمالي القيمة الإيجارية المتفق عليها عمولة تأجير تسدد مباشرة عند التوقيع على العقد و لمرة واحدة.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • إصدار شيك مصرفي أو حوالة بنكية لأمر السادة / شركة سقيفة الصفا المحدودة، 
+                                        بنسبة 7.50% 
+                                        من إجمالي القيمة الإيجارية المتفق عليها أتعاب إدارية تسدد مباشرة عند التوقيع على العقد و لمرة واحدة 
+                                        و ذلك مقابل (إصدار العروض و العقود و متابعة توثيقها من الطرفين و متابعة تنفيذ المستأجرين لأعمال 
+                                        الديكور وفقاً لمتطلبات السلامة في المبنى و متابعة تحصيل الإيجارات).
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • الإيجار السنوي شامل الخدمات و رسوم استهلاك الكهرباء و التكييف لا يشمل ضريبة القيمة المضافة.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • عمولة التأجير و الأتعاب الإدارية لا تشمل ضريبة القيمة المضافة.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • تزويدنا بصورة من السجل التجاري، شهادة ضريبة القيمة المضافة، و العنوان الوطني للمنشأة.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • وكالة شرعية و هوية الشخص المفوض بالتوقيع على العقود.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • جوال أبشر و العنوان الوطني للشخص المفوض بالتوقيع على العقود.
+                                    </p>
+                                    
+                                    <p style="margin: 10px 0;">
+                                        • يخضع هذا العرض لموافقة المالك.
+                                    </p>
+                                    
+                                    <p style="margin: 5px 0;">
+                                        • تبلغ صلاحية هذا العرض خمسة أيام من التاريخ الموجود أعلاه.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <!-- Closing -->
+                    <div class="row" style="margin: 10px 0;">
+                        <div class="col-12">
+                            <p style="margin: 0; padding: 5px 0; text-align: center; font-size: 11px;">
+                                و تفضلوا بقبول خالص التحية و التقدير ،،،
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Approval Section -->
+                    <div class="row" style="margin: 10px 0;">
+                        <div class="col-6">
+                            <div style="text-align: center; border: 0px solid #000; padding: 10px; font-size: 10px;">
+                                <h4 style="margin-bottom: 8px; font-weight: bold; font-size: 11px;">
+                                    اعتماد العرض من قبل العميل
+                                </h4>
+                                
+                                <div style="margin: 8px 0;">
+                                    <span style="font-weight: bold;">الاسم : </span>
+                                    <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                        &#160;
+                                    </span>
+                                </div>
+                                
+                                <div style="margin: 8px 0;">
+                                    <span style="font-weight: bold;">التوقيع : </span>
+                                    <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                        &#160;
+                                    </span>
+                                </div>
+                                
+                                <div style="margin: 8px 0;">
+                                    <span style="font-weight: bold;">التاريخ : </span>
+                                    <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                        &#160;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Consultant Information -->
+                        <div class="col-6">
+                            <div style="text-align: center; padding: 10px; font-size: 10px;">
+                                <h4 style="margin-bottom: 8px; font-weight: bold; font-size: 11px;">
+                                    <span t-if="doc.salesperson_id and doc.salesperson_id.name" t-esc="doc.salesperson_id.name"/>
+                                    <span t-if="not doc.salesperson_id or not doc.salesperson_id.name">بديعة الأنصاري</span>
+                                </h4>
+                                <p style="margin: 5px 0; font-weight: bold;">
+                                    استشاري عقاري
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    </div>
+                </main>
+            </t>
+        </t>
+    </template>
+    
+    <!-- English Rental Quotation Report Template -->
+    <template id="report_rental_quotation_english_style_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+                <main>
+                    <div class="page" style="direction: ltr; text-align: left; font-family: Arial, sans-serif; font-size: 12px;">
+                        
+                        <!-- Company Header -->
+                        <div class="row" style="text-align: center; margin-bottom: 15px;">
+                            <div class="col-12">
+                                <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                                    RENTAL QUOTATION
+                                </h2>
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Information -->
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-12">
+                                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                                    <tr>
+                                        <td style="width: 15%; padding: 5px; border: none; font-weight: bold;">
+                                            Attention:
+                                        </td>
+                                        <td style="width: 50%; padding: 5px; border: none;">
+                                            <span t-if="doc.partner_id and doc.partner_id.name_en" t-esc="doc.partner_id.name_en"/>
+                                            <span t-if="not doc.partner_id or not doc.partner_id.name_en">Customer</span>
+                                        </td>
+                                        <td style="width: 20%; padding: 5px; border: none;">
+                                            &#160;
+                                        </td>
+                                    </tr>
+                                    <tr t-if="doc.contact_person_name">
+                                        <td style="width: 15%; padding: 5px; border: none; font-weight: bold;">
+                                            MS.:
+                                        </td>
+                                        <td style="width: 50%; padding: 5px; border: none;">
+                                            <span t-esc="doc.contact_person_name"/>
+                                        </td>
+                                        <td style="width: 20%; padding: 5px; border: none;">
+                                            &#160;
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Subject -->
+                        <div class="row" style="margin-bottom: 8px;">
+                            <div class="col-12">
+                                <p style="margin: 0; padding: 5px 0;">
+                                    <span style="font-weight: bold;">Subject: </span>
+                                    <span t-if="doc.quotation_subject">
+                                        <span t-esc="doc.quotation_subject"/>
+                                    </span>
+                                    <span t-else="">Office Rental</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Greeting -->
+                        <t t-if="doc.salutation_html">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-12">
+                                    <div style="line-height: 1.4;">
+                                        <t t-raw="doc.salutation_html"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <!-- Default Greeting if no template selected -->
+                            <div class="row" style="margin-bottom: 8px;">
+                                <div class="col-12">
+                                    <p style="margin: 0; padding: 5px 0;">
+                                        Peace be upon you,
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Introduction -->
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-12">
+                                    <p style="margin: 0; padding: 5px 0; line-height: 1.4;">
+                                        In reference to our meeting regarding <span t-if="doc.quotation_subject" t-esc="doc.quotation_subject"/>
+                                        <span t-else="">the project</span> and your interest in leasing Office, it is our pleasure to present this offer 
+                                        for the space required. We look forward to your acceptance and approval of this offer.
+                                    </p>
+                                </div>
+                            </div>
+                        </t>
+                        
+                        <!-- Office Details Table -->
+                        <div class="row" style="margin: 10px 0;">
+                            <div class="col-12">
+                                <table style="width: 100%; border-collapse: collapse; border: 2px solid #000;">
+                                    <thead>
+                                        <tr>
+                                            <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                                Unit No.
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                                Floor
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                                Activity
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                                Area m²
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; background-color: #f5f5f5;">
+                                                Annual Rent in SR<br/>(including services fees)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.quotation_line_ids" t-as="line">
+                                            <tr>
+                                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                    <span t-if="line.property_id.name" t-esc="line.property_id.name"/>
+                                                    <span t-if="not line.property_id.name and line.property_id.unit_number" t-esc="line.property_id.unit_number"/>
+                                                    <span t-if="not line.property_id.name and not line.property_id.unit_number">-</span>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                    <span t-if="line.property_id.floor_id and line.property_id.floor_id.name" t-esc="line.property_id.floor_id.name"/>
+                                                    <span t-if="not line.property_id.floor_id or not line.property_id.floor_id.name">-</span>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                    <span t-if="line.property_id.ptype and line.property_id.ptype.name" t-esc="line.property_id.ptype.name"/>
+                                                    <span t-if="not line.property_id.ptype or not line.property_id.ptype.name">Consulting</span>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                    <span t-esc="'{:.2f}'.format(line.property_area)"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                    <span t-esc="'{:,.0f}'.format(line.total_price)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        
+                                        <!-- Total Row -->
+                                        <tr style="font-weight: bold;">
+                                            <td colspan="3" style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                                Total value
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                                <span t-esc="'{:.2f}'.format(sum(doc.quotation_line_ids.mapped('property_area')))"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">
+                                                <span t-esc="'{:,.0f}'.format(doc.subtotal)"/>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Service Fees Row -->
+                                        <tr t-if="doc.service_fees">
+                                            <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                Service Fees
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-esc="'{:,.0f}'.format(doc.service_fees)"/>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Discount Row -->
+                                        <tr t-if="doc.discount_amount">
+                                            <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                Discount
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-esc="'{:,.0f}'.format(doc.discount_amount)"/>-
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Total Amount Row -->
+                                        <tr style="font-weight: bold;">
+                                            <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #e0e0e0;">
+                                                Final Total
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; background-color: #e0e0e0;">
+                                                <span t-esc="'{:,.0f}'.format(doc.total_amount)"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Terms / Lease Requirements -->
+                        <t t-if="doc.lease_requirements_html">
+                            <div class="row" style="margin: 10px 0;">
+                                <div class="col-12">
+                                    <div style="line-height: 1.4; font-size: 10px;">
+                                        <t t-raw="doc.lease_requirements_html"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <!-- Default Payment Terms if no template selected -->
+                            <div class="row" style="margin: 10px 0;">
+                                <div class="col-12">
+                                    <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 11px;">
+                                        Once this offer is approved please provide Saqifat al Safa with the following requirements to proceed in documenting a lease agreement:
+                                    </p>
+                                    
+                                    <div style="line-height: 1.4; margin-left: 15px; font-size: 10px;">
+                                        <p style="margin: 5px 0;">
+                                            • Kindly issue a certified cheque for (50%) of the total rent including service fees to HRH Prince Saud Bin Fahad Bin Abdulaziz Al Saud.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Tenant Pays the Security deposit to EJAR Portfolio amounting of 5% of the total rental value before signing the contract.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • The fees for electricity, water and A/C consumption will be 105 SR annually for each square meter. The lease agreement will outline the payment mechanism.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Kindly issue a certified cheque for 2.5% of the total annual rent including service fees as leasing commission to Saqifat al Safa Company Ltd., to be paid only one time to confirm the office space booking.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Kindly issue a certified cheque for 7.5% of the total annual rent including service fees as an Administrative fee to Saqifat al Safa Company Ltd., to be paid only one time. (Issuance of offers &amp; contracts, follow-up signature of the contract from both parties, follow-up implementation of tenants for the work of decoration in accordance with the requirements of safety in the building, etc......)
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Annual Rent, Electricity fees, leasing commission, and management fees are exclusive of any applicable Add Value Tax (VAT)
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Valid copy of the Commercial Registration.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Copy of (VAT) Registration Certificate.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • Including a copy of his/her ID.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • This offer is valid for 05 days, From the above date.
+                                        </p>
+                                        
+                                        <p style="margin: 5px 0;">
+                                            • This offer is subject to the owner's approval.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        
+                        <!-- Closing -->
+                        <div class="row" style="margin: 10px 0;">
+                            <div class="col-12">
+                                <p style="margin: 0; padding: 5px 0; text-align: left; font-size: 11px;">
+                                    Best Regards,
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Approval Section -->
+                        <div class="row" style="margin: 10px 0;">
+                            <div class="col-6">
+                                <div style="text-align: center; border: 1px solid #000; padding: 10px; font-size: 10px;">
+                                    <h4 style="margin-bottom: 8px; font-weight: bold; font-size: 11px;">
+                                        Approved by the customer
+                                    </h4>
+                                    
+                                    <div style="margin: 8px 0;">
+                                        <span style="font-weight: bold;">Name : </span>
+                                        <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                            &#160;
+                                        </span>
+                                    </div>
+                                    
+                                    <div style="margin: 8px 0;">
+                                        <span style="font-weight: bold;">Signature : </span>
+                                        <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                            &#160;
+                                        </span>
+                                    </div>
+                                    
+                                    <div style="margin: 8px 0;">
+                                        <span style="font-weight: bold;">Date : </span>
+                                        <span style="border-bottom: 1px dotted #000; display: inline-block; width: 150px; height: 15px;">
+                                            &#160;
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Consultant Information -->
+                            <div class="col-6">
+                                <div style="text-align: center; padding: 10px; font-size: 10px;">
+                                    <h4 style="margin-bottom: 8px; font-weight: bold; font-size: 11px;">
+                                        <span t-if="doc.salesperson_id and doc.salesperson_id.name" t-esc="doc.salesperson_id.name"/>
+                                        <span t-if="not doc.salesperson_id or not doc.salesperson_id.name">Ibrahim Kodai</span>
+                                    </h4>
+                                    <p style="margin: 5px 0; font-weight: bold;">
+                                        Sales Consultant
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </main>
+            </t>
+        </t>
+    </template>
+
+</odoo>

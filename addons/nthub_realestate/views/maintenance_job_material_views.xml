@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record id="maintenance_job_material_list" model="ir.ui.view">
+            <field name="name">maintenance.job.material.request.list</field>
+            <field name="model">maintenance.job.material.request</field>
+            <field name="arch" type="xml">
+                <list string="Material Requests" sample="1">
+                    <field name="name"/>
+                    <field name="job_order_id"/>
+                    <field name="product_id"/>
+                    <field name="qty_requested"/>
+                    <field name="qty_issued" sum="Total Issued"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="maintenance_job_material_form" model="ir.ui.view">
+            <field name="name">maintenance.job.material.request.form</field>
+            <field name="model">maintenance.job.material.request</field>
+            <field name="arch" type="xml">
+                <form string="Material Request">
+                    <header>
+                        <button name="action_approve" string="Approve" type="object" 
+                                class="btn-primary"/>
+                        <button name="action_create_picking" string="Create Picking" type="object" 
+                                class="btn-primary"/>
+                        <button name="action_confirm_receipt" string="Confirm Receipt" type="object"
+                                class="btn-primary"/>
+                        <button name="action_cancel" string="Cancel" type="object"/>
+                        <field name="state" widget="statusbar" 
+                               statusbar_visible="draft,approved,picking_created,issued,returned,cancelled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="True"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="job_order_id" readonly="True"/>
+                                <field name="product_id" readonly="True"/>
+                                <field name="qty_requested" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="uom_id"/>
+                                <field name="notes" nolabel="1" colspan="2"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Stock Picking" name="stock">
+                                <group>
+                                    <field name="stock_picking_id" readonly="True"/>
+                                    <field name="picking_state"/>
+                                </group>
+                                <group>
+                                    <field name="delivery_date"/>
+                                    <field name="received_date"/>
+                                    <field name="received_by"/>
+                                </group>
+                            </page>
+
+                            <page string="Quantities" name="quantities">
+                                <group>
+                                    <field name="qty_issued"/>
+                                    <field name="qty_used" readonly="True"/>
+                                    <field name="qty_returned"/>
+                                </group>
+                            </page>
+
+                            <page string="Receipt Proof" name="proof">
+                                <field name="proof_image" widget="image"/>
+                            </page>
+
+                            <page string="Notes" name="notes">
+                                <field name="notes" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter>
+
+                    </chatter>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="maintenance_job_material_kanban" model="ir.ui.view">
+            <field name="name">maintenance.job.material.request.kanban</field>
+            <field name="model">maintenance.job.material.request</field>
+            <field name="arch" type="xml">
+                <kanban string="Material Requests" sample="1">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="product_id"/>
+                    <field name="qty_requested"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_card_header">
+                                    <span class="oe_kanban_record_title"><strong><field name="name"/></strong></span>
+                                    <span class="oe_tag" t-if="record.state.raw_value == 'draft'" style="background-color:#e0e0e0">Draft</span>
+                                    <span class="oe_tag" t-if="record.state.raw_value == 'approved'" style="background-color:#81c784">Approved</span>
+                                    <span class="oe_tag" t-if="record.state.raw_value == 'picking_created'" style="background-color:#64b5f6">Picking</span>
+                                    <span class="oe_tag" t-if="record.state.raw_value == 'issued'" style="background-color:#ffc107">Issued</span>
+                                </div>
+                                <div class="oe_kanban_card_content">
+                                    <p><strong>Product:</strong> <field name="product_id"/></p>
+                                    <p><strong>Qty:</strong> <field name="qty_requested"/> units</p>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="maintenance_job_material_search" model="ir.ui.view">
+            <field name="name">maintenance.job.material.request.search</field>
+            <field name="model">maintenance.job.material.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Material Request">
+                    <field name="name" string="Request Number"/>
+                    <field name="job_order_id" string="Job Order"/>
+                    <field name="product_id" string="Product"/>
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                    <filter name="picking_created" string="Picking Created" domain="[('state', '=', 'picking_created')]"/>
+                    <filter name="issued" string="Issued" domain="[('state', '=', 'issued')]"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_job_order" string="Job Order" context="{'group_by': 'job_order_id'}"/>
+                        <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_maintenance_job_material_request" model="ir.actions.act_window">
+            <field name="name">Material Requests</field>
+            <field name="res_model">maintenance.job.material.request</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="search_view_id" ref="maintenance_job_material_search"/>
+            <field name="help">Track material requests for maintenance jobs with stock picking integration</field>
+        </record>
+
+    </data>
+</odoo>

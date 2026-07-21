@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Employee Form View to add Arabic and English names -->
+    <record id="view_employee_form_inherit_names" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.names</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add name_english and name_arabic after the name field -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="name_english" placeholder="Enter employee name in English"/>
+                <field name="name_arabic" placeholder="أدخل اسم الموظف بالعربية"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Inherit Employee Tree View to show names -->
+    <record id="view_employee_tree_inherit_names" model="ir.ui.view">
+        <field name="name">hr.employee.tree.inherit.names</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add name_english after the name field in tree view -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="name_english" optional="show"/>
+                <field name="name_arabic" optional="show"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>

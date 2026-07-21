@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- HR Allowances Main Menu -->
+        <menuitem id="menu_hr_allowances_root"
+                 name="Allowances | البدلات"
+                 sequence="185"/>
+        
+        <!-- Allowance Types Menu -->
+        <menuitem id="menu_hr_allowance_types"
+                 name="Allowance Types | أنواع البدلات"
+                 parent="menu_hr_allowances_root"
+                 action="action_hr_allowance_type"
+                 sequence="10"/>
+        
+        <!-- Employee Allowances Menu -->
+        <menuitem id="menu_hr_allowances"
+                 name="Employee Allowances | بدلات الموظفين"
+                 parent="menu_hr_allowances_root"
+                 action="action_hr_allowance"
+                 sequence="20"/>
+        
+    </data>
+</odoo>

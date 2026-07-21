@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+
+        <!--        form_property.type-->
+        <record model="ir.ui.view" id="view_main_property_types_form">
+            <field name="name">main.property.type.form</field>
+            <field name="model">rs.project.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--      action_property_type-->
+        <record id="main_property_type_action" model="ir.actions.act_window">
+            <field name="name">Project Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rs.project.type</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

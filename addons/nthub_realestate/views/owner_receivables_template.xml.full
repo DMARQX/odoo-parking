@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================
+         RECEIVABLES DASHBOARD
+         Professional Layout with Sidebar and Charts
+         ============================================ -->
+
+    <template id="portal_owner_receivables" name="Receivables Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load ApexCharts from CDN -->
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            
+            <!-- Dashboard Styles -->
+            <style type="text/css">
+            :root {
+                --owner-primary: #5C6BC0;
+                --owner-primary-light: #7986CB;
+                --owner-primary-dark: #3F51B5;
+                --owner-secondary: #78909C;
+                --owner-success: #66BB6A;
+                --owner-success-light: #E8F5E9;
+                --owner-warning: #FFA726;
+                --owner-warning-light: #FFF3E0;
+                --owner-danger: #EF5350;
+                --owner-danger-light: #FFEBEE;
+                --owner-info: #42A5F5;
+                --owner-info-light: #E3F2FD;
+                --owner-purple: #AB47BC;
+                --owner-purple-light: #F3E5F5;
+                --owner-teal: #26A69A;
+                --owner-teal-light: #E0F2F1;
+                --owner-bg: #F5F7FA;
+                --owner-sidebar-bg: #FFFFFF;
+                --owner-card-bg: #FFFFFF;
+                --owner-text: #37474F;
+                --owner-text-muted: #78909C;
+                --owner-border: #E0E0E0;
+                --owner-shadow: rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
+                --sidebar-collapsed-width: 80px;
+            }
+            .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); }
+            .owner-sidebar { width: var(--sidebar-width); background: var(--owner-sidebar-bg); border-right: 1px solid var(--owner-border); position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; transition: all 0.3s ease; box-shadow: 2px 0 10px var(--owner-shadow); display: flex; flex-direction: column; }
+            .owner-sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+            .owner-sidebar.collapsed .sidebar-text, .owner-sidebar.collapsed .sidebar-logo-text { display: none; }
+            .owner-sidebar.collapsed .nav-link { justify-content: center; padding: 1rem; }
+            .owner-sidebar.collapsed .nav-link i { margin-right: 0; font-size: 1.3rem; }
+            .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+            .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sidebar-logo i { color: white; font-size: 1.5rem; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+            .owner-sidebar.collapsed .nav-section-title { display: none; }
+            .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+            .sidebar-nav .nav-link i { width: 24px; margin-right: 12px; font-size: 1.1rem; color: var(--owner-text-muted); transition: all 0.2s ease; }
+            .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+            .sidebar-nav .nav-link:hover i { color: var(--owner-primary); }
+            .sidebar-nav .nav-link.active { background-color: rgba(239, 83, 80, 0.1); color: var(--owner-danger); border-left-color: var(--owner-danger); font-weight: 600; }
+            .sidebar-nav .nav-link.active i { color: var(--owner-danger); }
+            .nav-badge { margin-left: auto; background-color: var(--owner-danger); color: white; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 10px; font-weight: 600; }
+            .sidebar-user { padding: 1rem 1.5rem; border-top: 1px solid var(--owner-border); background-color: var(--owner-bg); }
+            .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--owner-teal) 0%, var(--owner-teal-light) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1rem; }
+            .user-info h6 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--owner-text); }
+            .user-info small { color: var(--owner-text-muted); font-size: 0.75rem; }
+            .sidebar-toggle { position: absolute; right: -12px; top: 70px; width: 24px; height: 24px; background: var(--owner-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; box-shadow: 0 2px 8px var(--owner-shadow); transition: all 0.3s ease; }
+            .sidebar-toggle i { color: white; font-size: 0.8rem; transition: transform 0.3s ease; }
+            .owner-sidebar.collapsed .sidebar-toggle i { transform: rotate(180deg); }
+            .owner-main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; transition: margin-left 0.3s ease; min-height: 100vh; }
+            .owner-sidebar.collapsed + .owner-main-content { margin-left: var(--sidebar-collapsed-width); }
+            .dashboard-header { margin-bottom: 2rem; }
+            .dashboard-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin-bottom: 0.25rem; }
+            .dashboard-header p { color: var(--owner-text-muted); margin: 0; }
+            .stat-cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+            .stat-card { background: var(--owner-card-bg); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px var(--owner-shadow); transition: all 0.3s ease; border: 1px solid transparent; }
+            .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--owner-shadow); }
+            .stat-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+            .stat-card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+            .stat-card-icon.danger { background-color: var(--owner-danger-light); color: var(--owner-danger); }
+            .stat-card-icon.warning { background-color: var(--owner-warning-light); color: var(--owner-warning); }
+            .stat-card-icon.info { background-color: var(--owner-info-light); color: var(--owner-info); }
+            .stat-card-icon.purple { background-color: var(--owner-purple-light); color: var(--owner-purple); }
+            .stat-card-value { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin-bottom: 0.25rem; line-height: 1.2; }
+            .stat-card-label { font-size: 0.85rem; color: var(--owner-text-muted); font-weight: 500; }
+            .chart-card { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); overflow: hidden; margin-bottom: 1.5rem; }
+            .chart-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; justify-content: space-between; align-items: center; }
+            .chart-card-header h5 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--owner-text); }
+            .chart-card-body { padding: 1.5rem; }
+            .data-table-card { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); overflow: hidden; }
+            .data-table-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+            .data-table-header h5 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--owner-text); }
+            .data-table { width: 100%; border-collapse: collapse; }
+            .data-table thead th { background-color: var(--owner-bg); padding: 1rem 1.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); border-bottom: 1px solid var(--owner-border); text-align: left; }
+            .data-table tbody td { padding: 1rem 1.25rem; font-size: 0.9rem; color: var(--owner-text); border-bottom: 1px solid var(--owner-border); vertical-align: middle; }
+            .data-table tbody tr:hover { background-color: var(--owner-bg); }
+            .status-badge { display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+            .status-badge.overdue { background-color: var(--owner-danger-light); color: var(--owner-danger); }
+            .status-badge.due { background-color: var(--owner-warning-light); color: var(--owner-warning); }
+            .status-badge.partial { background-color: var(--owner-info-light); color: var(--owner-info); }
+            .alert-card { background: linear-gradient(135deg, var(--owner-danger-light) 0%, #fff 100%); border-left: 4px solid var(--owner-danger); padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+            .alert-card i { font-size: 1.5rem; color: var(--owner-danger); }
+            .alert-card-content h6 { margin: 0 0 0.25rem 0; font-weight: 600; color: var(--owner-danger); }
+            .alert-card-content p { margin: 0; font-size: 0.85rem; color: var(--owner-text-muted); }
+            @media (max-width: 992px) { .owner-sidebar { transform: translateX(-100%); } .owner-sidebar.mobile-open { transform: translateX(0); } .owner-main-content { margin-left: 0; } .mobile-menu-toggle { display: flex !important; } }
+            @media (max-width: 768px) { .stat-cards-row { grid-template-columns: repeat(2, 1fr); } .owner-main-content { padding: 1rem; } }
+            .mobile-menu-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: var(--owner-primary); border-radius: 50%; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 4px 16px rgba(92, 107, 192, 0.4); cursor: pointer; }
+            .mobile-menu-toggle i { color: white; font-size: 1.5rem; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999; }
+            .sidebar-overlay.active { display: block; }
+            .search-box { position: relative; }
+            .search-box input { padding: 0.6rem 1rem 0.6rem 2.5rem; border: 1px solid var(--owner-border); border-radius: 8px; font-size: 0.9rem; width: 250px; transition: all 0.2s ease; }
+            .search-box input:focus { outline: none; border-color: var(--owner-primary); box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.1); }
+            .search-box i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--owner-text-muted); }
+            .aging-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+            .aging-indicator.critical { background-color: var(--owner-danger); }
+            .aging-indicator.warning { background-color: var(--owner-warning); }
+            .aging-indicator.normal { background-color: var(--owner-info); }
+            </style>
+            
+            <div class="owner-dashboard-wrapper">
+                <div class="sidebar-overlay"></div>
+                
+                <!-- Sidebar -->
+                <aside class="owner-sidebar">
+                    <div class="sidebar-toggle">
+                        <i class="fa fa-chevron-left"></i>
+                    </div>
+                    
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <i class="fa fa-building"></i>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title sidebar-text">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <i class="fa fa-dashboard"></i>
+                                <span class="sidebar-text">Dashboard</span>
+                            </a>
+                            <a href="/my/properties" class="nav-link">
+                                <i class="fa fa-building"></i>
+                                <span class="sidebar-text">My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title sidebar-text">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <i class="fa fa-money"></i>
+                                <span class="sidebar-text">Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link active">
+                                <i class="fa fa-file-invoice-dollar"></i>
+                                <span class="sidebar-text">Receivables</span>
+                                <t t-if="total_receivables > 0">
+                                    <span class="nav-badge"><t t-esc="'%.0f' % (total_receivables / 1000)"/>K</span>
+                                </t>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title sidebar-text">Operations</div>
+                            <a href="/my/vendor_quotes" class="nav-link">
+                                <i class="fa fa-check-circle"></i>
+                                <span class="sidebar-text">Pending Approvals</span>
+                            </a>
+                            <a href="/my/requests" class="nav-link">
+                                <i class="fa fa-comment"></i>
+                                <span class="sidebar-text">My Requests</span>
+                            </a>
+                        </div>
+                    </nav>
+                    
+                    <div class="sidebar-user d-flex align-items-center gap-3">
+                        <div class="user-avatar">
+                            <t t-esc="request.env.user.name[:2].upper()"/>
+                        </div>
+                        <div class="user-info sidebar-text">
+                            <h6><t t-esc="request.env.user.name"/></h6>
+                            <small>Property Owner</small>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="owner-main-content">
+                    <div class="mobile-menu-toggle">
+                        <i class="fa fa-bars"></i>
+                    </div>
+                    
+                    <div class="dashboard-header">
+                        <h1><i class="fa fa-file-text-o me-2" style="color: var(--owner-danger);"></i>Receivables</h1>
+                        <p>Outstanding amounts from your rental contracts</p>
+                    </div>
+                    
+                    <!-- Alert for overdue -->
+                    <t t-if="overdue_count > 0">
+                        <div class="alert-card">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <div class="alert-card-content">
+                                <h6><t t-esc="overdue_count"/> Overdue Invoices</h6>
+                                <p>Total overdue amount: <strong><t t-esc="'%.0f' % overdue_amount"/> <t t-esc="company_currency.symbol"/></strong></p>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <!-- Statistics Cards -->
+                    <div class="stat-cards-row">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon danger">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value">
+                                <t t-esc="'%.0f' % (total_receivables or 0)"/>
+                                <small style="font-size: 0.5em;"><t t-esc="company_currency.symbol"/></small>
+                            </div>
+                            <div class="stat-card-label">Total Receivables</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon warning">
+                                    <i class="fa fa-exclamation-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value">
+                                <t t-esc="'%.0f' % (overdue_amount or 0)"/>
+                                <small style="font-size: 0.5em;"><t t-esc="company_currency.symbol"/></small>
+                            </div>
+                            <div class="stat-card-label">Overdue Amount</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon info">
+                                    <i class="fa fa-list-alt"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="invoice_count or 0"/></div>
+                            <div class="stat-card-label">Total Invoices</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon purple">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="avg_days_overdue or 0"/></div>
+                            <div class="stat-card-label">Avg Days Overdue</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Row -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-6">
+                            <div class="chart-card">
+                                <div class="chart-card-header">
+                                    <h5><i class="fa fa-pie-chart me-2"></i>Aging Analysis</h5>
+                                </div>
+                                <div class="chart-card-body">
+                                    <div id="aging-chart" style="height: 280px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="chart-card">
+                                <div class="chart-card-header">
+                                    <h5><i class="fa fa-bar-chart me-2"></i>By Project</h5>
+                                </div>
+                                <div class="chart-card-body">
+                                    <div id="project-receivables-chart" style="height: 280px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Receivables Table -->
+                    <div class="data-table-card">
+                        <div class="data-table-header">
+                            <h5><i class="fa fa-table me-2"></i>Outstanding Invoices</h5>
+                            <div class="d-flex gap-2 align-items-center">
+                                <div class="search-box">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" id="receivables-search" placeholder="Search invoices..."/>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="receivables-table">
+                                <thead>
+                                    <tr>
+                                        <th>Due Date</th>
+                                        <th>Contract</th>
+                                        <th>Project</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th class="text-end">Total Amount</th>
+                                        <th class="text-end">Residual</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not receivable_invoices">
+                                        <tr>
+                                            <td colspan="8" class="text-center py-5 text-muted">
+                                                <i class="fa fa-check-circle fa-3x mb-3" style="color: var(--owner-success);"></i>
+                                                <p class="mb-0">No outstanding receivables! 🎉</p>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="receivable_invoices" t-as="inv">
+                                        <tr>
+                                            <td>
+                                                <t t-set="today" t-value="request.env['fields'].Date.today()"/>
+                                                <t t-set="is_overdue" t-value="inv['due_date'] and inv['due_date'] &lt; today"/>
+                                                <span t-attf-class="aging-indicator {{ 'critical' if is_overdue else 'normal' }}"></span>
+                                                <span t-field="inv['due_date']" t-options='{"widget": "date"}'/>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold" t-esc="inv['contract'].name"/>
+                                            </td>
+                                            <td t-esc="inv['project'].name if inv['project'] else '-'"/>
+                                            <td t-esc="inv['unit'].name if inv['unit'] else '-'"/>
+                                            <td t-esc="inv['tenant'].name if inv['tenant'] else '-'"/>
+                                            <td class="text-end">
+                                                <t t-esc="'%.2f' % inv['amount_total']"/>
+                                                <small class="text-muted"><t t-esc="company_currency.symbol"/></small>
+                                            </td>
+                                            <td class="text-end fw-bold" style="color: var(--owner-danger);">
+                                                <t t-esc="'%.2f' % inv['amount_residual']"/>
+                                                <small class="text-muted"><t t-esc="company_currency.symbol"/></small>
+                                            </td>
+                                            <td>
+                                                <t t-if="is_overdue">
+                                                    <span class="status-badge overdue">
+                                                        <i class="fa fa-exclamation me-1"></i> Overdue
+                                                    </span>
+                                                </t>
+                                                <t t-elif="inv['payment_state'] == 'partial'">
+                                                    <span class="status-badge partial">
+                                                        <i class="fa fa-adjust me-1"></i> Partial
+                                                    </span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="status-badge due">
+                                                        <i class="fa fa-clock-o me-1"></i> Due
+                                                    </span>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+            <!-- Chart Scripts -->
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Sidebar Toggle
+                    var sidebar = document.querySelector('.owner-sidebar');
+                    var toggle = document.querySelector('.sidebar-toggle');
+                    var mobileToggle = document.querySelector('.mobile-menu-toggle');
+                    var overlay = document.querySelector('.sidebar-overlay');
+
+                    if (toggle) toggle.addEventListener('click', function() { sidebar.classList.toggle('collapsed'); });
+                    if (mobileToggle) mobileToggle.addEventListener('click', function() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); });
+                    if (overlay) overlay.addEventListener('click', function() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); });
+
+                    // Search functionality
+                    var searchInput = document.getElementById('receivables-search');
+                    if (searchInput) {
+                        searchInput.addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#receivables-table tbody tr');
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                    }
+
+                    if (typeof ApexCharts === 'undefined') return;
+
+                    // Aging Analysis Chart
+                    var agingChartData = <t t-raw="json.dumps(chart_data.get('aging', {})) if chart_data else '{}'" />;
+                    var agingEl = document.getElementById('aging-chart');
+                    if (agingEl &amp;&amp; agingChartData.labels) {
+                        new ApexCharts(agingEl, {
+                            series: agingChartData.values || [],
+                            chart: { type: 'donut', height: 280 },
+                            labels: agingChartData.labels || [],
+                            colors: ['#66BB6A', '#FFA726', '#EF5350', '#B71C1C'],
+                            legend: { position: 'bottom', fontSize: '12px' },
+                            dataLabels: { enabled: true, formatter: function(val) { return val.toFixed(1) + '%'; } },
+                            plotOptions: { pie: { donut: { size: '60%', labels: { show: true, total: { show: true, label: 'Total', fontSize: '14px', formatter: function(w) { return w.globals.seriesTotals.reduce(function(a, b) { return a + b; }, 0).toLocaleString(); } } } } } }
+                        }).render();
+                    }
+
+                    // Project Receivables Chart
+                    var projectChartData = <t t-raw="json.dumps(chart_data.get('by_project', {})) if chart_data else '{}'" />;
+                    var projectEl = document.getElementById('project-receivables-chart');
+                    if (projectEl &amp;&amp; projectChartData.projects) {
+                        new ApexCharts(projectEl, {
+                            series: [{ name: 'Receivables', data: projectChartData.amounts || [] }],
+                            chart: { type: 'bar', height: 280, toolbar: { show: false } },
+                            colors: ['#EF5350'],
+                            plotOptions: { bar: { borderRadius: 6, horizontal: true } },
+                            dataLabels: { enabled: false },
+                            xaxis: { categories: projectChartData.projects || [], labels: { style: { colors: '#78909C' } } },
+                            yaxis: { labels: { style: { colors: '#78909C' } } },
+                            grid: { borderColor: '#E0E0E0', strokeDashArray: 4 }
+                        }).render();
+                    }
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

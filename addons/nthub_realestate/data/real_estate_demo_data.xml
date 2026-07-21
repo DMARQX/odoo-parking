@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- rs_project Types data -->
+    <record model="rs.project.type" id="rs_project_type_1">
+        <field name="name">Apartment</field>
+    </record>
+    <record model="rs.project.type" id="rs_project_type_2">
+        <field name="name">Land</field>
+    </record>
+    <record model="rs.project.type" id="rs_project_type_3">
+        <field name="name">Villa</field>
+    </record>
+    <record model="rs.project.type" id="rs_project_type_4">
+        <field name="name">Project</field>
+    </record>
+
+    <!-- rs_project Descriptions data -->
+    <record model="rs.project.desc" id="rs_project_desc_1">
+        <field name="name">تمليك</field>
+    </record>
+    <record model="rs.project.desc" id="rs_project_desc_2">
+        <field name="name">ايجار</field>
+    </record>
+    <record model="rs.project.desc" id="rs_project_desc_3">
+        <field name="name">سكني</field>
+    </record>
+    <record model="rs.project.desc" id="rs_project_desc_4">
+        <field name="name">تجاري</field>
+    </record>
+
+    <!-- rs_project Status data -->
+    <record model="rs.project.status" id="rs_project_status_1">
+        <field name="name">مفروش</field>
+    </record>
+    <record model="rs.project.status" id="rs_project_status_2">
+        <field name="name">محاره</field>
+    </record>
+    <record model="rs.project.status" id="rs_project_status_3">
+        <field name="name">نصف تشطيب</field>
+    </record>
+    <record model="rs.project.status" id="rs_project_status_4">
+        <field name="name">تشطيب</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Ownership Contract Sequence -->
+        <record id="ownership_contract_data_sequence" model="ir.sequence">
+            <field name="name">Ownership Contracts</field>
+            <field name="code">ownership.contract</field>
+            <field name="prefix">OC/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <!-- Rental Contract Sequence -->
+        <record id="rental_contract_data_sequence" model="ir.sequence">
+            <field name="name">Rental Contracts</field>
+            <field name="code">rental.contract</field>
+            <field name="prefix">RC/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

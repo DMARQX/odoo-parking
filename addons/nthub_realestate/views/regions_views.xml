@@ -1,0 +1,65 @@
+<odoo>
+    <data>
+        <!--     define a list_regions-->
+        <record model="ir.ui.view" id="view_regions_list">
+            <field name="name">regions.list</field>
+            <field name="model">regions</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+        <!-- define a form_regions-->
+        <record model="ir.ui.view" id="regions_form">
+            <field name="name">Regions</field>
+            <field name="model">regions</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <div name="button_box" class="oe_button_box">
+                            <button type="object" name="get_number_project" class="oe_stat_button" icon="fa-cubes">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value" widget="statinfo">
+                                        <field name="quantity" widget="statinfo" nolabel="1" class="mr4" readonly="0"/>
+                                    </span>
+                                    <span class="o_stat_text">Projects</span>
+                                </div>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="region"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <span class="o_form_label o_td_label" name="address">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <div class="d-flex justify-content-between">
+                                        <field name="country_id" placeholder="Country" class="o_address_country"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+<chatter/>
+                </form>
+            </field>
+        </record>
+        <!--  define a action_regions-->
+        <record id="regions_actions" model="ir.actions.act_window">
+            <field name="name">Regions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">regions</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

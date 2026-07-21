@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="nthub_realestate.RealEstateDashboardTemplate" owl="1">
+        <div class="o_action_manager">
+            <div class="o_control_panel"/>
+            <div class="o_content">
+                <section class="p-4 realestate_dashboard_section">
+
+                    <!-- Quick Links Section (Enterprise-style App Grid) -->
+                    <h4 class="dashboard-section-header">Quick Links / الوصول السريع</h4>
+                    <div class="re_app_grid_container mb-4">
+                        <div class="re_app_grid">
+                            <!-- Projects -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('rs.project', [], 'Projects / المشاريع')">
+                                <div class="re_app_icon" style="background-color: #875A7B;">
+                                    <i class="fa fa-building fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Projects<br/>المشاريع</div>
+                            </a>
+                            <!-- Units -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('sub.property', [], 'Units / الوحدات')">
+                                <div class="re_app_icon" style="background-color: #00A09D;">
+                                    <i class="fa fa-home fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Units<br/>الوحدات</div>
+                            </a>
+                            <!-- Tenants -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('res.partner', [['is_tenant', '=', true]], 'Tenants / المستأجرين')">
+                                <div class="re_app_icon" style="background-color: #714B67;">
+                                    <i class="fa fa-users fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Tenants<br/>المستأجرين</div>
+                            </a>
+                            <!-- Owners -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('res.partner', [['is_owner', '=', true]], 'Owners / الملاك')">
+                                <div class="re_app_icon" style="background-color: #E6A500;">
+                                    <i class="fa fa-user-tie fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Owners<br/>الملاك</div>
+                            </a>
+                            <!-- Rental Contracts -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('rental.contract', [], 'Rental Contracts / عقود الإيجار')">
+                                <div class="re_app_icon" style="background-color: #2196F3;">
+                                    <i class="fa fa-file-contract fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Rental Contracts<br/>عقود الإيجار</div>
+                            </a>
+                            <!-- Ownership Contracts -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('ownership.contract', [], 'Ownership Contracts / عقود التمليك')">
+                                <div class="re_app_icon" style="background-color: #4CAF50;">
+                                    <i class="fa fa-handshake fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Ownership<br/>التمليك</div>
+                            </a>
+                            <!-- Reservations -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('unit.reservation', [], 'Reservations / الحجوزات')">
+                                <div class="re_app_icon" style="background-color: #9C27B0;">
+                                    <i class="fa fa-calendar-check fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Reservations<br/>الحجوزات</div>
+                            </a>
+                            <!-- Maintenance Requests -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('rental.maintenance.request', [], 'Maintenance / الصيانة')">
+                                <div class="re_app_icon" style="background-color: #FF5722;">
+                                    <i class="fa fa-tools fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Maintenance<br/>الصيانة</div>
+                            </a>
+                            <!-- Job Orders -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('maintenance.job.order', [], 'Job Orders / أوامر العمل')">
+                                <div class="re_app_icon" style="background-color: #607D8B;">
+                                    <i class="fa fa-clipboard-list fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Job Orders<br/>أوامر العمل</div>
+                            </a>
+                            <!-- Material Requests -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('material.requisition.form', [], 'Material Requests / طلبات المواد')">
+                                <div class="re_app_icon" style="background-color: #795548;">
+                                    <i class="fa fa-boxes fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Materials<br/>المواد</div>
+                            </a>
+                            <!-- Owner Requests -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('owner.request', [], 'Owner Requests / طلبات الملاك')">
+                                <div class="re_app_icon" style="background-color: #009688;">
+                                    <i class="fa fa-envelope fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Owner Requests<br/>طلبات الملاك</div>
+                            </a>
+                            <!-- Quotations -->
+                            <a href="#" class="re_app_item" t-on-click.prevent="() => this.openListView('offer.presentation', [], 'Quotations / عروض الأسعار')">
+                                <div class="re_app_icon" style="background-color: #3F51B5;">
+                                    <i class="fa fa-file-invoice fa-2x"></i>
+                                </div>
+                                <div class="re_app_name">Quotations<br/>عروض الأسعار</div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Section -->
+                    <h4 class="dashboard-section-header">Statistics / الإحصائيات</h4>
+                    <div class="row mt-3">
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('rs.project', [], 'All Projects')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Total Projects</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.total_projects"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                             <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('sub.property', [], 'All Units')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Total Units</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.total_units"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                             <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('sub.property', [['state', '=', 'free']], 'Available Units')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Available Units</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.available_units"/>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="col-lg-2 col-md-4 col-6 mb-4">
+                             <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('sub.property', [['state', '=', 'on_lease']], 'Rented Units')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Rented Units</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.rented_units"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                             <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('sub.property', [['state', '=', 'sold']], 'Sold Units')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Sold Units </div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.sold_units"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                             <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('res.partner', [['is_owner', '=', 'True']], 'Owners')">
+                                <div class="card-body">
+                                    <div class="kpi-title">Owners</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.total_owners"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mt-4">
+                        <div class="col-lg-4 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Units by Status</h5>
+                                    <div class="chart-container" id="unitStatusChart" t-ref="unitStatusChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Monthly Rental Revenue</h5>
+                                    <div class="chart-container" id="monthlyRevenueChart" t-ref="monthlyRevenueChart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Projects by Status</h5>
+                                    <div class="chart-container" id="projectStatusChart" t-ref="projectStatusChart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

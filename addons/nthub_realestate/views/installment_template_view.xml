@@ -1,0 +1,74 @@
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<odoo>
+    <data>
+        <!-- Define a view for the installment template list -->
+        <record id="installment_template_list_view" model="ir.ui.view">
+            <field name="name">installment.template.list</field>
+            <field name="model">installment.template</field>
+            <field name="arch" type="xml">
+                <list string="installment template">
+                    <field name="name"/>
+                    <field name="duration_month"/>
+                    <field name="duration_year"/>
+                    <field name="repetition_rate"/>
+                    <field name="adv_payment_rate"/>
+                </list>
+            </field>
+        </record>
+        <!-- Define a view for the installment template form -->
+        <record id="installment_template_form_view" model="ir.ui.view">
+            <field name="name">installment.template.form</field>
+            <field name="model">installment.template</field>
+            <field name="arch" type="xml">
+                <form string="installment template">
+                    <sheet>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name"/>
+                        </h1>
+
+                        <group>
+                            <group>
+                                <field name="duration_month" readonly="duration_year > 0"/>
+                                <field name="duration_year" readonly="duration_month > 0"/>
+                                <field name="repetition_rate"/>
+                                <field name="adv_payment_rate"/>
+                                <field name="deduct"/>
+                                <field name="note"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <span class="o_form_label">Delay Penalty Percentage</span>
+                                <div class="text-muted content-group mt16">
+                                    <field name="delay_penalty" class="text-center oe_inline" widget="percentage"/>
+                                </div>
+                                <span class="o_form_label">Delay Penalty Process</span>
+                                <div class="text-muted content-group mt16">
+                                    <field name="delay_process" class="text-center oe_inline"/>
+                                    Days
+                                </div>
+                                <!--                            <div class="text-muted">-->
+                                <!--                                Delay penalty percentage will be applied after exceed the delay process-->
+                                <!--                                period-->
+                                <!--                            </div>-->
+                            </group>
+                        </group>
+                    </sheet>
+                <chatter/>
+                </form>
+            </field>
+        </record>
+        <!-- Define an action for the installment template window -->
+        <record id="installment_template_form_action" model="ir.actions.act_window">
+            <field name="name">Installment Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">installment.template</field>
+            <field name="view_id" ref="installment_template_list_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new installment template
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

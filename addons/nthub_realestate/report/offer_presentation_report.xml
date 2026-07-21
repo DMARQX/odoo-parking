@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Report Definition -->
+        <record id="offer_presentation_report" model="ir.actions.report">
+            <field name="name">Request for Quotation</field>
+            <field name="model">offer.presentation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.offer_presentation_template</field>
+            <field name="report_file">nthub_realestate.offer_presentation_template</field>
+            <field name="binding_model_id" ref="model_offer_presentation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="offer_presentation_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: 'Arial', sans-serif; direction: rtl;">
+                            
+                            <!-- Form Title -->
+                            <div class="row" style="margin-bottom: 20px;">
+                                <div class="col-8" style="text-align: center;">
+                                    <h2 style="font-weight: bold; margin: 0; font-size: 18px; color: #000;">
+                                        نموذج المعلومات الخاص بتقديم العرض
+                                    </h2>
+                                    <h3 style="font-weight: normal; margin: 5px 0; font-size: 14px; color: #666;">
+                                        Request for Quotation Information Form
+                                    </h3>
+                                </div>
+                                <div class="col-4" style="text-align: center;">
+                                    <div style="border: 1px solid #000; padding: 5px; font-size: 12px;">
+                                        <strong>التاريخ / Date:</strong><br/>
+                                        <span t-field="doc.presentation_date"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Information Table -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #000;">
+                                <thead>
+                                    <tr style="background-color: #90c695;">
+                                        <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 30%; font-weight: bold;">
+                                            English
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 40%; font-weight: bold;">
+                                            البيانات / Data
+                                        </th>
+                                        <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 30%; font-weight: bold;">
+                                            العربية
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Project Name
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.project_id.name"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            اسم المشروع
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Company Name
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.company_name"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            اسم الشركة
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Responsible Name
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.responsible_name"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            اسم المسؤول
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Responsible Department
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.responsible_department"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            الجهة المسؤولة
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Phone Number
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.phone_number"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            رقم الهاتف
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Fax Number
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.fax_number"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            رقم الفاكس
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Mobile Number
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.mobile_number"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            رقم الجوال
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Email
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.email"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            البريد الإلكتروني
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Center/Project Name
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-field="doc.center_name"/>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            اسم المركز/المشروع
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            Communication Method
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <span t-if="doc.communication_method == 'call'">☑ إتصال / Call</span>
+                                            <span t-if="doc.communication_method == 'visit'">☑ زيارة / Visit</span>
+                                            <span t-if="doc.communication_method == 'targeting'">☑ إستهداف / Targeting</span>
+                                            <span t-if="doc.communication_method == 'other'">☑ أخرى / Other</span>
+                                        </td>
+                                        <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            طريقة التواصل
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Office/Unit Details Section -->
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="text-align: center; background-color: #90c695; padding: 10px; margin: 0; border: 1px solid #000; font-weight: bold;">
+                                    تفاصيل المكاتب/الوحدات - Office/Unit Details
+                                </h3>
+                                
+                                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
+                                    <thead>
+                                        <tr style="background-color: #f0f0f0;">
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 8%;">
+                                                م<br/>No.
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 15%;">
+                                                اسم الوحدة<br/>Unit Name
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 12%;">
+                                                كود الوحدة<br/>Unit Code
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">
+                                                المساحة<br/>Area (m²)
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">
+                                                النوع<br/>Type
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 15%;">
+                                                النشاط<br/>Activity
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">
+                                                الماركة<br/>Brand
+                                            </th>
+                                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 20%;">
+                                                القيمة الإيجارية + خدمات<br/>Rental Value + Services
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="doc.offer_line_ids">
+                                            <t t-set="line_number" t-value="1"/>
+                                            <t t-foreach="doc.offer_line_ids" t-as="line">
+                                                <tr>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <t t-esc="line_number"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.unit_name"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.office_number"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.area"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.unit_type"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.activity"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.brand"/>
+                                                    </td>
+                                                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                        <span t-field="line.rental_value"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="line_number" t-value="line_number + 1"/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <tr>
+                                                <td colspan="8" style="border: 1px solid #000; padding: 20px; text-align: center; color: #666; font-style: italic;">
+                                                    لم يتم إضافة أي وحدات بعد / No units added yet
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Notes Section -->
+                            <div style="margin-bottom: 30px;" t-if="doc.notes">
+                                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
+                                    <tr style="background-color: #90c695;">
+                                        <th style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">
+                                            ملاحظات / Notes
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 15px; min-height: 60px; vertical-align: top;">
+                                            <span t-field="doc.notes"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Signature Section -->
+                            <div class="row" style="margin-top: 40px;">
+                                <div class="col-6">
+                                    <div style="border: 1px solid #000; padding: 15px; text-align: center; min-height: 80px;">
+                                        <strong>اسم المسوق / Marketer Name:</strong><br/>
+                                        <span t-field="doc.marketer_name" style="font-size: 14px; margin-top: 10px; display: inline-block;"/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div style="border: 1px solid #000; padding: 15px; text-align: center; min-height: 80px;">
+                                        <strong>التوقيع / Signature:</strong><br/>
+                                        <span t-field="doc.signature" style="font-size: 14px; margin-top: 10px; display: inline-block;"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

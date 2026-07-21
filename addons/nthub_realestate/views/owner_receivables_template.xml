@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_owner_receivables" name="Receivables Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            
+            <style type="text/css">
+            :root {
+                --rv-primary: #ef4444;
+                --rv-primary-dark: #dc2626;
+                --rv-primary-light: #fef2f2;
+                --rv-secondary: #64748b;
+                --rv-success: #10b981;
+                --rv-success-light: #ecfdf5;
+                --rv-warning: #f59e0b;
+                --rv-warning-light: #fffbeb;
+                --rv-danger: #ef4444;
+                --rv-danger-light: #fef2f2;
+                --rv-info: #3b82f6;
+                --rv-info-light: #eff6ff;
+                --rv-purple: #8b5cf6;
+                --rv-purple-light: #f5f3ff;
+                --rv-teal: #14b8a6;
+                --rv-bg: #f8fafc;
+                --rv-card: #ffffff;
+                --rv-text: #1e293b;
+                --rv-text-muted: #64748b;
+                --rv-border: #e2e8f0;
+                --rv-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+                --rv-font: 'Cairo', 'Inter', sans-serif;
+                --sidebar-width: 280px;
+            }
+            
+            * { font-family: var(--rv-font) !important; box-sizing: border-box; }
+            
+            .rv-wrapper { display: flex; min-height: 100vh; background: var(--rv-bg); }
+            
+            .rv-sidebar { width: var(--sidebar-width); background: var(--rv-card); border-right: 1px solid var(--rv-border); position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; display: flex; flex-direction: column; box-shadow: 2px 0 20px rgba(0,0,0,0.04); }
+            .rv-sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--rv-border); display: flex; align-items: center; gap: 1rem; }
+            .rv-sidebar-logo { width: 50px; height: 50px; background: linear-gradient(135deg, var(--rv-danger) 0%, #f87171 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+            .rv-sidebar-logo svg { width: 26px; height: 26px; color: white; }
+            .rv-sidebar-brand h5 { margin: 0; font-weight: 700; color: var(--rv-text); font-size: 1.1rem; }
+            .rv-sidebar-brand small { color: var(--rv-text-muted); font-size: 0.8rem; }
+            .rv-sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .rv-nav-section { margin-bottom: 1.5rem; }
+            .rv-nav-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--rv-text-muted); padding: 0 1.5rem; margin-bottom: 0.75rem; }
+            .rv-nav-link { display: flex; align-items: center; padding: 0.875rem 1.5rem; color: var(--rv-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; gap: 0.875rem; }
+            .rv-nav-link svg { width: 20px; height: 20px; color: var(--rv-text-muted); transition: all 0.2s ease; flex-shrink: 0; }
+            .rv-nav-link:hover { background: var(--rv-bg); color: var(--rv-danger); }
+            .rv-nav-link:hover svg { color: var(--rv-danger); }
+            .rv-nav-link.active { background: linear-gradient(90deg, var(--rv-danger-light), transparent); color: var(--rv-danger); border-left-color: var(--rv-danger); font-weight: 600; }
+            .rv-nav-link.active svg { color: var(--rv-danger); }
+            .rv-nav-badge { margin-left: auto; background: linear-gradient(135deg, var(--rv-danger), #f87171); color: white; font-size: 0.7rem; padding: 0.25rem 0.625rem; border-radius: 20px; font-weight: 600; }
+            .rv-sidebar-user { padding: 1.25rem 1.5rem; border-top: 1px solid var(--rv-border); background: var(--rv-bg); display: flex; align-items: center; gap: 0.875rem; }
+            .rv-user-avatar { width: 42px; height: 42px; background: linear-gradient(135deg, var(--rv-teal), #5eead4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1rem; }
+            .rv-user-info h6 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--rv-text); }
+            .rv-user-info small { color: var(--rv-text-muted); font-size: 0.75rem; }
+            
+            .rv-main { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; min-height: 100vh; }
+            
+            .rv-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+            .rv-page-title { display: flex; align-items: center; gap: 1rem; }
+            .rv-page-title .icon-wrapper { width: 56px; height: 56px; background: linear-gradient(135deg, var(--rv-danger-light), #fee2e2); border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+            .rv-page-title .icon-wrapper svg { width: 28px; height: 28px; color: var(--rv-danger); }
+            .rv-page-title h1 { margin: 0; font-size: 1.75rem; font-weight: 700; color: var(--rv-text); }
+            .rv-page-title p { margin: 0.25rem 0 0 0; color: var(--rv-text-muted); font-size: 0.95rem; }
+            
+            .rv-alert { background: linear-gradient(135deg, var(--rv-danger-light), #fff); border-left: 4px solid var(--rv-danger); padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; animation: rvPulse 2s infinite; }
+            @keyframes rvPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.2); } 50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
+            .rv-alert svg { width: 32px; height: 32px; color: var(--rv-danger); flex-shrink: 0; }
+            .rv-alert-content h5 { margin: 0 0 0.25rem 0; font-weight: 700; color: var(--rv-danger); }
+            .rv-alert-content p { margin: 0; font-size: 0.9rem; color: var(--rv-text-muted); }
+            
+            .rv-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+            .rv-stat-card { background: var(--rv-card); border-radius: 18px; padding: 1.5rem; box-shadow: var(--rv-shadow); transition: all 0.3s ease; position: relative; overflow: hidden; }
+            .rv-stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+            .rv-stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+            .rv-stat-card.danger::before { background: linear-gradient(90deg, var(--rv-danger), #f87171); }
+            .rv-stat-card.warning::before { background: linear-gradient(90deg, var(--rv-warning), #fbbf24); }
+            .rv-stat-card.info::before { background: linear-gradient(90deg, var(--rv-info), #60a5fa); }
+            .rv-stat-card.purple::before { background: linear-gradient(90deg, var(--rv-purple), #a78bfa); }
+            .rv-stat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+            .rv-stat-icon svg { width: 26px; height: 26px; }
+            .rv-stat-icon.danger { background: var(--rv-danger-light); color: var(--rv-danger); }
+            .rv-stat-icon.warning { background: var(--rv-warning-light); color: var(--rv-warning); }
+            .rv-stat-icon.info { background: var(--rv-info-light); color: var(--rv-info); }
+            .rv-stat-icon.purple { background: var(--rv-purple-light); color: var(--rv-purple); }
+            .rv-stat-value { font-size: 1.875rem; font-weight: 800; color: var(--rv-text); margin-bottom: 0.25rem; line-height: 1.2; }
+            .rv-stat-value small { font-size: 0.5em; color: var(--rv-text-muted); font-weight: 600; }
+            .rv-stat-label { font-size: 0.875rem; color: var(--rv-text-muted); font-weight: 500; }
+            
+            .rv-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+            .rv-chart-card { background: var(--rv-card); border-radius: 18px; box-shadow: var(--rv-shadow); overflow: hidden; }
+            .rv-chart-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--rv-border); display: flex; justify-content: space-between; align-items: center; }
+            .rv-chart-header h5 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--rv-text); display: flex; align-items: center; gap: 0.5rem; }
+            .rv-chart-header h5 svg { width: 20px; height: 20px; color: var(--rv-text-muted); }
+            .rv-chart-body { padding: 1.5rem; }
+            
+            .rv-table-card { background: var(--rv-card); border-radius: 18px; box-shadow: var(--rv-shadow); overflow: hidden; }
+            .rv-table-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--rv-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+            .rv-table-header h5 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--rv-text); display: flex; align-items: center; gap: 0.5rem; }
+            .rv-table-header h5 svg { width: 20px; height: 20px; color: var(--rv-text-muted); }
+            .rv-search-box { position: relative; }
+            .rv-search-box input { padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1px solid var(--rv-border); border-radius: 10px; font-size: 0.9rem; width: 280px; transition: all 0.2s ease; background: var(--rv-bg); }
+            .rv-search-box input:focus { outline: none; border-color: var(--rv-danger); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1); background: var(--rv-card); }
+            .rv-search-box svg { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--rv-text-muted); }
+            .rv-table { width: 100%; border-collapse: collapse; }
+            .rv-table thead th { background: var(--rv-bg); padding: 1rem 1.25rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--rv-text-muted); border-bottom: 1px solid var(--rv-border); text-align: left; }
+            .rv-table tbody td { padding: 1rem 1.25rem; font-size: 0.9rem; color: var(--rv-text); border-bottom: 1px solid var(--rv-border); vertical-align: middle; }
+            .rv-table tbody tr { transition: background 0.2s ease; }
+            .rv-table tbody tr:hover { background: var(--rv-bg); }
+            .rv-table tbody tr:last-child td { border-bottom: none; }
+            .rv-badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 0.875rem; border-radius: 25px; font-size: 0.8rem; font-weight: 600; }
+            .rv-badge svg { width: 14px; height: 14px; }
+            .rv-badge.overdue { background: var(--rv-danger-light); color: var(--rv-danger); }
+            .rv-badge.partial { background: var(--rv-info-light); color: var(--rv-info); }
+            .rv-badge.due { background: var(--rv-warning-light); color: var(--rv-warning); }
+            .rv-table-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--rv-border); display: flex; justify-content: space-between; align-items: center; background: var(--rv-bg); }
+            .rv-table-info { font-size: 0.875rem; color: var(--rv-text-muted); }
+            
+            .rv-filters { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+            .rv-filter-select { position: relative; display: flex; align-items: center; }
+            .rv-filter-select svg { position: absolute; left: 0.875rem; width: 18px; height: 18px; color: var(--rv-text-muted); pointer-events: none; }
+            .rv-filter-select select { padding: 0.75rem 2.5rem 0.75rem 2.75rem; border: 1px solid var(--rv-border); border-radius: 10px; font-size: 0.9rem; background: var(--rv-bg); color: var(--rv-text); cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 200px; transition: all 0.2s ease; }
+            .rv-filter-select select:focus { outline: none; border-color: var(--rv-danger); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1); background: var(--rv-card); }
+            .rv-filter-select::after { content: ''; position: absolute; right: 1rem; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--rv-text-muted); pointer-events: none; }
+            
+            .rv-empty { text-align: center; padding: 4rem 2rem; }
+            .rv-empty .empty-icon { width: 100px; height: 100px; border-radius: 50%; background: var(--rv-success-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+            .rv-empty .empty-icon svg { width: 48px; height: 48px; color: var(--rv-success); }
+            .rv-empty h4 { color: var(--rv-text); margin-bottom: 0.5rem; font-weight: 600; }
+            .rv-empty p { color: var(--rv-text-muted); max-width: 300px; margin: 0 auto; }
+            
+            .rv-mobile-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: linear-gradient(135deg, var(--rv-danger), #f87171); border-radius: 50%; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4); cursor: pointer; }
+            .rv-mobile-toggle svg { width: 24px; height: 24px; color: white; }
+            .rv-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
+            .rv-overlay.active { display: block; }
+            
+            @media (max-width: 1200px) { .rv-stats-grid { grid-template-columns: repeat(2, 1fr); } .rv-charts-row { grid-template-columns: 1fr; } }
+            @media (max-width: 992px) { .rv-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } .rv-sidebar.open { transform: translateX(0); } .rv-main { margin-left: 0; } .rv-mobile-toggle { display: flex; } }
+            @media (max-width: 768px) { .rv-stats-grid { grid-template-columns: 1fr; } .rv-main { padding: 1rem; } .rv-search-box input { width: 100%; } .rv-filters { flex-direction: column; align-items: stretch; } .rv-filter-select select { width: 100%; } }
+            
+            .rv-fade-in { animation: rvFadeIn 0.4s ease forwards; }
+            @keyframes rvFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            </style>
+            
+            <div class="rv-wrapper">
+                <div class="rv-overlay"></div>
+                
+                <aside class="rv-sidebar">
+                    <div class="rv-sidebar-header">
+                        <div class="rv-sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="rv-sidebar-brand">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="rv-sidebar-nav">
+                        <div class="rv-nav-section">
+                            <div class="rv-nav-title">Main Menu</div>
+                            <a href="/my/properties" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span>My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="rv-nav-section">
+                            <div class="rv-nav-title">Financials</div>
+                            <a href="/my/collected-payments" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span>Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="rv-nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span>Receivables</span>
+                                <t t-if="overdue_count"><span class="rv-nav-badge"><t t-esc="overdue_count"/></span></t>
+                            </a>
+                        </div>
+                        
+                        <div class="rv-nav-section">
+                            <div class="rv-nav-title">Requests</div>
+                            <a href="/my/vendor_quotes" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>Pending Approvals</span>
+                            </a>
+                            <a href="/my/requests" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span>My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="rv-nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                    
+                    <div class="rv-sidebar-user">
+                        <div class="rv-user-avatar"><t t-esc="request.env.user.name[:2].upper()"/></div>
+                        <div class="rv-user-info">
+                            <h6><t t-esc="request.env.user.name"/></h6>
+                            <small>Property Owner</small>
+                        </div>
+                    </div>
+                </aside>
+                
+                <main class="rv-main">
+                    <div class="rv-mobile-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                    </div>
+                    
+                    <div class="rv-page-header rv-fade-in">
+                        <div class="rv-page-title">
+                            <div class="icon-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div>
+                                <h1>Receivables</h1>
+                                <p>Outstanding invoices and aging analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <t t-if="overdue_count">
+                        <div class="rv-alert rv-fade-in">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                            <div class="rv-alert-content">
+                                <h5><t t-esc="overdue_count"/> Overdue Invoices</h5>
+                                <p>Total overdue: <t t-esc="'{:,.2f}'.format(overdue_amount)"/> &#65020;</p>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <div class="rv-stats-grid">
+                        <div class="rv-stat-card danger rv-fade-in">
+                            <div class="rv-stat-icon danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            </div>
+                            <div class="rv-stat-value"><t t-esc="'{:,.0f}'.format(total_receivables or 0)"/><small>&#65020;</small></div>
+                            <div class="rv-stat-label">Total Receivables</div>
+                        </div>
+                        
+                        <div class="rv-stat-card warning rv-fade-in">
+                            <div class="rv-stat-icon warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="rv-stat-value"><t t-esc="'{:,.0f}'.format(overdue_amount or 0)"/><small>&#65020;</small></div>
+                            <div class="rv-stat-label">Overdue Amount</div>
+                        </div>
+                        
+                        <div class="rv-stat-card info rv-fade-in">
+                            <div class="rv-stat-icon info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                            </div>
+                            <div class="rv-stat-value"><t t-esc="invoice_count or 0"/></div>
+                            <div class="rv-stat-label">Open Invoices</div>
+                        </div>
+                        
+                        <div class="rv-stat-card purple rv-fade-in">
+                            <div class="rv-stat-icon purple">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                            </div>
+                            <div class="rv-stat-value"><t t-esc="avg_days_overdue or 0"/></div>
+                            <div class="rv-stat-label">Avg Days Overdue</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rv-charts-row">
+                        <div class="rv-chart-card rv-fade-in">
+                            <div class="rv-chart-header">
+                                <h5>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>
+                                    Aging Analysis
+                                </h5>
+                            </div>
+                            <div class="rv-chart-body">
+                                <div id="aging-chart" style="height: 280px;"></div>
+                            </div>
+                        </div>
+                        <div class="rv-chart-card rv-fade-in">
+                            <div class="rv-chart-header">
+                                <h5>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+                                    By Project
+                                </h5>
+                            </div>
+                            <div class="rv-chart-body">
+                                <div id="project-chart" style="height: 280px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rv-table-card rv-fade-in">
+                        <div class="rv-table-header">
+                            <h5>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                                Outstanding Invoices / الفواتير المستحقة
+                            </h5>
+                            <div class="rv-filters">
+                                <div class="rv-filter-select">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" /></svg>
+                                    <select id="status-filter">
+                                        <option value="all">All Status</option>
+                                        <option value="overdue">Overdue</option>
+                                        <option value="partial">Partial</option>
+                                        <option value="due">Due</option>
+                                    </select>
+                                </div>
+                                <div class="rv-search-box">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                                    <input type="text" id="invoice-search" placeholder="Search invoices... / بحث..."/>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="rv-table" id="invoices-table">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice</th>
+                                        <th>Project</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Due Date</th>
+                                        <th class="text-end">Balance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not receivable_invoices">
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="rv-empty">
+                                                    <div class="empty-icon">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    </div>
+                                                    <h4>All Clear!</h4>
+                                                    <p>No outstanding receivables at this time.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="receivable_invoices or []" t-as="inv">
+                                        <t t-set="row_status" t-value="'overdue' if (inv.get('due_date') and inv['due_date'] &lt; datetime.date.today()) else ('partial' if inv.get('payment_state') == 'partial' else 'due')"/>
+                                        <tr t-att-data-status="row_status">
+                                            <td style="font-weight: 600;">
+                                                <t t-if="inv.get('invoice')">
+                                                    <t t-esc="inv['invoice'].name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="inv.get('contract').name if inv.get('contract') else '-'"/>
+                                                </t>
+                                            </td>
+                                            <td><t t-esc="inv['project'].name if inv.get('project') else '-'"/></td>
+                                            <td><t t-esc="inv['unit'].name if inv.get('unit') else '-'"/></td>
+                                            <td><t t-esc="inv['tenant'].name if inv.get('tenant') else '-'"/></td>
+                                            <td><t t-esc="inv['due_date'].strftime('%d %b %Y') if inv.get('due_date') else '-'"/></td>
+                                            <td class="text-end" style="font-weight: 700; color: var(--rv-danger);">
+                                                <t t-esc="'{:,.2f}'.format(inv.get('amount_residual', 0))"/> &#65020;
+                                            </td>
+                                            <td>
+                                                <t t-if="inv.get('due_date') and inv['due_date'] &lt; datetime.date.today()">
+                                                    <span class="rv-badge overdue">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                                                        Overdue
+                                                    </span>
+                                                </t>
+                                                <t t-elif="inv.get('payment_state') == 'partial'">
+                                                    <span class="rv-badge partial">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" /></svg>
+                                                        Partial
+                                                    </span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="rv-badge due">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                        Due
+                                                    </span>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="rv-table-footer">
+                            <div class="rv-table-info">
+                                Showing <strong id="visible-count"><t t-esc="len(receivable_invoices) if receivable_invoices else 0"/></strong> of <strong><t t-esc="len(receivable_invoices) if receivable_invoices else 0"/></strong> invoices
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    var sidebar = document.querySelector('.rv-sidebar');
+                    var mobileToggle = document.querySelector('.rv-mobile-toggle');
+                    var overlay = document.querySelector('.rv-overlay');
+
+                    if (mobileToggle) {
+                        mobileToggle.addEventListener('click', function() {
+                            sidebar.classList.add('open');
+                            overlay.classList.add('active');
+                        });
+                    }
+                    if (overlay) {
+                        overlay.addEventListener('click', function() {
+                            sidebar.classList.remove('open');
+                            overlay.classList.remove('active');
+                        });
+                    }
+
+                    var searchInput = document.getElementById('invoice-search');
+                    var statusFilter = document.getElementById('status-filter');
+                    var visibleCountEl = document.getElementById('visible-count');
+                    
+                    function filterTable() {
+                        var searchText = searchInput ? searchInput.value.toLowerCase() : '';
+                        var statusValue = statusFilter ? statusFilter.value : 'all';
+                        var rows = document.querySelectorAll('#invoices-table tbody tr[data-status]');
+                        var visibleCount = 0;
+                        
+                        rows.forEach(function(row) {
+                            var text = row.textContent.toLowerCase();
+                            var rowStatus = row.getAttribute('data-status');
+                            var matchesSearch = searchText === '' || text.includes(searchText);
+                            var matchesStatus = statusValue === 'all' || rowStatus === statusValue;
+                            
+                            if (matchesSearch &amp;&amp; matchesStatus) {
+                                row.style.display = '';
+                                visibleCount++;
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                        
+                        if (visibleCountEl) {
+                            visibleCountEl.textContent = visibleCount;
+                        }
+                    }
+                    
+                    if (searchInput) {
+                        searchInput.addEventListener('keyup', filterTable);
+                    }
+                    
+                    if (statusFilter) {
+                        statusFilter.addEventListener('change', filterTable);
+                    }
+
+                    if (typeof ApexCharts === 'undefined') return;
+
+                    var chartData = <t t-out="json.dumps(chart_data) if chart_data else '{}'" />;
+
+                    var agingEl = document.getElementById('aging-chart');
+                    if (agingEl &amp;&amp; chartData.aging) {
+                        new ApexCharts(agingEl, {
+                            series: chartData.aging.values || [],
+                            chart: { type: 'donut', height: 280, fontFamily: 'Cairo, Inter, sans-serif' },
+                            labels: chartData.aging.labels || [],
+                            colors: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                            legend: { position: 'bottom', fontSize: '12px' },
+                            plotOptions: { pie: { donut: { size: '60%', labels: { show: true, total: { show: true, label: 'Total', formatter: function(w) { return w.globals.seriesTotals.reduce((a,b)=>a+b,0).toLocaleString() + ' \uFDFC'; } } } } } }
+                        }).render();
+                    }
+
+                    var projectEl = document.getElementById('project-chart');
+                    if (projectEl &amp;&amp; chartData.by_project) {
+                        new ApexCharts(projectEl, {
+                            series: [{ name: 'Amount', data: chartData.by_project.amounts || [] }],
+                            chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Cairo, Inter, sans-serif' },
+                            colors: ['#ef4444'],
+                            plotOptions: { bar: { borderRadius: 8, horizontal: true } },
+                            dataLabels: { enabled: false },
+                            xaxis: { categories: chartData.by_project.projects || [], labels: { formatter: function(val) { return val.toLocaleString(); } } },
+                            yaxis: { labels: { style: { colors: '#64748b' } } },
+                            tooltip: { y: { formatter: function(val) { return val.toLocaleString() + ' \uFDFC'; } } }
+                        }).render();
+                    }
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

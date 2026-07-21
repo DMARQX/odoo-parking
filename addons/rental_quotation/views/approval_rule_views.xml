@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Approval Rule Tree View -->
+    <record id="view_rental_approval_rule_tree" model="ir.ui.view">
+        <field name="name">rental.approval.rule.tree</field>
+        <field name="model">rental.approval.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="condition_type"/>
+                <field name="min_amount"/>
+                <field name="max_amount"/>
+                <field name="approval_level"/>
+                <field name="approver_group_id"/>
+                <field name="company_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Approval Rule Form View -->
+    <record id="view_rental_approval_rule_form" model="ir.ui.view">
+        <field name="name">rental.approval.rule.form</field>
+        <field name="model">rental.approval.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Rule Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Rule Configuration">
+                            <field name="sequence"/>
+                            <field name="condition_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Approval Settings">
+                            <field name="approval_level"/>
+                            <field name="approver_group_id"/>
+                            <field name="can_self_approve"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Conditions">
+                        <group>
+                            <field name="min_amount" 
+                                   invisible="condition_type == 'always'"/>
+                            <field name="max_amount" 
+                                   invisible="condition_type == 'always'"/>
+                        </group>
+                        <group>
+                            <field name="customer_type" 
+                                   invisible="condition_type != 'customer_type'"/>
+                            <field name="property_type" 
+                                   invisible="condition_type != 'property_type'"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Description">
+                        <field name="description" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Approval Rule Search View -->
+    <record id="view_rental_approval_rule_search" model="ir.ui.view">
+        <field name="name">rental.approval.rule.search</field>
+        <field name="model">rental.approval.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="condition_type"/>
+                <field name="approver_group_id"/>
+                
+                <filter name="filter_active" string="Active" domain="[('active','=',True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active','=',False)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Condition Type" name="group_by_condition" 
+                            context="{'group_by':'condition_type'}"/>
+                    <filter string="Approval Level" name="group_by_level" 
+                            context="{'group_by':'approval_level'}"/>
+                    <filter string="Approver Group" name="group_by_group" 
+                            context="{'group_by':'approver_group_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

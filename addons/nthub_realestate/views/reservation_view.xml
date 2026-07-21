@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--define a view search -->
+        <record model="ir.ui.view" id="view_unit_reservation_search">
+            <field name="name">unit.reservation.search</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Reference" filter_domain="[('name','ilike',self)]"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','ilike',self)]"/>
+                    <field name="user_id" string="Responsible" filter_domain="[('user_id','ilike',self)]"/>
+                    <field name="rs_project" string="Project" filter_domain="[('rs_project','ilike',self)]"/>
+                    <filter name="state" string="Confirmed"
+                            domain="[('state','=','confirmed')]"/>
+                    <filter name="state" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                    <filter name="state" string="Canceled"
+                            domain="[('state','=','canceled')]"/>
+                    <filter name="state" string="Contracted"
+                            domain="[('state','=','contracted')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" name="group_by_partner_id"
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="Responsible" name="group_by_user_id"
+                                context="{'group_by': 'user_id'}"/>
+                        <filter string="Project" name="group_by_rs_project"
+                                context="{'group_by': 'rs_project'}"/>
+                        <filter string="State" name="group_by_state"
+                                context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Define a view for the unit reservation list -->
+        <record id="unit_reservation_list_view" model="ir.ui.view">
+            <field name="name">unit.reservation.list</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="quotation_reference" optional="show"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="rs_project"/>
+                    <field name="rs_project_code"/>
+                    <field name="rs_project_unit"/>
+                    <field name="unit_code"/>
+                    <field name="state"
+                           decoration-info="state=='draft'"
+                           decoration-warning="state=='confirmed'" decoration-success="state=='contracted'"
+                           decoration-danger="state=='canceled'" widget="badge"/>
+                </list>
+            </field>
+        </record>
+        <!-- Define a view for the unit reservation form -->
+        <record id="unit_reservation_form_view" model="ir.ui.view">
+            <field name="name">unit.reservation.form</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Project Unit Reservation">
+                    <header>
+                        <button name="action_confirm" type="object"
+                                invisible="state != 'draft'"
+                                string="Confirm" class="oe_highlight"/>
+                        <button name="action_contract_ownership" type="object"
+                                invisible="state in ('canceled','draft','contracted')"
+                                string="Sell" class="oe_highlight"/>
+                        <button name="action_contract_rental" type="object"
+                                invisible="state in ('canceled','draft','contracted')"
+                                string="Rent" class="oe_highlight"/>
+                        <button name="action_cancel" type="object"
+                                invisible="state in ('canceled','draft','contracted')"
+                                string="Cancel" class="oe_highlight"/>
+                        <button name="action_receive_deposit" type="object"
+                                invisible="state == 'sold'"
+                                string="Receive First Payment" class="oe_highlight"/>
+
+                        <field name="state"
+                               widget="statusbar"
+                               statusbar_visible="draft,confirmed,contracted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="view_contract_own"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    invisible="contract_count_own == 0">
+                                <field name="contract_count_own" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                    name="view_contract_rent"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    invisible="contract_count_rent == 0">
+                                <field name="contract_count_rent" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                    name="view_deposits"
+                                    class="oe_stat_button"
+                                    icon="fa-money"
+                                    invisible="deposit_count == 0">
+                                <field name="deposit_count" widget="statinfo" string="First Payments"/>
+                            </button>
+                        </div>
+                        <separator string="Booking Data" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="quotation_reference" readonly="1" invisible="not quotation_reference"/>
+                                <field name="partner_id" readonly="state != 'draft'" required="1"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="date" readonly="state != 'draft'" required="1"/>
+                                <field name="deposit"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <separator string="Project" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="rs_project" readonly="state != 'draft'"/>
+                                <field name="rs_project_code" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="region" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        <separator string="Project Unit" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="rs_project_unit" options="{'no_create': True, 'no_open': True}"
+                                       readonly="state != 'draft'"/>
+                                <field name="unit_code" readonly="state != 'draft'"/>
+                                <field name="floor" readonly="state != 'draft'"/>
+                                <field name="pricing"/>
+                            </group>
+                            <group>
+                                <field name="type" readonly="state != 'draft'"/>
+                                <field name="status" readonly="state != 'draft'"/>
+                                <field name="rs_project_area" readonly="state != 'draft'"/>
+                                <field name="address" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                    </sheet>
+<chatter/>
+                </form>
+            </field>
+        </record>
+        <!-- Define the action for the unit reservation  -->
+        <record id="unit_reservation_form_action" model="ir.actions.act_window">
+            <field name="name">Booking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">unit.reservation</field>
+            <field name="view_id" ref="unit_reservation_list_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Unit Reservation
+                </p>
+            </field>
+        </record>
+        <!-- Define a cron job for the unit reservation list -->
+        <record model="ir.cron" id="auto_cancel_unit_reservation">
+            <field name="name">Auto Cancel Unit Reservation</field>
+            <field name="model_id" ref="model_unit_reservation"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_cancel_reservation()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>

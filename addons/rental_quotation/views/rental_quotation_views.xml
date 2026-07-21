@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Rental Quotation List View -->
+    <record id="view_rental_quotation_list" model="ir.ui.view">
+        <field name="name">rental.quotation.list</field>
+        <field name="model">rental.quotation</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state=='draft'" 
+                  decoration-warning="state in ['submitted','under_review']"
+                  decoration-success="state=='approved'"
+                  decoration-muted="state in ['expired','rejected']">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="salesperson_id"/>
+                <field name="quotation_date"/>
+                <field name="validity_date"/>
+                <field name="total_amount" sum="Total"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state=='draft'"
+                       decoration-warning="state in ['submitted','under_review']"
+                       decoration-success="state in ['approved','sent','accepted']"
+                       decoration-danger="state in ['rejected','expired']"/>
+                <field name="current_approval_level" optional="hide"/>
+                <field name="max_approval_level" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Rental Quotation Form View -->
+    <record id="view_rental_quotation_form" model="ir.ui.view">
+        <field name="name">rental.quotation.form</field>
+        <field name="model">rental.quotation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit_for_approval" type="object" 
+                            string="Submit for Approval" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    
+                    <button name="action_approve" type="object" 
+                            string="Approve" class="btn-success"
+                            invisible="not can_approve"/>
+                    
+                    <button name="action_reject" type="object" 
+                            string="Reject" class="btn-danger"
+                            invisible="not can_reject"/>
+                    
+                    <button name="action_send_to_customer" type="object" 
+                            string="Send to Customer" class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    
+                    <button name="action_customer_accept" type="object" 
+                            string="Customer Accepted" class="btn-success"
+                            invisible="state != 'sent'"/>
+                    
+                    <button name="action_convert_to_contract" type="object" 
+                            string="Convert to Contract" class="btn-warning"
+                            invisible="state != 'accepted'"/>
+                    
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,submitted,under_review,approved,sent,accepted"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_approval_history" icon="fa-check-circle">
+                            <div class="o_stat_info">
+                                <field name="current_approval_level" class="o_stat_value"/>
+                                <span class="o_stat_text">/ <field name="max_approval_level"/> Approvals</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Reservations Button -->
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_reservations" 
+                                icon="fa-calendar-check-o"
+                                invisible="reservation_count == 0">
+                            <field name="reservation_count" widget="statinfo" string="Reservations"/>
+                        </button>
+                        
+                        <!-- Arabic Print Button -->
+                        <button class="oe_stat_button" type="action" 
+                                name="%(action_report_rental_quotation_arabic_style)d" 
+                                icon="fa-print" 
+                                string="طباعة عربية"
+                                title="Print Arabic Quotation / طباعة عرض السعر العربي">
+                            <div class="o_button_icon">
+                                <i class="fa fa-print"/>
+                            </div>
+                        </button>
+                        
+                        <!-- English Print Button -->
+                        <button class="oe_stat_button" type="action" 
+                                name="%(action_report_rental_quotation_english_style)d" 
+                                icon="fa-print" 
+                                string="English Print"
+                                title="Print English Quotation">
+                            <div class="o_button_icon">
+                                <i class="fa fa-file-text-o"/>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="contact_person_name" placeholder="e.g. إياد إلياس"/>
+                            <field name="quotation_subject" placeholder="e.g. برج طريق الملك"/>
+                            <field name="salesperson_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="quotation_date"/>
+                            <field name="validity_date"/>
+                            <field name="grace_period" readonly="state in ['sent', 'accepted', 'converted', 'expired']"/>
+                            <field name="grace_period_end_date" readonly="1" decoration-danger="grace_period_end_date &lt; context_today().strftime('%Y-%m-%d')"/>
+                            <field name="is_expired" invisible="1"/>
+                            <div class="alert alert-warning" role="alert" invisible="not is_expired">
+                                <strong>Warning:</strong> This quotation has expired!
+                            </div>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Quotation Lines" name="quotation_lines">
+                            <field name="quotation_line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="property_id" required="1"/>
+                                    <field name="property_code" readonly="1"/>
+                                    <field name="property_area" readonly="1"/>
+                                    <field name="rental_price_per_sqm"/>
+                                    <field name="electricity_price_per_sqm" column_invisible="1"/>
+                                    <field name="base_rental_amount" column_invisible="1"/>
+                                    <field name="electricity_amount" column_invisible="1"/>
+                                    <field name="service_fee"/>
+                                    <field name="maintenance_charge" column_invisible="1"/>
+                                    <field name="insurance_charge" column_invisible="1"/>
+                                    <field name="line_discount_type"/>
+                                    <field name="line_discount_value"/>
+                                    <field name="line_discount_amount" readonly="1"/>
+                                    <field name="total_price" readonly="1" sum="Total"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="property_id" required="1"/>
+                                            <field name="property_code" readonly="1"/>
+                                            <field name="property_area" readonly="1"/>
+                                            <field name="proposed_lease_duration"/>
+                                            <field name="move_in_date"/>
+                                        </group>
+                                        <group>
+                                            <field name="rental_price_per_sqm"/>
+                                            <field name="service_fee"/>
+                                        </group>
+                                    </group>
+                                    
+                                    <group string="Discount &amp; Total">
+                                        <group>
+                                            <field name="line_discount_type"/>
+                                            <field name="line_discount_value"/>
+                                            <field name="line_discount_amount" readonly="1"/>
+                                            <field name="subtotal" readonly="1"/>
+                                            <field name="total_price" readonly="1"/>
+                                        </group>
+                                    </group>
+                                    
+                                    <group string="Description">
+                                        <field name="description" colspan="2"/>
+                                        <field name="special_terms" colspan="2"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <page string="Pricing" name="pricing">
+                            <group>
+                                <group>
+                                    <field name="subtotal" readonly="1"/>
+                                    <field name="discount_type"/>
+                                    <field name="discount_value"/>
+                                    <field name="discount_amount" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="service_fees"/>
+                                    <field name="management_fee" invisible="1"/>
+                                    <field name="insurance_fee" invisible="1"/>
+                                    <field name="maintenance_fee" invisible="1"/>
+                                    <field name="total_amount" readonly="1" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Terms &amp; Conditions / الشروط والأحكام" name="terms">
+                            <group>
+                                <group string="Template Selection / اختيار القالب">
+                                    <field name="terms_template_id" 
+                                           domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+                                           options="{'no_create': True, 'no_open': True}"
+                                           placeholder="Select a predefined template / اختر قالب جاهز"/>
+                                </group>
+                                <group>
+                                    <!-- Empty group for layout -->
+                                </group>
+                            </group>
+                            
+                            <group string="Salutation / التحية (Above Rental Table / فوق جدول الأسعار)">
+                                <field name="salutation_html" colspan="2" nolabel="1" 
+                                       widget="html" 
+                                       placeholder="Enter greeting text that appears above the rental fees table...&#10;أدخل نص التحية الذي سيظهر فوق جدول الأسعار..."/>
+                            </group>
+                            
+                            <group string="Lease Agreement Requirements &amp; Conditions / شروط ومتطلبات عقد الإيجار">
+                                <field name="lease_requirements_html" colspan="2" nolabel="1" 
+                                       widget="html" 
+                                       placeholder="Enter lease requirements and conditions...&#10;أدخل شروط ومتطلبات عقد الإيجار..."/>
+                            </group>
+                            
+                            <group string="Internal Notes / ملاحظات داخلية">
+                                <field name="notes" colspan="2" nolabel="1" placeholder="Internal notes (not shown to customer)..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Approval History" name="approval_history">
+                            <field name="approval_history_ids" readonly="1">
+                                <list>
+                                    <field name="approval_level"/>
+                                    <field name="user_id"/>
+                                    <field name="decision" decoration-success="decision=='approved'"
+                                           decoration-danger="decision=='rejected'"/>
+                                    <field name="approval_date"/>
+                                    <field name="comments"/>
+                                </list>
+                            </field>
+                            
+                            <group string="Approval Status" invisible="not approval_required">
+                                <field name="approval_required" readonly="1"/>
+                                <field name="current_approval_level" readonly="1"/>
+                                <field name="max_approval_level" readonly="1"/>
+                                <field name="next_approver_id" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                                 <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Rental Quotation Search View -->
+    <record id="view_rental_quotation_search" model="ir.ui.view">
+        <field name="name">rental.quotation.search</field>
+        <field name="model">rental.quotation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="salesperson_id"/>
+                
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_pending_approval" string="Pending Approval" 
+                        domain="[('state','in',['submitted','under_review'])]"/>
+                <filter name="filter_approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="filter_sent" string="Sent to Customer" domain="[('state','=','sent')]"/>
+                <filter name="filter_accepted" string="Accepted" domain="[('state','=','accepted')]"/>
+                <filter name="filter_my_quotations" string="My Quotations" 
+                        domain="[('salesperson_id','=',uid)]"/>
+                <filter name="filter_expired" string="Expired" domain="[('is_expired','=',True)]"/>
+                
+                <separator/>
+                <filter name="filter_this_month" string="This Month" 
+                        domain="[('quotation_date','&gt;=',datetime.datetime.now().replace(day=1))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Salesperson" name="group_by_salesperson" 
+                            context="{'group_by':'salesperson_id'}"/>
+                    <filter string="Customer" name="group_by_customer" 
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="State" name="group_by_state" 
+                            context="{'group_by':'state'}"/>
+                    <filter string="Quotation Date" name="group_by_date" 
+                            context="{'group_by':'quotation_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Rental Quotation Kanban View -->
+    <record id="view_rental_quotation_kanban" model="ir.ui.view">
+        <field name="name">rental.quotation.kanban</field>
+        <field name="model">rental.quotation</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="salesperson_id"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+                <field name="quotation_date"/>
+                <field name="validity_date"/>
+                <field name="is_expired"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click 
+                             #{record.is_expired.raw_value ? 'oe_kanban_card_danger' : ''}">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <span class="badge badge-pill">
+                                        <t t-esc="record.total_amount.value"/> 
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="partner_id"/>
+                                    <br/>
+                                    <i class="fa fa-user"/> <field name="salesperson_id"/>
+                                    <br/>
+                                    <i class="fa fa-calendar"/> <field name="quotation_date"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.is_expired.raw_value" 
+                                              class="badge badge-danger">Expired</span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

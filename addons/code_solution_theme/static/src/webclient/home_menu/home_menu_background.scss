@@ -1,0 +1,128 @@
+// Code Solution Theme - Home Menu Background
+// Shared with web client and login screen
+
+// Home Menu Background Variables
+$o-home-menu-caption-color: $o-gray-700 !default;
+$o-home-menu-caption-shadow: none !default;
+$o-home-menu-font-size-base: 1rem;
+$o-home-menu-container-size: 850px;
+$o-home-menu-app-icon-max-width: 80px;
+
+// Background - Light theme like Enterprise
+.o_home_menu_background, .o_web_client.o_home_menu_background {
+    background: {
+        size: cover;
+        attachment: fixed;
+        color: var(--homeMenu-bg-color, #f8f9fa);
+        image: var(--homeMenu-bg-image, none);
+    }
+}
+
+// Home Menu Background - Light Design
+.o_home_menu_background {
+    --homeMenu-bg-color: #f8f9fa;
+    --homeMenu-bg-image: none;
+    background-color: #f8f9fa !important;
+
+    .o_app_icon {
+        --AppSwitcherIcon-background: #{$o-white};
+        --AppSwitcherIcon-inset-shadow: none;
+        --AppSwitcherIcon-border-color: transparent;
+    }
+
+    .o_app:hover .o_app_icon {
+        --AppSwitcherIcon-inset-shadow: #{0 0 0 1px rgba(0,0,0, .05)}; 
+    }
+
+    // Light navbar on home menu
+    &:not(.o_home_menu_background_custom) .o_main_navbar {
+        background: transparent !important;
+        border-bottom-color: transparent !important;
+        
+        // Dark text for navbar on light background
+        .o_menu_toggle,
+        .o_menu_brand,
+        .o_navbar_apps_menu .dropdown-toggle,
+        .o_menu_sections .nav-link,
+        .o_menu_systray .nav-link,
+        .o_menu_systray .dropdown-toggle {
+            color: $o-gray-700 !important;
+            
+            &:hover {
+                color: $o-cs-primary !important;
+                background-color: rgba(0, 0, 0, 0.05) !important;
+            }
+        }
+    }
+}
+
+// Home Menu Apps - Enterprise Style
+.o_home_menu {
+    font-size: $o-home-menu-font-size-base;
+    padding: 40px 20px;
+
+    .o_apps {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .o_app {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        border-radius: $border-radius-lg;
+        transition: all 0.2s ease;
+        width: 110px;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .o_app_icon {
+            width: $o-home-menu-app-icon-max-width;
+            height: $o-home-menu-app-icon-max-width;
+            padding: 12px;
+            background-color: var(--AppSwitcherIcon-background, $o-white);
+            object-fit: contain;
+            transform-origin: center bottom;
+            transition: transform ease 0.15s, box-shadow ease 0.15s;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
+                        0 4px 6px rgba(0, 0, 0, 0.04);
+        }
+        
+        &:hover .o_app_icon {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12),
+                        0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        &:active .o_app_icon {
+            transform: translateY(-1px) scale(0.98);
+            transition: none;
+        }
+
+        .o_caption {
+            color: $o-gray-700;
+            font-weight: 500;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &.o_focused {
+            background: rgba($o-cs-primary, 0.08);
+            outline: 2px solid $o-cs-primary;
+            border-radius: $border-radius-lg;
+        }
+    }
+}

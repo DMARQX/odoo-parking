@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Job Order Form View -->
+    <record id="view_job_order_form" model="ir.ui.view">
+        <field name="name">job.order.form.view.form</field>
+        <field name="model">job.order.form</field>
+        <field name="arch" type="xml">
+            <form string="Job Order">
+                <header>
+                    <!-- Backend Buttons -->
+                    <button name="action_send_to_contractor" type="object" string="Send to Contractor" 
+                            class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_issue_materials" type="object" string="Issue Materials from Stock" 
+                            invisible="state not in ['sent_to_contractor', 'in_progress']" />
+                    <button name="purchase_approval_request" type="object" string="Request Purchase Approval" 
+                            invisible="state not in ['sent_to_contractor', 'in_progress']" />
+                    <button name="action_approve_job_order" type="object" string="Approve &amp; Close" 
+                            class="oe_highlight" 
+                            invisible="state not in ['pending_supervisor_approval', 'pending_tenant_approval']" />
+                    <button name="action_close_job_order" type="object" string="Close" 
+                            class="oe_highlight" invisible="state not in ['completed_by_contractor']" />
+                    <button name="action_cancel" type="object" string="Cancel" 
+                            invisible="state in ['closed', 'cancelled']" />
+                    
+                    <!-- Contractor Portal Buttons (will be shown conditionally) -->
+                    <button name="action_start_work" type="object" string="Start Work" 
+                            class="oe_highlight" invisible="state != 'sent_to_contractor'" />
+                    <button name="action_request_materials" type="object" string="Request Materials" 
+                            invisible="state not in ['sent_to_contractor', 'in_progress']" />
+                    <button name="action_mark_completed" type="object" string="Mark as Completed" 
+                            class="oe_highlight" invisible="state != 'in_progress'" />
+                    <button name="action_supervisor_approval" type="object" string="Submit for Supervisor Approval" 
+                            invisible="state != 'completed_by_contractor'" />
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent_to_contractor,in_progress,completed_by_contractor,pending_supervisor_approval,pending_tenant_approval,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Header Information">
+                            <field name="date"/>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="x_unit_area" options="{'no_create': True}"/>
+                            <field name="maintenance_request_id" readonly="1"/>
+                            <field name="job_logged_by" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Assignment Details">
+                            <field name="assigned_contractor_id" options="{'no_create': True}"/>
+                            <field name="job_assigned_datetime" readonly="1"/>
+                            <field name="ordered_by_id" options="{'no_create': True}"/>
+                            <field name="ordered_mobile" readonly="1"/>
+                            <field name="ordered_email" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Job Classification">
+                            <field name="job_type"/>
+                            <field name="job_type_other" invisible="job_type != 'other'" placeholder="Please specify..."/>
+                            <field name="priority"/>
+                            <field name="job_reference"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="job_start_datetime" readonly="state not in ['sent_to_contractor', 'in_progress']"/>
+                            <field name="job_end_datetime" readonly="state not in ['in_progress', 'completed_by_contractor']"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Job Description">
+                            <group>
+                                <field name="job_description" nolabel="1" placeholder="Describe the job to be performed..."/>
+                                <field name="technician_id" placeholder="Technician name assigned by contractor"/>
+                                <field name="corrective_action" placeholder="Actions taken to fix the issue..."/>
+                                <field name="additional_resources" placeholder="Additional manpower or equipment needed..."/>
+                                <field name="requested_material_text" placeholder="Summary of requested materials..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Requested Materials (E-1)">
+                            <field name="material_request_line_ids">
+                                <list editable="bottom">
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="type_of_material"/>
+                                    <field name="request_priority"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Issued from Stock (E-2)">
+                            <field name="material_issue_line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="issue_qty"/>
+                                    <field name="uom_id"/>
+                                    <field name="serial_no"/>
+                                    <field name="issue_date"/>
+                                    <field name="move_id" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="To Purchase (E-3)">
+                            <field name="material_purchase_line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="supplier_id"/>
+                                    <field name="target_date"/>
+                                    <field name="status"/>
+                                    <field name="purchase_line_id" readonly="1"/>
+                                    <field name="received_quantities_po" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Supervisor Sign-off">
+                            <group>
+                                <group>
+                                    <field name="supervisor_id" placeholder="Supervisor name"/>
+                                    <field name="supervisor_remarks" placeholder="Supervisor's remarks on work quality..."/>
+                                    <field name="supervisor_sign_datetime" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="supervisor_signature" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Tenant Sign-off">
+                            <group>
+                                <group>
+                                    <field name="tenant_manager_id"/>
+                                    <field name="tenant_remarks" placeholder="Tenant's remarks on completed work..."/>
+                                    <field name="tenant_sign_datetime" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="tenant_signature" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Job Completion">
+                            <group>
+                                <group>
+                                    <field name="manager_name"/>
+                                    <field name="manager_sign_date"/>
+                                </group>
+                                <group>
+                                    <field name="manager_signature" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Legacy Materials" groups="base.group_no_one">
+                            <separator string="Old Material Models (Deprecated)"/>
+                            <field name="requested_material_ids">
+                                <list>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                    
+                    <group string="Cancellation Details" invisible="state != 'cancelled'">
+                        <field name="cancellation_reason" nolabel="1" placeholder="Reason for cancellation..."/>
+                    </group>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <!-- Job Order Tree View -->
+    <record id="view_job_order_tree" model="ir.ui.view">
+        <field name="name">job.order.form.view.list</field>
+        <field name="model">job.order.form</field>
+        <field name="arch" type="xml">
+            <list string="Job Orders" decoration-info="state == 'draft'" 
+                  decoration-warning="state == 'sent_to_contractor'" 
+                  decoration-primary="state == 'in_progress'"
+                  decoration-success="state == 'closed'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="assigned_contractor_id"/>
+                <field name="job_type"/>
+                <field name="priority" widget="badge" decoration-danger="priority == 'urgent'" 
+                       decoration-warning="priority == 'high'"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state in ['sent_to_contractor', 'pending_supervisor_approval', 'pending_tenant_approval']"
+                       decoration-primary="state == 'in_progress'"
+                       decoration-success="state == 'closed'"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Job Order Search View -->
+    <record id="view_job_order_search" model="ir.ui.view">
+        <field name="name">job.order.form.view.search</field>
+        <field name="model">job.order.form</field>
+        <field name="arch" type="xml">
+            <search string="Job Orders">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="assigned_contractor_id"/>
+                <field name="job_type"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Sent to Contractor" name="sent" domain="[('state', '=', 'sent_to_contractor')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed_by_contractor')]"/>
+                <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="Urgent" name="urgent" domain="[('priority', '=', 'urgent')]"/>
+                <filter string="High Priority" name="high" domain="[('priority', '=', 'high')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Contractor" name="group_contractor" context="{'group_by': 'assigned_contractor_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Job Type" name="group_job_type" context="{'group_by': 'job_type'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Job Order Action -->
+    <record id="action_job_order" model="ir.actions.act_window">
+        <field name="name">Job Orders</field>
+        <field name="res_model">job.order.form</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Job Order
+            </p>
+            <p>
+                Job Orders are created from maintenance requests or can be created manually.
+            </p>
+        </field>
+    </record>
+</odoo>

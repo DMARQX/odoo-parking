@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Report Action -->
+        <record id="tenant_information_report" model="ir.actions.report">
+            <field name="name">Tenant Information Form</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.tenant_information_template</field>
+            <field name="report_file">nthub_realestate.tenant_information_template</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="tenant_information_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="partner">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="padding: 20px; font-family: Arial, sans-serif;">
+                            
+                            <!-- Title -->
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <h3 style="margin: 10px 0 5px 0; font-size: 16px; font-weight: bold;">Tenant information form</h3>
+                                <h3 style="margin: 0 0 20px 0; font-size: 16px; font-weight: bold;">نموذج معلومات المستأجر</h3>
+                            </div>
+
+                            <!-- Main Table -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+                                <!-- Header Row -->
+                                <tr>
+                                    <td style="width: 40%; background-color: #90c695; border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 14px;">Tenant information</td>
+                                    <td style="width: 20%; border: 1px solid #000; padding: 8px;"></td>
+                                    <td style="width: 40%; background-color: #90c695; border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 14px;">بيانات المستأجر</td>
+                                </tr>
+                                
+                                <!-- Data Rows -->
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Name in English</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.name_en"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الاسم بالانجليزي</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Name in Arabic</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.name"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الاسم بالعربي</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Trade Name</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.trade_name"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الاسم التجاري</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Activity</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.activity"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">النشاط</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Commercial Registration No.</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.commercial_registration_no"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">رقم السجل التجاري</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Commercial Registration validity</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.commercial_registration_validity"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">صلاحية السجل التجاري</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">VAT Number</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.vat_number"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الرقم الضريبي</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Company Age</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.company_age"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">عمر الشركة</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Current location</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.current_location"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الموقع الحالي</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Number of Employees</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.number_of_employees"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">عدد الموظفين</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Number of companies (if any)</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.number_of_companies"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">عدد الشركات (إن وجد)</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Activity of companies (if any)</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.companies_activity"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">نشاط الشركات (إن وجد)</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">International / Location</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.international_location"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">شركات عالمية/ محلية</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Capital of Company</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.capital_of_company"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">رأس مال الشركة</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Capital Investment</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.capital_investment"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">قيمة حجم الإستثمارات</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Credit Record</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.credit_record"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">السجل الإئتماني</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Financial Performance</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.financial_performance"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">الأداء المالي</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Legal Cases</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+                                        <span t-if="partner.legal_cases">Yes</span>
+                                        <span t-else="">No</span>
+                                    </td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">هل يوجد قضايا</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">CV of Company Owners</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.company_owners_cv"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">السيرة الذاتية لملاك الشركة</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Number of Existing Projects</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.number_of_existing_projects"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">عدد المشاريع الحالية</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px; font-size: 12px;">Number of future Projects</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;"><span t-field="partner.number_of_future_projects"/></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: right; font-size: 12px;">عدد المشاريع المستقبلية</td>
+                                </tr>
+                            </table>
+
+                            <!-- Footer Signature Section -->
+                            <div style="margin-top: 50px;">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 50%; text-align: center; padding: 20px 0; border-bottom: 1px solid #000;">
+                                            <div style="margin-bottom: 50px;"></div>
+                                            <div style="font-size: 14px; font-weight: bold;">: التوقيع  </div>
+                                        </td>
+                                        <td style="width: 50%; text-align: center; padding: 20px 0; border-bottom: 1px solid #000;">
+                                            <div style="margin-bottom: 50px;"></div>
+                                            <div style="font-size: 14px; font-weight: bold;">: الموظف المسؤول</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

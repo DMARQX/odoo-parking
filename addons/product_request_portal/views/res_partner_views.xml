@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit Partner Form View -->
+        <record id="view_partner_form_inherit_product_request" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.product.request</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page string="Product Request Settings / إعدادات طلب المنتجات" name="product_request_settings" invisible="not is_company and not parent_id">
+                        <group>
+                            <group>
+                                <field name="is_product_requester"/>
+                                <field name="product_request_count" readonly="1"/>
+                            </group>
+                            <group>
+                                <!-- Empty group for layout -->
+                            </group>
+                        </group>
+                        
+                        <group string="Allowed Products / المنتجات المسموح بها" invisible="not is_product_requester">
+                            <field name="allowed_product_ids" nolabel="1" widget="many2many_tags"/>
+                        </group>
+                        
+                        <group string="Allowed Source Warehouses / المخازن المصدر المسموح بها" invisible="not is_product_requester">
+                            <field name="allowed_source_location_ids" nolabel="1" widget="many2many_tags"/>
+                        </group>
+                        
+                        <group string="Allowed Destination Warehouses / مخازن الوجهة المسموح بها" invisible="not is_product_requester">
+                            <field name="allowed_dest_location_ids" nolabel="1" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                </xpath>
+                
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button type="object" 
+                            name="action_view_product_requests" 
+                            class="oe_stat_button" 
+                            icon="fa-list-alt"
+                            invisible="not product_request_count">
+                        <field name="product_request_count" widget="statinfo" string="Product Requests"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

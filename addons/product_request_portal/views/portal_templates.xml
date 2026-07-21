@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Dashboard Template -->
+        <template id="portal_product_requests_dashboard" name="Product Requests Dashboard">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Dashboard / لوحة التحكم</t>
+                </t>
+                
+                <div class="container-fluid mt-4">
+                    <!-- Top Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-file-text fa-3x text-primary mb-3"></i>
+                                    <h2 id="totalRequests" class="mb-0">-</h2>
+                                    <p class="text-muted mb-0">Total Requests<br/>إجمالي الطلبات</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-cubes fa-3x text-success mb-3"></i>
+                                    <h2 id="totalItems" class="mb-0">-</h2>
+                                    <p class="text-muted mb-0">Total Items<br/>إجمالي الأصناف</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-clock-o fa-3x text-warning mb-3"></i>
+                                    <h2 id="pendingRequests" class="mb-0">-</h2>
+                                    <p class="text-muted mb-0">Pending<br/>قيد الانتظار</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-check-circle fa-3x text-info mb-3"></i>
+                                    <h2 id="approvedRequests" class="mb-0">-</h2>
+                                    <p class="text-muted mb-0">Approved<br/>موافق عليها</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0"><i class="fa fa-pie-chart"></i> Request Status / حالة الطلبات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="statusChart" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="fa fa-line-chart"></i> Monthly Trend / الاتجاه الشهري</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="monthlyChart" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Products -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="fa fa-star"></i> Most Requested Products / المنتجات الأكثر طلباً</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="topProductsChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <a href="/my/product_requests/new" class="btn btn-success btn-lg mr-2">
+                                <i class="fa fa-plus"></i> New Request / طلب جديد
+                            </a>
+                            <a href="/my/product_requests" class="btn btn-primary btn-lg">
+                                <i class="fa fa-list"></i> View All Requests / عرض جميع الطلبات
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ApexCharts Library -->
+                <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+                
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Fetch dashboard data
+                        fetch('/my/product_requests/dashboard/data', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: {}
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.result) {
+                                updateDashboard(data.result);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+
+                    function updateDashboard(data) {
+                        // Update statistics cards
+                        document.getElementById('totalRequests').textContent = data.total_requests || 0;
+                        document.getElementById('totalItems').textContent = data.total_items || 0;
+                        
+                        // Calculate pending and approved
+                        let pending = 0;
+                        let approved = 0;
+                        for (let [status, count] of Object.entries(data.status_counts || {})) {
+                            if (status === 'Submitted' || status === 'Draft') {
+                                pending += count;
+                            } else if (status === 'Approved') {
+                                approved += count;
+                            }
+                        }
+                        document.getElementById('pendingRequests').textContent = pending;
+                        document.getElementById('approvedRequests').textContent = approved;
+
+                        // Status Pie Chart
+                        const statusLabels = Object.keys(data.status_counts || {});
+                        const statusData = Object.values(data.status_counts || {});
+                        
+                        if (statusLabels.length > 0) {
+                            const statusOptions = {
+                                series: statusData,
+                                chart: {
+                                    type: 'donut',
+                                    height: 350
+                                },
+                                labels: statusLabels,
+                                colors: ['#17a2b8', '#ffc107', '#28a745', '#dc3545', '#6c757d'],
+                                legend: {
+                                    position: 'bottom'
+                                },
+                                responsive: [{
+                                    breakpoint: 480,
+                                    options: {
+                                        chart: {
+                                            width: 300
+                                        },
+                                        legend: {
+                                            position: 'bottom'
+                                        }
+                                    }
+                                }]
+                            };
+                            const statusChart = new ApexCharts(document.querySelector("#statusChart"), statusOptions);
+                            statusChart.render();
+                        }
+
+                        // Monthly Trend Line Chart
+                        const monthlyLabels = (data.monthly_trend || []).map(item => item.month);
+                        const monthlyData = (data.monthly_trend || []).map(item => item.count);
+                        
+                        if (monthlyLabels.length > 0) {
+                            const monthlyOptions = {
+                                series: [{
+                                    name: 'Requests / الطلبات',
+                                    data: monthlyData
+                                }],
+                                chart: {
+                                    type: 'area',
+                                    height: 350,
+                                    toolbar: {
+                                        show: false
+                                    }
+                                },
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                stroke: {
+                                    curve: 'smooth',
+                                    width: 2
+                                },
+                                xaxis: {
+                                    categories: monthlyLabels
+                                },
+                                colors: ['#28a745'],
+                                fill: {
+                                    type: 'gradient',
+                                    gradient: {
+                                        opacityFrom: 0.6,
+                                        opacityTo: 0.1
+                                    }
+                                }
+                            };
+                            const monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), monthlyOptions);
+                            monthlyChart.render();
+                        }
+
+                        // Top Products Bar Chart
+                        const productNames = (data.top_products || []).map(p => p.name.length > 20 ? p.name.substring(0, 20) + '...' : p.name);
+                        const productCounts = (data.top_products || []).map(p => p.count);
+                        
+                        if (productNames.length > 0) {
+                            const topProductsOptions = {
+                                series: [{
+                                    name: 'Request Count / عدد الطلبات',
+                                    data: productCounts
+                                }],
+                                chart: {
+                                    type: 'bar',
+                                    height: 400,
+                                    toolbar: {
+                                        show: false
+                                    }
+                                },
+                                plotOptions: {
+                                    bar: {
+                                        horizontal: true,
+                                        dataLabels: {
+                                            position: 'top'
+                                        }
+                                    }
+                                },
+                                dataLabels: {
+                                    enabled: true,
+                                    offsetX: 30,
+                                    style: {
+                                        fontSize: '12px',
+                                        colors: ['#304758']
+                                    }
+                                },
+                                xaxis: {
+                                    categories: productNames
+                                },
+                                colors: ['#17a2b8'],
+                                grid: {
+                                    borderColor: '#f1f1f1'
+                                }
+                            };
+                            const topProductsChart = new ApexCharts(document.querySelector("#topProductsChart"), topProductsOptions);
+                            topProductsChart.render();
+                        }
+                    }
+                </script>
+            </t>
+        </template>
+        
+        <!-- Product Request List Template -->
+        <template id="portal_my_product_requests" name="My Product Requests">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Product Requests / طلبات المنتجات</t>
+                </t>
+                
+                <div class="container mt-4">
+                    <!-- Dashboard Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Request Status / حالة الطلبات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="statusChart" class="apex-chart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monthly Trend / الاتجاه الشهري</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="monthlyChart" class="apex-chart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requests List -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4><i class="fa fa-list"></i> My Product Requests / طلباتي</h4>
+                                    <div>
+                                        <a href="/my/product_requests/dashboard" class="btn btn-info mr-2">
+                                            <i class="fa fa-dashboard"></i> Dashboard / لوحة التحكم
+                                        </a>
+                                        <a href="/my/product_requests/new" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> New Request / طلب جديد
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <t t-if="not requests">
+                                        <div class="alert alert-info text-center">
+                                            <h5>No Requests Found</h5>
+                                            <p>لم يتم العثور على طلبات</p>
+                                            <a href="/my/product_requests/new" class="btn btn-success">
+                                                <i class="fa fa-plus"></i> Create Your First Request
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Request / الطلب</th>
+                                                        <th>Date / التاريخ</th>
+                                                        <th>Status / الحالة</th>
+                                                        <th>Actions / الإجراءات</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="requests" t-as="prod_request">
+                                                        <td>
+                                                            <strong t-esc="prod_request.name"/>
+                                                        </td>
+                                                        <td t-esc="prod_request.request_date" t-options="{'widget': 'date'}"/>
+                                                        <td>
+                                                            <span t-attf-class="badge badge-#{prod_request.state == 'draft' and 'secondary' or prod_request.state == 'submitted' and 'warning' or prod_request.state == 'approved' and 'success' or 'primary'}" t-esc="prod_request.state"/>
+                                                        </td>
+                                                        <td>
+                                                            <a t-attf-href="/my/product_request/#{prod_request.id}" class="btn btn-sm btn-outline-primary">
+                                                                <i class="fa fa-eye"></i> View / عرض
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Product Request Detail Template -->
+        <template id="portal_product_request_detail" name="Product Request Detail">
+            <t t-call="portal.portal_layout">
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Header -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    <h3 class="mb-0">
+                                        <i class="fa fa-file-text"></i> Product Request Details / تفاصيل طلب المنتجات
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Request Number / رقم الطلب:</strong><br/>
+                                            <span class="badge badge-primary" style="font-size: 1.1em;">
+                                                <t t-esc="product_request.name"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Request Date / تاريخ الطلب:</strong><br/>
+                                            <t t-esc="product_request.request_date" t-options="{'widget': 'datetime'}"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Requester / الطالب:</strong><br/>
+                                            <t t-esc="product_request.user_id.name"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Status / الحالة:</strong><br/>
+                                            <span t-attf-class="badge badge-#{product_request.state == 'submitted' and 'warning' or product_request.state == 'approved' and 'success' or product_request.state == 'received' and 'info' or product_request.state == 'cancelled' and 'danger' or 'secondary'}">
+                                                <t t-esc="dict(product_request.fields_get(['state'])['state']['selection'])[product_request.state]"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Source Warehouse / المخزن المصدر:</strong><br/>
+                                            <t t-esc="product_request.source_location_id.display_name"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Destination Warehouse / مخزن الوجهة:</strong><br/>
+                                            <t t-esc="product_request.dest_location_id.display_name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Products Table -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-box"></i> Requested Products / المنتجات المطلوبة
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Product / المنتج</th>
+                                                    <th>Requested Quantity / الكمية المطلوبة</th>
+                                                    <th>Available Quantity / الكمية المتاحة</th>
+                                                    <th>Unit / الوحدة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-foreach="product_request.request_line_ids" t-as="line">
+                                                    <td><t t-esc="line_index + 1"/></td>
+                                                    <td>
+                                                        <strong><t t-esc="line.product_id.name"/></strong><br/>
+                                                        <small class="text-muted"><t t-esc="line.product_id.default_code or ''"/></small>
+                                                    </td>
+                                                    <td><t t-esc="line.quantity"/></td>
+                                                    <td>
+                                                        <span t-attf-class="badge badge-#{line.available_quantity >= line.quantity and 'success' or 'warning'}">
+                                                            <t t-esc="line.available_quantity"/>
+                                                        </span>
+                                                    </td>
+                                                    <td><t t-esc="line.product_uom_id.name"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="card mb-4" t-if="product_request.notes">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-comment"></i> Notes / ملاحظات
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0"><t t-esc="product_request.notes"/></p>
+                                </div>
+                            </div>
+
+                            <!-- Back Button -->
+                            <div class="text-center mb-4">
+                                <a href="/my/product_requests" class="btn btn-secondary btn-lg">
+                                    <i class="fa fa-arrow-left"></i> Back to My Requests / العودة إلى طلباتي
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- New Product Request Template -->
+        <template id="portal_new_product_request" name="New Product Request">
+            <t t-call="portal.portal_layout">
+                <div class="container mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fa fa-plus"></i> New Product Request / طلب منتجات جديد</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="/my/product_requests/create">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Source Location / موقع المصدر</label>
+                                            <select name="source_location_id" class="form-control" required="required">
+                                                <option value="">Select Source Location</option>
+                                                <option t-foreach="source_locations" t-as="location" t-att-value="location.id" t-esc="location.display_name"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Destination Location / موقع الوجهة</label>
+                                            <select name="dest_location_id" class="form-control" required="required">
+                                                <option value="">Select Destination Location</option>
+                                                <option t-foreach="dest_locations" t-as="location" t-att-value="location.id" t-esc="location.display_name"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description / الوصف</label>
+                                    <textarea name="description" class="form-control" rows="3"/>
+                                </div>
+
+                                <!-- Product Lines Section -->
+                                <div class="card mt-3 mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Products / المنتجات</h5>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="addProductLine()">
+                                            <i class="fa fa-plus"></i> Add Product / إضافة منتج
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="product_lines">
+                                            <!-- Product lines will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <a href="/my/product_requests" class="btn btn-secondary">Cancel / إلغاء</a>
+                                    <button type="submit" class="btn btn-success" id="submitBtn">Submit / إرسال</button>
+                                </div>
+
+                                <script>
+                                    // Form validation before submit
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const form = document.querySelector('form');
+                                        form.addEventListener('submit', function(e) {
+                                            const productLines = document.querySelectorAll('.product-line');
+                                            if (productLines.length === 0) {
+                                                e.preventDefault();
+                                                alert('Please add at least one product line / الرجاء إضافة منتج واحد على الأقل');
+                                                return false;
+                                            }
+                                            return true;
+                                        });
+                                    });
+                                    // Store products and UOMs data
+                                    const productsData = [
+                                        <t t-foreach="products" t-as="product">
+                                            {id: <t t-esc="product.id"/>, name: '<t t-esc="product.name"/>', uom_category_id: <t t-esc="product.uom_id.category_id.id or 0"/>},
+                                        </t>
+                                    ];
+                                    
+                                    const uomsData = [
+                                        <t t-foreach="uoms" t-as="uom">
+                                            {id: <t t-esc="uom.id"/>, name: '<t t-esc="uom.name"/>', category_id: <t t-esc="uom.category_id.id or 0"/>},
+                                        </t>
+                                    ];
+                                    
+                                    let lineCounter = 0;
+                                    
+                                    function addProductLine() {
+                                        lineCounter++;
+                                        const container = document.getElementById('product_lines');
+                                        const lineDiv = document.createElement('div');
+                                        lineDiv.className = 'row mb-3 product-line';
+                                        lineDiv.id = 'line_' + lineCounter;
+                                        
+                                        // Build product options
+                                        let productOptions = '<option value="">Select Product / اختر منتج</option>';
+                                        productsData.forEach(product => {
+                                            productOptions += `<option value="${product.id}">${product.name}</option>`;
+                                        });
+                                        
+                                        // Build UOM options
+                                        let uomOptions = '<option value="">Select Unit / اختر وحدة</option>';
+                                        uomsData.forEach(uom => {
+                                            uomOptions += `<option value="${uom.id}">${uom.name}</option>`;
+                                        });
+                                        
+                                        lineDiv.innerHTML = `
+                                            <div class="col-md-5">
+                                                <label>Product / المنتج</label>
+                                                <select name="product_id_` + lineCounter + `" class="form-control product-select" data-line="` + lineCounter + `" required="required">
+                                                    ` + productOptions + `
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Quantity / الكمية</label>
+                                                <input type="number" name="quantity_` + lineCounter + `" class="form-control" value="1" min="1" required="required"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Unit / الوحدة</label>
+                                                <select name="uom_id_` + lineCounter + `" class="form-control uom-select" data-line="` + lineCounter + `" required="required">
+                                                    ` + uomOptions + `
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <label> </label>
+                                                <button type="button" class="btn btn-danger btn-block" onclick="removeProductLine(` + lineCounter + `)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        `;
+                                        container.appendChild(lineDiv);
+                                        
+                                        // Add event listener for product change to filter UOMs
+                                        const productSelect = lineDiv.querySelector('.product-select');
+                                        const uomSelect = lineDiv.querySelector('.uom-select');
+                                        
+                                        productSelect.addEventListener('change', function() {
+                                            const productId = parseInt(this.value);
+                                            if (!productId) {
+                                                // Reset UOM options
+                                                uomSelect.innerHTML = '<option value="">Select Unit / اختر وحدة</option>';
+                                                uomsData.forEach(uom => {
+                                                    uomSelect.innerHTML += `<option value="${uom.id}">${uom.name}</option>`;
+                                                });
+                                                return;
+                                            }
+                                            
+                                            // Find the product
+                                            const product = productsData.find(p => p.id === productId);
+                                            if (!product || !product.uom_category_id) {
+                                                return;
+                                            }
+                                            
+                                            // Filter UOMs by category
+                                            uomSelect.innerHTML = '<option value="">Select Unit / اختر وحدة</option>';
+                                            const filteredUoms = uomsData.filter(uom => uom.category_id === product.uom_category_id);
+                                            filteredUoms.forEach(uom => {
+                                                uomSelect.innerHTML += `<option value="${uom.id}">${uom.name}</option>`;
+                                            });
+                                            
+                                            // Select the product's default UOM if available
+                                            const defaultOption = uomSelect.querySelector(`option[value="${product.uom_category_id}"]`);
+                                            if (defaultOption) {
+                                                uomSelect.value = product.uom_category_id;
+                                            }
+                                        });
+                                    }
+                                    
+                                    function removeProductLine(lineId) {
+                                        const line = document.getElementById('line_' + lineId);
+                                        if (line) {
+                                            line.remove();
+                                        }
+                                    }
+                                    
+                                    // Add first line by default
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        addProductLine();
+                                    });
+                                </script>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Success Page Template -->
+        <template id="portal_product_request_success" name="Product Request Success">
+            <t t-call="portal.portal_layout">
+                <div class="container mt-5">
+                    <!-- Success Animation Card -->
+                    <div class="card shadow-lg border-0 mb-4">
+                        <div class="card-body text-center py-5">
+                            <!-- Animated Success Icon -->
+                            <div class="success-animation mb-4">
+                                <div class="success-checkmark">
+                                    <div class="check-icon">
+                                        <span class="icon-line line-tip"></span>
+                                        <span class="icon-line line-long"></span>
+                                        <div class="icon-circle"></div>
+                                        <div class="icon-fix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h1 class="text-success mb-3">
+                                <i class="fa fa-check-circle"></i> Request Submitted Successfully!
+                            </h1>
+                            <h2 class="text-success mb-4">تم إرسال الطلب بنجاح!</h2>
+                            
+                            <div class="alert alert-success mb-4" role="alert">
+                                <h5 class="alert-heading">Thank you! / شكراً لك!</h5>
+                                <p class="mb-0">Your product request has been submitted and is now being processed.</p>
+                                <p class="mb-0">تم استلام طلبك وجاري معالجته.</p>
+                            </div>
+                            
+                            <!-- Request Details -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-info-circle"></i> Request Details / تفاصيل الطلب
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Request Number / رقم الطلب:</strong><br/>
+                                            <span class="badge badge-primary" style="font-size: 1.2em;">
+                                                <t t-esc="product_request.name"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Request Date / تاريخ الطلب:</strong><br/>
+                                            <t t-esc="product_request.request_date" t-options="{'widget': 'datetime'}"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Status / الحالة:</strong><br/>
+                                            <span t-attf-class="badge badge-#{product_request.state == 'submitted' and 'warning' or 'info'}">
+                                                <t t-esc="product_request.state"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>Number of Items / عدد الأصناف:</strong><br/>
+                                            <t t-esc="len(product_request.request_line_ids)"/> items / صنف
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Products List -->
+                                    <div class="mt-4">
+                                        <h6 class="border-bottom pb-2">
+                                            <i class="fa fa-box"></i> Requested Products / المنتجات المطلوبة
+                                        </h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Product / المنتج</th>
+                                                        <th>Quantity / الكمية</th>
+                                                        <th>Unit / الوحدة</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="product_request.request_line_ids" t-as="line">
+                                                        <td><t t-esc="line_index + 1"/></td>
+                                                        <td><t t-esc="line.product_id.name"/></td>
+                                                        <td><t t-esc="line.quantity"/></td>
+                                                        <td><t t-esc="line.product_uom_id.name"/></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <a t-attf-href="/my/product_request/#{product_request.id}" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-eye"></i> View Request Details / عرض التفاصيل
+                                </a>
+                                <a href="/my/product_requests/new" class="btn btn-success btn-lg">
+                                    <i class="fa fa-plus"></i> Create New Request / طلب جديد
+                                </a>
+                                <a href="/my/product_requests" class="btn btn-secondary btn-lg">
+                                    <i class="fa fa-list"></i> View All Requests / كل الطلبات
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Next Steps Card -->
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fa fa-question-circle"></i> What's Next? / ماذا بعد؟
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="step-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; line-height: 60px; font-size: 24px;">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                    <h6>Step 1 / الخطوة 1</h6>
+                                    <p class="text-muted">Request Review<br/>مراجعة الطلب</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="step-icon bg-warning text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; line-height: 60px; font-size: 24px;">
+                                        <i class="fa fa-thumbs-up"></i>
+                                    </div>
+                                    <h6>Step 2 / الخطوة 2</h6>
+                                    <p class="text-muted">Approval<br/>الموافقة</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="step-icon bg-success text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; line-height: 60px; font-size: 24px;">
+                                        <i class="fa fa-truck"></i>
+                                    </div>
+                                    <h6>Step 3 / الخطوة 3</h6>
+                                    <p class="text-muted">Delivery<br/>التسليم</p>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-3" role="alert">
+                                <i class="fa fa-info-circle"></i>
+                                <strong>Note:</strong> You will receive notifications about your request status.<br/>
+                                <strong>ملاحظة:</strong> سوف تتلقى إشعارات بحالة طلبك.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CSS for Success Animation -->
+                <style>
+                    .success-checkmark {
+                        width: 120px;
+                        height: 120px;
+                        margin: 0 auto;
+                    }
+                    
+                    .success-checkmark .check-icon {
+                        width: 120px;
+                        height: 120px;
+                        position: relative;
+                        border-radius: 50%;
+                        box-sizing: content-box;
+                        border: 4px solid #28a745;
+                    }
+                    
+                    .success-checkmark .check-icon::before {
+                        top: 3px;
+                        left: -2px;
+                        width: 40px;
+                        transform-origin: 100% 50%;
+                        border-radius: 100px 0 0 100px;
+                    }
+                    
+                    .success-checkmark .check-icon::after {
+                        top: 0;
+                        left: 40px;
+                        width: 80px;
+                        transform-origin: 0 50%;
+                        border-radius: 0 100px 100px 0;
+                        animation: rotate-circle 4.25s ease-in;
+                    }
+                    
+                    .success-checkmark .check-icon::before,
+                    .success-checkmark .check-icon::after {
+                        content: '';
+                        height: 120px;
+                        position: absolute;
+                        background: #fff;
+                        transform: rotate(-45deg);
+                    }
+                    
+                    .success-checkmark .icon-line {
+                        height: 5px;
+                        background-color: #28a745;
+                        display: block;
+                        border-radius: 2px;
+                        position: absolute;
+                        z-index: 10;
+                    }
+                    
+                    .success-checkmark .icon-line.line-tip {
+                        top: 56px;
+                        left: 21px;
+                        width: 32px;
+                        transform: rotate(45deg);
+                        animation: icon-line-tip 0.75s;
+                    }
+                    
+                    .success-checkmark .icon-line.line-long {
+                        top: 48px;
+                        right: 13px;
+                        width: 60px;
+                        transform: rotate(-45deg);
+                        animation: icon-line-long 0.75s;
+                    }
+                    
+                    .success-checkmark .icon-circle {
+                        top: -4px;
+                        left: -4px;
+                        z-index: 10;
+                        width: 120px;
+                        height: 120px;
+                        border-radius: 50%;
+                        position: absolute;
+                        box-sizing: content-box;
+                        border: 4px solid rgba(40, 167, 69, .5);
+                    }
+                    
+                    .success-checkmark .icon-fix {
+                        top: 12px;
+                        width: 10px;
+                        left: 32px;
+                        z-index: 1;
+                        height: 100px;
+                        position: absolute;
+                        transform: rotate(-45deg);
+                        background-color: #fff;
+                    }
+                    
+                    @keyframes rotate-circle {
+                        0% {
+                            transform: rotate(-45deg);
+                        }
+                        5% {
+                            transform: rotate(-45deg);
+                        }
+                        12% {
+                            transform: rotate(-405deg);
+                        }
+                        100% {
+                            transform: rotate(-405deg);
+                        }
+                    }
+                    
+                    @keyframes icon-line-tip {
+                        0% {
+                            width: 0;
+                            left: 1px;
+                            top: 26px;
+                        }
+                        54% {
+                            width: 0;
+                            left: 1px;
+                            top: 26px;
+                        }
+                        70% {
+                            width: 50px;
+                            left: -8px;
+                            top: 56px;
+                        }
+                        84% {
+                            width: 24px;
+                            left: 25px;
+                            top: 64px;
+                        }
+                        100% {
+                            width: 32px;
+                            left: 21px;
+                            top: 56px;
+                        }
+                    }
+                    
+                    @keyframes icon-line-long {
+                        0% {
+                            width: 0;
+                            right: 46px;
+                            top: 62px;
+                        }
+                        65% {
+                            width: 0;
+                            right: 46px;
+                            top: 62px;
+                        }
+                        84% {
+                            width: 75px;
+                            right: 0;
+                            top: 35px;
+                        }
+                        100% {
+                            width: 60px;
+                            right: 13px;
+                            top: 48px;
+                        }
+                    }
+                    
+                    .gap-3 {
+                        gap: 1rem;
+                    }
+                    
+                    .btn-lg {
+                        margin: 0.5rem;
+                    }
+                </style>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Detailed Quotation Form View -->
+        <record id="view_detailed_quotation_form" model="ir.ui.view">
+            <field name="name">detailed.quotation.form</field>
+            <field name="model">rental.detailed.quotation</field>
+            <field name="arch" type="xml">
+                <form string="Detailed Quotation">
+                    <header>
+                        <button name="action_print_quotation" 
+                                string="Print Quotation" 
+                                type="object" 
+                                class="oe_highlight" 
+                                icon="fa-print"/>
+                        <button name="action_send_quotation" 
+                                string="Send to Customer" 
+                                type="object" 
+                                class="btn-primary" 
+                                icon="fa-envelope"
+                                invisible="state in ['sent', 'accepted', 'rejected']"/>
+                        <button name="action_customer_accept" 
+                                string="Mark as Accepted" 
+                                type="object" 
+                                class="btn-success" 
+                                icon="fa-check"
+                                invisible="state != 'sent'"/>
+                        <button name="action_customer_reject" 
+                                string="Mark as Rejected" 
+                                type="object" 
+                                class="btn-danger" 
+                                icon="fa-times"
+                                invisible="state != 'sent'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,accepted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="quotation_number" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Basic Information">
+                                <field name="date"/>
+                                <field name="partner_id" options="{'no_create': True}"/>
+                                <field name="customer_company" readonly="1"/>
+                                <field name="contact_person"/>
+                            </group>
+                            
+                            <group string="Project Information">
+                                <field name="project_id" options="{'no_create': True}"/>
+                                <field name="subject"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Greeting &amp; Introduction">
+                                <field name="greeting_text" widget="html"/>
+                            </page>
+                            
+                            <page string="Units">
+                                <field name="quotation_line_ids">
+                                    <list editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="property_id" options="{'no_create': True}"/>
+                                        <field name="office_number"/>
+                                        <field name="floor"/>
+                                        <field name="activity"/>
+                                        <field name="area"/>
+                                        <field name="annual_rent" sum="Total Annual Rent"/>
+                                    </list>
+                                </field>
+                                
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="total_area" readonly="1"/>
+                                    <field name="total_annual_rent" readonly="1" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Terms &amp; Conditions">
+                                <group>
+                                    <group string="Property Owner">
+                                        <field name="owner_name"/>
+                                    </group>
+                                    
+                                    <group string="Percentages &amp; Rates">
+                                        <field name="deposit_percentage"/>
+                                        <field name="commission_percentage"/>
+                                        <field name="management_fee_percentage"/>
+                                        <field name="electricity_rate"/>
+                                        <field name="validity_days"/>
+                                    </group>
+                                </group>
+                                
+                                <group>
+                                    <group string="Calculated Amounts">
+                                        <field name="deposit_amount" readonly="1"/>
+                                        <field name="commission_amount" readonly="1"/>
+                                        <field name="management_fee_amount" readonly="1"/>
+                                        <field name="electricity_fee" readonly="1"/>
+                                    </group>
+                                    
+                                    <group string="Company Information">
+                                        <field name="company_name"/>
+                                        <field name="consultant_name"/>
+                                        <field name="consultant_title"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Customer Approval">
+                                <group>
+                                    <field name="customer_approval_name"/>
+                                    <field name="customer_approval_date"/>
+                                    <field name="customer_signature" widget="image" class="oe_avatar"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+<!--                    <div class="oe_chatter">-->
+<!--                        <field name="message_follower_ids"/>-->
+<!--                        <field name="activity_ids"/>-->
+<!--                        <field name="message_ids"/>-->
+<!--                    </div>-->
+                </form>
+            </field>
+        </record>
+
+        <!-- Detailed Quotation List View -->
+        <record id="view_detailed_quotation_list" model="ir.ui.view">
+            <field name="name">detailed.quotation.list</field>
+            <field name="model">rental.detailed.quotation</field>
+            <field name="arch" type="xml">
+                <list string="Detailed Quotations">
+                    <field name="quotation_number"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="contact_person"/>
+                    <field name="project_id"/>
+                    <field name="subject"/>
+                    <field name="total_area"/>
+                    <field name="total_annual_rent" sum="Total"/>
+                    <field name="state" 
+                           decoration-success="state == 'accepted'"
+                           decoration-info="state == 'sent'"
+                           decoration-muted="state == 'draft'"
+                           decoration-danger="state == 'rejected'"
+                           widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Detailed Quotation Search View -->
+        <record id="view_detailed_quotation_search" model="ir.ui.view">
+            <field name="name">detailed.quotation.search</field>
+            <field name="model">rental.detailed.quotation</field>
+            <field name="arch" type="xml">
+                <search string="Search Detailed Quotations">
+                    <field name="quotation_number"/>
+                    <field name="partner_id"/>
+                    <field name="contact_person"/>
+                    <field name="project_id"/>
+                    <field name="subject"/>
+                    
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Sent" name="sent" domain="[('state', '=', 'sent')]"/>
+                    <filter string="Accepted" name="accepted" domain="[('state', '=', 'accepted')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                    
+                    <separator/>
+                    <filter string="This Month" name="this_month" 
+                            domain="[('date','&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <filter string="This Week" name="this_week" 
+                            domain="[('date','&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" name="group_customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Project" name="group_project" context="{'group_by':'project_id'}"/>
+                        <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Detailed Quotation Kanban View -->
+        <record id="view_detailed_quotation_kanban" model="ir.ui.view">
+            <field name="name">detailed.quotation.kanban</field>
+            <field name="model">rental.detailed.quotation</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="id"/>
+                    <field name="quotation_number"/>
+                    <field name="partner_id"/>
+                    <field name="contact_person"/>
+                    <field name="date"/>
+                    <field name="total_annual_rent"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary"><strong><field name="quotation_number"/></strong></div>
+                                        <div class="text-muted"><field name="partner_id"/></div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_content">
+                                    <div><strong>Contact:</strong> <field name="contact_person"/></div>
+                                    <div><strong>Date:</strong> <field name="date"/></div>
+                                    <div><strong>Amount:</strong> <field name="total_annual_rent" widget="monetary"/> SAR</div>
+                                </div>
+                                <div class="o_kanban_card_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="state" widget="priority"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action for Detailed Quotations -->
+        <record id="action_detailed_quotation" model="ir.actions.act_window">
+            <field name="name">Detailed Quotations</field>
+            <field name="res_model">rental.detailed.quotation</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new detailed quotation
+                </p>
+                <p>
+                    Generate professional detailed quotations with customizable terms and conditions.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

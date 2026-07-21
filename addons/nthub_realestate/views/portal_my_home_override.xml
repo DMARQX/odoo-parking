@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Override Portal My Home Page for Owners -->
+    <template id="portal_my_home_owner" name="Owner Portal Home Override" inherit_id="portal.portal_my_home" priority="99">
+        <!-- Replace the entire content for owners -->
+        <xpath expr="//div[hasclass('o_portal_my_home')]" position="replace">
+            <t t-if="request.env.user.partner_id.is_owner">
+                <!-- Custom Owner Portal Home -->
+                <t t-set="no_breadcrumbs" t-value="True"/>
+                
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+                <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+                
+                <style type="text/css">
+                /* CSS Variables - Soft Color Palette */
+                :root {
+                    --owner-primary: #5C6BC0;
+                    --owner-primary-light: #7986CB;
+                    --owner-primary-dark: #3F51B5;
+                    --owner-secondary: #78909C;
+                    --owner-success: #66BB6A;
+                    --owner-success-light: #E8F5E9;
+                    --owner-warning: #FFA726;
+                    --owner-warning-light: #FFF3E0;
+                    --owner-danger: #EF5350;
+                    --owner-danger-light: #FFEBEE;
+                    --owner-info: #42A5F5;
+                    --owner-info-light: #E3F2FD;
+                    --owner-purple: #AB47BC;
+                    --owner-purple-light: #F3E5F5;
+                    --owner-bg: #F5F7FA;
+                    --owner-sidebar-bg: #FFFFFF;
+                    --owner-card-bg: #FFFFFF;
+                    --owner-text: #37474F;
+                    --owner-text-muted: #78909C;
+                    --owner-border: #E0E0E0;
+                    --owner-shadow: rgba(0, 0, 0, 0.08);
+                    --sidebar-width: 280px;
+                    --font-family: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                }
+                * { font-family: var(--font-family) !important; }
+                
+                /* Layout */
+                .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); }
+                
+                /* Sidebar - Light Theme */
+                .owner-sidebar { 
+                    width: var(--sidebar-width); 
+                    background: var(--owner-sidebar-bg); 
+                    border-right: 1px solid var(--owner-border); 
+                    position: fixed; 
+                    left: 0; 
+                    top: 0; 
+                    height: 100vh; 
+                    z-index: 1000; 
+                    box-shadow: 2px 0 10px var(--owner-shadow); 
+                    display: flex; 
+                    flex-direction: column; 
+                }
+                .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+                .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                .sidebar-logo svg { color: white; width: 24px; height: 24px; }
+                .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+                .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+                .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+                .nav-section { margin-bottom: 1.5rem; }
+                .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+                .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+                .sidebar-nav .nav-link .nav-icon { width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; color: var(--owner-text-muted); transition: all 0.2s ease; }
+                .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+                .sidebar-nav .nav-link:hover .nav-icon { color: var(--owner-primary); }
+                .sidebar-nav .nav-link.active { background-color: rgba(92, 107, 192, 0.1); color: var(--owner-primary); border-left-color: var(--owner-primary); font-weight: 600; }
+                .sidebar-nav .nav-link.active .nav-icon { color: var(--owner-primary); }
+                
+                /* Main Content */
+                .owner-main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; min-height: 100vh; }
+                
+                /* Welcome Section */
+                .welcome-section { margin-bottom: 2rem; }
+                .welcome-title { font-size: 2rem; font-weight: 700; color: var(--owner-text); margin: 0; }
+                .welcome-subtitle { color: var(--owner-text-muted); margin: 0.5rem 0 0 0; font-size: 1.1rem; }
+                
+                /* Quick Links Grid */
+                .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+                .quick-link-card { background: var(--owner-card-bg); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px var(--owner-shadow); transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; gap: 1rem; border: 1px solid transparent; }
+                .quick-link-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--owner-shadow); border-color: var(--owner-primary); }
+                .quick-link-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                .quick-link-icon svg { width: 26px; height: 26px; }
+                .quick-link-icon.dashboard { background: rgba(92, 107, 192, 0.15); color: var(--owner-primary); }
+                .quick-link-icon.properties { background: var(--owner-info-light); color: var(--owner-info); }
+                .quick-link-icon.payments { background: var(--owner-success-light); color: var(--owner-success); }
+                .quick-link-icon.requests { background: var(--owner-warning-light); color: var(--owner-warning); }
+                .quick-link-icon.quotes { background: var(--owner-purple-light); color: var(--owner-purple); }
+                .quick-link-content h4 { margin: 0 0 0.25rem 0; font-weight: 600; color: var(--owner-text); font-size: 1rem; }
+                .quick-link-content p { margin: 0; color: var(--owner-text-muted); font-size: 0.85rem; }
+                
+                /* Account Section */
+                .account-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--owner-border); }
+                .account-section h3 { font-size: 1.25rem; font-weight: 600; color: var(--owner-text); margin-bottom: 1rem; }
+                
+                @media (max-width: 991.98px) {
+                    .owner-sidebar { transform: translateX(-100%); }
+                    .owner-main-content { margin-left: 0; }
+                }
+                </style>
+                
+                <div class="owner-dashboard-wrapper">
+                    <!-- Sidebar -->
+                    <aside class="owner-sidebar">
+                        <div class="sidebar-header">
+                            <div class="sidebar-logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                            </div>
+                            <div class="sidebar-logo-text">
+                                <h5>Owner Portal</h5>
+                                <small>Real Estate Management</small>
+                            </div>
+                        </div>
+                        
+                        <nav class="sidebar-nav">
+                            <div class="nav-section">
+                                <div class="nav-section-title">Main Menu</div>
+                                <a href="/my/properties" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                    <span>Dashboard</span>
+                                </a>
+                                <a href="/my/my-properties" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                    <span>My Properties</span>
+                                </a>
+                            </div>
+                            
+                            <div class="nav-section">
+                                <div class="nav-section-title">Financials</div>
+                                <a href="/my/collected-payments" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                    <span>Collected Payments</span>
+                                </a>
+                                <a href="/my/receivables" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                    <span>Receivables</span>
+                                </a>
+                            </div>
+                            
+                            <div class="nav-section">
+                                <div class="nav-section-title">Approvals</div>
+                                <a href="/my/vendor_quotes" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                                    <span>Vendor Quotes</span>
+                                </a>
+                            </div>
+                            
+                            <div class="nav-section">
+                                <div class="nav-section-title">Requests</div>
+                                <a href="/my/requests" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                    <span>My Requests</span>
+                                </a>
+                                <a href="/my/requests/new" class="nav-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    <span>New Request</span>
+                                </a>
+                            </div>
+                        </nav>
+                    </aside>
+                    
+                    <!-- Main Content -->
+                    <main class="owner-main-content">
+                        <div class="welcome-section">
+                            <h1 class="welcome-title">Welcome, <t t-esc="request.env.user.name"/>!</h1>
+                            <p class="welcome-subtitle">Manage your properties and track your investments</p>
+                        </div>
+                        
+                        <!-- Quick Links -->
+                        <div class="quick-links-grid">
+                            <a href="/my/properties" class="quick-link-card">
+                                <div class="quick-link-icon dashboard">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>Dashboard</h4>
+                                    <p>View your properties overview and statistics</p>
+                                </div>
+                            </a>
+                            
+                            <a href="/my/my-properties" class="quick-link-card">
+                                <div class="quick-link-icon properties">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>My Properties</h4>
+                                    <p>Browse and manage your property portfolio</p>
+                                </div>
+                            </a>
+                            
+                            <a href="/my/collected-payments" class="quick-link-card">
+                                <div class="quick-link-icon payments">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>Collected Payments</h4>
+                                    <p>Track rent collections and payment history</p>
+                                </div>
+                            </a>
+                            
+                            <a href="/my/requests" class="quick-link-card">
+                                <div class="quick-link-icon requests">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>My Requests</h4>
+                                    <p>Submit and track your service requests</p>
+                                </div>
+                            </a>
+                            
+                            <a href="/my/vendor_quotes" class="quick-link-card">
+                                <div class="quick-link-icon quotes">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>Vendor Quotes</h4>
+                                    <p>Review and approve maintenance quotes</p>
+                                </div>
+                            </a>
+                            
+                            <a href="/my/receivables" class="quick-link-card">
+                                <div class="quick-link-icon properties">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                </div>
+                                <div class="quick-link-content">
+                                    <h4>Receivables</h4>
+                                    <p>View outstanding and upcoming payments</p>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Account Section -->
+                        <div class="account-section">
+                            <h3>Account Settings</h3>
+                            <div class="quick-links-grid">
+                                <a href="/my/security" class="quick-link-card">
+                                    <div class="quick-link-icon" style="background: var(--owner-bg); color: var(--owner-secondary);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Security Settings</h4>
+                                        <p>Update password and security options</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="/my/account" class="quick-link-card">
+                                    <div class="quick-link-icon" style="background: var(--owner-bg); color: var(--owner-secondary);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>My Profile</h4>
+                                        <p>Edit your personal information</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </t>
+            
+            <!-- Tenant Portal for non-owners -->
+            <t t-else="">
+                <t t-call="nthub_realestate.tenant_portal_styles"/>
+                <div class="t-wrapper">
+                    <t t-call="nthub_realestate.tenant_sidebar"><t t-set="page_name" t-value="'home'"/></t>
+                    <main class="t-main">
+                        <div class="t-header">
+                            <h1>Welcome, <t t-esc="request.env.user.name"/>!</h1>
+                            <p>Welcome to your tenant portal</p>
+                        </div>
+                        <div class="t-links" style="margin-top:2rem;">
+                            <a href="/my/rental_contracts" class="t-link">
+                                <div class="t-link-icon" style="background:rgba(14,165,233,0.15);color:#0EA5E9;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                </div>
+                                <div><h4>My Contracts</h4><p>View your rental contracts</p></div>
+                            </a>
+                            <a href="/my/maintenance_requests" class="t-link">
+                                <div class="t-link-icon" style="background:#FEF3C7;color:#F59E0B;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
+                                </div>
+                                <div><h4>Maintenance Requests</h4><p>Submit and track requests</p></div>
+                            </a>
+                            <a href="/my/security" class="t-link">
+                                <div class="t-link-icon" style="background:#E2E8F0;color:#64748B;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                                </div>
+                                <div><h4>Security</h4><p>Update password</p></div>
+                            </a>
+                            <a href="/my/account" class="t-link">
+                                <div class="t-link-icon" style="background:#E0E7FF;color:#6366F1;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                                </div>
+                                <div><h4>My Profile</h4><p>Edit personal info</p></div>
+                            </a>
+                        </div>
+                    </main>
+                </div>
+            </t>
+        </xpath>
+    </template>
+    
+</odoo>

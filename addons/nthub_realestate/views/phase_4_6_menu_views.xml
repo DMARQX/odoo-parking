@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- MENU ITEMS FOR PHASE 4-6 -->
+
+        <!-- Main Submenu: Stock & Purchasing -->
+        <menuitem id="menu_maintenance_stock_purchase" 
+                  name="Stock &amp; Purchasing"
+                  parent="nthub_realestate.menu_maintenance_root"
+                  sequence="50"/>
+
+        <!-- Phase 4: Material Requests -->
+        <menuitem id="menu_material_requests"
+                  name="Material Requests"
+                  parent="menu_maintenance_stock_purchase"
+                  action="action_maintenance_job_material_request"
+                  sequence="10"/>
+
+        <!-- Phase 5: Purchase Requisitions - HIDDEN -->
+        <!-- 
+        <menuitem id="menu_purchase_requisitions"
+                  name="Purchase Requisitions"
+                  parent="menu_maintenance_stock_purchase"
+                  action="action_maintenance_purchase_requisition"
+                  sequence="20"/>
+        -->
+
+        <!-- Phase 6: Completion & Defects - TEMPORARILY DISABLED -->
+        <!-- Requires job_completion_views.xml to be enabled first -->
+        <!--
+        <menuitem id="menu_job_completion_parent"
+                  name="Job Completion"
+                  parent="nthub_realestate.menu_maintenance_root"
+                  sequence="60"/>
+
+        <menuitem id="menu_defects"
+                  name="Defects / Rework"
+                  parent="menu_job_completion_parent"
+                  action="action_job_order_defect"
+                  sequence="10"/>
+        -->
+
+    </data>
+</odoo>

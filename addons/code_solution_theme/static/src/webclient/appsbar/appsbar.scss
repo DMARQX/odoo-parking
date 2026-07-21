@@ -1,0 +1,155 @@
+// Code Solution Theme - AppsBar Sidebar Styles
+
+.cs_apps_sidebar_panel {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    background: linear-gradient(180deg, #1e1e2d 0%, #151521 100%);
+    width: var(--cs-sidebar-width, 0);
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1040;
+    transition: width 0.3s ease;
+    
+    .cs_apps_sidebar {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 60px; // Space for navbar
+        white-space: nowrap;
+        
+        .cs_apps_sidebar_menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            
+            > li {
+                margin: 2px 8px;
+                border-radius: 8px;
+                overflow: hidden;
+                
+                > a {
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 400;
+                    overflow: hidden;
+                    padding: 10px 12px;
+                    text-decoration: none;
+                    color: #a2a3b7;
+                    text-overflow: ellipsis;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 8px;
+                    transition: all 0.2s ease;
+                    
+                    .cs_apps_sidebar_icon {
+                        width: 24px;
+                        height: 24px;
+                        margin-right: 10px;
+                        border-radius: 6px;
+                    }
+                    
+                    .cs_apps_sidebar_name {
+                        flex: 1;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.08);
+                        color: #fff;
+                    }
+                }
+                
+                &.active > a {
+                    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                    color: #fff;
+                    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+                }
+            }
+        }
+    }
+}
+
+// Sidebar size variants
+.cs_sidebar_type_large {
+    --cs-sidebar-width: 180px;
+}
+
+.cs_sidebar_type_small {
+    --cs-sidebar-width: 60px;
+    
+    .cs_apps_sidebar_name {
+        display: none !important;
+    }
+    .cs_apps_sidebar_icon {
+        margin-right: 0 !important;
+    }
+    .cs_apps_sidebar_menu > li > a {
+        justify-content: center;
+        padding: 12px !important;
+    }
+}
+
+.cs_sidebar_type_invisible {
+    --cs-sidebar-width: 0;
+}
+
+// Hide sidebar in certain views
+.o_home_menu_background,
+.o_fullscreen {
+    --cs-sidebar-width: 0;
+}
+
+// Adjust main content area when sidebar is visible
+.o_web_client.cs_sidebar_type_large,
+.o_web_client.cs_sidebar_type_small {
+    .o_action_manager {
+        margin-left: var(--cs-sidebar-width, 0);
+        transition: margin-left 0.3s ease;
+    }
+    
+    .o_main_navbar {
+        margin-left: var(--cs-sidebar-width, 0);
+        transition: margin-left 0.3s ease;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 991.98px) {
+    .cs_sidebar_type_large {
+        --cs-sidebar-width: 60px;
+        
+        .cs_apps_sidebar_name {
+            display: none !important;
+        }
+        .cs_apps_sidebar_icon {
+            margin-right: 0 !important;
+        }
+        .cs_apps_sidebar_menu > li > a {
+            justify-content: center;
+            padding: 12px !important;
+        }
+    }
+}
+
+@media (max-width: 767.98px) {
+    .cs_sidebar_type_large,
+    .cs_sidebar_type_small {
+        --cs-sidebar-width: 0;
+    }
+    
+    .o_web_client.cs_sidebar_type_large,
+    .o_web_client.cs_sidebar_type_small {
+        .o_action_manager,
+        .o_main_navbar {
+            margin-left: 0;
+        }
+    }
+}

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="rental_quotation.RentalQuotationDashboardTemplate" owl="1">
+        <div class="o_action_manager">
+            <div class="o_control_panel"/>
+            <div class="o_content">
+                <section class="p-4 rental_quotation_dashboard_section">
+
+                    <!-- قسم الإحصائيات -->
+                    <h4 class="dashboard-section-header">
+                        <i class="fa fa-chart-bar me-2"/> Rental Quotations Dashboard
+                    </h4>
+                    
+                    <!-- KPI Cards -->
+                    <div class="row mt-3">
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border" t-on-click="() => this.openListView('rental.quotation', [], 'All Quotations')">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-file-text fa-2x mb-2 text-primary"/>
+                                    <div class="kpi-title">Total Quotations</div>
+                                    <div class="kpi-value" t-esc="this.formatNumber(state.dashboardData.total_quotations)"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border" t-on-click="() => this.openListView('rental.quotation', [['state', '=', 'draft']], 'Draft Quotations')">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-edit fa-2x mb-2 text-secondary"/>
+                                    <div class="kpi-title">Draft</div>
+                                    <div class="kpi-value" t-esc="this.formatNumber(state.dashboardData.draft_quotations)"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border" t-on-click="() => this.openListView('rental.quotation', [['state', '=', 'submitted']], 'Under Review')">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-clock fa-2x mb-2 text-warning"/>
+                                    <div class="kpi-title">Under Review</div>
+                                    <div class="kpi-value" t-esc="this.formatNumber(state.dashboardData.submitted_quotations)"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border" t-on-click="() => this.openListView('rental.quotation', [['state', '=', 'approved']], 'Approved Quotations')">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-check-circle fa-2x mb-2 text-success"/>
+                                    <div class="kpi-title">Approved</div>
+                                    <div class="kpi-value" t-esc="this.formatNumber(state.dashboardData.approved_quotations)"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border" t-on-click="() => this.openListView('rental.quotation', [['state', '=', 'rejected']], 'Rejected Quotations')">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-times-circle fa-2x mb-2 text-danger"/>
+                                    <div class="kpi-title">Rejected</div>
+                                    <div class="kpi-value" t-esc="this.formatNumber(state.dashboardData.rejected_quotations)"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="kpi-card bg-white text-dark border">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-money-bill fa-2x mb-2 text-info"/>
+                                    <div class="kpi-title">Total Value</div>
+                                    <div class="kpi-value" t-esc="this.formatCurrency(state.dashboardData.total_quotation_value)"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الرسوم البيانية -->
+                    <div class="row mt-4">
+                        <!-- رسم بياني: توزيع الكوتيشن حسب الحالة -->
+                        <div class="col-lg-4 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-pie-chart me-2"/> Quotations by Status
+                                    </h5>
+                                    <div class="chart-container" id="quotationStatusChart" t-ref="quotationStatusChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- رسم بياني: القيمة الشهرية -->
+                        <div class="col-lg-8 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-area-chart me-2"/> Monthly Quotation Value
+                                    </h5>
+                                    <div class="chart-container" id="monthlyValueChart" t-ref="monthlyValueChart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <!-- رسم بياني: عدد الكوتيشن الشهرية -->
+                        <div class="col-lg-8 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-bar-chart me-2"/> Monthly Quotations Count
+                                    </h5>
+                                    <div class="chart-container" id="monthlyQuotationsChart" t-ref="monthlyQuotationsChart"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- قائمة أحدث الكوتيشن -->
+                        <div class="col-lg-4 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-list me-2"/> Recent Quotations
+                                    </h5>
+                                    <div class="recent-quotations-list">
+                                        <t t-if="!state.dashboardData.recent_quotations or state.dashboardData.recent_quotations.length === 0">
+                                            <div class="text-muted text-center py-4">
+                                                <i class="fa fa-info-circle me-2"/>
+                                                No recent quotations
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-foreach="state.dashboardData.recent_quotations" t-as="quotation" t-key="quotation.id">
+                                                <div class="recent-quotation-item p-3 mb-2 bg-light rounded" 
+                                                     t-on-click="() => this.openQuotation(quotation.id)"
+                                                     style="cursor: pointer; transition: all 0.2s;">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <strong t-esc="quotation.quotation_number"/>
+                                                            <br/>
+                                                            <small class="text-muted" t-esc="quotation.partner_name"/>
+                                                            <br/>
+                                                            <span class="badge" 
+                                                                  t-attf-class="badge-{{quotation.state === 'Approved' ? 'success' : quotation.state === 'Rejected' ? 'danger' : quotation.state === 'Submitted' ? 'warning' : 'secondary'}}"
+                                                                  t-esc="quotation.state"/>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <div class="fw-bold text-success" t-esc="this.formatCurrency(quotation.total_amount)"/>
+                                                            <small class="text-muted" t-esc="quotation.create_date"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

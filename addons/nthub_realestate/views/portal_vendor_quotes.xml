@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         VENDOR QUOTES LIST FOR OWNER PORTAL - NEW WORKFLOW
+         ============================================================ -->
+    <template id="portal_my_vendor_quotes" name="My Vendor Quotes Pending Approval">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Vendor Quotes</t>
+            </t>
+            
+            <div class="container">
+                <!-- Success/Error Messages -->
+                <t t-if="message == 'approved'">
+                    <div class="alert alert-success alert-dismissible fade show mt-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <i class="fa fa-check-circle"/> Quote approved successfully!
+                    </div>
+                </t>
+                <t t-if="message == 'rejected'">
+                    <div class="alert alert-info alert-dismissible fade show mt-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <i class="fa fa-times-circle"/> Quote rejected successfully.
+                    </div>
+                </t>
+                <t t-if="error">
+                    <div class="alert alert-danger alert-dismissible fade show mt-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <i class="fa fa-exclamation-circle"/> <t t-esc="error"/>
+                    </div>
+                </t>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"/> Review vendor quotes for your maintenance requests. 
+                            Each quote contains multiple vendor price quotes as PDF attachments.
+                        </div>
+                        
+                        <!-- Pending Owner Approval Section -->
+                        <h4 class="mt-4 mb-3">
+                            <i class="fa fa-clock-o text-warning"/> Pending Approval
+                            <span class="badge bg-warning text-dark"><t t-esc="len(pending_quotes)"/></span>
+                        </h4>
+                        
+                        <t t-if="not pending_quotes">
+                            <div class="alert alert-secondary" role="alert">
+                                <p class="mb-0"><i class="fa fa-check"/> No quotes pending your approval.</p>
+                            </div>
+                        </t>
+                        
+                        <t t-if="pending_quotes">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Quote #</th>
+                                            <th>Project</th>
+                                            <th>Job Order</th>
+                                            <th>Est. Amount</th>
+                                            <th>Vendor Quotes</th>
+                                            <th>Date</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="pending_quotes" t-as="quote">
+                                            <tr>
+                                                <td>
+                                                    <strong><t t-esc="quote.name"/></strong>
+                                                </td>
+                                                <td><t t-esc="quote.project_id.name if quote.project_id else '-'"/></td>
+                                                <td>
+                                                    <t t-if="quote.job_order_id">
+                                                        <t t-esc="quote.job_order_id.name"/>
+                                                    </t>
+                                                    <t t-else="">-</t>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-primary">
+                                                        <t t-esc="'{:,.2f}'.format(quote.total_amount)"/> 
+                                                        <t t-esc="quote.company_currency_id.symbol if quote.company_currency_id else 'SAR'"/>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <i class="fa fa-file-pdf-o"/> <t t-esc="len(quote.vendor_attachment_ids)"/> vendor quotes
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <small><t t-esc="quote.sent_to_owner_date.strftime('%Y-%m-%d %H:%M') if quote.sent_to_owner_date else quote.quote_date"/></small>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a t-attf-href="/my/vendor_quote/#{quote.id}" 
+                                                       class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-eye"/> Review
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                        
+                        <!-- Approved Quotes Section -->
+                        <t t-if="approved_quotes">
+                            <h4 class="mt-5 mb-3">
+                                <i class="fa fa-check-circle text-success"/> Approved (Pending Vendor Selection)
+                                <span class="badge bg-success"><t t-esc="len(approved_quotes)"/></span>
+                            </h4>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-success">
+                                        <tr>
+                                            <th>Quote #</th>
+                                            <th>Project</th>
+                                            <th>Job Order</th>
+                                            <th>Approval Date</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="approved_quotes" t-as="quote">
+                                            <tr>
+                                                <td><strong><t t-esc="quote.name"/></strong></td>
+                                                <td><t t-esc="quote.project_id.name if quote.project_id else '-'"/></td>
+                                                <td><t t-esc="quote.job_order_id.name if quote.job_order_id else '-'"/></td>
+                                                <td><t t-esc="quote.approval_date.strftime('%Y-%m-%d') if quote.approval_date else '-'"/></td>
+                                                <td class="text-end">
+                                                    <a t-attf-href="/my/vendor_quote/#{quote.id}" 
+                                                       class="btn btn-success btn-sm">
+                                                        <i class="fa fa-eye"/> View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         VENDOR QUOTE DETAIL - NEW WORKFLOW
+         ============================================================ -->
+    <template id="portal_vendor_quote_detail" name="Vendor Quote Detail">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load Google Fonts - Cairo for Arabic -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+            
+            <style type="text/css">
+            /* CSS Variables - Soft Color Palette */
+            :root {
+                --owner-primary: #5C6BC0;
+                --owner-primary-light: #7986CB;
+                --owner-primary-dark: #3F51B5;
+                --owner-secondary: #78909C;
+                --owner-success: #66BB6A;
+                --owner-success-light: #E8F5E9;
+                --owner-warning: #FFA726;
+                --owner-warning-light: #FFF3E0;
+                --owner-danger: #EF5350;
+                --owner-danger-light: #FFEBEE;
+                --owner-info: #42A5F5;
+                --owner-info-light: #E3F2FD;
+                --owner-purple: #AB47BC;
+                --owner-purple-light: #F3E5F5;
+                --owner-teal: #26A69A;
+                --owner-teal-light: #E0F2F1;
+                --owner-bg: #F5F7FA;
+                --owner-sidebar-bg: #FFFFFF;
+                --owner-card-bg: #FFFFFF;
+                --owner-text: #37474F;
+                --owner-text-muted: #78909C;
+                --owner-border: #E0E0E0;
+                --owner-shadow: rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
+                --font-family: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+            * { font-family: var(--font-family) !important; }
+            
+            /* Layout */
+            .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); }
+            
+            /* Sidebar - Light Theme */
+            .owner-sidebar { 
+                width: var(--sidebar-width); 
+                background: var(--owner-sidebar-bg); 
+                border-right: 1px solid var(--owner-border); 
+                position: fixed; 
+                left: 0; 
+                top: 0; 
+                height: 100vh; 
+                z-index: 1000; 
+                box-shadow: 2px 0 10px var(--owner-shadow); 
+                display: flex; 
+                flex-direction: column; 
+            }
+            .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+            .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sidebar-logo svg { color: white; width: 24px; height: 24px; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+            .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+            .sidebar-nav .nav-link .nav-icon { width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; color: var(--owner-text-muted); transition: all 0.2s ease; }
+            .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+            .sidebar-nav .nav-link:hover .nav-icon { color: var(--owner-primary); }
+            .sidebar-nav .nav-link.active { background-color: rgba(92, 107, 192, 0.1); color: var(--owner-primary); border-left-color: var(--owner-primary); font-weight: 600; }
+            .sidebar-nav .nav-link.active .nav-icon { color: var(--owner-primary); }
+            
+            /* Main Content */
+            .owner-main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; min-height: 100vh; }
+            
+            /* Page Header */
+            .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+            .page-title { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin: 0; }
+            .page-subtitle { color: var(--owner-text-muted); margin: 0.25rem 0 0 0; }
+            
+            /* Cards */
+            .detail-card { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); margin-bottom: 1.5rem; overflow: hidden; }
+            .detail-card-header { padding: 1rem 1.5rem; background: var(--owner-bg); border-bottom: 1px solid var(--owner-border); display: flex; justify-content: space-between; align-items: center; }
+            .detail-card-header h5 { margin: 0; font-weight: 600; color: var(--owner-text); display: flex; align-items: center; gap: 0.5rem; }
+            .detail-card-header h5 svg { width: 20px; height: 20px; color: var(--owner-primary); }
+            .detail-card-body { padding: 1.5rem; }
+            
+            /* Status Badge */
+            .status-badge { padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; }
+            .status-badge svg { width: 16px; height: 16px; }
+            .status-badge.pending { background: var(--owner-warning-light); color: var(--owner-warning); }
+            .status-badge.approved { background: var(--owner-success-light); color: var(--owner-success); }
+            .status-badge.rejected { background: var(--owner-danger-light); color: var(--owner-danger); }
+            .status-badge.selected { background: var(--owner-info-light); color: var(--owner-info); }
+            .status-badge.po_created { background: var(--owner-purple-light); color: var(--owner-purple); }
+            
+            /* Info Grid */
+            .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+            .info-item label { display: block; font-size: 0.85rem; color: var(--owner-text-muted); margin-bottom: 0.25rem; }
+            .info-item .value { font-weight: 600; color: var(--owner-text); font-size: 1rem; }
+            .info-item .value.highlight { color: var(--owner-primary); font-size: 1.25rem; }
+            
+            /* Tables */
+            .styled-table { width: 100%; border-collapse: collapse; }
+            .styled-table thead { background: var(--owner-bg); }
+            .styled-table th, .styled-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--owner-border); }
+            .styled-table th { font-weight: 600; color: var(--owner-text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+            .styled-table tbody tr:hover { background: var(--owner-bg); }
+            .styled-table tbody tr:last-child td { border-bottom: none; }
+            .styled-table tfoot { background: var(--owner-bg); font-weight: 600; }
+            
+            /* Buttons */
+            .btn-action { padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
+            .btn-action svg { width: 18px; height: 18px; }
+            .btn-action.primary { background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); color: white; }
+            .btn-action.primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(92, 107, 192, 0.4); }
+            .btn-action.success { background: linear-gradient(135deg, var(--owner-success) 0%, #43A047 100%); color: white; }
+            .btn-action.success:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(102, 187, 106, 0.4); }
+            .btn-action.danger { background: linear-gradient(135deg, var(--owner-danger) 0%, #E53935 100%); color: white; }
+            .btn-action.danger:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(239, 83, 80, 0.4); }
+            .btn-action.outline { background: transparent; border: 2px solid var(--owner-border); color: var(--owner-text); }
+            .btn-action.outline:hover { border-color: var(--owner-primary); color: var(--owner-primary); }
+            
+            /* Action Buttons Container */
+            .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+            
+            /* Alert Messages */
+            .alert-banner { padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+            .alert-banner svg { width: 24px; height: 24px; flex-shrink: 0; }
+            .alert-banner.success { background: var(--owner-success-light); color: var(--owner-success); border: 1px solid rgba(102, 187, 106, 0.3); }
+            .alert-banner.warning { background: var(--owner-warning-light); color: #E65100; border: 1px solid rgba(255, 167, 38, 0.3); }
+            .alert-banner.danger { background: var(--owner-danger-light); color: var(--owner-danger); border: 1px solid rgba(239, 83, 80, 0.3); }
+            .alert-banner.info { background: var(--owner-info-light); color: #1565C0; border: 1px solid rgba(66, 165, 245, 0.3); }
+            
+            /* PDF Button */
+            .pdf-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; transition: all 0.2s ease; }
+            .pdf-btn.view { background: var(--owner-info-light); color: var(--owner-info); }
+            .pdf-btn.view:hover { background: var(--owner-info); color: white; }
+            .pdf-btn.download { background: var(--owner-bg); color: var(--owner-text-muted); border: 1px solid var(--owner-border); }
+            .pdf-btn.download:hover { background: var(--owner-primary); color: white; border-color: var(--owner-primary); }
+            .pdf-btn svg { width: 16px; height: 16px; }
+            
+            /* Responsive */
+            @media (max-width: 991.98px) {
+                .owner-sidebar { transform: translateX(-100%); }
+                .owner-main-content { margin-left: 0; }
+            }
+            </style>
+            
+            <div class="owner-dashboard-wrapper">
+                <!-- Sidebar - Light Theme -->
+                <aside class="owner-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span>My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span>Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span>Receivables</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Approvals</div>
+                            <a href="/my/vendor_quotes" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                                <span>Vendor Quotes</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Requests</div>
+                            <a href="/my/requests" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span>My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="owner-main-content">
+                
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title"><t t-esc="quote.name"/></h1>
+                        <p class="page-subtitle">Vendor Quote Details</p>
+                    </div>
+                    <div>
+                        <t t-if="quote.state == 'pending_owner_approval'">
+                            <span class="status-badge pending">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                Pending Approval
+                            </span>
+                        </t>
+                        <t t-if="quote.state == 'owner_approved'">
+                            <span class="status-badge approved">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                Approved
+                            </span>
+                        </t>
+                        <t t-if="quote.state == 'vendor_selected'">
+                            <span class="status-badge selected">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
+                                Vendor Selected
+                            </span>
+                        </t>
+                        <t t-if="quote.state == 'po_created'">
+                            <span class="status-badge po_created">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" /></svg>
+                                PO Created
+                            </span>
+                        </t>
+                        <t t-if="quote.state == 'rejected'">
+                            <span class="status-badge rejected">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                                Rejected
+                            </span>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Interactive Success Message for Approval -->
+                <t t-if="message == 'approved'">
+                    <div class="alert-banner success">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <div>
+                            <strong>Quote Approved Successfully!</strong>
+                            <p style="margin: 0.25rem 0 0 0; opacity: 0.9;">The management team will now review and select the best vendor option.</p>
+                        </div>
+                    </div>
+                </t>
+                
+                <!-- Interactive Rejection Message -->
+                <t t-if="message == 'rejected'">
+                    <div class="alert-banner danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                        <div>
+                            <strong>Quote Rejected</strong>
+                            <p style="margin: 0.25rem 0 0 0; opacity: 0.9;">The maintenance team will be notified and may submit a new request.</p>
+                        </div>
+                    </div>
+                </t>
+                
+                <!-- Error Message -->
+                <t t-if="error">
+                    <div class="alert-banner danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                        <div><strong>Error:</strong> <t t-esc="error"/></div>
+                    </div>
+                </t>
+                
+                <!-- Quote Info Card -->
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <h5>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            Quote Information
+                        </h5>
+                    </div>
+                    <div class="detail-card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Project</label>
+                                <div class="value"><t t-esc="quote.project_id.name if quote.project_id else '-'"/></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Job Order</label>
+                                <div class="value"><t t-esc="quote.job_order_id.name if quote.job_order_id else '-'"/></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Est. Total</label>
+                                <div class="value highlight">
+                                    <t t-esc="'{:,.2f}'.format(quote.total_amount)"/> 
+                                    <t t-esc="quote.company_currency_id.symbol if quote.company_currency_id else 'SAR'"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Date</label>
+                                <div class="value"><t t-esc="quote.quote_date"/></div>
+                            </div>
+                        </div>
+                        <t t-if="quote.selected_vendor_id">
+                            <hr style="margin: 1.5rem 0; border-color: var(--owner-border);"/>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Selected Vendor</label>
+                                    <div class="value" style="color: var(--owner-success);">
+                                        <t t-esc="quote.selected_vendor_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Final Amount</label>
+                                    <div class="value highlight" style="color: var(--owner-success);">
+                                        <t t-esc="'{:,.2f}'.format(quote.final_amount)"/> 
+                                        <t t-esc="quote.company_currency_id.symbol if quote.company_currency_id else 'SAR'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Vendor Price Quotes Card -->
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <h5>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            Vendor Price Quotes (<t t-esc="len(vendor_attachments)"/>)
+                        </h5>
+                    </div>
+                    <div class="detail-card-body">
+                        <t t-if="not vendor_attachments">
+                            <div class="alert-banner warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                                <div>No vendor quotes attached yet.</div>
+                            </div>
+                        </t>
+                        <t t-if="vendor_attachments">
+                            <div class="table-responsive">
+                                <table class="styled-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor</th>
+                                            <th>Quote Amount</th>
+                                            <th>Delivery</th>
+                                            <th>Payment Terms</th>
+                                            <th>Warranty</th>
+                                            <th>PDF File</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="vendor_attachments" t-as="att">
+                                            <tr t-att-style="'background: var(--owner-success-light);' if att.is_selected else ''">
+                                                <td>
+                                                    <strong><t t-esc="att.vendor_id.name"/></strong>
+                                                    <t t-if="att.is_selected">
+                                                        <br/><span class="status-badge approved" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Selected</span>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <strong style="color: var(--owner-primary);">
+                                                        <t t-esc="'{:,.2f}'.format(att.quote_amount) if att.quote_amount else '-'"/>
+                                                        <t t-if="att.quote_amount">
+                                                            <t t-esc="att.currency_id.symbol if att.currency_id else 'SAR'"/>
+                                                        </t>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <t t-if="att.delivery_days">
+                                                        <t t-esc="att.delivery_days"/> days
+                                                    </t>
+                                                    <t t-else="">-</t>
+                                                </td>
+                                                <td><t t-esc="att.payment_terms or '-'"/></td>
+                                                <td><t t-esc="att.warranty_period or '-'"/></td>
+                                                <td>
+                                                    <t t-if="att.attachment_id">
+                                                        <a t-attf-href="/my/vendor_quote/attachment/#{att.attachment_id.id}" 
+                                                           class="pdf-btn view" target="_blank">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                            View
+                                                        </a>
+                                                        <a t-attf-href="/my/vendor_quote/attachment/#{att.attachment_id.id}?download=1" 
+                                                           class="pdf-btn download" style="margin-left: 0.5rem;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                                                        </a>
+                                                        <br/>
+                                                        <small style="color: var(--owner-text-muted);"><t t-esc="att.quote_filename"/></small>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Materials List Card -->
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <h5>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                            Materials List
+                        </h5>
+                    </div>
+                    <div class="detail-card-body">
+                        <t t-if="not quote_lines">
+                            <div class="alert-banner info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                                <div>No materials listed.</div>
+                            </div>
+                        </t>
+                        <t t-if="quote_lines">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Est. Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="quote_lines" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line_index + 1"/></td>
+                                            <td><t t-esc="line.product_id.name"/></td>
+                                            <td><t t-esc="line.description or '-'"/></td>
+                                            <td><t t-esc="line.quantity"/> <t t-esc="line.uom_id.name if line.uom_id else 'Units'"/></td>
+                                            <td><t t-esc="'{:,.2f}'.format(line.unit_price)"/></td>
+                                            <td><strong><t t-esc="'{:,.2f}'.format(line.subtotal)"/></strong></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="5" style="text-align: right;">Est. Total:</th>
+                                        <th><t t-esc="'{:,.2f}'.format(quote.total_amount)"/> <t t-esc="quote.company_currency_id.symbol if quote.company_currency_id else 'SAR'"/></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Notes Card -->
+                <t t-if="quote.notes or quote.owner_notes or quote.rejection_reason">
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h5>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                                Notes
+                            </h5>
+                        </div>
+                        <div class="detail-card-body">
+                            <t t-if="quote.notes">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="font-weight: 600; color: var(--owner-text-muted); font-size: 0.85rem;">Internal Notes:</label>
+                                    <p style="margin: 0.25rem 0 0 0;"><t t-esc="quote.notes"/></p>
+                                </div>
+                            </t>
+                            <t t-if="quote.owner_notes">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="font-weight: 600; color: var(--owner-success); font-size: 0.85rem;">Owner Notes:</label>
+                                    <p style="margin: 0.25rem 0 0 0; color: var(--owner-success);"><t t-esc="quote.owner_notes"/></p>
+                                </div>
+                            </t>
+                            <t t-if="quote.rejection_reason">
+                                <div>
+                                    <label style="font-weight: 600; color: var(--owner-danger); font-size: 0.85rem;">Rejection Reason:</label>
+                                    <p style="margin: 0.25rem 0 0 0; color: var(--owner-danger);"><t t-esc="quote.rejection_reason"/></p>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                
+                <!-- Action Buttons -->
+                <t t-if="quote.state == 'pending_owner_approval'">
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h5>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.97z" /></svg>
+                                Your Decision
+                            </h5>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="action-buttons">
+                                <button type="button" class="btn-action success" data-bs-toggle="modal" data-bs-target="#approve_modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                    Approve Quote
+                                </button>
+                                <button type="button" class="btn-action danger" data-bs-toggle="modal" data-bs-target="#reject_modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                    Reject Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                
+                <!-- Back Button -->
+                <div style="margin-bottom: 2rem;">
+                    <a href="/my/vendor_quotes" class="btn-action outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                        Back to List
+                    </a>
+                </div>
+                
+                <!-- Approve Modal -->
+                <div class="modal fade" id="approve_modal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" t-attf-action="/my/vendor_quote/#{quote.id}/approve" id="approve_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="modal-header" style="background: var(--owner-success); color: white;">
+                                    <h5 class="modal-title">Approve Vendor Quotes</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert-banner info" style="margin-bottom: 1rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                                        <div>Select the vendor quote(s) you want to approve. The management team will then select the final vendor.</div>
+                                    </div>
+                                    
+                                    <h6 style="margin-bottom: 1rem; font-weight: 600;">Select Vendor Quotes to Approve: <span style="color: var(--owner-danger);">*</span></h6>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px;">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="select_all_vendors" onclick="toggleAllVendors(this)"/>
+                                                            <label class="form-check-label" for="select_all_vendors">All</label>
+                                                        </div>
+                                                    </th>
+                                                    <th>Vendor</th>
+                                                    <th>Amount</th>
+                                                    <th>Delivery</th>
+                                                    <th>Payment Terms</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="vendor_attachments" t-as="att">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input vendor-checkbox" 
+                                                                       name="approved_vendor_ids" 
+                                                                       t-att-value="att.id"
+                                                                       t-att-id="'vendor_%d' % att.id"/>
+                                                            </div>
+                                                        </td>
+                                                        <td><strong><t t-esc="att.vendor_id.name"/></strong></td>
+                                                        <td>
+                                                            <t t-if="att.quote_amount">
+                                                                <strong style="color: var(--owner-primary);"><t t-esc="'{:,.2f}'.format(att.quote_amount)"/> SAR</strong>
+                                                            </t>
+                                                            <t t-else=""><span style="color: var(--owner-text-muted);">Not specified</span></t>
+                                                        </td>
+                                                        <td><t t-if="att.delivery_days"><t t-esc="att.delivery_days"/> days</t><t t-else="">-</t></td>
+                                                        <td><t t-esc="att.payment_terms or '-'"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="alert-banner warning d-none" id="no_vendor_selected_alert" style="margin-top: 1rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                                        <div>Please select at least one vendor quote to approve.</div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem;">
+                                        <label class="form-label" style="font-weight: 600;">Owner Notes (Optional):</label>
+                                        <textarea name="owner_notes" class="form-control" rows="3" 
+                                                  placeholder="Add any notes or preferences for vendor selection..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-action outline" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn-action success" id="confirm_approve_btn" onclick="return validateApproval()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                        Confirm Approval
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    function toggleAllVendors(checkbox) {
+                        var checkboxes = document.querySelectorAll('.vendor-checkbox');
+                        checkboxes.forEach(function(cb) {
+                            cb.checked = checkbox.checked;
+                        });
+                    }
+                    
+                    function validateApproval() {
+                        var checkboxes = document.querySelectorAll('.vendor-checkbox:checked');
+                        var alert = document.getElementById('no_vendor_selected_alert');
+                        if (checkboxes.length === 0) {
+                            alert.classList.remove('d-none');
+                            return false;
+                        }
+                        alert.classList.add('d-none');
+                        return true;
+                    }
+                </script>
+                
+                <!-- Reject Modal -->
+                <div class="modal fade" id="reject_modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" t-attf-action="/my/vendor_quote/#{quote.id}/reject">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="modal-header" style="background: var(--owner-danger); color: white;">
+                                    <h5 class="modal-title">Reject Quote</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>You are about to reject this quote request.</p>
+                                    
+                                    <div style="margin-top: 1rem;">
+                                        <label class="form-label" style="font-weight: 600;">Rejection Reason (Required) *:</label>
+                                        <textarea name="rejection_reason" class="form-control" rows="4" 
+                                                  placeholder="Please provide a reason for rejection..." required="1"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-action outline" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn-action danger">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        Confirm Rejection
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                </main><!-- /.owner-main-content -->
+            </div><!-- /.owner-dashboard-wrapper -->
+        </t>
+    </template>
+
+    <!-- ============================================================
+         NO QUOTES MESSAGE - LEGACY COMPATIBILITY
+         ============================================================ -->
+    <template id="portal_job_order_no_quotes" name="No Quotes for Job Order">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="alert alert-warning">
+                    <i class="fa fa-exclamation-triangle"/> No quote request found for this job order.
+                </div>
+                <a href="/my/vendor_quotes" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"/> Back to Vendor Quotes
+                </a>
+            </div>
+        </t>
+    </template>
+
+    <!-- LEGACY TEMPLATE - kept for backward compatibility -->
+    <template id="portal_job_order_quotes_comparison" name="Compare Vendor Quotes (Legacy)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="alert alert-info">
+                    <i class="fa fa-info-circle"/> This page has been updated. Please use the new vendor quotes interface.
+                </div>
+                <a href="/my/vendor_quotes" class="btn btn-primary">
+                    <i class="fa fa-arrow-right"/> Go to New Interface
+                </a>
+            </div>
+        </t>
+    </template>
+
+</odoo>

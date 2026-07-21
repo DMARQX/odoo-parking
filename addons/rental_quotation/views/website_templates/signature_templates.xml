@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Digital Signature Page Template -->
+    <template id="digital_signature_page" name="Digital Signature Page">
+        <t t-call="website.layout">
+            <t t-set="title">Digital Signature - <t t-esc="signature_request.document_reference"/></t>
+            
+            <!-- Include signature pad JS and CSS -->
+            <t t-call-assets="rental_quotation.signature_assets" t-js="false"/>
+            
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Document Preview Section -->
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4><i class="fa fa-file-pdf-o"></i> Document: <t t-esc="signature_request.document_reference"/></h4>
+                            </div>
+                            <div class="card-body">
+                                <iframe t-att-src="document_url" 
+                                        class="w-100" 
+                                        style="height: 600px; border: 1px solid #ddd;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Signature Section -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h4><i class="fa fa-pencil"></i> Digital Signature</h4>
+                            </div>
+                            <div class="card-body">
+                                <!-- Signer Information -->
+                                <div class="mb-4">
+                                    <h5>Signer Information</h5>
+                                    <p><strong>Name:</strong> <t t-esc="signer.name"/></p>
+                                    <p><strong>Email:</strong> <t t-esc="signer.email"/></p>
+                                    <p t-if="signer.role"><strong>Role:</strong> <t t-esc="signer.role"/></p>
+                                </div>
+                                
+                                <!-- Signature Canvas -->
+                                <div class="mb-4">
+                                    <h5>Draw Your Signature</h5>
+                                    <div class="signature-container">
+                                        <canvas id="signature-canvas" 
+                                                width="320" 
+                                                height="180" 
+                                                style="border: 2px solid #007bff; border-radius: 5px; cursor: crosshair;"></canvas>
+                                        <div class="mt-2 text-center">
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="clearSignature()">
+                                                <i class="fa fa-eraser"></i> Clear
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Upload Signature Option -->
+                                <div class="mb-4">
+                                    <h6>Or Upload Signature Image</h6>
+                                    <input type="file" 
+                                           id="signature-upload" 
+                                           accept="image/*" 
+                                           class="form-control-file"
+                                           onchange="loadSignatureImage(this)"/>
+                                </div>
+                                
+                                <!-- Legal Agreement -->
+                                <div class="mb-4">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fa fa-info-circle"></i> Legal Notice</h6>
+                                        <p class="small">
+                                            By signing this document electronically, you agree that your electronic signature 
+                                            is the legal equivalent of your manual signature on this document. 
+                                            You also agree that no certification authority or other third party verification 
+                                            is necessary to validate your electronic signature.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input type="checkbox" 
+                                               id="agreement-checkbox" 
+                                               class="form-check-input" 
+                                               required="required"/>
+                                        <label for="agreement-checkbox" class="form-check-label small">
+                                            I agree to sign this document electronically and accept the terms above.
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="text-center">
+                                    <button type="button" 
+                                            class="btn btn-success btn-lg mb-2" 
+                                            onclick="submitSignature()"
+                                            id="sign-button"
+                                            disabled="disabled">
+                                        <i class="fa fa-check"></i> Sign Document
+                                    </button>
+                                    <br/>
+                                    <button type="button" 
+                                            class="btn btn-outline-danger" 
+                                            onclick="rejectDocument()">
+                                        <i class="fa fa-times"></i> Reject
+                                    </button>
+                                </div>
+                                
+                                <!-- Loading Indicator -->
+                                <div id="loading-indicator" class="text-center" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Processing...</span>
+                                    </div>
+                                    <p class="mt-2">Processing your signature...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hidden form data -->
+            <input type="hidden" id="access_token" t-att-value="signer.access_token"/>
+            
+            <!-- Include signature JavaScript -->
+            <script type="text/javascript">
+                var canvas = document.getElementById('signature-canvas');
+                var ctx = canvas.getContext('2d');
+                var isDrawing = false;
+                var hasSignature = false;
+                
+                // Signature drawing functionality
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                
+                // Touch events for mobile
+                canvas.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    var touch = e.touches[0];
+                    var mouseEvent = new MouseEvent('mousedown', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                canvas.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    var touch = e.touches[0];
+                    var mouseEvent = new MouseEvent('mousemove', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                canvas.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    var mouseEvent = new MouseEvent('mouseup', {});
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                function startDrawing(e) {
+                    isDrawing = true;
+                    var rect = canvas.getBoundingClientRect();
+                    ctx.beginPath();
+                    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+                    hasSignature = true;
+                    checkFormValidity();
+                }
+                
+                function draw(e) {
+                    if (!isDrawing) return;
+                    var rect = canvas.getBoundingClientRect();
+                    ctx.lineWidth = 2;
+                    ctx.lineCap = 'round';
+                    ctx.strokeStyle = '#000';
+                    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                    ctx.stroke();
+                }
+                
+                function stopDrawing() {
+                    if (isDrawing) {
+                        isDrawing = false;
+                        ctx.beginPath();
+                    }
+                }
+                
+                function clearSignature() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    hasSignature = false;
+                    checkFormValidity();
+                }
+                
+                function loadSignatureImage(input) {
+                    if (input.files &amp;&amp; input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var img = new Image();
+                            img.onload = function() {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                hasSignature = true;
+                                checkFormValidity();
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                
+                // Check agreement checkbox
+                document.getElementById('agreement-checkbox').addEventListener('change', checkFormValidity);
+                
+                function checkFormValidity() {
+                    var agreementChecked = document.getElementById('agreement-checkbox').checked;
+                    var signButton = document.getElementById('sign-button');
+                    
+                    if (hasSignature &amp;&amp; agreementChecked) {
+                        signButton.disabled = false;
+                        signButton.classList.remove('btn-secondary');
+                        signButton.classList.add('btn-success');
+                    } else {
+                        signButton.disabled = true;
+                        signButton.classList.remove('btn-success');
+                        signButton.classList.add('btn-secondary');
+                    }
+                }
+                
+                function submitSignature() {
+                    if (!hasSignature) {
+                        alert('Please provide your signature first.');
+                        return;
+                    }
+                    
+                    if (!document.getElementById('agreement-checkbox').checked) {
+                        alert('Please accept the legal agreement first.');
+                        return;
+                    }
+                    
+                    // Show loading indicator
+                    document.getElementById('loading-indicator').style.display = 'block';
+                    document.getElementById('sign-button').disabled = true;
+                    
+                    // Get signature data
+                    var signatureData = canvas.toDataURL('image/png');
+                    var accessToken = document.getElementById('access_token').value;
+                    
+                    // Submit via AJAX
+                    fetch('/web/sign/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            method: "call",
+                            params: {
+                                access_token: accessToken,
+                                signature_data: signatureData,
+                                signature_method: 'canvas',
+                                location: getLocation()
+                            }
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('loading-indicator').style.display = 'none';
+                        
+                        if (data.result.status === 'success') {
+                            showSuccessMessage(data.result.message, data.result.verification_code);
+                        } else {
+                            showErrorMessage(data.result.message);
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('loading-indicator').style.display = 'none';
+                        showErrorMessage('An error occurred. Please try again.');
+                        console.error('Error:', error);
+                    });
+                }
+                
+                function rejectDocument() {
+                    var reason = prompt('Please provide a reason for rejecting this document:');
+                    if (reason === null) return; // User cancelled
+                    
+                    var accessToken = document.getElementById('access_token').value;
+                    
+                    fetch('/web/sign/reject', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            method: "call",
+                            params: {
+                                access_token: accessToken,
+                                reason: reason
+                            }
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result.status === 'success') {
+                            showSuccessMessage('Document has been rejected successfully.');
+                        } else {
+                            showErrorMessage(data.result.message);
+                        }
+                    })
+                    .catch(error => {
+                        showErrorMessage('An error occurred. Please try again.');
+                        console.error('Error:', error);
+                    });
+                }
+                
+                function showSuccessMessage(message, verificationCode) {
+                    var html = '&lt;div class="alert alert-success"&gt;' +
+                              '&lt;h4&gt;&lt;i class="fa fa-check-circle"&gt;&lt;/i&gt; Success!&lt;/h4&gt;' +
+                              '&lt;p&gt;' + message + '&lt;/p&gt;';
+                    
+                    if (verificationCode) {
+                        html += '&lt;p&gt;&lt;strong&gt;Verification Code:&lt;/strong&gt; ' + verificationCode + '&lt;/p&gt;' +
+                               '&lt;small&gt;Save this code for verification purposes.&lt;/small&gt;';
+                    }
+                    
+                    html += '&lt;/div&gt;';
+                    
+                    document.querySelector('.card-body').innerHTML = html;
+                }
+                
+                function showErrorMessage(message) {
+                    var html = '&lt;div class="alert alert-danger"&gt;' +
+                              '&lt;h4&gt;&lt;i class="fa fa-exclamation-triangle"&gt;&lt;/i&gt; Error&lt;/h4&gt;' +
+                              '&lt;p&gt;' + message + '&lt;/p&gt;' +
+                              '&lt;button type="button" class="btn btn-primary" onclick="location.reload()"&gt;Try Again&lt;/button&gt;' +
+                              '&lt;/div&gt;';
+                    
+                    document.querySelector('.card-body').innerHTML = html;
+                }
+                
+                function getLocation() {
+                    // Simple location detection - in production you might want to use a geolocation API
+                    return 'Web Browser';
+                }
+            </script>
+        </t>
+    </template>
+    
+    <!-- Signature Already Signed Template -->
+    <template id="signature_already_signed" name="Already Signed">
+        <t t-call="website.layout">
+            <t t-set="title">Document Already Signed</t>
+            
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <i class="fa fa-check-circle text-success" style="font-size: 4rem;"></i>
+                            <h2 class="mt-3">Document Already Signed</h2>
+                            <p class="lead">
+                                This document has already been signed by <strong><t t-esc="signer.name"/></strong>.
+                            </p>
+                            <p>
+                                <strong>Document:</strong> <t t-esc="signature_request.document_reference"/><br/>
+                                <strong>Signed on:</strong> <t t-esc="signer.signed_date"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Signature Expired Template -->
+    <template id="signature_expired" name="Signature Expired">
+        <t t-call="website.layout">
+            <t t-set="title">Signature Request Expired</t>
+            
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <i class="fa fa-clock-o text-warning" style="font-size: 4rem;"></i>
+                            <h2 class="mt-3">Signature Request Expired</h2>
+                            <p class="lead">
+                                The signature request for this document has expired.
+                            </p>
+                            <p>
+                                <strong>Document:</strong> <t t-esc="signature_request.document_reference"/><br/>
+                                <strong>Expired on:</strong> <t t-esc="signature_request.expires_on"/>
+                            </p>
+                            <p class="mt-4">
+                                Please contact the document sender to request a new signature link.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Signature Error Template -->
+    <template id="signature_error" name="Signature Error">
+        <t t-call="website.layout">
+            <t t-set="title">Signature Error</t>
+            
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <i class="fa fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                            <h2 class="mt-3">Signature Error</h2>
+                            <div class="alert alert-danger">
+                                <t t-esc="error_message"/>
+                            </div>
+                            <p class="mt-4">
+                                Please check your signature link or contact support for assistance.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Signature Verification Page -->
+    <template id="signature_verification_page" name="Signature Verification">
+        <t t-call="website.layout">
+            <t t-set="title">Signature Verification</t>
+            
+            <div class="container mt-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h3><i class="fa fa-shield"></i> Digital Signature Verification</h3>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="verification_successful">
+                                    <div class="alert alert-success">
+                                        <h4><i class="fa fa-check-circle"></i> Signature Verified Successfully</h4>
+                                        <p>This digital signature has been verified and is authentic.</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5>Document Information</h5>
+                                            <table class="table table-borderless">
+                                                <tr>
+                                                    <td><strong>Document:</strong></td>
+                                                    <td><t t-esc="certificate_data.document_reference"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Signer:</strong></td>
+                                                    <td><t t-esc="certificate_data.signer_name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Email:</strong></td>
+                                                    <td><t t-esc="certificate_data.signer_email"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Signed Date:</strong></td>
+                                                    <td><t t-esc="certificate_data.signature_date"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5>Verification Details</h5>
+                                            <table class="table table-borderless">
+                                                <tr>
+                                                    <td><strong>Verification Code:</strong></td>
+                                                    <td><code><t t-esc="certificate_data.verification_code"/></code></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Signature Hash:</strong></td>
+                                                    <td><small><t t-esc="certificate_data.signature_hash[:16]"/>...</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Status:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-success">
+                                                            <t t-if="certificate_data.is_verified">Verified</t>
+                                                            <t t-else="">Pending Verification</t>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Issued by:</strong></td>
+                                                    <td><t t-esc="certificate_data.company_name"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4">
+                                        <a t-attf-href="/web/sign/download/#{signature.verification_code}" 
+                                           class="btn btn-primary">
+                                            <i class="fa fa-download"></i> Download Certificate
+                                        </a>
+                                    </div>
+                                </t>
+                                
+                                <t t-else="">
+                                    <div class="alert alert-danger">
+                                        <h4><i class="fa fa-times-circle"></i> Verification Failed</h4>
+                                        <t t-esc="error_message"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

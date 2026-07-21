@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Transportation Allowance -->
+        <record id="allowance_type_transport" model="hr.allowance.type">
+            <field name="name">Transportation Allowance</field>
+            <field name="name_arabic">بدل المواصلات</field>
+            <field name="code">TRANSPORT</field>
+            <field name="description">Monthly transportation allowance for employees</field>
+            <field name="category">transport</field>
+            <field name="sequence">10</field>
+            <field name="default_amount">500</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Housing Allowance -->
+        <record id="allowance_type_housing" model="hr.allowance.type">
+            <field name="name">Housing Allowance</field>
+            <field name="name_arabic">بدل السكن</field>
+            <field name="code">HOUSING</field>
+            <field name="description">Housing allowance for employees</field>
+            <field name="category">housing</field>
+            <field name="sequence">20</field>
+            <field name="percentage_of_salary">True</field>
+            <field name="default_percentage">25.0</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Food Allowance -->
+        <record id="allowance_type_food" model="hr.allowance.type">
+            <field name="name">Food Allowance</field>
+            <field name="name_arabic">بدل الطعام</field>
+            <field name="code">FOOD</field>
+            <field name="description">Daily food allowance for employees</field>
+            <field name="category">food</field>
+            <field name="sequence">30</field>
+            <field name="default_amount">300</field>
+            <field name="is_taxable">False</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Communication Allowance -->
+        <record id="allowance_type_communication" model="hr.allowance.type">
+            <field name="name">Communication Allowance</field>
+            <field name="name_arabic">بدل الاتصالات</field>
+            <field name="code">COMM</field>
+            <field name="description">Mobile and internet allowance</field>
+            <field name="category">communication</field>
+            <field name="sequence">40</field>
+            <field name="default_amount">200</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Medical Allowance -->
+        <record id="allowance_type_medical" model="hr.allowance.type">
+            <field name="name">Medical Allowance</field>
+            <field name="name_arabic">البدل الطبي</field>
+            <field name="code">MEDICAL</field>
+            <field name="description">Medical and health insurance allowance</field>
+            <field name="category">medical</field>
+            <field name="sequence">50</field>
+            <field name="percentage_of_salary">True</field>
+            <field name="default_percentage">10.0</field>
+            <field name="is_taxable">False</field>
+            <field name="is_mandatory">True</field>
+        </record>
+        
+        <!-- Performance Allowance -->
+        <record id="allowance_type_performance" model="hr.allowance.type">
+            <field name="name">Performance Allowance</field>
+            <field name="name_arabic">بدل الأداء</field>
+            <field name="code">PERFORMANCE</field>
+            <field name="description">Performance-based incentive allowance</field>
+            <field name="category">performance</field>
+            <field name="sequence">60</field>
+            <field name="default_amount">1000</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Overtime Allowance -->
+        <record id="allowance_type_overtime" model="hr.allowance.type">
+            <field name="name">Overtime Allowance</field>
+            <field name="name_arabic">بدل الوقت الإضافي</field>
+            <field name="code">OVERTIME</field>
+            <field name="description">Additional compensation for overtime work</field>
+            <field name="category">overtime</field>
+            <field name="sequence">70</field>
+            <field name="percentage_of_salary">True</field>
+            <field name="default_percentage">15.0</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+        <!-- Special Allowance -->
+        <record id="allowance_type_special" model="hr.allowance.type">
+            <field name="name">Special Allowance</field>
+            <field name="name_arabic">البدل الخاص</field>
+            <field name="code">SPECIAL</field>
+            <field name="description">Special allowance for specific roles or circumstances</field>
+            <field name="category">special</field>
+            <field name="sequence">80</field>
+            <field name="default_amount">750</field>
+            <field name="is_taxable">True</field>
+            <field name="is_mandatory">False</field>
+        </record>
+        
+    </data>
+</odoo>

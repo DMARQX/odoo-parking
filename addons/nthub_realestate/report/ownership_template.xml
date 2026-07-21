@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template for the Ownership Contract Report -->
+        <template id="report_ownership_contract">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="oe_structure"/>
+                    <div class="page">
+                        <!-- Ownership Contract Details Header -->
+                        <h3 style="text-align:center; color: white; background-color: blue; padding: 10px;">
+                            Ownership Contract Details
+                            <t t-foreach="docs" t-as="o">
+                                <span t-esc="o.name"/>
+                            </t>
+                        </h3> <!-- Added blue background and styled the text -->
+                        <br/>
+
+                        <!-- Owner Contract Data Table -->
+                        <t t-foreach="docs" t-as="o">
+                            <h7>Owner Contract Data</h7>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Responsible</th>
+                                        <th>Owner (Arabic) / المالك</th>
+                                        <th>Owner (English)</th>
+                                        <th>Date</th>
+                                        <th>First Payment Date</th>
+                                        <th>Reservation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.user_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.partner_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.partner_id.name_en or '-'"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.date"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.date_payment"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.reservation_id.name"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Location Table -->
+                            <h7>Location</h7>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Region</th>
+                                        <th>Project</th>
+                                        <th>Project Code</th>
+                                        <th>Floors</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.region.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_code"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.no_of_floors"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Project Unit Table -->
+                            <h7>Project Unit</h7>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Project Unit</th>
+                                        <th>Unit Code</th>
+                                        <th>Floor</th>
+                                        <th>Address</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.unit_code"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.floor"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.address"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.pricing"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Other Payments Table -->
+                            <h7>Other Payments</h7>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Maintenance</th>
+                                        <th>Club</th>
+                                        <th>Garage</th>
+                                        <th>Elevator</th>
+                                        <th>Other Expenses</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.maintenance"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.club"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.garage"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.elevator"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.other"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Installments Table -->
+                            <h7>Installments</h7>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <td>Serial</td>
+                                        <td>Name</td>
+                                        <td>Amount</td>
+                                        <td>Due Date</td>
+                                        <td>Payment State</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="lines" t-value="o.oc_line_ids"/>
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <span t-field="line.serial"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.date"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.payment_state"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Total, Paid, Balance Table -->
+                            <style>
+                                .table5 {
+                                    text-align: right;
+                                    font-size: 16px;
+                                    line-height: 0.5;
+                                }
+                            </style>
+                            <table style="border-collapse: collapse;width: 100%;" class="table5 table-condensed">
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Total">Total:</td>
+                                    <td name="Total Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.amount_total"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Paid">Paid:</td>
+                                    <td name="Delay Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.paid"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Balance">
+                                        Balance:
+                                    </td>
+                                    <td name="Total After Delay Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.balance"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <!-- Template to iterate through ownership.contract records -->
+        <template id="ownership_det_id">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="nthub_realestate.report_ownership_contract"/>
+                    <t t-set="docs" t-value="[o]"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- Record definition for the Ownership Contract Report -->
+        <record id="ownership_details_id" model="ir.actions.report">
+            <field name="name">Ownership Contract Report</field>
+            <field name="model">ownership.contract</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.ownership_det_id</field>
+            <field name="report_file">nthub_realestate.ownership_det_id</field>
+            <field name="binding_model_id" ref="nthub_realestate.model_ownership_contract"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

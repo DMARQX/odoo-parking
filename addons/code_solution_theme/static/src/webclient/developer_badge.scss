@@ -1,0 +1,51 @@
+// Code Solution Theme - Developer Badge
+// Credit badge shown in footer
+
+.o_web_client {
+    position: relative;
+}
+
+// Developer credit badge - bottom right corner
+.cs-developer-badge {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: linear-gradient(135deg, rgba($o-cs-primary, 0.95) 0%, rgba($o-cs-secondary, 0.95) 100%);
+    color: $o-white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: $box-shadow;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    img {
+        height: 20px;
+        width: auto;
+        border-radius: 4px;
+    }
+
+    span {
+        opacity: 0.9;
+    }
+
+    a {
+        color: $o-white;
+        text-decoration: none;
+        font-weight: 600;
+        
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// RTL Support for badge
+html[dir="rtl"] .cs-developer-badge {
+    right: auto;
+    left: 10px;
+    flex-direction: row-reverse;
+}

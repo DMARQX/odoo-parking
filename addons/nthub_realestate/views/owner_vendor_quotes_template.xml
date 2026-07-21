@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================
+         VENDOR QUOTES APPROVAL DASHBOARD
+         Professional Layout with Sidebar
+         ============================================ -->
+
+    <template id="portal_my_vendor_quotes" name="Vendor Quotes Approval Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load ApexCharts from CDN -->
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            
+            <!-- Dashboard Styles -->
+            <style type="text/css">
+            :root {
+                --owner-primary: #5C6BC0;
+                --owner-primary-light: #7986CB;
+                --owner-primary-dark: #3F51B5;
+                --owner-secondary: #78909C;
+                --owner-success: #66BB6A;
+                --owner-success-light: #E8F5E9;
+                --owner-warning: #FFA726;
+                --owner-warning-light: #FFF3E0;
+                --owner-danger: #EF5350;
+                --owner-danger-light: #FFEBEE;
+                --owner-info: #42A5F5;
+                --owner-info-light: #E3F2FD;
+                --owner-purple: #AB47BC;
+                --owner-purple-light: #F3E5F5;
+                --owner-teal: #26A69A;
+                --owner-teal-light: #E0F2F1;
+                --owner-bg: #F5F7FA;
+                --owner-sidebar-bg: #FFFFFF;
+                --owner-card-bg: #FFFFFF;
+                --owner-text: #37474F;
+                --owner-text-muted: #78909C;
+                --owner-border: #E0E0E0;
+                --owner-shadow: rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
+                --sidebar-collapsed-width: 80px;
+            }
+            .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); }
+            .owner-sidebar { width: var(--sidebar-width); background: var(--owner-sidebar-bg); border-right: 1px solid var(--owner-border); position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; transition: all 0.3s ease; box-shadow: 2px 0 10px var(--owner-shadow); display: flex; flex-direction: column; }
+            .owner-sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+            .owner-sidebar.collapsed .sidebar-text, .owner-sidebar.collapsed .sidebar-logo-text { display: none; }
+            .owner-sidebar.collapsed .nav-link { justify-content: center; padding: 1rem; }
+            .owner-sidebar.collapsed .nav-link .nav-icon { margin-right: 0; width: 24px; height: 24px; }
+            .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+            .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sidebar-logo svg { width: 24px; height: 24px; color: white; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+            .owner-sidebar.collapsed .nav-section-title { display: none; }
+            .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+            .sidebar-nav .nav-link .nav-icon { width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; color: var(--owner-text-muted); transition: all 0.2s ease; }
+            .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+            .sidebar-nav .nav-link:hover .nav-icon { color: var(--owner-primary); }
+            .sidebar-nav .nav-link.active { background-color: rgba(92, 107, 192, 0.1); color: var(--owner-primary); border-left-color: var(--owner-primary); font-weight: 600; }
+            .sidebar-nav .nav-link.active .nav-icon { color: var(--owner-primary); }
+            .nav-badge { margin-left: auto; background-color: var(--owner-warning); color: white; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 10px; font-weight: 600; }
+            .sidebar-user { padding: 1rem 1.5rem; border-top: 1px solid var(--owner-border); background-color: var(--owner-bg); }
+            .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--owner-teal) 0%, var(--owner-teal-light) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1rem; }
+            .user-info h6 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--owner-text); }
+            .user-info small { color: var(--owner-text-muted); font-size: 0.75rem; }
+            .sidebar-toggle { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: var(--owner-card-bg); border: 1px solid var(--owner-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; transition: all 0.2s ease; box-shadow: 0 2px 8px var(--owner-shadow); }
+            .sidebar-toggle:hover { background: var(--owner-primary); color: white; border-color: var(--owner-primary); }
+            .main-content { flex: 1; margin-left: var(--sidebar-width); transition: margin-left 0.3s ease; padding: 2rem; }
+            .owner-sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed-width); }
+            .page-header { margin-bottom: 2rem; }
+            .page-title { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin: 0 0 0.5rem 0; }
+            .page-subtitle { color: var(--owner-text-muted); font-size: 0.95rem; margin: 0; }
+            .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+            .stat-card { background: var(--owner-card-bg); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px var(--owner-shadow); border: 1px solid var(--owner-border); transition: all 0.3s ease; }
+            .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--owner-shadow); }
+            .stat-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+            .stat-card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+            .stat-card-icon.purple { background-color: var(--owner-purple-light); color: var(--owner-purple); }
+            .stat-card-icon.warning { background-color: var(--owner-warning-light); color: var(--owner-warning); }
+            .stat-card-icon.success { background-color: var(--owner-success-light); color: var(--owner-success); }
+            .stat-card-icon.danger { background-color: var(--owner-danger-light); color: var(--owner-danger); }
+            .stat-card-value { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin-bottom: 0.25rem; }
+            .stat-card-label { color: var(--owner-text-muted); font-size: 0.85rem; }
+            .content-card { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); border: 1px solid var(--owner-border); overflow: hidden; margin-bottom: 1.5rem; }
+            .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; justify-content: space-between; align-items: center; }
+            .card-title { font-size: 1rem; font-weight: 600; color: var(--owner-text); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+            .card-title i { color: var(--owner-purple); }
+            .status-badge { display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+            .status-badge.pending { background-color: var(--owner-warning-light); color: var(--owner-warning); }
+            .status-badge.approved { background-color: var(--owner-success-light); color: var(--owner-success); }
+            .status-badge.rejected { background-color: var(--owner-danger-light); color: var(--owner-danger); }
+            .table-wrapper { overflow-x: auto; }
+            .data-table { width: 100%; border-collapse: collapse; }
+            .data-table th { background-color: var(--owner-bg); padding: 1rem 1.5rem; text-align: left; font-weight: 600; color: var(--owner-text); font-size: 0.85rem; border-bottom: 2px solid var(--owner-border); }
+            .data-table td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--owner-border); color: var(--owner-text); font-size: 0.9rem; }
+            .data-table tbody tr:hover { background-color: var(--owner-bg); }
+            .search-box { position: relative; }
+            .search-box input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--owner-border); border-radius: 8px; font-size: 0.9rem; transition: all 0.2s ease; }
+            .search-box input:focus { outline: none; border-color: var(--owner-primary); box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.1); }
+            .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--owner-text-muted); }
+            .action-btn { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; border: none; }
+            .action-btn.approve { background: var(--owner-success); color: white; }
+            .action-btn.approve:hover { background: #4CAF50; }
+            .action-btn.reject { background: var(--owner-danger); color: white; }
+            .action-btn.reject:hover { background: #E53935; }
+            .action-btn.view { background: var(--owner-info); color: white; }
+            .action-btn.view:hover { background: #1E88E5; }
+            .mobile-menu-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: var(--owner-primary); color: white; border-radius: 50%; z-index: 1002; cursor: pointer; box-shadow: 0 4px 12px rgba(92, 107, 192, 0.4); align-items: center; justify-content: center; }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 999; }
+            @media (max-width: 768px) {
+                .owner-sidebar { transform: translateX(-100%); width: 280px; }
+                .owner-sidebar.mobile-open { transform: translateX(0); }
+                .main-content { margin-left: 0; padding: 1rem; }
+                .mobile-menu-toggle { display: flex; }
+                .sidebar-overlay.active { display: block; }
+                .sidebar-toggle { display: none; }
+            }
+            </style>
+            
+            <div class="owner-dashboard-wrapper">
+                <!-- Sidebar -->
+                <aside class="owner-sidebar">
+                    <div class="sidebar-toggle" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                    </div>
+                    
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span class="sidebar-text">Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span class="sidebar-text">My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span class="sidebar-text">Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span class="sidebar-text">Receivables</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Requests</div>
+                            <a href="/my/vendor_quotes" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="sidebar-text">Pending Approvals</span>
+                                <t t-if="pending_count">
+                                    <span class="nav-badge"><t t-esc="pending_count"/></span>
+                                </t>
+                            </a>
+                            <a href="/my/requests" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span class="sidebar-text">My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="sidebar-text">New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                    
+                    <div class="sidebar-user">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="user-avatar">
+                                <t t-esc="request.env.user.name[:2].upper()"/>
+                            </div>
+                            <div class="user-info">
+                                <h6><t t-esc="request.env.user.name"/></h6>
+                                <small>Property Owner</small>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Sidebar Overlay for Mobile -->
+                <div class="sidebar-overlay"/>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                </button>
+                
+                <!-- Main Content -->
+                <main class="main-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Vendor Quotes Approval</h1>
+                        <p class="page-subtitle">Review and approve vendor quotes for your properties</p>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon purple">
+                                    <i class="fa fa-file-text"/>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="total_quotes or 0"/></div>
+                            <div class="stat-card-label">Total Quotes</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon warning">
+                                    <i class="fa fa-clock-o"/>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="pending_count or 0"/></div>
+                            <div class="stat-card-label">Pending Approval</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon success">
+                                    <i class="fa fa-check-circle"/>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="approved_count or 0"/></div>
+                            <div class="stat-card-label">Approved</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon danger">
+                                    <i class="fa fa-times-circle"/>
+                                </div>
+                            </div>
+                            <div class="stat-card-value"><t t-esc="rejected_count or 0"/></div>
+                            <div class="stat-card-label">Rejected</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quotes Table -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fa fa-list"/>
+                                Vendor Quotes
+                            </h3>
+                            <div class="search-box" style="width: 250px;">
+                                <i class="fa fa-search"/>
+                                <input type="text" id="quotes-search" placeholder="Search quotes..."/>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="quotes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Quote #</th>
+                                        <th>Vendor</th>
+                                        <th>Project</th>
+                                        <th>Job Order</th>
+                                        <th class="text-end">Amount</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="quotes or []" t-as="quote">
+                                        <tr>
+                                            <td><t t-esc="quote.get('name', '-')"/></td>
+                                            <td><t t-esc="quote.get('vendor_name', '-')"/></td>
+                                            <td><t t-esc="quote.get('project_name', '-')"/></td>
+                                            <td><t t-esc="quote.get('job_order_name', '-')"/></td>
+                                            <td class="text-end">
+                                                <t t-esc="'%.2f' % quote.get('amount', 0)"/>
+                                                <small class="text-muted"><t t-esc="company_currency.symbol if company_currency else 'SAR'"/></small>
+                                            </td>
+                                            <td>
+                                                <t t-if="quote.get('state') == 'pending'">
+                                                    <span class="status-badge pending">
+                                                        <i class="fa fa-clock-o me-1"/> Pending
+                                                    </span>
+                                                </t>
+                                                <t t-elif="quote.get('state') == 'approved'">
+                                                    <span class="status-badge approved">
+                                                        <i class="fa fa-check me-1"/> Approved
+                                                    </span>
+                                                </t>
+                                                <t t-elif="quote.get('state') == 'rejected'">
+                                                    <span class="status-badge rejected">
+                                                        <i class="fa fa-times me-1"/> Rejected
+                                                    </span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-set="quote_url" t-value="'/my/vendor_quote/' + str(quote.get('id', 0))"/>
+                                                <a t-att-href="quote_url" class="action-btn view">
+                                                    <i class="fa fa-eye"/> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="not quotes">
+                                        <tr>
+                                            <td colspan="7" class="text-center py-4">
+                                                <i class="fa fa-inbox fa-3x mb-3" style="color: var(--owner-text-muted);" title="No vendor quotes"/>
+                                                <p class="text-muted mb-0">No vendor quotes found</p>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+            <!-- Scripts -->
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Sidebar Toggle
+                    var sidebar = document.querySelector('.owner-sidebar');
+                    var toggle = document.querySelector('.sidebar-toggle');
+                    var mobileToggle = document.querySelector('.mobile-menu-toggle');
+                    var overlay = document.querySelector('.sidebar-overlay');
+
+                    if (toggle) toggle.addEventListener('click', function() { sidebar.classList.toggle('collapsed'); });
+                    if (mobileToggle) mobileToggle.addEventListener('click', function() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); });
+                    if (overlay) overlay.addEventListener('click', function() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); });
+
+                    // Search functionality
+                    var searchInput = document.getElementById('quotes-search');
+                    if (searchInput) {
+                        searchInput.addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#quotes-table tbody tr');
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                    }
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

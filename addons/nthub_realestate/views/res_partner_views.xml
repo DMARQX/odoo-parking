@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit res.partner form view to add bilingual name fields -->
+        <record id="view_partner_bilingual_names" model="ir.ui.view">
+            <field name="name">res.partner.bilingual.names</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">5</field>
+            <field name="arch" type="xml">
+                <!-- Add bilingual name fields after the name field -->
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="name_english" placeholder="Enter name in English"/>
+                    <field name="name_arabic" placeholder="أدخل الاسم بالعربية"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Inherit res.partner list view to show bilingual names (Odoo 18) -->
+        <record id="view_partner_list_bilingual_names" model="ir.ui.view">
+            <field name="name">res.partner.list.bilingual.names</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="name_english" optional="show" string="Name (EN)"/>
+                    <field name="name_arabic" optional="show" string="Name (AR)"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit res.partner form view to add tenant information page -->
+        <record id="view_partner_tenant_form" model="ir.ui.view">
+            <field name="name">res.partner.tenant.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Tenant Information" name="tenant_info" 
+                          invisible="is_tenant != True">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Tenant Information Form / نموذج معلومات المستأجر</strong>
+                        </div>
+                        
+                        <!-- Print Button -->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_print_tenant_form" 
+                                    type="object" 
+                                    string="Print Tenant Form"
+                                    class="oe_stat_button btn-primary" 
+                                    icon="fa-print">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Print Form</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <group>
+                            <group string="Basic Information">
+                                <field name="is_tenant" string="Is Tenant"/>
+                                <field name="tenant_name" string="Tenant Name" 
+                                       invisible="1"/>
+                                <field name="trade_name" string="Trade Name"/>
+                                <field name="activity" string="Activity"/>
+                            </group>
+                            
+                            <group string="Registration Information">
+                                <field name="commercial_registration_no" 
+                                       string="Commercial Registration No."
+                                       invisible="1"/>
+                                <field name="commercial_registration_validity" 
+                                       string="Commercial Registration Validity"
+                                       invisible="1"/>
+                                <field name="vat_number" string="VAT Number"
+                                       invisible="1"/>
+                                <field name="company_age" string="Company Age (Years)"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Company Details">
+                                <field name="current_location" string="Current Location"/>
+                                <field name="number_of_employees" 
+                                       string="Number of Employees"/>
+                                <field name="number_of_companies" 
+                                       string="Number of Companies (if any)"/>
+                                <field name="companies_activity" 
+                                       string="Activity of Companies (if any)"/>
+                                <field name="international_location" 
+                                       string="International / Location"/>
+                            </group>
+                            
+                            <group string="Financial Information">
+                                <field name="capital_of_company" 
+                                       string="Capital of Company"/>
+                                <field name="capital_investment" 
+                                       string="Capital Investment"/>
+                                <field name="credit_record" 
+                                       string="Credit Record"/>
+                                <field name="financial_performance" 
+                                       string="Financial Performance"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Legal Information">
+                                <field name="legal_cases" 
+                                       string="Legal Cases"/>
+                                <field name="legal_cases_details" 
+                                       string="Legal Cases Details"
+                                       invisible="legal_cases != True"/>
+                                <field name="company_owners_cv" 
+                                       string="CV of Company Owners"/>
+                            </group>
+                            
+                            <group string="Projects Information">
+                                <field name="number_of_existing_projects" 
+                                       string="Number of Existing Projects"/>
+                                <field name="number_of_future_projects" 
+                                       string="Number of Future Projects"/>
+                            </group>
+                        </group>
+
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <!-- Add is_tenant field to the main partner form for easy access -->
+        <record id="view_partner_tenant_checkbox" model="ir.ui.view">
+            <field name="name">res.partner.tenant.checkbox</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_company']" position="after">
+                    <field name="is_tenant" string="Is Tenant"/>
+                    <field name="is_owner" string="Is Owner"/>
+                </xpath>
+                <xpath expr="//field[@name='is_owner']" position="after">
+                    <field name="is_contractor" string="Is Contractor"/>
+                    <field name="is_contractor_supervisor" string="Is Contractor Supervisor"/>
+                </xpath>
+                <field name="name" position="after">
+                    <field name="name_en" placeholder="Name in English" 
+                           invisible="is_tenant != True and is_owner != True"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

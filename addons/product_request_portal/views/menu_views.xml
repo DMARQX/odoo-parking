@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_product_request_root" 
+                  name="Product Requests / طلبات المنتجات" 
+                  web_icon="product_request_portal,static/description/icon.png"
+                  sequence="95"/>
+
+        <!-- Product Requests Menu -->
+        <menuitem id="menu_product_request_main" 
+                  name="Requests / الطلبات" 
+                  parent="menu_product_request_root" 
+                  action="action_product_request" 
+                  sequence="10"/>
+
+        <!-- Product Request Lines Menu -->
+        <menuitem id="menu_product_request_line" 
+                  name="Request Lines / بنود الطلبات" 
+                  parent="menu_product_request_root" 
+                  action="action_product_request_line" 
+                  sequence="20"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_product_request_config" 
+                  name="Configuration / إعدادات" 
+                  parent="menu_product_request_root" 
+                  sequence="100"/>
+
+        <!-- Partners Configuration -->
+        <menuitem id="menu_product_request_partners" 
+                  name="Portal Users / مستخدمي البورتال" 
+                  parent="menu_product_request_config"
+                  action="base.action_partner_form"
+                  sequence="10"/>
+
+    </data>
+</odoo>

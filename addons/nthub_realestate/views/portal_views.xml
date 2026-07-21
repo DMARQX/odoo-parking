@@ -1,0 +1,1158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================== -->
+    <!--  1. Rental Contracts List View     -->
+    <!-- ================================== -->
+    <template id="portal_my_rental_contracts" name="My Rental Contracts">
+        <t t-call="portal.portal_layout">
+            <t t-set="title">Rental Contracts</t>
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            <t t-call="nthub_realestate.tenant_portal_styles"/>
+            
+            <div class="t-wrapper">
+                <!-- Sidebar -->
+                <t t-call="nthub_realestate.tenant_sidebar">
+                    <t t-set="page_name" t-value="'rental_contracts'"/>
+                </t>
+                
+                <!-- Main Content -->
+                <main class="t-main">
+                    <div class="t-header">
+                        <h1>My Contracts</h1>
+                        <p>Manage and track all your rental agreements</p>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="t-stats">
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:rgba(14,165,233,0.15);color:#0EA5E9;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            </div>
+                            <div class="t-stat-value"><t t-esc="len(contracts) if contracts else 0"/></div>
+                            <div class="t-stat-label">Total Contracts</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#D1FAE5;color:#059669;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#059669;"><t t-esc="len([c for c in (contracts or []) if c.state == 'confirmed'])"/></div>
+                            <div class="t-stat-label">Active</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#FEF3C7;color:#D97706;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#D97706;"><t t-esc="len([c for c in (contracts or []) if c.state == 'draft'])"/></div>
+                            <div class="t-stat-label">In Draft</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#FEE2E2;color:#DC2626;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#DC2626;"><t t-esc="len([c for c in (contracts or []) if c.state in ['done', 'cancel']])"/></div>
+                            <div class="t-stat-label">Expired</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contracts Table -->
+                    <div class="t-card">
+                        <div class="t-card-header">
+                            <span>Contracts List</span>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table class="t-table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Property</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Status</th>
+                                        <th style="text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not contracts">
+                                        <tr>
+                                            <td colspan="6" style="text-align:center;padding:3rem;color:var(--t-muted);">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:48px;height:48px;margin-bottom:1rem;opacity:0.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>
+                                                <br/>No contracts found
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="contracts or []" t-as="contract">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="contract.name"/>
+                                                <br/><small style="color:var(--t-muted);">#<t t-esc="contract.id"/></small>
+                                            </td>
+                                            <td>
+                                                <t t-if="contract.rs_project_unit">
+                                                    <t t-esc="contract.rs_project_unit.name"/>
+                                                </t>
+                                                <t t-else="">-</t>
+                                            </td>
+                                            <td><t t-esc="contract.date_from" t-options='{"widget": "date"}'/></td>
+                                            <td><t t-esc="contract.date_to" t-options='{"widget": "date"}'/></td>
+                                            <td>
+                                                <span t-if="contract.state == 'draft'" class="t-badge t-badge-warning">Draft</span>
+                                                <span t-if="contract.state == 'confirmed'" class="t-badge t-badge-success">Active</span>
+                                                <span t-if="contract.state == 'done'" class="t-badge t-badge-gray">Done</span>
+                                                <span t-if="contract.state == 'cancel'" class="t-badge t-badge-danger">Cancelled</span>
+                                                <span t-if="contract.state in ['renewed', 'renew']" class="t-badge t-badge-info">Renewed</span>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <a t-att-href="'/my/rental_contract/' + str(contract.id)" class="t-btn-outline" style="text-decoration:none;">
+                                                    View →
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================================== -->
+    <!--  2. Rental Contract DETAIL View          -->
+    <!--  Modern sidebar design like Owner Portal -->
+    <!-- ======================================== -->
+    <template id="portal_rental_contract_view" name="Rental Contract Details">
+        <t t-call="portal.portal_layout">
+            <t t-set="title">Contract <t t-esc="contract.name"/></t>
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            <t t-call="nthub_realestate.tenant_portal_styles"/>
+            
+            <div class="t-wrapper">
+                <!-- Sidebar -->
+                <t t-call="nthub_realestate.tenant_sidebar">
+                    <t t-set="page_name" t-value="'contract_detail'"/>
+                </t>
+                
+                <!-- Main Content -->
+                <main class="t-main">
+                    <!-- Success Message -->
+                    <t t-if="request.params.get('message') == 'success'">
+                        <div class="t-alert t-alert-success" style="margin-bottom:1.5rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;margin-right:8px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Your maintenance request has been submitted successfully.
+                        </div>
+                    </t>
+                    
+                    <!-- Header with Back Button -->
+                    <div class="t-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+                        <div>
+                            <h1 t-esc="contract.name"/>
+                            <p>Contract Details and Management</p>
+                        </div>
+                        <a href="/my/rental_contracts" class="t-btn-outline" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                            Back to Contracts
+                        </a>
+                    </div>
+                    
+                    <!-- Contract Info Cards Row -->
+                    <div class="t-stats" style="margin-bottom:1.5rem;">
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:rgba(14,165,233,0.15);color:#0EA5E9;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                            </div>
+                            <div class="t-stat-value"><t t-esc="contract.date_from" t-options='{"widget": "date"}'/></div>
+                            <div class="t-stat-label">Start Date</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#FEE2E2;color:#DC2626;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                            </div>
+                            <div class="t-stat-value"><t t-esc="contract.date_to" t-options='{"widget": "date"}'/></div>
+                            <div class="t-stat-label">End Date</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#D1FAE5;color:#059669;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="font-size:0.95rem;"><t t-esc="contract.rs_project_unit.name or '-'"/></div>
+                            <div class="t-stat-label">Property / Unit</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" t-attf-style="background:{{ 'rgba(14,165,233,0.15)' if contract.state == 'draft' else ('#D1FAE5' if contract.state == 'confirmed' else '#FEE2E2') }};color:{{ '#0EA5E9' if contract.state == 'draft' else ('#059669' if contract.state == 'confirmed' else '#DC2626') }};">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="font-size:0.95rem;">
+                                <span t-if="contract.state == 'draft'">Draft</span>
+                                <span t-if="contract.state == 'confirmed'">Active</span>
+                                <span t-if="contract.state == 'done'">Done</span>
+                                <span t-if="contract.state == 'cancel'">Cancelled</span>
+                                <span t-if="contract.state in ['renewed', 'renew']">Renewed</span>
+                            </div>
+                            <div class="t-stat-label">Status</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Two Column Layout -->
+                    <div style="display:grid;grid-template-columns:1fr 350px;gap:1.5rem;">
+                        <!-- Left Column -->
+                        <div>
+                            <!-- Payments Card -->
+                            <div class="t-card" style="margin-bottom:1.5rem;">
+                                <div class="t-card-header">
+                                    <span>Payment Schedule</span>
+                                    <span class="t-badge t-badge-info" t-if="installments"><t t-esc="len(installments)"/> payments</span>
+                                </div>
+                                <div style="overflow-x:auto;">
+                                    <table class="t-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice No</th>
+                                                <th>Description</th>
+                                                <th>Due Date</th>
+                                                <th style="text-align:right;">Amount</th>
+                                                <th style="text-align:center;">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="not installments">
+                                                <tr>
+                                                    <td colspan="5" style="text-align:center;padding:2rem;color:var(--t-muted);">
+                                                        No payment installments found.
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-foreach="installments or []" t-as="line">
+                                                <tr>
+                                                    <td><strong t-esc="line.inv_number or '-'"/></td>
+                                                    <td t-esc="line.name or '-'"/>
+                                                    <td><t t-esc="line.date" t-options='{"widget": "date"}'/></td>
+                                                    <td style="text-align:right;font-weight:600;"><t t-esc="line.amount" t-options='{"widget": "monetary", "display_currency": contract.company_id.currency_id}'/></td>
+                                                    <td style="text-align:center;">
+                                                        <span t-if="line.payment_state == 'paid'" class="t-badge t-badge-success">Paid</span>
+                                                        <span t-elif="line.payment_state == 'in_payment'" class="t-badge t-badge-info">In Payment</span>
+                                                        <span t-else="" class="t-badge t-badge-warning">Not Paid</span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Maintenance History Card -->
+                            <div class="t-card">
+                                <div class="t-card-header">
+                                    <span>Maintenance History</span>
+                                    <span class="t-badge t-badge-warning" t-if="maintenance_requests"><t t-esc="len(maintenance_requests)"/> requests</span>
+                                </div>
+                                <div style="overflow-x:auto;">
+                                    <table class="t-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Subject</th>
+                                                <th>Type</th>
+                                                <th>Priority</th>
+                                                <th>Status</th>
+                                                <th style="text-align:center;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="not maintenance_requests">
+                                                <tr>
+                                                    <td colspan="5" style="text-align:center;padding:2rem;color:var(--t-muted);">
+                                                        No maintenance requests found.
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-foreach="maintenance_requests or []" t-as="req">
+                                                <tr>
+                                                    <td><strong t-esc="req.name"/></td>
+                                                    <td>
+                                                        <span t-if="req.x_request_type == 'electrical'" class="t-badge" style="background:#FEF3C7;color:#B45309;">Electrical</span>
+                                                        <span t-if="req.x_request_type == 'mechanical'" class="t-badge" style="background:#DBEAFE;color:#1D4ED8;">Mechanical</span>
+                                                        <span t-if="req.x_request_type == 'low_current'" class="t-badge" style="background:#E0E7FF;color:#4338CA;">Low Current</span>
+                                                        <span t-if="req.x_request_type == 'civil'" class="t-badge" style="background:#F3F4F6;color:#374151;">Civil</span>
+                                                        <span t-if="req.x_request_type == 'general'" class="t-badge" style="background:#1F2937;color:#fff;">General</span>
+                                                        <span t-if="req.x_request_type == 'other'" class="t-badge" style="background:#E5E7EB;color:#374151;">Other</span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-if="req.priority == 'urgent'" class="t-badge t-badge-danger">Urgent</span>
+                                                        <span t-elif="req.priority == 'high'" class="t-badge t-badge-warning">High</span>
+                                                        <span t-elif="req.priority == 'normal'" class="t-badge t-badge-info">Normal</span>
+                                                        <span t-else="" class="t-badge t-badge-gray">Low</span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-if="req.x_status == 'draft'" class="t-badge t-badge-gray">Draft</span>
+                                                        <span t-elif="req.x_status == 'submitted'" class="t-badge t-badge-info">Submitted</span>
+                                                        <span t-elif="req.x_status == 'under_review'" class="t-badge" style="background:#DBEAFE;color:#1D4ED8;">Under Review</span>
+                                                        <span t-elif="req.x_status == 'job_ordered'" class="t-badge t-badge-warning">Job Ordered</span>
+                                                        <span t-elif="req.x_status == 'in_progress'" class="t-badge t-badge-warning">In Progress</span>
+                                                        <span t-elif="req.x_status == 'approved_by_tenant'" class="t-badge t-badge-success">Approved</span>
+                                                        <span t-elif="req.x_status == 'closed'" class="t-badge t-badge-success">Closed</span>
+                                                        <span t-else="" class="t-badge t-badge-danger">Cancelled</span>
+                                                    </td>
+                                                    <td style="text-align:center;">
+                                                        <a t-att-href="'/my/maintenance_request/' + str(req.id)" class="t-btn-outline" style="text-decoration:none;padding:0.35rem 0.75rem;font-size:0.8rem;">View</a>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column - Sidebar Cards -->
+                        <div>
+                            <!-- Tenant Info Card -->
+                            <div class="t-card" style="margin-bottom:1.5rem;">
+                                <div class="t-card-header">
+                                    <span>Tenant Information</span>
+                                </div>
+                                <div style="padding:1.25rem;">
+                                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+                                        <img t-att-src="image_data_uri(contract.partner_id.avatar_128)" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #E2E8F0;" alt="Avatar"/>
+                                        <div>
+                                            <h4 style="margin:0;font-weight:600;color:var(--t-dark);" t-esc="contract.partner_id.name"/>
+                                            <p t-if="contract.partner_id.email" style="margin:0;font-size:0.85rem;color:var(--t-muted);">
+                                                <t t-esc="contract.partner_id.email"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <t t-if="contract.partner_id.phone">
+                                        <div style="display:flex;align-items:center;gap:0.5rem;color:var(--t-muted);font-size:0.9rem;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
+                                            <span t-esc="contract.partner_id.phone"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            
+                            <!-- Maintenance Request Form Card -->
+                            <div class="t-card">
+                                <div class="t-card-header" style="background:linear-gradient(135deg,#0EA5E9 0%,#0284C7 100%);color:#fff;">
+                                    <span>Request Maintenance</span>
+                                </div>
+                                <div style="padding:1.25rem;">
+                                    <form t-att-action="'/my/rental_contract/' + str(contract.id) + '/maintenance_request'" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        
+                                        <!-- Request Type -->
+                                        <div style="margin-bottom:1rem;">
+                                            <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.4rem;color:var(--t-dark);">Request Type <span style="color:#DC2626;">*</span></label>
+                                            <select name="x_request_type" required="1" style="width:100%;padding:0.6rem;border:1px solid #E2E8F0;border-radius:8px;font-size:0.9rem;">
+                                                <option value="">-- Select Type --</option>
+                                                <option value="electrical">Electrical</option>
+                                                <option value="mechanical">Mechanical</option>
+                                                <option value="low_current">Low Current</option>
+                                                <option value="civil">Civil</option>
+                                                <option value="general">General</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Issue / Subject -->
+                                        <div style="margin-bottom:1rem;">
+                                            <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.4rem;color:var(--t-dark);">Issue / Subject <span style="color:#DC2626;">*</span></label>
+                                            <input type="text" name="name" required="1" placeholder="e.g. Leaky Faucet in Kitchen" style="width:100%;padding:0.6rem;border:1px solid #E2E8F0;border-radius:8px;font-size:0.9rem;"/>
+                                        </div>
+                                        
+                                        <!-- Priority -->
+                                        <div style="margin-bottom:1rem;">
+                                            <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.4rem;color:var(--t-dark);">Priority <span style="color:#DC2626;">*</span></label>
+                                            <select name="priority" required="1" style="width:100%;padding:0.6rem;border:1px solid #E2E8F0;border-radius:8px;font-size:0.9rem;">
+                                                <option value="normal" selected="1">Normal</option>
+                                                <option value="low">Low</option>
+                                                <option value="high">High</option>
+                                                <option value="urgent">Urgent</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Description -->
+                                        <div style="margin-bottom:1rem;">
+                                            <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.4rem;color:var(--t-dark);">Description <span style="color:#DC2626;">*</span></label>
+                                            <textarea name="description" rows="3" required="1" placeholder="Please provide details about the issue..." style="width:100%;padding:0.6rem;border:1px solid #E2E8F0;border-radius:8px;font-size:0.9rem;resize:vertical;"></textarea>
+                                        </div>
+                                        
+                                        <!-- Attachments -->
+                                        <div style="margin-bottom:1.25rem;">
+                                            <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.4rem;color:var(--t-dark);">Attachments</label>
+                                            <input type="file" name="attachments" multiple="1" accept="image/*,.pdf,.doc,.docx" style="width:100%;padding:0.5rem;border:1px solid #E2E8F0;border-radius:8px;font-size:0.85rem;background:#F8FAFC;"/>
+                                            <small style="color:var(--t-muted);font-size:0.75rem;">Photos or documents (Max 10MB each)</small>
+                                        </div>
+                                        
+                                        <button type="submit" style="width:100%;padding:0.75rem;background:linear-gradient(135deg,#0EA5E9 0%,#0284C7 100%);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
+                                            Submit Request
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Responsive Style for mobile -->
+                    <style>
+                        @media (max-width: 1024px) {
+                            .t-main > div[style*="grid-template-columns"] {
+                                grid-template-columns: 1fr !important;
+                            }
+                        }
+                    </style>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_contract_installments_card">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-light fw-bold">Payments</div>
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless mb-0">
+                    <thead><tr><th><span class="text-highlight fw-bold">Invoice No</span></th><th><span class="text-highlight fw-bold">Description</span></th><th><span class="text-highlight fw-bold">Due Date</span></th><th class="text-end"><span class="text-highlight fw-bold">Amount</span></th><th class="text-center"><span class="text-highlight fw-bold">Status</span></th></tr></thead>
+                    <tbody>
+                        <t t-if="not installments"><tr><td colspan="5" class="text-center text-muted py-4">No payment installments found.</td></tr></t>
+                        <t t-foreach="installments" t-as="line"><tr class="align-middle"><td><span class="text-highlight"><t t-esc="line.inv_number"/></span></td><td><span class="text-highlight"><t t-esc="line.name"/></span></td><td><span class="text-highlight"><t t-esc="line.date" t-options='{"widget": "date"}'/></span></td><td class="text-end"><span class="text-highlight fw-bold"><t t-esc="line.amount" t-options='{"widget": "monetary", "display_currency": contract.company_id.currency_id}'/></span></td><td class="text-center"><span t-if="line.payment_state == 'paid'" class="badge rounded-pill fs-base fw-normal badge-soft-success">Paid</span><span t-elif="line.payment_state == 'in_payment'" class="badge rounded-pill fs-base fw-normal badge-soft-info">In Payment</span><span t-else="" class="badge rounded-pill fs-base fw-normal badge-soft-warning">Not Paid</span></td></tr></t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <!-- ======================================== -->
+    <!--  3. Maintenance Request Views (Updated)  -->
+    <!-- ======================================== -->
+    <template id="portal_contract_maintenance_history_card">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-light fw-bold">Maintenance History</div>
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless mb-0">
+                    <thead><tr><th class="ps-4">Subject</th><th>Type</th><th>Priority</th><th>Status</th><th class="text-end pe-4">Action</th></tr></thead>
+                    <tbody>
+                        <t t-if="not maintenance_requests"><tr><td colspan="5" class="text-center text-muted py-4">No maintenance requests found.</td></tr></t>
+                        <t t-foreach="maintenance_requests" t-as="req">
+                            <tr class="align-middle">
+                                <td class="ps-4" t-esc="req.name"/>
+                                <td>
+                                    <span t-if="req.x_request_type == 'electrical'" class="badge bg-warning">Electrical</span>
+                                    <span t-if="req.x_request_type == 'mechanical'" class="badge bg-info">Mechanical</span>
+                                    <span t-if="req.x_request_type == 'low_current'" class="badge bg-primary">Low Current</span>
+                                    <span t-if="req.x_request_type == 'civil'" class="badge bg-secondary">Civil</span>
+                                    <span t-if="req.x_request_type == 'general'" class="badge bg-dark">General</span>
+                                    <span t-if="req.x_request_type == 'other'" class="badge bg-light text-dark">Other</span>
+                                </td>
+                                <td>
+                                    <span t-if="req.priority == 'urgent'" class="badge bg-danger">Urgent</span>
+                                    <span t-elif="req.priority == 'high'" class="badge bg-warning">High</span>
+                                    <span t-elif="req.priority == 'normal'" class="badge bg-info">Normal</span>
+                                    <span t-else="" class="badge bg-secondary">Low</span>
+                                </td>
+                                <td>
+                                    <span t-if="req.x_status == 'draft'" class="badge rounded-pill bg-secondary">Draft</span>
+                                    <span t-elif="req.x_status == 'submitted'" class="badge rounded-pill bg-primary">Submitted</span>
+                                    <span t-elif="req.x_status == 'under_review'" class="badge rounded-pill bg-info">Under Review</span>
+                                    <span t-elif="req.x_status == 'job_ordered'" class="badge rounded-pill bg-warning">Job Ordered</span>
+                                    <span t-elif="req.x_status == 'in_progress'" class="badge rounded-pill bg-warning text-dark">In Progress</span>
+                                    <span t-elif="req.x_status == 'approved_by_tenant'" class="badge rounded-pill bg-success">Approved</span>
+                                    <span t-elif="req.x_status == 'closed'" class="badge rounded-pill bg-success">Closed</span>
+                                    <span t-else="" class="badge rounded-pill bg-danger">Cancelled</span>
+                                </td>
+                                <td class="text-end pe-4"><a t-att-href="'/my/maintenance_request/' + str(req.id)" class="btn btn-sm btn-outline-secondary">View</a></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_maintenance_request_view" name="Maintenance Request Details">
+        <t t-call="portal.portal_layout">
+            <t t-set="title">Maintenance Request</t>
+            <t t-call="nthub_realestate.tenant_portal_styles"/>
+            
+            <div class="t-wrapper">
+                <!-- Sidebar -->
+                <t t-call="nthub_realestate.tenant_sidebar">
+                    <t t-set="page_name" t-value="'maintenance'"/>
+                </t>
+                
+                <!-- Main Content -->
+                <main class="t-main">
+                    <!-- Header -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+                        <div>
+                            <a t-att-href="'/my/maintenance_requests'" style="color:#0EA5E9;text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.3rem;margin-bottom:0.5rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                                Back to Requests
+                            </a>
+                            <h1 style="font-size:1.5rem;font-weight:700;color:#1e293b;margin:0;" t-esc="maintenance_request_obj.name"/>
+                        </div>
+                        <!-- Status Badge -->
+                        <div>
+                            <span t-if="maintenance_request_obj.x_status == 'draft'" class="t-badge" style="--badge-bg:#f1f5f9;--badge-color:#64748b;">Draft</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'submitted'" class="t-badge" style="--badge-bg:#dbeafe;--badge-color:#1d4ed8;">Submitted</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'under_review'" class="t-badge" style="--badge-bg:#e0f2fe;--badge-color:#0369a1;">Under Review</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'job_ordered'" class="t-badge" style="--badge-bg:#fef3c7;--badge-color:#d97706;">Job Ordered</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'in_progress'" class="t-badge" style="--badge-bg:#fed7aa;--badge-color:#c2410c;">In Progress</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'pending_supervisor_approval'" class="t-badge" style="--badge-bg:#e0e7ff;--badge-color:#4338ca;">Supervisor Review</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'pending_tenant_approval'" class="t-badge" style="--badge-bg:#fef08a;--badge-color:#a16207;">Your Approval Needed</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'approved_by_tenant'" class="t-badge" style="--badge-bg:#dcfce7;--badge-color:#15803d;">Approved</span>
+                            <span t-elif="maintenance_request_obj.x_status == 'closed'" class="t-badge" style="--badge-bg:#d1fae5;--badge-color:#047857;">Closed</span>
+                            <span t-else="" class="t-badge" style="--badge-bg:#fee2e2;--badge-color:#dc2626;">Cancelled</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Alerts -->
+                    <div t-if="request.params.get('message')" style="background:#d1fae5;border:1px solid #86efac;color:#166534;padding:1rem;border-radius:8px;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <t t-esc="request.params.get('message')"/>
+                    </div>
+                    <div t-if="request.params.get('error') == 'rejection_reason_required'" style="background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:1rem;border-radius:8px;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                        Please provide a reason for rejection.
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="t-stats">
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#fef3c7;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#d97706" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>
+                            </div>
+                            <div class="t-stat-content">
+                                <span class="t-stat-label">Request Type</span>
+                                <span class="t-stat-value" style="font-size:0.95rem;">
+                                    <t t-if="maintenance_request_obj.x_request_type == 'electrical'">Electrical</t>
+                                    <t t-elif="maintenance_request_obj.x_request_type == 'mechanical'">Mechanical</t>
+                                    <t t-elif="maintenance_request_obj.x_request_type == 'low_current'">Low Current</t>
+                                    <t t-elif="maintenance_request_obj.x_request_type == 'civil'">Civil</t>
+                                    <t t-elif="maintenance_request_obj.x_request_type == 'general'">General</t>
+                                    <t t-else="">Other</t>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#fee2e2;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#dc2626" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                            </div>
+                            <div class="t-stat-content">
+                                <span class="t-stat-label">Priority</span>
+                                <span class="t-stat-value" style="font-size:0.95rem;">
+                                    <t t-if="maintenance_request_obj.priority == 'urgent'">Urgent</t>
+                                    <t t-elif="maintenance_request_obj.priority == 'high'">High</t>
+                                    <t t-elif="maintenance_request_obj.priority == 'normal'">Normal</t>
+                                    <t t-else="">Low</t>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#e0f2fe;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#0284c7" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                            </div>
+                            <div class="t-stat-content">
+                                <span class="t-stat-label">Created</span>
+                                <span class="t-stat-value" style="font-size:0.85rem;" t-field="maintenance_request_obj.create_date" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#f3e8ff;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9333ea" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                            </div>
+                            <div class="t-stat-content">
+                                <span class="t-stat-label">Contract</span>
+                                <a t-att-href="'/my/rental_contract/' + str(maintenance_request_obj.contract_id.id)" class="t-stat-value" style="font-size:0.85rem;color:#0EA5E9;text-decoration:none;" t-esc="maintenance_request_obj.contract_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Two Column Layout -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+                        <!-- Left Column -->
+                        <div>
+                            <!-- Description Card -->
+                            <div class="t-card">
+                                <div class="t-card-header">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                    Description
+                                </div>
+                                <div class="t-card-body">
+                                    <p style="color:#475569;line-height:1.7;margin:0;" t-esc="maintenance_request_obj.description or 'No description provided.'"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Attachments Card -->
+                            <div t-if="maintenance_request_obj.attachment_ids" class="t-card" style="margin-top:1rem;">
+                                <div class="t-card-header">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                                    Attachments
+                                </div>
+                                <div class="t-card-body">
+                                    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+                                        <t t-foreach="maintenance_request_obj.attachment_ids" t-as="attachment">
+                                            <a t-att-href="'/web/content/' + str(attachment.id) + '?download=true'" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:#f1f5f9;border-radius:8px;color:#475569;text-decoration:none;font-size:0.85rem;transition:all 0.2s;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                                                <t t-esc="attachment.name"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Previous Rejection -->
+                            <div t-if="maintenance_request_obj.tenant_rejection_reason" class="t-card" style="margin-top:1rem;border-left:4px solid #f59e0b;">
+                                <div class="t-card-header" style="color:#d97706;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                                    Previous Rejection
+                                </div>
+                                <div class="t-card-body">
+                                    <p style="color:#92400e;margin:0;line-height:1.6;" t-esc="maintenance_request_obj.tenant_rejection_reason"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column -->
+                        <div>
+                            <!-- Job Order Card -->
+                            <div t-if="job_order" class="t-card">
+                                <div class="t-card-header">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>
+                                    Job Order Details
+                                </div>
+                                <div class="t-card-body">
+                                    <div style="display:grid;gap:1rem;">
+                                        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                                            <span style="color:#64748b;font-size:0.85rem;">Job Order</span>
+                                            <span style="font-weight:600;color:#1e293b;" t-esc="job_order.name"/>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                                            <span style="color:#64748b;font-size:0.85rem;">Status</span>
+                                            <span t-if="job_order.state == 'draft'" class="t-badge" style="--badge-bg:#f1f5f9;--badge-color:#64748b;">Draft</span>
+                                            <span t-elif="job_order.state == 'sent_to_contractor'" class="t-badge" style="--badge-bg:#dbeafe;--badge-color:#1d4ed8;">Sent to Contractor</span>
+                                            <span t-elif="job_order.state == 'in_progress'" class="t-badge" style="--badge-bg:#fef3c7;--badge-color:#d97706;">In Progress</span>
+                                            <span t-elif="job_order.state == 'completed_by_contractor'" class="t-badge" style="--badge-bg:#dbeafe;--badge-color:#1d4ed8;">Completed</span>
+                                            <span t-elif="job_order.state == 'pending_supervisor_approval'" class="t-badge" style="--badge-bg:#e0e7ff;--badge-color:#4338ca;">Supervisor Review</span>
+                                            <span t-elif="job_order.state == 'pending_tenant_approval'" class="t-badge" style="--badge-bg:#fef08a;--badge-color:#a16207;">Your Approval</span>
+                                            <span t-elif="job_order.state == 'closed'" class="t-badge" style="--badge-bg:#dcfce7;--badge-color:#15803d;">Closed</span>
+                                            <span t-else="" class="t-badge" style="--badge-bg:#f1f5f9;--badge-color:#64748b;">Unknown</span>
+                                        </div>
+                                        <div t-if="job_order.job_end_datetime" style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                                            <span style="color:#64748b;font-size:0.85rem;">Completed</span>
+                                            <span style="font-weight:500;color:#059669;" t-field="job_order.job_end_datetime" t-options='{"widget": "datetime"}'/>
+                                        </div>
+                                        <div t-if="job_order.job_description" style="padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                                            <span style="color:#64748b;font-size:0.85rem;display:block;margin-bottom:0.5rem;">Job Description</span>
+                                            <p style="margin:0;color:#1e293b;line-height:1.6;" t-esc="job_order.job_description"/>
+                                        </div>
+                                        <div t-if="job_order.corrective_action" style="padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                                            <span style="color:#64748b;font-size:0.85rem;display:block;margin-bottom:0.5rem;">Corrective Action</span>
+                                            <p style="margin:0;color:#1e293b;line-height:1.6;" t-esc="job_order.corrective_action"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Approval Actions -->
+                            <t t-if="job_order and (job_order.state == 'pending_supervisor_approval' or job_order.state == 'pending_tenant_approval')">
+                                <div class="t-card" style="margin-top:1rem;border:2px solid #0EA5E9;">
+                                    <div class="t-card-header" style="background:linear-gradient(135deg,#0EA5E9 0%,#0284C7 100%);color:#fff;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                                        Action Required
+                                    </div>
+                                    <div class="t-card-body">
+                                        <p style="color:#475569;margin-bottom:1rem;line-height:1.6;">
+                                            <t t-if="job_order.state == 'pending_supervisor_approval'">The supervisor has reviewed the maintenance work. Please approve to proceed or reject with a reason.</t>
+                                            <t t-else="">The maintenance work has been completed. Please review and approve or reject.</t>
+                                        </p>
+                                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                                            <form t-att-action="'/my/maintenance_request/' + str(maintenance_request_obj.id) + ('/supervisor_approve' if job_order.state == 'pending_supervisor_approval' else '/tenant_action')" method="POST">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input t-if="job_order.state == 'pending_tenant_approval'" type="hidden" name="action" value="approve"/>
+                                                <button type="submit" style="width:100%;padding:0.75rem;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                                    Approve
+                                                </button>
+                                            </form>
+                                            <button type="button" data-bs-toggle="modal" t-att-data-bs-target="'#rejectModal'" style="width:100%;padding:0.75rem;background:#ef4444;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                Reject
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    
+                    <!-- Materials Table -->
+                    <div t-if="job_order and materials_needed" class="t-card" style="margin-top:1.5rem;">
+                        <div class="t-card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+                            Materials Used
+                        </div>
+                        <div class="t-card-body" style="padding:0;">
+                            <table class="t-table">
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th>Quantity</th>
+                                        <th>Description</th>
+                                        <th>Availability</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="materials_needed" t-as="material">
+                                        <tr>
+                                            <td style="font-weight:500;">
+                                                <t t-if="material.get('product')" t-esc="material['product'].name"/>
+                                                <t t-else="" t-esc="material.get('description', 'N/A')"/>
+                                            </td>
+                                            <td><t t-esc="material.get('quantity', 0)"/></td>
+                                            <td><t t-esc="material.get('description', 'N/A')"/></td>
+                                            <td>
+                                                <span t-if="material.get('is_available')" class="t-badge" style="--badge-bg:#dcfce7;--badge-color:#15803d;">Available</span>
+                                                <span t-else="" class="t-badge" style="--badge-bg:#fef3c7;--badge-color:#d97706;">Need to Order</span>
+                                            </td>
+                                            <td>
+                                                <span t-if="material.get('reception_status') == 'received_from_stock'" class="t-badge" style="--badge-bg:#dcfce7;--badge-color:#15803d;">From Stock</span>
+                                                <span t-elif="material.get('reception_status') == 'received_from_supplier'" class="t-badge" style="--badge-bg:#dbeafe;--badge-color:#1d4ed8;">From Supplier</span>
+                                                <span t-else="" class="t-badge" style="--badge-bg:#f1f5f9;--badge-color:#64748b;">Pending</span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Conversation -->
+                    <div class="t-card" style="margin-top:1.5rem;">
+                        <div class="t-card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+                            Conversation
+                        </div>
+                        <div class="t-card-body">
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="maintenance_request_obj"/>
+                            </t>
+                        </div>
+                    </div>
+                    
+                    <!-- Responsive -->
+                    <style>
+                        @media (max-width: 1024px) {
+                            .t-main > div[style*="grid-template-columns: 1fr 1fr"] {
+                                grid-template-columns: 1fr !important;
+                            }
+                        }
+                    </style>
+                </main>
+            </div>
+            
+            <!-- Rejection Modal -->
+            <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="border-radius:12px;border:none;">
+                        <form t-att-action="'/my/maintenance_request/' + str(maintenance_request_obj.id) + ('/supervisor_reject' if job_order and job_order.state == 'pending_supervisor_approval' else '/tenant_action')" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input t-if="not (job_order and job_order.state == 'pending_supervisor_approval')" type="hidden" name="action" value="reject"/>
+                            <div class="modal-header" style="background:#ef4444;color:#fff;border-radius:12px 12px 0 0;">
+                                <h5 class="modal-title" style="font-weight:600;">Reject Work</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="padding:1.5rem;">
+                                <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:#1e293b;">Reason for Rejection <span style="color:#ef4444;">*</span></label>
+                                <textarea class="form-control" name="rejection_reason" rows="4" required="" placeholder="Please explain why you are rejecting this work..." style="border-radius:8px;"></textarea>
+                            </div>
+                            <div class="modal-footer" style="border-top:1px solid #e2e8f0;padding:1rem 1.5rem;">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius:8px;">Cancel</button>
+                                <button type="submit" class="btn" style="background:#ef4444;color:#fff;border-radius:8px;">Submit Rejection</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ================================== -->
+    <!--  4. Helper Snippets (Updated)      -->
+    <!-- ================================== -->
+    <template id="portal_rental_contracts_styles"><style type="text/css">body { background-color: #f7fafc; background-image: linear-gradient(135deg, #f7fafc 0%, #e8f3fe 100%); background-attachment: fixed; }.badge.badge-soft-success { color: #1a744f; background-color: #d1f7e5; }.badge.badge-soft-warning { color: #856404; background-color: #fff3cd; }.badge.badge-soft-secondary { color: #566573; background-color: #e9ecef; }.badge.badge-soft-info { color: #0c5460; background-color: #d1ecf1; }.text-highlight {  padding: 0.2rem 0.5rem; border-radius: 0.25rem; display: inline-block; }</style></template>
+    <template id="portal_contract_main_info_card"><div class="card shadow-sm border-0 rounded-4 mb-4"><div class="card-body p-4"><div class="d-flex justify-content-between align-items-start mb-3"><div><h3 class="fw-bold mb-1" t-esc="contract.name"/><p class="text-muted">Contract Reference</p></div><t t-call="nthub_realestate.portal_contract_status_badge"/></div><hr/><dl class="row"><dt class="col-sm-4 col-md-3 text-muted">Start Date</dt><dd class="col-sm-8 col-md-9"><span t-field="contract.date_from"/></dd><dt class="col-sm-4 col-md-3 text-muted">End Date</dt><dd class="col-sm-8 col-md-9"><span t-field="contract.date_to"/></dd><dt class="col-sm-4 col-md-3 text-muted">Property / Unit</dt><dd class="col-sm-8 col-md-9"><span t-field="contract.rs_project_unit.name"/></dd></dl></div></div></template>
+    <template id="portal_contract_tenant_info_card"><div class="card shadow-sm border-0 rounded-4 mb-4"><div class="card-header bg-light fw-bold">Tenant Information</div><div class="card-body"><div class="d-flex align-items-center mb-3"><img t-att-src="image_data_uri(contract.partner_id.avatar_128)" class="rounded-circle me-3" style="width: 64px; height: 64px; object-fit: cover;" alt="Tenant Avatar"/><div><h5 class="mb-0 fw-bold" t-field="contract.partner_id.name"/><p class="mb-0 text-muted" t-if="contract.partner_id.email"><i class="fa fa-envelope-o me-1 small"/> <span t-field="contract.partner_id.email"/></p></div></div><p class="mb-0 text-muted" t-if="contract.partner_id.phone"><i class="fa fa-phone me-1 small"/> <span t-field="contract.partner_id.phone"/></p></div></div></template>
+
+    <!-- ### THIS IS THE MAIN CHANGE ### -->
+
+ <template id="portal_contract_maintenance_form_card">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-light fw-bold">Request Maintenance</div>
+            <div class="card-body">
+                <form t-att-action="'/my/rental_contract/' + str(contract.id) + '/maintenance_request'" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    
+                    <!-- Request Type -->
+                    <div class="mb-3">
+                        <label for="x_request_type" class="form-label fw-bold">Request Type <span class="text-danger">*</span></label>
+                        <select class="form-select" id="x_request_type" name="x_request_type" required="1">
+                            <option value="">-- Select Type --</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="mechanical">Mechanical</option>
+                            <option value="low_current">Low Current</option>
+                            <option value="civil">Civil</option>
+                            <option value="general">General</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Issue / Subject -->
+                    <div class="mb-3">
+                        <label for="maintenance_name" class="form-label fw-bold">Issue / Subject <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="maintenance_name" name="name" required="1" placeholder="e.g. Leaky Faucet in Kitchen"/>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="mb-3">
+                        <label for="priority" class="form-label fw-bold">Priority <span class="text-danger">*</span></label>
+                        <select class="form-select" id="priority" name="priority" required="1">
+                            <option value="normal" selected="1">Normal</option>
+                            <option value="low">Low</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="maintenance_description" class="form-label fw-bold">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="maintenance_description" name="description" rows="4" required="1" placeholder="Please provide details about the issue..."></textarea>
+                    </div>
+
+                    <!-- Attachments -->
+                    <div class="mb-3">
+                        <label for="attachments" class="form-label fw-bold">Attachments (Photos/Documents)</label>
+                        <input type="file" class="form-control" id="attachments" name="attachments" multiple="1" accept="image/*,.pdf,.doc,.docx"/>
+                        <small class="form-text text-muted">You can attach photos or documents (Max 10MB each)</small>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-wrench me-2"/>Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- ### END OF MAIN CHANGE ### -->
+<!-- 1. Status Badge (Using Standard Bootstrap) -->
+<template id="portal_contract_status_badge">
+    <span t-if="contract.state == 'draft'" class="badge rounded-pill fs-base fw-normal bg-warning-subtle text-warning-emphasis">Draft</span>
+    <span t-if="contract.state == 'confirmed'" class="badge rounded-pill fs-base fw-normal bg-success-subtle text-success-emphasis">Confirmed</span>
+    <span t-if="contract.state == 'cancel'" class="badge rounded-pill fs-base fw-normal bg-secondary-subtle text-secondary-emphasis">Cancelled</span>
+    <span t-if="contract.state == 'done'" class="badge rounded-pill fs-base fw-normal bg-info-subtle text-info-emphasis">Done</span>
+    <span t-if="contract.state == 'renewed' or contract.state == 'renew'" class="badge rounded-pill fs-base fw-normal bg-info-subtle text-info-emphasis">Renewed</span>
+</template>
+
+
+
+
+
+<template id="portal_stat_card_total">
+    <div class="card border rounded-4 h-100">
+        <div class="card-header bg-light fw-bold text-start">
+            Total Contracts
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center w-100 h-100">
+            <h3 class="fw-bolder mb-0" t-esc="total_count"/>
+        </div>
+    </div>
+</template>
+    <template id="portal_stat_card_active">
+    <div class="card border rounded-4 h-100">
+        <div class="card-header bg-light fw-bold text-start">
+            Active
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center w-100 h-100">
+            <h3 class="fw-bolder text-success mb-0" t-esc="active_count"/>
+        </div>
+    </div>
+</template>
+
+<!-- 3. In Draft Contracts Card -->
+<template id="portal_stat_card_draft">
+    <div class="card border rounded-4 h-100">
+        <div class="card-header bg-light fw-bold text-start">
+            In Draft
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center w-100 h-100">
+            <h3 class="fw-bolder text-warning mb-0" t-esc="draft_count"/>
+            <!-- <i class="fa fa-edit fa-2x text-warning opacity-50"/> -->
+        </div>
+    </div>
+</template>
+
+<!-- 4. Expired Contracts Card -->
+<template id="portal_stat_card_expired">
+    <div class="card border rounded-4 h-100">
+        <div class="card-header bg-light fw-bold text-start">
+            Expired
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center w-100 h-100">
+            <h3 class="fw-bolder text-danger mb-0" t-esc="expired_count"/>
+        </div>
+    </div>
+</template>
+
+
+<!-- Example of a full dashboard page using the new card designs -->
+<template id="portal_contracts_new_dashboard" name="New Contracts Dashboard">
+    <t t-call="portal.portal_layout">
+        <t t-set="title">Contracts Dashboard</t>
+
+        <div class="container py-5">
+            <!-- Page Header -->
+            <div class="mb-5">
+                <h2 class="fw-bolder display-6">Your Rental Contracts</h2>
+                <p class="text-muted fs-5">Manage and track all your rental agreements.</p>
+            </div>
+
+            <!-- Section for the new Stat Cards -->
+            <div class="row g-4 mb-5">
+                <!-- We call the new templates here -->
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_total"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_active"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_draft"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_expired"/></div>
+            </div>
+
+            <!-- ... your contracts table would go here ... -->
+
+        </div>
+    </t>
+</template>
+
+    <template id="portal_contracts_bootstrap_dashboard" name="Bootstrap Contracts Dashboard">
+    <t t-call="portal.portal_layout">
+        <t t-set="title">Contracts Dashboard</t>
+
+        <div class="container py-5">
+            <!-- Page Header -->
+            <div class="mb-5">
+                <h2 class="fw-bolder display-6">Your Rental Contracts</h2>
+                <p class="text-muted fs-5">Manage and track all your rental agreements.</p>
+            </div>
+
+            <!-- Section for Stat Cards -->
+            <div class="row g-4 mb-5">
+                <!-- Here we call your rewritten snippets -->
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_total"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_active"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_draft"/></div>
+                <div class="col-12 col-sm-6 col-lg-3"><t t-call="nthub_realestate.portal_stat_card_expired"/></div>
+            </div>
+
+            <!-- Section for Contracts Table -->
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless o_portal_my_doc_table mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Reference</th>
+                                <th>Start Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="contracts" t-as="contract">
+                                <tr class="align-middle">
+                                    <td class="ps-4" t-esc="contract.name"/>
+                                    <td><span t-field="contract.date_from"/></td>
+                                    <td class="text-center">
+                                        <!-- Call the rewritten badge snippet -->
+                                        <t t-call="nthub_realestate.portal_contract_status_badge"/>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a t-att-href="'/my/rental_contract/' + str(contract.id)" class="btn btn-outline-primary btn-sm">
+                                            View Details <i class="fa fa-chevron-right small ms-2"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+<!--    <template id="portal_contract_status_badge">-->
+<!--        <span t-if="contract.state == 'draft'" class="badge rounded-pill fs-base fw-normal badge-soft-warning">Draft</span><span t-if="contract.state == 'confirmed'" class="badge rounded-pill fs-base fw-normal badge-soft-success">Confirmed</span><span t-if="contract.state == 'cancel'" class="badge rounded-pill fs-base fw-normal badge-soft-secondary">Cancelled</span><span t-if="contract.state == 'done'" class="badge rounded-pill fs-base fw-normal badge-soft-info">Done</span><span t-if="contract.state == 'renewed' or contract.state == 'renew'" class="badge rounded-pill fs-base fw-normal badge-soft-info">Renewed</span></template>-->
+<!--    <template id="portal_stat_card_total"><div class="card shadow border-0 h-100 rounded-4"><div class="card-body d-flex align-items-center p-4"><div class="flex-grow-1"><p class="card-text text-muted mb-1">Total Contracts</p><h4 class="card-title fw-bold mb-0" t-esc="total_count"/></div><i class="fa fa-file-alt fa-3x text-primary opacity-25 ms-3"/></div></div></template>-->
+<!--    <template id="portal_stat_card_active"><div class="card shadow border-0 h-100 rounded-4"><div class="card-body d-flex align-items-center p-4"><div class="flex-grow-1"><p class="card-text text-muted mb-1">Active</p><h4 class="card-title fw-bold mb-0 text-success" t-esc="active_count"/></div><i class="fa fa-check-circle fa-3x text-success opacity-25 ms-3"/></div></div></template>-->
+<!--    <template id="portal_stat_card_draft"><div class="card shadow border-0 h-100 rounded-4"><div class="card-body d-flex align-items-center p-4"><div class="flex-grow-1"><p class="card-text text-muted mb-1">In Draft</p><h4 class="card-title fw-bold mb-0 text-warning" t-esc="draft_count"/></div><i class="fa fa-edit fa-3x text-warning opacity-25 ms-3"/></div></div></template>-->
+<!--    <template id="portal_stat_card_expired"><div class="card shadow border-0 h-100 rounded-4"><div class="card-body d-flex align-items-center p-4"><div class="flex-grow-1"><p class="card-text text-muted mb-1">Expired</p><h4 class="card-title fw-bold mb-0 text-danger" t-esc="expired_count"/></div><i class="fa fa-times-circle fa-3x text-danger opacity-25 ms-3"/></div></div></template>-->
+
+    <!-- Portal Home Extension للـ Rental Contracts و Real Estate -->
+    <template id="portal_my_home_rental" name="Portal layout: Add Rental Contracts" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <!-- Rental Contracts Link -->
+            <t t-if="rental_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Rental Contracts</t>
+                <t t-set="url" t-value="'/my/rental_contracts'"/>
+                <t t-set="placeholder_count" t-value="'rental_count'"/>
+            </t>
+            
+            <!-- Maintenance Requests Link -->
+            <t t-if="maintenance_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Maintenance Requests</t>
+                <t t-set="url" t-value="'/my/maintenance_requests'"/>
+                <t t-set="placeholder_count" t-value="'maintenance_count'"/>
+            </t>
+            
+            <!-- Properties Link (for owners) -->
+            <t t-if="property_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">My Properties</t>
+                <t t-set="url" t-value="'/my/properties'"/>
+                <t t-set="placeholder_count" t-value="'property_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- ======================================== -->
+    <!--  MAINTENANCE HISTORY PAGE               -->
+    <!--  Modern sidebar design                  -->
+    <!-- ======================================== -->
+    <template id="portal_my_maintenance_requests" name="My Maintenance Requests">
+        <t t-call="portal.portal_layout">
+            <t t-set="title">Maintenance History</t>
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            <t t-call="nthub_realestate.tenant_portal_styles"/>
+            
+            <div class="t-wrapper">
+                <!-- Sidebar -->
+                <t t-call="nthub_realestate.tenant_sidebar">
+                    <t t-set="page_name" t-value="'maintenance'"/>
+                </t>
+                
+                <!-- Main Content -->
+                <main class="t-main">
+                    <div class="t-header">
+                        <h1>Maintenance Requests</h1>
+                        <p>Track and manage all your maintenance requests</p>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="t-stats">
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:rgba(14,165,233,0.15);color:#0EA5E9;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
+                            </div>
+                            <div class="t-stat-value"><t t-esc="total_count or 0"/></div>
+                            <div class="t-stat-label">Total Requests</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#DBEAFE;color:#2563EB;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#2563EB;"><t t-esc="new_count or 0"/></div>
+                            <div class="t-stat-label">New</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#FEF3C7;color:#D97706;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#D97706;"><t t-esc="in_progress_count or 0"/></div>
+                            <div class="t-stat-label">In Progress</div>
+                        </div>
+                        <div class="t-stat">
+                            <div class="t-stat-icon" style="background:#D1FAE5;color:#059669;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="t-stat-value" style="color:#059669;"><t t-esc="done_count or 0"/></div>
+                            <div class="t-stat-label">Completed</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Maintenance Requests Table -->
+                    <div class="t-card">
+                        <div class="t-card-header">
+                            <span>All Requests</span>
+                            <span class="t-badge t-badge-info" t-if="maintenance_requests"><t t-esc="len(maintenance_requests)"/> total</span>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table class="t-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Contract</th>
+                                        <th>Type</th>
+                                        <th>Created</th>
+                                        <th>Status</th>
+                                        <th style="text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not maintenance_requests">
+                                        <tr>
+                                            <td colspan="6" style="text-align:center;padding:3rem;color:var(--t-muted);">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:48px;height:48px;margin-bottom:1rem;opacity:0.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
+                                                <br/>No maintenance requests found
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="maintenance_requests or []" t-as="req">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="req.name"/>
+                                                <br/><small style="color:var(--t-muted);" t-esc="(req.description or '')[:40] + '...' if len(req.description or '') > 40 else (req.description or '-')"/>
+                                            </td>
+                                            <td>
+                                                <t t-if="req.contract_id">
+                                                    <a t-att-href="'/my/rental_contract/' + str(req.contract_id.id)" style="color:var(--t-primary);text-decoration:none;">
+                                                        <t t-esc="req.contract_id.name"/>
+                                                    </a>
+                                                </t>
+                                                <t t-else="">-</t>
+                                            </td>
+                                            <td>
+                                                <span t-if="req.x_request_type == 'electrical'" class="t-badge" style="background:#FEF3C7;color:#B45309;">Electrical</span>
+                                                <span t-elif="req.x_request_type == 'mechanical'" class="t-badge" style="background:#DBEAFE;color:#1D4ED8;">Mechanical</span>
+                                                <span t-elif="req.x_request_type == 'low_current'" class="t-badge" style="background:#E0E7FF;color:#4338CA;">Low Current</span>
+                                                <span t-elif="req.x_request_type == 'civil'" class="t-badge" style="background:#F3F4F6;color:#374151;">Civil</span>
+                                                <span t-elif="req.x_request_type == 'general'" class="t-badge" style="background:#1F2937;color:#fff;">General</span>
+                                                <span t-else="" class="t-badge" style="background:#E5E7EB;color:#374151;">Other</span>
+                                            </td>
+                                            <td><t t-esc="req.create_date" t-options='{"widget": "date"}'/></td>
+                                            <td>
+                                                <span t-if="req.x_status == 'draft'" class="t-badge t-badge-gray">Draft</span>
+                                                <span t-elif="req.x_status == 'submitted'" class="t-badge t-badge-info">Submitted</span>
+                                                <span t-elif="req.x_status == 'under_review'" class="t-badge" style="background:#DBEAFE;color:#1D4ED8;">Under Review</span>
+                                                <span t-elif="req.x_status == 'job_ordered'" class="t-badge t-badge-warning">Job Ordered</span>
+                                                <span t-elif="req.x_status == 'in_progress'" class="t-badge t-badge-warning">In Progress</span>
+                                                <span t-elif="req.x_status == 'pending_supervisor_approval'" class="t-badge" style="background:#E9D5FF;color:#7C3AED;">Supervisor Approve</span>
+                                                <span t-elif="req.x_status == 'pending_tenant_approval'" class="t-badge" style="background:#E9D5FF;color:#7C3AED;">Your Approval Needed</span>
+                                                <span t-elif="req.x_status == 'approved_by_tenant'" class="t-badge t-badge-success">Approved</span>
+                                                <span t-elif="req.x_status == 'closed'" class="t-badge t-badge-success">Closed</span>
+                                                <span t-elif="req.x_status == 'cancelled'" class="t-badge t-badge-danger">Cancelled</span>
+                                                <span t-else="" class="t-badge t-badge-gray"><t t-esc="req.x_status"/></span>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <a t-att-href="'/my/maintenance_request/' + str(req.id)" class="t-btn-outline" style="text-decoration:none;">
+                                                    View Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,91 @@
+<odoo>
+    <record id="action_report_material_requisition" model="ir.actions.report">
+  <field name="name">Material Requisition Report</field>
+  <field name="model">material.requisition.form</field>
+  <field name="report_type">qweb-pdf</field>
+  <field name="report_name">nthub_realestate.report_material_requisition</field>
+  <field name="report_file">nthub_realestate.report_material_requisition</field>
+  <field name="binding_model_id" ref="model_material_requisition_form"/>
+            <field name="binding_type">report</field>
+</record>
+
+
+
+
+
+
+<template id="report_material_requisition">
+  <t t-call="web.html_container">
+    <t t-foreach="docs" t-as="doc">
+      <t t-call="web.external_layout">
+      <div class="page">
+
+        <div style="text-align:center; font-size: 20px; font-weight: bold; margin-bottom: 20px;">
+          MATERIAL REQUISITION FORM
+        </div>
+
+        <table style="width: 100%; font-size: 13px; margin-bottom: 10px;">
+          <tr>
+            <td><strong>Project Name:</strong> <t t-esc="doc.project_id.name"/></td>
+            <td><strong>Date:</strong> <t t-esc="doc.date"/></td>
+          </tr>
+          <tr>
+            <td><strong>Department:</strong> <t t-esc="doc.department"/></td>
+            <td><strong>Reference:</strong> <t t-esc="doc.name"/></td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; font-size: 12px; margin-bottom: 10px;">
+          <tr>
+            <td><strong>Categories:</strong></td>
+            <td>
+              <t t-if="doc.materials">Materials ✔ </t>
+              <t t-if="doc.spare_parts">Spare Parts ✔ </t>
+              <t t-if="doc.consumable">Consumable ✔ </t>
+              <t t-if="doc.stationary">Stationary ✔ </t>
+              <t t-if="doc.tools">Tools ✔ </t>
+              <t t-if="doc.equipments">Equipment ✔ </t>
+              <t t-if="doc.furniture">Furniture ✔ </t>
+              <t t-if="doc.services">Services ✔ </t>
+            </td>
+          </tr>
+        </table>
+
+        <table class="table table-sm" style="width: 100%; border: 1px solid black; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr>
+              <th style="border: 1px solid black;">Description</th>
+              <th style="border: 1px solid black;">Unit</th>
+              <th style="border: 1px solid black;">Qty</th>
+              <th style="border: 1px solid black;">Estimated Cost / Unit</th>
+              <th style="border: 1px solid black;">Total</th>
+              <th style="border: 1px solid black;">Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr t-foreach="doc.line_ids" t-as="line">
+              <td style="border: 1px solid black;"><t t-esc="line.description"/></td>
+              <td style="border: 1px solid black;"><t t-esc="line.unit"/></td>
+              <td style="border: 1px solid black;"><t t-esc="line.quantity"/></td>
+              <td style="border: 1px solid black;"><t t-esc="line.estimated_cost_per_unit"/></td>
+              <td style="border: 1px solid black;"><t t-esc="line.estimated_cost_total"/></td>
+              <td style="border: 1px solid black;"><t t-esc="line.remarks"/></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 50px;">
+          <strong>Prepared By:</strong> ____________________
+            <br></br>
+          <strong>Approved By:</strong> ____________________
+        </div>
+
+      </div>
+      </t>
+    </t>
+  </t>
+</template>
+
+
+
+</odoo>

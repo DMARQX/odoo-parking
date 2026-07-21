@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--- Define the list view for OwnershipContractLine -->
+        <record id="ownership_contract_line_list_view" model="ir.ui.view">
+            <field name="name">ownership.contract.line.list.view</field>
+            <field name="model">ownership.contract.line</field>
+            <field name="arch" type="xml">
+                <list create="0" delete="0">
+                    <field name="reference"/>
+                    <field name="delay_state"/>
+                    <field name="customer_id"/>
+                    <field name="date"/>
+                    <field name="amount"/>
+                    <field name="amount_residual"/>
+                    <field name="invoice_id" invisible="1"/>
+                    <field name="invoice_state" widget="badge"
+                           decoration-success="invoice_state == 'posted'"
+                           decoration-info="invoice_state == 'draft'"
+                           decoration-warning="invoice_state == 'late'"/>
+                    <field name="payment_state" widget="badge"
+                           decoration-danger="payment_state == 'not_paid'"
+                           decoration-warning="payment_state in ('partial', 'in_payment')"
+                           decoration-success="payment_state in ('paid', 'reversed')"/>
+                    <button name="view_invoice" string="View Invoice" type="object"
+                            class="oe_highlight" icon="fa-eye"
+                            readonly="invoice_id == False"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Define the search view  OwnershipContractLine -->
+        <record model="ir.ui.view" id="view_ownership_contract_line_search">
+            <field name="name">ownership.contract.line.search</field>
+            <field name="model">ownership.contract.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="reference"/>
+                    <field name="invoice_state"/>
+                    <field name="customer_id"/>
+                    <field name="payment_state"/>
+                    <filter name="filter_draft" string="Posted"
+                            domain="[('invoice_state','=','posted')]"/>
+                    <filter name="filter_payment_state_paid" string="Paid"
+                            domain="[('payment_state','=','paid')]"/>
+                    <filter name="filter_payment_state_not_paid" string="Not Paid"
+                            domain="[('payment_state','=','not_paid')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Payment State" name="group_by_payment_state"
+                                context="{'group_by': 'payment_state'}"/>
+                        <filter string="Customer" name="group_by_customer_id"
+                                context="{'group_by': 'customer_id'}"/>
+                        <filter string="Invoice State" name="group_by_invoice_state"
+                                context="{'group_by': 'invoice_state'}"/>
+                        <filter string="Invoice" name="group_by_invoice_id"
+                                context="{'group_by': 'invoice_id'}"/>
+                        <filter string="Reference" name="group_by_oc_id"
+                                context="{'group_by': 'oc_id'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="customer_id" icon="fa-users" enable_counters="1"/>
+                        <field name="invoice_state" icon="fa-check-square-o"
+                               select="multi" enable_counters="1"/>
+
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_owner_ship_calendar">
+            <field name="name">Owner Ship calendar</field>
+            <field name="model">ownership.contract.line</field>
+            <field name="arch" type="xml">
+                <calendar string="Calendar" date_start="date" date_stop="date">
+                    <field name="reference"/>
+                </calendar>
+            </field>
+        </record>
+
+                <!-- Define the action for OwnershipContractLine -->
+        <record id="ownership_contract_line_action" model="ir.actions.act_window">
+            <field name="name">Ownership Settlement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ownership.contract.line</field>
+            <field name="view_mode">list,calendar</field>
+        </record>
+    </data>
+</odoo>

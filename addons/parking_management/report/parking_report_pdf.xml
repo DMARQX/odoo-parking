@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_parking_contract" model="ir.actions.report">
+        <field name="name">Parking Contract</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_contract</field>
+        <field name="report_file">parking_contract_%(name)s</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="multi">False</field>
+        <field name="print_report_name">'Parking-Contract-%s' % (object.name)</field>
+    </record>
+
+    <record id="action_report_parking_spots_summary" model="ir.actions.report">
+        <field name="name">Spots Summary Report</field>
+        <field name="model">parking.spot</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_spots_summary</field>
+        <field name="report_file">parking_spots_summary</field>
+        <field name="binding_model_id" ref="model_parking_spot"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+        <field name="print_report_name">'Spots-Summary-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <record id="action_report_parking_contracts_summary" model="ir.actions.report">
+        <field name="name">Contracts Summary Report</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_contracts_summary</field>
+        <field name="report_file">parking_contracts_summary</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+        <field name="print_report_name">'Contracts-Summary-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <record id="action_report_parking_vehicles_registry" model="ir.actions.report">
+        <field name="name">Vehicles Registry Report</field>
+        <field name="model">parking.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_vehicles_registry</field>
+        <field name="report_file">parking_vehicles_registry</field>
+        <field name="binding_model_id" ref="model_parking_vehicle"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+        <field name="print_report_name">'Vehicles-Registry-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <record id="action_report_parking_services" model="ir.actions.report">
+        <field name="name">Additional Services Report</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_services</field>
+        <field name="report_file">parking_services_report</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+        <field name="print_report_name">'Services-Report-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <delete id="action_report_parking_invoice" model="ir.actions.report"/>
+    <delete id="report_parking_invoice" model="ir.ui.view"/>
+
+    <!-- ============================================================ -->
+    <!-- COMMON HEADER MACRO -->
+    <!-- ============================================================ -->
+    <template id="report_parking_header">
+        <t t-set="lbl_generated" t-value="'تم الإنشاء' if is_ar else 'Generated'"/>
+        <div style="border-bottom: 2px solid #C9A04E; margin-bottom: 16px;">
+            <table style="width: 100%; margin-bottom: 8px;">
+                <tr>
+                    <td style="width: 80px; vertical-align: middle;">
+                        <img t-if="env.company.logo" t-att-src="image_data_uri(env.company.logo)" style="max-height: 60px; max-width: 80px;"/>
+                    </td>
+                    <td style="vertical-align: middle; text-align: center;">
+                        <div style="font-size: 16px; font-weight: bold; color: #0f172a;">
+                            <t t-esc="title"/>
+                        </div>
+                        <div style="font-size: 9px; color: #C9A04E; margin-top: 2px;">
+                            <span t-esc="env.company.name or ''"/>
+                        </div>
+                    </td>
+                    <td style="width: 80px; vertical-align: middle; text-align: end;">
+                        <div style="font-size: 9px; color: #888;">
+                            <t t-esc="lbl_generated"/>:<br/>
+                            <span t-esc="datetime.datetime.now().strftime('%%Y-%%m-%%d')"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <!-- COMMON FOOTER MACRO -->
+    <template id="report_parking_footer">
+        <t t-set="lbl_pms" t-value="'نظام إدارة المواقف' if is_ar else 'Parking Management System'"/>
+        <div style="margin-top: 20px;">
+            <div style="height: 4px; background: #C9A04E;"></div>
+            <div style="height: 6px; background: #0f172a;"></div>
+            <div style="margin-top: 6px; text-align: center; font-size: 8px; color: #999;">
+                <t t-esc="lbl_pms"/> — <span t-esc="datetime.datetime.now().strftime('%%Y-%%m-%%d %%H:%%M')"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- KPI CARD MACRO -->
+    <template id="report_parking_kpi_card">
+        <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%;" t-att-style="'border-inline-start: 4px solid %s;' % (border_color or '#0f172a')">
+            <div style="font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">
+                <t t-esc="label"/>
+            </div>
+            <div style="font-size: 22px; font-weight: bold; margin-top: 4px;" t-att-style="'color: %s;' % (text_color or '#0f172a')">
+                <t t-esc="value"/>
+            </div>
+        </td>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- SPOTS SUMMARY -->
+    <!-- ============================================================ -->
+    <template id="report_parking_spots_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="o._is_arabic_context()"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <t t-set="title" t-value="'ملخص المواقف' if is_ar else 'Parking Spots Summary'"/>
+                        <t t-call="parking_management.report_parking_header"/>
+
+                        <!-- KPI Cards -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Available'"/>
+                                    <t t-set="value" t-value="len([s for s in docs if s.status == 'available'])"/>
+                                    <t t-set="border_color" t-value="'#00A86B'"/>
+                                    <t t-set="text_color" t-value="'#00A86B'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Reserved'"/>
+                                    <t t-set="value" t-value="len([s for s in docs if s.status == 'reserved'])"/>
+                                    <t t-set="border_color" t-value="'#F4A940'"/>
+                                    <t t-set="text_color" t-value="'#F4A940'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Occupied'"/>
+                                    <t t-set="value" t-value="len([s for s in docs if s.status == 'occupied'])"/>
+                                    <t t-set="border_color" t-value="'#DC3545'"/>
+                                    <t t-set="text_color" t-value="'#DC3545'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Total'"/>
+                                    <t t-set="value" t-value="len(docs)"/>
+                                    <t t-set="border_color" t-value="'#4A90D9'"/>
+                                    <t t-set="text_color" t-value="'#4A90D9'"/>
+                                </t>
+                            </tr>
+                        </table>
+
+                        <!-- Table -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #0f172a; color: #ffffff;">
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Spot</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Branch</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Status</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Type</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Floor</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Vehicle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs" t-as="s" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 5px 10px; font-size: 10px; font-weight: bold;" t-esc="s.name"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="s.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;">
+                                        <span t-esc="s.status" style="text-transform: capitalize;"/>
+                                    </td>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="s.spot_type"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="s.floor or '—'"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="s.current_vehicle_plate or '—'"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-call="parking_management.report_parking_footer"/>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- CONTRACTS SUMMARY -->
+    <!-- ============================================================ -->
+    <template id="report_parking_contracts_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="o._is_arabic_context()"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <t t-set="title" t-value="'تقرير ملخص العقود' if is_ar else 'Contracts Summary Report'"/>
+                        <t t-call="parking_management.report_parking_header"/>
+
+                        <!-- KPI Cards -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Active'"/>
+                                    <t t-set="value" t-value="len([c for c in docs if c.state == 'active'])"/>
+                                    <t t-set="border_color" t-value="'#00A86B'"/>
+                                    <t t-set="text_color" t-value="'#00A86B'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Expired'"/>
+                                    <t t-set="value" t-value="len([c for c in docs if c.state == 'expired'])"/>
+                                    <t t-set="border_color" t-value="'#DC3545'"/>
+                                    <t t-set="text_color" t-value="'#DC3545'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Near Expiry'"/>
+                                    <t t-set="value" t-value="len([c for c in docs if c.state == 'active' and c.end_date and (c.end_date - datetime.date.today()).days &lt;= 30])"/>
+                                    <t t-set="border_color" t-value="'#F4A940'"/>
+                                    <t t-set="text_color" t-value="'#F4A940'"/>
+                                </t>
+                                <t t-call="parking_management.report_parking_kpi_card">
+                                    <t t-set="label" t-value="'Total'"/>
+                                    <t t-set="value" t-value="len(docs)"/>
+                                    <t t-set="border_color" t-value="'#4A90D9'"/>
+                                    <t t-set="text_color" t-value="'#4A90D9'"/>
+                                </t>
+                            </tr>
+                        </table>
+
+                        <!-- Table -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #0f172a; color: #ffffff;">
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Contract</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Customer</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Branch</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Status</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Start</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">End</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs" t-as="c" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 5px 10px; font-size: 10px; font-weight: bold;" t-esc="c.name"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.partner_id.name"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.state"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.start_date"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.end_date"/>
+                                    <td style="padding: 5px 10px; font-size: 10px; text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f} SAR'.format(c.amount_total)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Total Amount -->
+                        <div style="margin-top: 12px; text-align: right; padding: 8px 12px; background: #0f172a; border-radius: 3px;">
+                            <span style="font-size: 11px; color: #ffffff; font-weight: bold;">
+                                Total Amount: <span style="color: #C9A04E;" t-esc="'{:,.2f} SAR'.format(sum(c.amount_total for c in docs))"/>
+                            </span>
+                        </div>
+
+                        <t t-call="parking_management.report_parking_footer"/>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- VEHICLES REGISTRY -->
+    <!-- ============================================================ -->
+    <template id="report_parking_vehicles_registry">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="o._is_arabic_context()"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <t t-set="title" t-value="'سجل المركبات' if is_ar else 'Vehicles Registry Report'"/>
+                        <t t-call="parking_management.report_parking_header"/>
+
+                        <!-- Table -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #0f172a; color: #ffffff;">
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">#</th>
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">License Plate</th>
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Brand</th>
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Model</th>
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Owner</th>
+                                    <th style="padding: 7px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Contract</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs" t-as="v" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 5px 8px; font-size: 10px; color: #888;" t-esc="v_index + 1"/>
+                                    <td style="padding: 5px 8px; font-size: 10px; font-weight: bold;" t-esc="v.license_plate or '—'"/>
+                                    <td style="padding: 5px 8px; font-size: 10px;" t-esc="v.brand or '—'"/>
+                                    <td style="padding: 5px 8px; font-size: 10px;" t-esc="v.model or '—'"/>
+                                    <td style="padding: 5px 8px; font-size: 10px;" t-esc="v.owner_id.name or '—'"/>
+                                    <td style="padding: 5px 8px; font-size: 10px;">
+                                        <t t-foreach="v.contract_ids" t-as="ctr">
+                                            <span t-esc="ctr.name"/>
+                                            <t t-if="not ctr_last">, </t>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Total -->
+                        <div style="margin-top: 10px; padding: 6px 8px; background: #F8F9FC; border: 1px solid #E0E0E0; border-radius: 3px;">
+                            <span style="font-size: 11px; font-weight: bold; color: #0f172a;">Total Vehicles: </span>
+                            <span style="font-size: 11px;" t-esc="len(docs)"/>
+                        </div>
+
+                        <t t-call="parking_management.report_parking_footer"/>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- ADDITIONAL SERVICES -->
+    <!-- ============================================================ -->
+    <template id="report_parking_services">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="o._is_arabic_context()"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <t t-set="title" t-value="'تقرير الخدمات الإضافية' if is_ar else 'Additional Services Report'"/>
+                        <t t-call="parking_management.report_parking_header"/>
+
+                        <!-- Table -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #0f172a; color: #ffffff;">
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Contract</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Customer</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Branch</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Spot</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: start;">Services</th>
+                                    <th style="padding: 7px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs" t-as="c" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 5px 10px; font-size: 10px; font-weight: bold;" t-esc="c.name"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.partner_id.name"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;" t-esc="c.spot_id.name or '—'"/>
+                                    <td style="padding: 5px 10px; font-size: 10px;">
+                                        <t t-foreach="c.service_line_ids" t-as="line">
+                                            <div><span t-esc="line.name"/><t t-if="line.quantity != 1"> × <span t-esc="line.quantity"/></t></div>
+                                        </t>
+                                    </td>
+                                    <td style="padding: 5px 10px; font-size: 10px; text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f} SAR'.format(c.services_total)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-call="parking_management.report_parking_footer"/>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- VEHICLE MOVEMENT REPORT -->
+    <!-- ============================================================ -->
+    <record id="action_report_parking_vehicle_movement" model="ir.actions.report">
+        <field name="name">Vehicle Movement Report</field>
+        <field name="model">parking.vehicle.movement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_vehicle_movement_report</field>
+        <field name="report_file">vehicle_movement_report</field>
+        <field name="binding_model_id" ref="model_parking_vehicle_movement"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+        <field name="print_report_name">'Vehicle-Movement-Report-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <record id="action_report_parking_vehicle_movement_from_vehicle" model="ir.actions.report">
+        <field name="name">Vehicle Movement Report</field>
+        <field name="model">parking.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_vehicle_movement_by_vehicle</field>
+        <field name="report_file">vehicle_movement_%(name)s</field>
+        <field name="binding_model_id" ref="model_parking_vehicle"/>
+        <field name="binding_type">report</field>
+        <field name="multi">False</field>
+        <field name="print_report_name">'Vehicle-Movement-%s' % (object.name or object.id)</field>
+    </record>
+
+    <template id="report_parking_vehicle_movement_report">
+        <t t-call="web.html_container">
+            <t t-set="is_ar" t-value="(env.user.lang or '').startswith('ar')"/>
+            <t t-set="movements" t-value="docs"/>
+            <style>
+                @page { size: A4; margin: 5mm; }
+                html, body { margin: 0; padding: 0; }
+                .page table { table-layout: fixed; width: 100%; }
+                .page td, .page th { box-sizing: border-box; word-wrap: break-word; white-space: normal; }
+                .page img { max-width: 100%; height: auto; }
+                .page { overflow: visible; }
+            </style>
+            <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                <div style="height: 4px; background: #C9A04E;"></div>
+                <div style="height: 6px; background: #0f172a;"></div>
+
+                <t t-set="title" t-value="'تقرير حركة المركبات' if is_ar else 'Vehicle Movement Report'"/>
+                <t t-call="parking_management.report_parking_header"/>
+
+                <!-- Summary -->
+                <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 12px; border-top: 3px solid #0f172a;">
+                    <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                        <strong style="font-size: 11px; color: #0f172a;" t-esc="'ملخص الحركات' if is_ar else 'Movement Summary'"/>
+                    </div>
+                    <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 6px 12px; color: #666; width: 25%; background: #F8F9FC;" t-esc="'إجمالي الحركات' if is_ar else 'Total Movements'"/>
+                            <td style="padding: 6px 12px; font-weight: bold; width: 25%;" t-esc="str(len(movements))"/>
+                            <td style="padding: 6px 12px; color: #666; width: 25%; background: #F8F9FC;" t-esc="'التاريخ' if is_ar else 'Date'"/>
+                            <td style="padding: 6px 12px; width: 25%;">
+                                <t t-if="movements"><span t-esc="movements[0].check_in_time.strftime('%Y-%m-%d') if movements[0].check_in_time else '—'"/></t>
+                                <t t-if="not movements"><span t-esc="'—'"/></t>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Movements Table -->
+                <div style="border: 1px solid #E0E0E0; border-radius: 4px; border-top: 3px solid #0f172a;">
+                    <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                        <strong style="font-size: 11px; color: #0f172a;" t-esc="'سجل الحركة' if is_ar else 'Movement History'"/>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #0f172a; color: #ffffff;">
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'#'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'اللوحة' if is_ar else 'Plate'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'السيارة' if is_ar else 'Vehicle'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'المالك' if is_ar else 'Owner'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'دخول' if is_ar else 'Check In'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'خروج' if is_ar else 'Check Out'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'المدة' if is_ar else 'Duration'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'الموقف' if is_ar else 'Spot'"/>
+                                <th style="padding: 4px 4px; font-size: 7px; letter-spacing: 0.5px; text-align: start;" t-esc="'المشغل' if is_ar else 'Operator'"/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="movements" t-as="m" style="border-bottom: 1px solid #E0E0E0;">
+                                <td style="padding: 3px 4px; font-size: 8px; color: #888;" t-esc="m_index + 1"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.vehicle_id.license_plate or '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.vehicle_id.brand or ''"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.vehicle_id.owner_id.name or '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.check_in_time or '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.check_out_time or '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="'%d:%02d' % (int(m.duration_hours), int((m.duration_hours * 60) % 60)) if m.duration_hours is not None else '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.spot_id.name or '—'"/>
+                                <td style="padding: 3px 4px; font-size: 8px;" t-esc="m.operator_in_id.name or '—'"/>
+                            </tr>
+                            <tr t-if="not movements">
+                                <td colspan="9" style="padding: 20px 12px; font-size: 10px; color: #888; text-align: center; font-style: italic;" t-esc="'لا توجد حركات مسجلة' if is_ar else 'No movements recorded'"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <t t-call="parking_management.report_parking_footer"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- VEHICLE MOVEMENT REPORT BY VEHICLE (from Vehicle form) -->
+    <!-- ============================================================ -->
+    <template id="report_parking_vehicle_movement_by_vehicle">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="(env.user.lang or '').startswith('ar')"/>
+                    <t t-set="movements" t-value="o.movement_ids or []"/>
+                    <style>
+                        @page { size: A4; margin: 8mm; }
+                        html, body { margin: 0; padding: 0; }
+                        .page table { table-layout: fixed; width: 100%; }
+                        .page td, .page th { box-sizing: border-box; word-wrap: break-word; white-space: normal; }
+                        .page img { max-width: 100%; height: auto; }
+                        .page { overflow: visible; }
+                    </style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <t t-set="title" t-value="'تقرير حركة المركبات' if is_ar else 'Vehicle Movement Report'"/>
+                        <t t-call="parking_management.report_parking_header"/>
+
+                        <!-- Vehicle Info -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 16px; border-top: 3px solid #0f172a;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="'معلومات المركبة' if is_ar else 'Vehicle Information'"/>
+                            </div>
+                            <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 6px 12px; color: #666; width: 20%; background: #F8F9FC;" t-esc="'اللوحة' if is_ar else 'Plate'"/>
+                                    <td style="padding: 6px 12px; font-weight: bold; width: 30%;" t-esc="o.license_plate or '—'"/>
+                                    <td style="padding: 6px 12px; color: #666; width: 20%; background: #F8F9FC;" t-esc="'العلامة' if is_ar else 'Brand'"/>
+                                    <td style="padding: 6px 12px; width: 30%;" t-esc="o.brand or '—'"/>
+                                </tr>
+                                <tr style="background: #F8F9FC;">
+                                    <td style="padding: 6px 12px; color: #666;" t-esc="'الموديل' if is_ar else 'Model'"/>
+                                    <td style="padding: 6px 12px;" t-esc="o.model or '—'"/>
+                                    <td style="padding: 6px 12px; color: #666;" t-esc="'المالك' if is_ar else 'Owner'"/>
+                                    <td style="padding: 6px 12px;" t-esc="o.owner_id.name or '—'"/>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Movements Table -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; border-top: 3px solid #0f172a;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="'سجل الحركة' if is_ar else 'Movement History'"/>
+                                <span style="font-size: 10px; color: #666;" t-esc="' (' + str(len(movements)) + ')'"/>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #0f172a; color: #ffffff;">
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'#'"/>
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'دخول' if is_ar else 'Check In'"/>
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'خروج' if is_ar else 'Check Out'"/>
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'المدة' if is_ar else 'Duration'"/>
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'الموقف' if is_ar else 'Spot'"/>
+                                        <th style="padding: 6px 8px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="'مشغل الدخول' if is_ar else 'Operator In'"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="movements" t-as="m" style="border-bottom: 1px solid #E0E0E0;">
+                                        <td style="padding: 5px 8px; font-size: 10px; color: #888;" t-esc="m_index + 1"/>
+                                        <td style="padding: 5px 8px; font-size: 10px;" t-esc="m.check_in_time"/>
+                                        <td style="padding: 5px 8px; font-size: 10px;" t-esc="m.check_out_time or '—'"/>
+                                        <td style="padding: 5px 8px; font-size: 10px;" t-esc="'%d:%02d' % (int(m.duration_hours), int((m.duration_hours * 60) % 60)) if m.duration_hours is not None else '—'"/>
+                                        <td style="padding: 5px 8px; font-size: 10px;" t-esc="m.spot_id.name or '—'"/>
+                                        <td style="padding: 5px 8px; font-size: 10px;" t-esc="m.operator_in_id.name or '—'"/>
+                                    </tr>
+                                    <tr t-if="not movements">
+                                        <td colspan="6" style="padding: 20px 12px; font-size: 10px; color: #888; text-align: center; font-style: italic;" t-esc="'لا توجد حركات مسجلة' if is_ar else 'No movements recorded'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <t t-call="parking_management.report_parking_footer"/>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

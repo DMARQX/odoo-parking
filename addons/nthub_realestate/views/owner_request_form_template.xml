@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================
+         NEW REQUEST FORM - MODERN DESIGN
+         With Sidebar Navigation (matching Dashboard)
+         ============================================ -->
+
+    <template id="portal_owner_request_form_new" name="New Owner Request - Modern">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load Google Fonts - Cairo for Arabic -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+            
+            <style type="text/css">
+            /* Request Form Styles */
+            :root {
+                --req-primary: #5C6BC0;
+                --req-primary-light: #E8EAF6;
+                --req-primary-dark: #3949AB;
+                --req-success: #66BB6A;
+                --req-success-light: #E8F5E9;
+                --req-warning: #FFA726;
+                --req-warning-light: #FFF3E0;
+                --req-danger: #EF5350;
+                --req-danger-light: #FFEBEE;
+                --req-info: #42A5F5;
+                --req-info-light: #E3F2FD;
+                --req-text: #37474F;
+                --req-text-muted: #78909C;
+                --req-bg: #F5F7FA;
+                --req-card-bg: #FFFFFF;
+                --req-border: #E0E0E0;
+                --req-shadow: rgba(0, 0, 0, 0.06);
+                --req-font: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                --sidebar-width: 280px;
+                --sidebar-collapsed-width: 80px;
+            }
+            
+            * { font-family: var(--req-font) !important; }
+            
+            .request-form-wrapper { 
+                display: flex; 
+                min-height: 100vh; 
+                background-color: var(--req-bg);
+                font-family: var(--req-font);
+            }
+            
+            /* Sidebar Styles */
+            .req-sidebar { 
+                width: var(--sidebar-width); 
+                background: var(--req-card-bg); 
+                border-right: 1px solid var(--req-border); 
+                position: fixed; 
+                left: 0; 
+                top: 0; 
+                height: 100vh; 
+                z-index: 1000; 
+                transition: all 0.3s ease; 
+                box-shadow: 2px 0 10px var(--req-shadow); 
+                display: flex; 
+                flex-direction: column; 
+            }
+            .sidebar-header { 
+                padding: 1.5rem; 
+                border-bottom: 1px solid var(--req-border); 
+                display: flex; 
+                align-items: center; 
+                gap: 1rem; 
+            }
+            .sidebar-logo { 
+                width: 48px; 
+                height: 48px; 
+                background: linear-gradient(135deg, var(--req-primary) 0%, var(--req-primary-dark) 100%); 
+                border-radius: 12px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                flex-shrink: 0; 
+            }
+            .sidebar-logo svg { width: 24px; height: 24px; color: white; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--req-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--req-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { 
+                font-size: 0.7rem; 
+                font-weight: 600; 
+                text-transform: uppercase; 
+                letter-spacing: 0.5px; 
+                color: var(--req-text-muted); 
+                padding: 0 1.5rem; 
+                margin-bottom: 0.5rem; 
+            }
+            .sidebar-nav .nav-link { 
+                display: flex; 
+                align-items: center; 
+                padding: 0.75rem 1.5rem; 
+                color: var(--req-text); 
+                text-decoration: none; 
+                transition: all 0.2s ease; 
+                border-left: 3px solid transparent; 
+                margin: 2px 0; 
+            }
+            .sidebar-nav .nav-link .nav-icon { 
+                width: 20px; 
+                height: 20px; 
+                margin-right: 12px; 
+                flex-shrink: 0;
+                color: var(--req-text-muted); 
+                transition: all 0.2s ease; 
+            }
+            .sidebar-nav .nav-link:hover { background-color: var(--req-bg); color: var(--req-primary); }
+            .sidebar-nav .nav-link:hover .nav-icon { color: var(--req-primary); }
+            .sidebar-nav .nav-link.active { 
+                background-color: rgba(92, 107, 192, 0.1); 
+                color: var(--req-primary); 
+                border-left-color: var(--req-primary); 
+                font-weight: 600; 
+            }
+            .sidebar-nav .nav-link.active .nav-icon { color: var(--req-primary); }
+            .nav-badge { 
+                margin-left: auto; 
+                background-color: var(--req-danger); 
+                color: white; 
+                font-size: 0.7rem; 
+                padding: 0.2rem 0.5rem; 
+                border-radius: 10px; 
+                font-weight: 600; 
+            }
+            .sidebar-user { 
+                padding: 1rem 1.5rem; 
+                border-top: 1px solid var(--req-border); 
+                background-color: var(--req-bg); 
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .user-avatar { 
+                width: 40px; 
+                height: 40px; 
+                background: linear-gradient(135deg, #26A69A 0%, #E0F2F1 100%); 
+                border-radius: 50%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                color: white; 
+                font-weight: 600; 
+                font-size: 1rem; 
+            }
+            .user-info h6 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--req-text); }
+            .user-info small { color: var(--req-text-muted); font-size: 0.75rem; }
+            
+            /* Main Content */
+            .req-main-content { 
+                flex: 1; 
+                margin-left: var(--sidebar-width); 
+                padding: 2rem; 
+                transition: margin-left 0.3s ease; 
+                min-height: 100vh; 
+            }
+            
+            /* Page Header */
+            .req-page-header {
+                margin-bottom: 2rem;
+            }
+            .req-page-header h1 {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--req-text);
+                margin-bottom: 0.5rem;
+            }
+            .req-page-header p {
+                color: var(--req-text-muted);
+                margin: 0;
+            }
+            
+            /* Form Card */
+            .req-form-card {
+                background: var(--req-card-bg);
+                border-radius: 16px;
+                box-shadow: 0 2px 12px var(--req-shadow);
+                overflow: hidden;
+                max-width: 800px;
+            }
+            .req-form-header {
+                padding: 1.5rem 2rem;
+                background: linear-gradient(135deg, var(--req-primary) 0%, var(--req-primary-dark) 100%);
+                color: white;
+            }
+            .req-form-header h3 {
+                margin: 0 0 0.25rem 0;
+                font-weight: 600;
+                font-size: 1.25rem;
+            }
+            .req-form-header p {
+                margin: 0;
+                opacity: 0.9;
+                font-size: 0.9rem;
+            }
+            .req-form-body {
+                padding: 2rem;
+            }
+            
+            /* Form Elements */
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                color: var(--req-text);
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+            }
+            .form-group label .required {
+                color: var(--req-danger);
+            }
+            .form-control-modern {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                border: 2px solid var(--req-border);
+                border-radius: 10px;
+                font-size: 0.95rem;
+                transition: all 0.2s ease;
+                background: var(--req-card-bg);
+            }
+            .form-control-modern:focus {
+                outline: none;
+                border-color: var(--req-primary);
+                box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.15);
+            }
+            .form-control-modern::placeholder {
+                color: var(--req-text-muted);
+            }
+            select.form-control-modern {
+                cursor: pointer;
+            }
+            textarea.form-control-modern {
+                min-height: 120px;
+                resize: vertical;
+            }
+            
+            /* Request Type Cards */
+            .request-type-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            .request-type-card {
+                position: relative;
+                padding: 1.25rem;
+                border: 2px solid var(--req-border);
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                background: var(--req-card-bg);
+            }
+            .request-type-card:hover {
+                border-color: var(--req-primary-light);
+                background: var(--req-primary-light);
+            }
+            .request-type-card.selected {
+                border-color: var(--req-primary);
+                background: var(--req-primary-light);
+            }
+            .request-type-card input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+            }
+            .request-type-card .type-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+                font-size: 1.25rem;
+            }
+            .request-type-card .type-icon.financial { background: var(--req-success-light); color: var(--req-success); }
+            .request-type-card .type-icon.maintenance { background: var(--req-warning-light); color: var(--req-warning); }
+            .request-type-card .type-icon.info { background: var(--req-info-light); color: var(--req-info); }
+            .request-type-card .type-icon.other { background: #F3E5F5; color: #AB47BC; }
+            .request-type-card h6 {
+                margin: 0 0 0.25rem 0;
+                font-weight: 600;
+                color: var(--req-text);
+            }
+            .request-type-card p {
+                margin: 0;
+                font-size: 0.8rem;
+                color: var(--req-text-muted);
+            }
+            
+            /* File Upload */
+            .file-upload-area {
+                border: 2px dashed var(--req-border);
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                background: var(--req-bg);
+            }
+            .file-upload-area:hover {
+                border-color: var(--req-primary);
+                background: var(--req-primary-light);
+            }
+            .file-upload-area i {
+                font-size: 2.5rem;
+                color: var(--req-primary);
+                margin-bottom: 0.75rem;
+            }
+            .file-upload-area h6 {
+                margin: 0 0 0.25rem 0;
+                font-weight: 600;
+                color: var(--req-text);
+            }
+            .file-upload-area p {
+                margin: 0;
+                font-size: 0.85rem;
+                color: var(--req-text-muted);
+            }
+            .file-upload-area input[type="file"] {
+                display: none;
+            }
+            
+            /* Buttons */
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--req-border);
+                margin-top: 1rem;
+            }
+            .btn-cancel {
+                padding: 0.75rem 1.5rem;
+                border: 2px solid var(--req-border);
+                border-radius: 10px;
+                background: transparent;
+                color: var(--req-text);
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .btn-cancel:hover {
+                background: var(--req-bg);
+                border-color: var(--req-text-muted);
+            }
+            .btn-submit {
+                padding: 0.75rem 2rem;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(135deg, var(--req-primary) 0%, var(--req-primary-dark) 100%);
+                color: white;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(92, 107, 192, 0.4);
+            }
+            
+            /* Tips Card */
+            .tips-card {
+                background: var(--req-info-light);
+                border-radius: 12px;
+                padding: 1.25rem;
+                margin-top: 1.5rem;
+                max-width: 800px;
+            }
+            .tips-card h6 {
+                margin: 0 0 0.75rem 0;
+                color: var(--req-info);
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .tips-card ul {
+                margin: 0;
+                padding-left: 1.25rem;
+            }
+            .tips-card li {
+                color: var(--req-text);
+                font-size: 0.85rem;
+                margin-bottom: 0.35rem;
+            }
+            
+            /* Responsive */
+            @media (max-width: 992px) {
+                .req-sidebar { transform: translateX(-100%); }
+                .req-main-content { margin-left: 0; }
+                .request-type-grid { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 576px) {
+                .req-form-body { padding: 1.25rem; }
+                .form-actions { flex-direction: column-reverse; }
+                .btn-cancel, .btn-submit { width: 100%; justify-content: center; }
+            }
+            </style>
+            
+            <div class="request-form-wrapper">
+                <!-- Sidebar Navigation -->
+                <aside class="req-sidebar">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar Navigation -->
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span>My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span>Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span>Receivables</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Requests</div>
+                            <a href="/my/vendor_quotes" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>Pending Approvals</span>
+                            </a>
+                            <a href="/my/requests" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span>My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                    
+                    <!-- Sidebar User -->
+                    <div class="sidebar-user">
+                        <div class="user-avatar">
+                            <t t-esc="request.env.user.name[:2].upper()"/>
+                        </div>
+                        <div class="user-info">
+                            <h6><t t-esc="request.env.user.name"/></h6>
+                            <small>Property Owner</small>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="req-main-content">
+                    <!-- Page Header -->
+                    <div class="req-page-header">
+                        <h1><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:28px;height:28px;margin-right:8px;color:var(--req-primary);vertical-align:middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Submit New Request</h1>
+                        <p>Fill out the form below to submit a new request. Our team will respond as soon as possible.</p>
+                    </div>
+                    
+                    <!-- Request Form -->
+                    <div class="req-form-card">
+                        <div class="req-form-header">
+                            <h3><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:22px;height:22px;margin-right:8px;vertical-align:middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>Request Details</h3>
+                            <p>Please provide as much detail as possible to help us assist you better.</p>
+                        </div>
+                        
+                        <div class="req-form-body">
+                            <form action="/my/requests/new" method="post" enctype="multipart/form-data" id="requestForm">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                
+                                <!-- Subject -->
+                                <div class="form-group">
+                                    <label>Subject <span class="required">*</span></label>
+                                    <input type="text" name="subject" class="form-control-modern" 
+                                           placeholder="Brief description of your request" required="required"/>
+                                </div>
+                                
+                                <!-- Related Project -->
+                                <div class="form-group">
+                                    <label>Related Property</label>
+                                    <select name="project_id" class="form-control-modern">
+                                        <option value="">-- Select Property (Optional) --</option>
+                                        <t t-foreach="projects" t-as="p">
+                                            <option t-att-value="p.id" t-esc="p.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                
+                                <!-- Request Type -->
+                                <div class="form-group">
+                                    <label>Request Type <span class="required">*</span></label>
+                                    <div class="request-type-grid">
+                                        <label class="request-type-card" onclick="selectType(this)">
+                                            <input type="radio" name="request_type" value="financial"/>
+                                            <div class="type-icon financial"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg></div>
+                                            <h6>Financial Report</h6>
+                                            <p>Request financial statements or reports</p>
+                                        </label>
+                                        <label class="request-type-card" onclick="selectType(this)">
+                                            <input type="radio" name="request_type" value="maintenance"/>
+                                            <div class="type-icon maintenance"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg></div>
+                                            <h6>Maintenance Query</h6>
+                                            <p>Report maintenance issues or queries</p>
+                                        </label>
+                                        <label class="request-type-card selected" onclick="selectType(this)">
+                                            <input type="radio" name="request_type" value="info" checked="checked"/>
+                                            <div class="type-icon info"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></div>
+                                            <h6>Information Request</h6>
+                                            <p>General inquiries about your property</p>
+                                        </label>
+                                        <label class="request-type-card" onclick="selectType(this)">
+                                            <input type="radio" name="request_type" value="other"/>
+                                            <div class="type-icon other"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg></div>
+                                            <h6>Other</h6>
+                                            <p>Any other type of request</p>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Description -->
+                                <div class="form-group">
+                                    <label>Details</label>
+                                    <textarea name="description" class="form-control-modern" 
+                                              placeholder="Please provide detailed information about your request..."></textarea>
+                                </div>
+                                
+                                <!-- File Upload -->
+                                <div class="form-group">
+                                    <label>Attachments</label>
+                                    <label class="file-upload-area" for="attachments">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:40px;height:40px;color:#5C6BC0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>
+                                        <h6>Drop files here or click to upload</h6>
+                                        <p>Supports: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max 10MB each)</p>
+                                        <input type="file" name="attachments" id="attachments" multiple="multiple"/>
+                                    </label>
+                                    <div id="file-list" style="margin-top: 0.75rem;"></div>
+                                </div>
+                                
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <a href="/my/properties" class="btn-cancel">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg> Cancel
+                                    </a>
+                                    <button type="submit" class="btn-submit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg> Submit Request
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Tips -->
+                    <div class="tips-card">
+                        <h6><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;margin-right:6px;vertical-align:middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" /></svg> Tips for a faster response</h6>
+                        <ul>
+                            <li>Be specific about what you need - include dates, amounts, or unit numbers when relevant</li>
+                            <li>Attach supporting documents if available (contracts, photos, invoices)</li>
+                            <li>Select the correct request type to route your request to the right team</li>
+                            <li>Check your email regularly for updates on your request</li>
+                        </ul>
+                    </div>
+                </main>
+            </div>
+            
+            <script>
+                function selectType(element) {
+                    document.querySelectorAll('.request-type-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    element.classList.add('selected');
+                }
+                
+                // File upload display
+                document.getElementById('attachments').addEventListener('change', function(e) {
+                    var fileList = document.getElementById('file-list');
+                    fileList.innerHTML = '';
+                    Array.from(this.files).forEach(function(file) {
+                        var fileItem = document.createElement('div');
+                        fileItem.style.cssText = 'display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: #F5F7FA; border-radius: 8px; margin-bottom: 0.5rem;';
+                        fileItem.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;color:#5C6BC0;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg><span style="flex: 1;">' + file.name + '</span><small style="color: #78909C;">' + (file.size / 1024).toFixed(1) + ' KB</small>';
+                        fileList.appendChild(fileItem);
+                    });
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

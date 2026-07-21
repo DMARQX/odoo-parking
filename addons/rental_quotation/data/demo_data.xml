@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Default Approval Rules -->
+        <record id="approval_rule_small_amount" model="rental.approval.rule">
+            <field name="name">Small Amount Approval</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">0</field>
+            <field name="max_amount">10000</field>
+            <field name="approval_level">1</field>
+            <field name="sequence">10</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <record id="approval_rule_medium_amount" model="rental.approval.rule">
+            <field name="name">Medium Amount Approval</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">10001</field>
+            <field name="max_amount">50000</field>
+            <field name="approval_level">2</field>
+            <field name="sequence">20</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Sample Quotation Template -->
+        <record id="quotation_template_default" model="rental.quotation.template">
+            <field name="name">Default Rental Template</field>
+            <field name="active" eval="True"/>
+            <field name="default_lease_duration">12</field>
+            <field name="default_discount_type">percentage</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Product Request Line List View -->
+        <record id="view_product_request_line_list" model="ir.ui.view">
+            <field name="name">product.request.line.list</field>
+            <field name="model">product.request.line</field>
+            <field name="arch" type="xml">
+                <list string="Product Request Lines / بنود طلبات المنتجات" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="request_id"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="product_uom_id"/>
+                    <field name="available_quantity"/>
+                    <field name="description"/>
+                    <field name="state" widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Product Request Line Form View -->
+        <record id="view_product_request_line_form" model="ir.ui.view">
+            <field name="name">product.request.line.form</field>
+            <field name="model">product.request.line</field>
+            <field name="arch" type="xml">
+                <form string="Product Request Line / بند طلب المنتجات">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="request_id"/>
+                                <field name="sequence"/>
+                                <field name="product_id" required="1"/>
+                                <field name="product_template_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="quantity" required="1"/>
+                                <field name="product_uom_id"/>
+                                <field name="available_quantity"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Description / الوصف">
+                            <field name="description" nolabel="1" placeholder="Enter product description or notes... / أدخل وصف المنتج أو ملاحظات..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Product Request Line Search View -->
+        <record id="view_product_request_line_search" model="ir.ui.view">
+            <field name="name">product.request.line.search</field>
+            <field name="model">product.request.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Product Request Lines">
+                    <field name="request_id" string="Request / الطلب"/>
+                    <field name="product_id" string="Product / المنتج"/>
+                    <field name="description" string="Description / الوصف"/>
+                    
+                    <filter string="Draft / مسودة" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Submitted / مُرسل" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                    <filter string="Approved / معتمد" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <filter string="Received / مُستلم" name="received" domain="[('state', '=', 'received')]"/>
+                    
+                    <group expand="0" string="Group By / تجميع حسب">
+                        <filter string="Request / الطلب" name="group_request" domain="[]" context="{'group_by': 'request_id'}"/>
+                        <filter string="Product / المنتج" name="group_product" domain="[]" context="{'group_by': 'product_id'}"/>
+                        <filter string="Status / الحالة" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Product Request Line Action -->
+        <record id="action_product_request_line" model="ir.actions.act_window">
+            <field name="name">Product Request Lines / بنود طلبات المنتجات</field>
+            <field name="res_model">product.request.line</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_product_request_line_search"/>
+        </record>
+
+    </data>
+</odoo>

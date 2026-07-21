@@ -1,0 +1,77 @@
+<odoo>
+
+          <record id="action_report_drawing_submittal_custom" model="ir.actions.report">
+            <field name="name">Drawing Submittal</field>
+            <field name="model">drawing.submittal</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.report_drawing_submittal_custom</field>
+            <field name="report_file">nthub_realestate.report_drawing_submittal_custom</field>
+            <field name="binding_model_id" ref="model_drawing_submittal"/>
+            <field name="binding_type">report</field>
+        </record>
+
+  <template id="report_drawing_submittal_custom">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+        <div class="page">
+
+        <h2 style="text-align:center;">DOCUMENT / TENANT SHOP DRAWING SUBMITTAL</h2>
+        <p><strong>From:</strong> Saqifat Al Safa</p>
+        <p><strong>Docs. Sub. Date:</strong> <span t-field="doc.submission_date"/></p>
+        <p><strong>Document No.:</strong> <span t-field="doc.name"/></p>
+        <p><strong>Tenant:</strong> <span t-field="doc.tenant_id.name"/></p>
+        <p><strong>Drawings:</strong> <span t-field="doc.drawing_description"/></p>
+        <p><strong>No. of Copies:</strong> <span t-field="doc.copies"/></p>
+
+        <hr/>
+
+        <!-- Section Template -->
+        <t t-set="sections" t-value="[
+          ('Architectural Comments', doc.architectural_comments, doc.architectural_status),
+          ('Electrical Comments', doc.electrical_comments, doc.electrical_status),
+          ('Mechanical - HVAC', doc.hvac_comments, doc.hvac_status),
+          ('Drainage - Water Supply', doc.drainage_comments, doc.drainage_status),
+          ('Fire Fighting', doc.firefighting_comments, doc.firefighting_status),
+          ('Low Current', doc.low_current_comments, doc.low_current_status),
+          ('Fire Alarm', doc.fire_alarm_comments, doc.fire_alarm_status)
+        ]"/>
+        <t t-foreach="sections" t-as="section">
+          <p><strong><t t-esc="section[0]"/>:</strong></p>
+          <ul>
+            <li><t t-esc="section[1]"/></li>
+            <li>Status:
+              <t t-if="section[2] == 'app'">APP</t>
+              <t t-if="section[2] == 'aan'">AAN</t>
+              <t t-if="section[2] == 'rej'">REJ</t>
+            </li>
+          </ul>
+        </t>
+
+        <hr/>
+        <p><strong>Note:</strong><br/><t t-esc="doc.guideline_note"/></p>
+
+        <br/><br/>
+        <div style="display:flex; justify-content:space-between;">
+          <div>
+            <p><strong>Name:</strong> <span t-esc="doc.signed_by"/></p>
+            <p><strong>Date:</strong> <span t-field="doc.signed_date"/></p>
+          </div>
+          <div>
+            <p><strong>Signature:</strong></p>
+            <img t-if="doc.signature" t-att-src="'data:image/png;base64,%s' % doc.signature.decode()" style="width:150px; height:auto;"/>
+          </div>
+        </div>
+
+        <br/>
+        <p><strong>APP</strong>: Proposal is acceptable</p>
+        <p><strong>AAN</strong>: Approved as noted</p>
+        <p><strong>REJ</strong>: Rejected</p>
+
+        </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+</odoo>

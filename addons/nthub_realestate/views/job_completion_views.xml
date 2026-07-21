@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- JOB COMPLETION CHECKLIST VIEWS -->
+
+        <!-- Checklist List -->
+        <record id="job_order_completion_checklist_list" model="ir.ui.view">
+            <field name="name">job.order.completion.checklist.list</field>
+            <field name="model">job.order.completion.checklist</field>
+            <field name="arch" type="xml">
+                <list string="Completion Checklists" sample="1">
+                    <field name="name"/>
+                    <field name="maintenance_type"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Checklist Form -->
+        <record id="job_order_completion_checklist_form" model="ir.ui.view">
+            <field name="name">job.order.completion.checklist.form</field>
+            <field name="model">job.order.completion.checklist</field>
+            <field name="arch" type="xml">
+                <form string="Completion Checklist">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="maintenance_type"/>
+                        </group>
+                        <separator string="Checklist Items"/>
+                        <field name="checklist_items" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence"/>
+                                <field name="description"/>
+                                <field name="is_required" widget="boolean_toggle"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- COMPLETION RESULT VIEWS -->
+
+        <!-- Result List -->
+        <record id="job_order_completion_result_list" model="ir.ui.view">
+            <field name="name">job.order.completion.result.list</field>
+            <field name="model">job.order.completion.result</field>
+            <field name="arch" type="xml">
+                <list string="Completion Results" sample="1">
+                    <field name="name"/>
+                    <field name="job_order_id"/>
+                    <field name="checklist_id"/>
+                    <field name="completion_date"/>
+                    <field name="overall_status"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Result Form -->
+        <record id="job_order_completion_result_form" model="ir.ui.view">
+            <field name="name">job.order.completion.result.form</field>
+            <field name="model">job.order.completion.result</field>
+            <field name="arch" type="xml">
+                <form string="Job Completion Result">
+                    <header>
+                        <button name="action_acknowledge" string="Acknowledge" type="object" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="job_order_id" readonly="True"/>
+                                <field name="checklist_id" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="completion_date" readonly="True"/>
+                                <field name="overall_status" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <separator string="Completion Photos"/>
+                        <field name="completion_photos" widget="many2many_tags"/>
+
+                        <separator string="Checklist Results"/>
+                        <field name="item_results" nolabel="1">
+                            <tree>
+                                <field name="item_id"/>
+                                <field name="status"/>
+                            </tree>
+                        </field>
+
+                        <separator string="Contractor Notes"/>
+                        <field name="contractor_notes" nolabel="1"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,acknowledged"/>
+                    </sheet>
+                    <chatter>
+
+                    </chatter>
+                </form>
+            </field>
+        </record>
+
+        <!-- DEFECT VIEWS -->
+
+        <!-- Defect List -->
+        <record id="job_order_defect_list" model="ir.ui.view">
+            <field name="name">job.order.defect.list</field>
+            <field name="model">job.order.defect</field>
+            <field name="arch" type="xml">
+                <list string="Defects / Rework Items" sample="1">
+                    <field name="name"/>
+                    <field name="job_order_id"/>
+                    <field name="severity"/>
+                    <field name="status"/>
+                    <field name="reported_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Defect Form -->
+        <record id="job_order_defect_form" model="ir.ui.view">
+            <field name="name">job.order.defect.form</field>
+            <field name="model">job.order.defect</field>
+            <field name="arch" type="xml">
+                <form string="Defect / Rework Item">
+                    <header>
+                        <button name="action_acknowledge" string="Acknowledge" type="object" class="btn-primary"/>
+                        <button name="action_create_rework" string="Create Rework Job" type="object" class="btn-warning"/>
+                        <button name="action_resolve" string="Mark Resolved" type="object" class="btn-success"/>
+                        <button name="action_close" string="Close" type="object"/>
+                        <field name="status" widget="statusbar" statusbar_visible="open,acknowledged,rework_assigned,resolved,closed"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="job_order_id" readonly="True"/>
+                                <field name="reported_by" readonly="True"/>
+                                <field name="reported_date" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="severity"/>
+                                <field name="rework_job_order_id" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <separator string="Description"/>
+                        <field name="description" nolabel="1"/>
+
+                        <separator string="Defect Photo"/>
+                        <field name="defect_photo" widget="image"/>
+
+                        <separator string="Rework Notes"/>
+                        <field name="rework_notes" nolabel="1"/>
+                    </sheet>
+                    <chatter>
+
+                    </chatter>
+                </form>
+            </field>
+        </record>
+
+        <!-- Defect Search -->
+        <record id="job_order_defect_search" model="ir.ui.view">
+            <field name="name">job.order.defect.search</field>
+            <field name="model">job.order.defect</field>
+            <field name="arch" type="xml">
+                <search string="Search Defects">
+                    <field name="name" string="Defect Number"/>
+                    <field name="job_order_id" string="Job Order"/>
+                    <separator/>
+                    <filter name="critical" string="Critical" domain="[('severity', '=', 'critical')]"/>
+                    <filter name="major" string="Major" domain="[('severity', '=', 'major')]"/>
+                    <filter name="minor" string="Minor" domain="[('severity', '=', 'minor')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Defect Action -->
+        <record id="action_job_order_defect" model="ir.actions.act_window">
+            <field name="name">Defects / Rework Items</field>
+            <field name="res_model">job.order.defect</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="job_order_defect_search"/>
+            <field name="help">Track defects and rework items during job completion</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,114 @@
+<odoo>
+
+
+  <record id="view_unit_handover_form_list" model="ir.ui.view">
+  <field name="name">view.unit.handover.form.list</field>
+  <field name="model">unit.handover.form</field>
+  <field name="arch" type="xml">
+    <list>
+      <field name="date"/>
+      <field name="unit_number"/>
+      <field name="tenant_name"/>
+      <field name="contact_person"/>
+    </list>
+  </field>
+</record>
+
+<record id="view_unit_handover_form" model="ir.ui.view">
+  <field name="name">unit.handover.form</field>
+  <field name="model">unit.handover.form</field>
+  <field name="arch" type="xml">
+    <form string="Unit Handover Form">
+      <sheet>
+        <group>
+          <field name="contract_id"/>
+          <field name="date"/>
+          <field name="unit_number"/>
+          <field name="total_area"/>
+          <field name="tenant_name"/>
+          <field name="contact_person"/>
+          <field name="office_number"/>
+        </group>
+
+        <notebook>
+          <page string="Items Checklist">
+            <field name="handover_item_ids">
+              <list editable="bottom">
+                <field name="item_name"/>
+                <field name="description"/>
+                <field name="checked"/>
+              </list>
+            </field>
+          </page>
+
+<!--          <page string="Signatures">-->
+<!--            <group>-->
+<!--              <field name="consultant_name"/>-->
+<!--              <field name="consultant_signature" widget="image"/>-->
+<!--              <field name="consultant_date"/>-->
+<!--            </group>-->
+<!--            <group>-->
+<!--              <field name="tenant_rep_name"/>-->
+<!--              <field name="tenant_signature" widget="image"/>-->
+<!--              <field name="tenant_date"/>-->
+<!--            </group>-->
+<!--          </page>-->
+        </notebook>
+                <group string="Signatures">
+          <group>
+            <field name="consultant_name"/>
+            <field name="consultant_signature" widget="signature"/>
+            <field name="consultant_date"/>
+          </group>
+          <group>
+            <field name="tenant_rep_name"/>
+            <field name="tenant_signature" widget="signature"/>
+            <field name="tenant_date"/>
+          </group>
+        </group>
+
+      </sheet>
+    </form>
+  </field>
+</record>
+
+
+
+<!--  <record id="rental_contract_view_form_inherit_handover_page" model="ir.ui.view">-->
+<!--  <field name="name">rental.contract.form.inherit.handover.page</field>-->
+<!--  <field name="model">rental.contract</field>-->
+<!--  <field name="inherit_id" ref="nthub_realestate.rental_contract_form"/>-->
+<!--  <field name="arch" type="xml">-->
+<!--    <xpath expr="//notebook" position="inside">-->
+<!--      <page string="Unit Handover">-->
+<!--        <field name="unit_handover_ids">-->
+<!--          <list editable="bottom">-->
+<!--            <field name="date"/>-->
+<!--            <field name="unit_number"/>-->
+<!--            <field name="total_area"/>-->
+<!--            <field name="tenant_name"/>-->
+<!--            <field name="contact_person"/>-->
+<!--            <field name="office_number"/>-->
+<!--          </list>-->
+<!--        </field>-->
+<!--      </page>-->
+<!--    </xpath>-->
+<!--  </field>-->
+<!--</record>-->
+
+<!--<record id="rental_contract_view_form_inherit_handover_button" model="ir.ui.view">-->
+<!--  <field name="name">rental.contract.form.inherit.handover.button</field>-->
+<!--  <field name="model">rental.contract</field>-->
+<!--  <field name="inherit_id" ref="nthub_realestate.rental_contract_form"/>-->
+<!--  <field name="arch" type="xml">-->
+<!--    <xpath expr="//header" position="inside">-->
+<!--      <button name="action_open_unit_handover_forms"-->
+<!--              type="object"-->
+<!--              string="Unit Handover Forms"-->
+<!--              class="btn-secondary"-->
+<!--              context="{'default_contract_id': id}"/>-->
+<!--    </xpath>-->
+<!--  </field>-->
+<!--</record>-->
+
+</odoo>

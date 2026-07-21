@@ -1,0 +1,48 @@
+<odoo>
+    <record id="res_config_settings_view_form_inherit_contract_articles" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.contract.articles</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="nthub_realestate.res_config_settings_view_form_nthub_realestate"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='nthub_realestate']" position="inside">
+                <h2>Default Contract Articles Template</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                       <div class="o_setting_right_pane">
+                           <p class="o_form_label">These texts will be used as the default template when creating a new project.</p>
+
+                           <label for="contract_article_1"  style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_1" widget="html"/>
+                           <label for="contract_article_2" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_2" widget="html"/>
+                           <label for="contract_article_3" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_3" widget="html"/>
+                           <label for="contract_article_4" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_4" widget="html"/>
+                           <label for="contract_article_5" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_5" widget="html"/>
+                           <label for="contract_article_6" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_6" widget="html"/>
+                           <label for="contract_article_7" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_7" widget="html"/>
+                           <label for="contract_article_8" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_8" widget="html"/>
+                           <label for="contract_article_9" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_9" widget="html"/>
+                           <label for="contract_article_10" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_10" widget="html"/>
+                           <label for="contract_article_11" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_11" widget="html"/>
+                           <label for="contract_article_12" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_12" widget="html"/>
+                           <label for="contract_article_13" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_13" widget="html"/>
+                           <label for="contract_article_14" style="font-size: 17px;  text-align: right;"/>
+                           <field name="contract_article_14" widget="html"/>
+                       </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

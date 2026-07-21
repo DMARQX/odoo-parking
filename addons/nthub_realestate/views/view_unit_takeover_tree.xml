@@ -1,0 +1,96 @@
+<!-- 1. Tree View -->
+<odoo>
+
+<record id="view_unit_takeover_tree" model="ir.ui.view">
+  <field name="name">unit.takeover.form.tree</field>
+  <field name="model">unit.takeover.form</field>
+  <field name="arch" type="xml">
+    <list>
+      <field name="date"/>
+      <field name="unit_number"/>
+      <field name="tenant_name"/>
+      <field name="contact_person"/>
+    </list>
+  </field>
+</record>
+
+<!-- 2. Form View -->
+<record id="view_unit_takeover_form" model="ir.ui.view">
+  <field name="name">unit.takeover.form.form</field>
+  <field name="model">unit.takeover.form</field>
+  <field name="arch" type="xml">
+    <form string="Unit Takeover Form">
+      <sheet>
+        <group>
+          <field name="contract_id"/>
+          <field name="date"/>
+          <field name="unit_number"/>
+          <field name="total_area"/>
+          <field name="office_number"/>
+          <field name="tenant_name"/>
+          <field name="contact_person"/>
+        </group>
+
+        <field name="takeover_item_ids">
+          <list editable="bottom">
+            <field name="item_name"/>
+            <field name="description"/>
+            <field name="checked"/>
+          </list>
+        </field>
+
+        <group string="Signatures">
+          <group>
+            <field name="consultant_name"/>
+            <field name="consultant_signature" widget="signature"/>
+            <field name="consultant_date"/>
+          </group>
+          <group>
+            <field name="tenant_rep_name"/>
+            <field name="tenant_signature" widget="signature"/>
+            <field name="tenant_date"/>
+          </group>
+        </group>
+      </sheet>
+    </form>
+  </field>
+</record>
+
+<!-- 3. Action -->
+
+<!-- 4. Button in rental.contract -->
+<record id="rental_contract_view_form_inherit_takeover_button" model="ir.ui.view">
+  <field name="name">rental.contract.form.inherit.takeover.button</field>
+  <field name="model">rental.contract</field>
+  <field name="inherit_id" ref="nthub_realestate.rental_contract_form"/>
+  <field name="arch" type="xml">
+    <xpath expr="//header" position="inside">
+     <button name="action_open_unit_takeover_forms"
+        string="Open Takeover Forms"
+        type="object"
+        class="btn-secondary"/>
+
+    </xpath>
+  </field>
+</record>
+
+<!-- 5. Page in rental.contract to show all related takeover forms -->
+<record id="rental_contract_view_form_inherit_takeover_page" model="ir.ui.view">
+  <field name="name">rental.contract.form.inherit.takeover.page</field>
+  <field name="model">rental.contract</field>
+  <field name="inherit_id" ref="nthub_realestate.rental_contract_form"/>
+  <field name="arch" type="xml">
+    <xpath expr="//notebook" position="inside">
+      <page string="Takeover Forms">
+        <field name="unit_takeover_ids">
+          <list>
+            <field name="date"/>
+            <field name="unit_number"/>
+            <field name="tenant_name"/>
+          </list>
+        </field>
+      </page>
+    </xpath>
+  </field>
+</record>
+</odoo>

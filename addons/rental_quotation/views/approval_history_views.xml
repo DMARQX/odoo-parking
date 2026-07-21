@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Approval History list View -->
+    <record id="view_rental_quotation_approval_list" model="ir.ui.view">
+        <field name="name">rental.quotation.approval.list</field>
+        <field name="model">rental.quotation.approval</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="quotation_id"/>
+                <field name="approval_level"/>
+                <field name="user_id"/>
+                <field name="decision" decoration-success="decision=='approved'"
+                       decoration-danger="decision=='rejected'"
+                       decoration-info="decision=='pending'"/>
+                <field name="approval_date"/>
+                <field name="comments"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Approval History Form View -->
+    <record id="view_rental_quotation_approval_form" model="ir.ui.view">
+        <field name="name">rental.quotation.approval.form</field>
+        <field name="model">rental.quotation.approval</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="quotation_id"/>
+                            <field name="approval_level"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="decision"/>
+                            <field name="approval_date"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Comments">
+                        <field name="comments" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Quotation Line list View -->
+    <record id="view_rental_quotation_line_list" model="ir.ui.view">
+        <field name="name">rental.quotation.line.list</field>
+        <field name="model">rental.quotation.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="quotation_id"/>
+                <field name="property_id"/>
+                <field name="property_code"/>
+                <field name="property_area"/>
+                <field name="rental_price_per_sqm"/>
+                <field name="electricity_price_per_sqm"/>
+                <field name="total_price" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Dashboard/Kanban Views for Quick Access -->
+    <record id="view_rental_quotation_dashboard" model="ir.ui.view">
+        <field name="name">rental.quotation.dashboard</field>
+        <field name="model">rental.quotation</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" create="false">
+                <field name="state"/>
+                <field name="total_amount"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">Rental Quotations</div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <div class="mb4">
+                                            <span class="text-muted">Rental Quotations Dashboard</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

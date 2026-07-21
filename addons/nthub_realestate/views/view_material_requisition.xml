@@ -1,0 +1,67 @@
+<odoo>
+    <record id="view_material_requisition_tree" model="ir.ui.view">
+  <field name="name">material.requisition.form.tree</field>
+  <field name="model">material.requisition.form</field>
+  <field name="arch" type="xml">
+    <list>
+      <field name="name"/>
+      <field name="project_id"/>
+      <field name="date"/>
+      <field name="department"/>
+      <field name="state"/>
+    </list>
+  </field>
+</record>
+    <record id="view_material_requisition_form" model="ir.ui.view">
+  <field name="name">material.requisition.form.form</field>
+  <field name="model">material.requisition.form</field>
+  <field name="arch" type="xml">
+    <form string="Material Requisition Form">
+      <header>
+        <button name="action_confirm" type="object" string="Confirm"  class="btn-primary"/>
+        <button name="action_set_to_draft" type="object" string="Set to Draft" />
+        <field name="state" widget="statusbar" />
+      </header>
+      <sheet>
+        <group>
+          <field name="name" readonly="1"/>
+          <field name="project_id"/>
+          <field name="date"/>
+          <field name="department"/>
+        </group>
+
+        <group string="Categories">
+          <field name="materials"/>
+          <field name="spare_parts"/>
+          <field name="consumable"/>
+          <field name="stationary"/>
+          <field name="tools"/>
+          <field name="equipments"/>
+          <field name="furniture"/>
+          <field name="services"/>
+        </group>
+
+        <field name="line_ids">
+          <list editable="bottom">
+            <field name="description"/>
+            <field name="unit"/>
+            <field name="quantity"/>
+            <field name="estimated_cost_per_unit"/>
+            <field name="estimated_cost_total" readonly="1"/>
+            <field name="remarks"/>
+          </list>
+        </field>
+
+      </sheet>
+    </form>
+  </field>
+</record>
+<record id="action_material_requisition_form" model="ir.actions.act_window">
+  <field name="name">Material Requisitions</field>
+  <field name="res_model">material.requisition.form</field>
+  <field name="view_mode">list,form</field>
+</record>
+
+
+
+</odoo>

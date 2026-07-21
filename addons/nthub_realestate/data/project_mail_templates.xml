@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email Template for New Project Creation Notification -->
+        <record id="email_template_new_project_creation" model="mail.template">
+            <field name="name">Project: Creation Notification to Owner</field>
+            <!-- IMPORTANT: Replace 'nthub_realestate' with the technical name of your module -->
+            <field name="model_id" ref="nthub_realestate.model_rs_project"/>
+            <field name="subject">Your project "{{ object.name }}" has been created</field>
+
+            <!-- THIS IS THE CORRECTED LINE -->
+            <field name="email_from"><![CDATA["{{ object.company_id.name }}" <{{ object.company_id.email or user.email }}>]]></field>
+
+            <field name="email_to">{{ object.partner_id.email_formatted if object.partner_id else '' }}</field>
+            <field name="body_html" type="html">
+                 <html>
+                <div style="margin: 0px; padding: 0px; font-family: sans-serif;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Dear <t t-out="object.partner_id.name or 'Owner'"/>,
+                        <br/><br/>
+                        We are pleased to inform you that your project, <strong><t t-out="object.name or ''"/></strong>, has been successfully created.
+                        <br/><br/>
+                        With compliments from the Sales Department.
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="object.company_id.name or 'Your Company'"/>
+                    </p>
+                </div>
+                 </html>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

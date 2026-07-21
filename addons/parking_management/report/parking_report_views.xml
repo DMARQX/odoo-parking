@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- SEARCH VIEWS -->
+    <!-- ============================================================ -->
+
+    <!-- Spots Search (Report) -->
+    <record id="parking_spot_report_search" model="ir.ui.view">
+        <field name="name">parking.spot.report.search</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <search string="Search Spots">
+                <filter name="group_location" string="By Branch" context="{'group_by': 'location_id'}"/>
+                <filter name="group_status" string="By Status" context="{'group_by': 'status'}"/>
+                <filter name="group_spot_type" string="By Type" context="{'group_by': 'spot_type'}"/>
+                <separator/>
+                <filter name="available" string="Available" domain="[('status', '=', 'available')]"/>
+                <filter name="reserved" string="Reserved" domain="[('status', '=', 'reserved')]"/>
+                <filter name="occupied" string="Occupied" domain="[('status', '=', 'occupied')]"/>
+                <separator/>
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="status"/>
+                <field name="spot_type"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Contracts Search (Report) -->
+    <record id="parking_contract_report_search" model="ir.ui.view">
+        <field name="name">parking.contract.report.search</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <search string="Search Contracts">
+                <filter name="group_location" string="By Branch" context="{'group_by': 'location_id'}"/>
+                <filter name="group_state" string="By Status" context="{'group_by': 'state'}"/>
+                <filter name="group_subscription" string="By Subscription" context="{'group_by': 'subscription_type'}"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('state', '=', 'active')]"/>
+                <filter name="expired" string="Expired" domain="[('state', '=', 'expired')]"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="filter_create_date" string="Date" date="create_date"/>
+                <separator/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="location_id"/>
+                <field name="spot_id"/>
+                <field name="state"/>
+                <field name="subscription_type"/>
+                <field name="user_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vehicles Search (Report) -->
+    <record id="parking_vehicle_report_search" model="ir.ui.view">
+        <field name="name">parking.vehicle.report.search</field>
+        <field name="model">parking.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Search Vehicles">
+                <filter name="group_brand" string="By Brand" context="{'group_by': 'brand'}"/>
+                <separator/>
+                <field name="license_plate"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="owner_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- LIST VIEWS -->
+    <!-- ============================================================ -->
+
+    <!-- Spots Report List -->
+    <record id="parking_spot_report_list" model="ir.ui.view">
+        <field name="name">parking.spot.report.list</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="status" widget="badge" decoration-success="status == 'available'" decoration-warning="status == 'reserved'" decoration-danger="status == 'occupied'"/>
+                <field name="spot_type"/>
+                <field name="floor"/>
+                <field name="current_vehicle_plate"/>
+                <field name="current_owner_id"/>
+                <field name="current_contract_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vehicles Report List -->
+    <record id="parking_vehicle_report_list" model="ir.ui.view">
+        <field name="name">parking.vehicle.report.list</field>
+        <field name="model">parking.vehicle</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="license_plate"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="color"/>
+                <field name="owner_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- PIVOT VIEWS -->
+    <!-- ============================================================ -->
+
+    <!-- Contracts Pivot -->
+    <record id="parking_contract_report_pivot" model="ir.ui.view">
+        <field name="name">parking.contract.report.pivot</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <pivot string="Contracts Analysis">
+                <field name="state" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="amount_total" type="measure" string="Total Amount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Spots Pivot -->
+    <record id="parking_spot_report_pivot" model="ir.ui.view">
+        <field name="name">parking.spot.report.pivot</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <pivot string="Spots Analysis">
+                <field name="status" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="spot_type" type="measure" string="Count"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- GRAPH VIEWS -->
+    <!-- ============================================================ -->
+
+    <record id="parking_contract_report_graph" model="ir.ui.view">
+        <field name="name">parking.contract.report.graph</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <graph string="Contracts Graph" type="bar">
+                <field name="state" type="row"/>
+                <field name="amount_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="parking_spot_report_graph" model="ir.ui.view">
+        <field name="name">parking.spot.report.graph</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <graph string="Spots Graph" type="pie">
+                <field name="status" type="row"/>
+                <field name="name" type="measure" string="Count"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- ACTIONS -->
+    <!-- ============================================================ -->
+
+    <record id="action_parking_report_spots" model="ir.actions.act_window">
+        <field name="name">Spots Summary</field>
+        <field name="res_model">parking.spot</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="parking_spot_report_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                View parking spots summary.
+            </p>
+            <p>
+                Filter by branch, status, or type. Use Pivot view for analysis.
+                Export to Excel using the Export button.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_parking_report_contracts" model="ir.actions.act_window">
+        <field name="name">Contracts Summary</field>
+        <field name="res_model">parking.contract</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="parking_contract_report_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                View contracts summary.
+            </p>
+            <p>
+                Filter by status, branch, or date. Use filters for Active, Expired, or Near Expiration.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_parking_report_vehicles" model="ir.actions.act_window">
+        <field name="name">Vehicles Registry</field>
+        <field name="res_model">parking.vehicle</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="parking_vehicle_report_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                View all registered vehicles.
+            </p>
+        </field>
+    </record>
+
+    <!-- Services Report - based on contracts with services -->
+    <record id="action_parking_report_services" model="ir.actions.act_window">
+        <field name="name">Additional Services Report</field>
+        <field name="res_model">parking.contract</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('service_line_ids', '!=', False)]</field>
+        <field name="search_view_id" ref="parking_contract_report_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                View contracts with additional services.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- MENUS -->
+    <!-- ============================================================ -->
+
+    <menuitem id="menu_parking_reports" name="Reports" parent="menu_parking_root" sequence="60"/>
+
+    <menuitem id="menu_parking_report_spots" name="Spots Summary" parent="menu_parking_reports" action="action_parking_report_spots" sequence="10"/>
+    <menuitem id="menu_parking_report_contracts" name="Contracts Summary" parent="menu_parking_reports" action="action_parking_report_contracts" sequence="20"/>
+    <menuitem id="menu_parking_report_vehicles" name="Vehicles Registry" parent="menu_parking_reports" action="action_parking_report_vehicles" sequence="30"/>
+    <menuitem id="menu_parking_report_services" name="Additional Services" parent="menu_parking_reports" action="action_parking_report_services" sequence="40"/>
+
+</odoo>

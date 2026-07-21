@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Digital Signature Certificate Report -->
+    <template id="report_signature_certificate_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                
+                <div class="text-center">
+                    <h1>شهادة التوقيع الإلكتروني</h1>
+                    <h2>Digital Signature Certificate</h2>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td width="30%"><strong>رقم الشهادة:</strong></td>
+                                <td><span t-field="doc.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>المستند المرتبط:</strong></td>
+                                <td><span t-field="doc.document_ref"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>الموقع:</strong></td>
+                                <td><span t-field="doc.signer_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>البريد الإلكتروني:</strong></td>
+                                <td><span t-field="doc.signer_id.email"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>تاريخ التوقيع:</strong></td>
+                                <td><span t-field="doc.signature_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>IP Address:</strong></td>
+                                <td><span t-field="doc.ip_address"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>الهاش الرقمي:</strong></td>
+                                <td style="font-family: monospace; word-break: break-all;">
+                                    <small><span t-field="doc.signature_hash"/></small>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row mt-4" t-if="doc.signature_image">
+                    <div class="col-12 text-center">
+                        <h4>التوقيع</h4>
+                        <img t-att-src="'data:image/png;base64,' + doc.signature_image.decode('utf-8')" 
+                             style="max-width: 300px; border: 2px solid #333; padding: 10px;"/>
+                    </div>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <h5>معلومات التحقق</h5>
+                            <p>يمكن التحقق من صحة هذا التوقيع باستخدام الهاش الرقمي أعلاه.</p>
+                            <p>This signature can be verified using the digital hash above.</p>
+                            <p><strong>تاريخ الإنشاء:</strong> <span t-field="doc.create_date"/></p>
+                            <p><strong>حالة التوقيع:</strong> 
+                                <span t-if="doc.is_valid" class="text-success">صالح</span>
+                                <span t-else="" class="text-danger">غير صالح</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Signature Request Report -->
+    <template id="report_signature_request_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                
+                <div class="text-center">
+                    <h1>طلب التوقيع الإلكتروني</h1>
+                    <h2>Digital Signature Request</h2>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <h4>معلومات الطلب</h4>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>رقم الطلب:</strong></td>
+                                <td><span t-field="doc.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>المستند:</strong></td>
+                                <td><span t-field="doc.document_ref"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>تاريخ الإنشاء:</strong></td>
+                                <td><span t-field="doc.create_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>الحالة:</strong></td>
+                                <td>
+                                    <span t-if="doc.status == 'pending'" class="text-warning">في الانتظار</span>
+                                    <span t-elif="doc.status == 'signed'" class="text-success">موقع</span>
+                                    <span t-elif="doc.status == 'rejected'" class="text-danger">مرفوض</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <h4>معلومات الموقعين</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>الموقع</th>
+                                    <th>الدور</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.signer_ids" t-as="signer">
+                                    <tr>
+                                        <td><span t-field="signer.signer_id.name"/></td>
+                                        <td><span t-field="signer.signer_role"/></td>
+                                        <td>
+                                            <span t-if="signer.status == 'pending'" class="text-warning">في الانتظار</span>
+                                            <span t-elif="signer.status == 'signed'" class="text-success">موقع</span>
+                                            <span t-elif="signer.status == 'rejected'" class="text-danger">مرفوض</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row mt-4" t-if="doc.message">
+                    <div class="col-12">
+                        <h4>رسالة الطلب</h4>
+                        <div class="alert alert-light">
+                            <span t-field="doc.message"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4>تعليمات التوقيع</h4>
+                        <ol>
+                            <li>يرجى مراجعة المستند المرفق بعناية</li>
+                            <li>إذا كنت توافق على المحتوى، قم بالنقر على زر "توقيع"</li>
+                            <li>ارسم توقيعك في المساحة المخصصة</li>
+                            <li>اضغط على "حفظ" لإتمام عملية التوقيع</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Report Actions -->
+    <record id="action_report_signature_certificate" model="ir.actions.report">
+        <field name="name">شهادة التوقيع الإلكتروني</field>
+        <field name="model">digital.signature</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_quotation.report_signature_certificate_document</field>
+        <field name="report_file">rental_quotation.report_signature_certificate_document</field>
+        <field name="print_report_name">'شهادة توقيع - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_digital_signature"/>
+        <field name="binding_type">report</field>
+    </record>
+    
+    <record id="action_report_signature_request" model="ir.actions.report">
+        <field name="name">طلب التوقيع الإلكتروني</field>
+        <field name="model">digital.signature.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_quotation.report_signature_request_document</field>
+        <field name="report_file">rental_quotation.report_signature_request_document</field>
+        <field name="print_report_name">'طلب توقيع - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_digital_signature_request"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

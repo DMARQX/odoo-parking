@@ -1,0 +1,3470 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* nthub_realestate
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-26 11:12+0000\n"
+"PO-Revision-Date: 2023-11-26 11:12+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_kanban
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_kanban
+msgid "<b>Name :</b>"
+msgstr "الاسم"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_kanban
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_kanban
+msgid "<b>Owner :</b>"
+msgstr "المالك"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_kanban
+msgid "<b>Project:</b>"
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_kanban
+msgid "<b>Region :</b>"
+msgstr "المنطقة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_kanban
+msgid "<b>State :</b>"
+msgstr "الحالة"
+
+#. module: nthub_realestate
+#: model:mail.template,body_html:nthub_realestate.loan_installment_email_template
+msgid ""
+"<html>\n"
+"                    Dear Customer:\n"
+"                    <t t-esc=\"ctx.get('user_name')\"></t>\n"
+"                    <br>\n"
+"                    <head>your Property Installment In This Month</head>\n"
+"                    <table border=\"1\" style=\"width:100%\">\n"
+"                        <thead style=\"background-color: blue;\">\n"
+"                            <tr>\n"
+"                                <th align=\"center\">Payment Date</th>\n"
+"                                <th align=\"center\">Amount</th>\n"
+"                            </tr>\n"
+"                        </thead>\n"
+"                        <tbody>\n"
+"                            <tr>\n"
+"                                <td>\n"
+"                                    <t t-esc=\"ctx.get('deadline')\"></t>\n"
+"                                </td>\n"
+"                                <td>\n"
+"                                    <t t-esc=\"ctx.get('amount')\"></t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                    <br>\n"
+"                    <br>\n"
+"                    <br>\n"
+"                    <br>\n"
+"                    <b>Regards,</b>\n"
+"                    <br>\n"
+"                    <t t-out=\"object.company_id.name\"></t>\n"
+"                </html>\n"
+"\n"
+"            "
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "<span class=\"mr-1\">Every</span>"
+msgstr "كل"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address\">\n"
+"                                        <b>Address</b>\n"
+"                                    </span>"
+msgstr "العنوان"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address\">\n"
+"                                    <b>Address</b>\n"
+"                                </span>"
+msgstr "العنوان"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Days to release units reservation</span>"
+msgstr "أيام لإصدار حجز الوحدات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Delay Account</span>"
+msgstr "حساب التأخير"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_form_view
+msgid "<span class=\"o_form_label\">Delay Penalty Percentage</span>"
+msgstr "نسبة عقوبة التأخير"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_form_view
+msgid "<span class=\"o_form_label\">Delay Penalty Process</span>"
+msgstr "تأخير عملية العقوبة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Destination Location</span>"
+msgstr "نقل الى"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Extras Account</span>"
+msgstr "حساب الإضافات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Maintenance Account</span>"
+msgstr "حساب الصيانة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Settlement Account</span>"
+msgstr "حساب التسوية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "<span class=\"o_form_label\">Source Location</span>"
+msgstr "نقل من"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>#</strong>"
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Amount</strong>"
+msgstr "الكمية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Due Date</strong>"
+msgstr "تاريخ الاستحقاق"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Invoice</strong>"
+msgstr "الفاتورة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Name</strong>"
+msgstr "الاسم"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Payment Status</strong>"
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "<strong>Status</strong>"
+msgstr "الحالة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_needaction
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_needaction
+msgid "Action Needed"
+msgstr "الإجراء اللازمة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_ids
+msgid "Activities"
+msgstr "الانشطة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_exception_decoration
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_type_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "رمز نوع النشاط"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Additional Information"
+msgstr "معلومات إضافية"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__address
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__address
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__address
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+#, python-format
+msgid "Address"
+msgstr "العنوان"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Address:"
+msgstr "العنون"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+msgid "Aditional Information"
+msgstr "معلومات إضافية"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Advance Payment"
+msgstr "دفعه مقدمه"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__adv_payment_rate
+msgid "Advance Payment %"
+msgstr "دفعه مقدمه %"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__air_condition
+msgid "Air Condition"
+msgstr "التكيف"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__amount
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Amount"
+msgstr "الكمية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__amount_residual
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__amount_residual
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__amount_residual
+msgid "Amount Due"
+msgstr "المبلغ المستحق"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Area:"
+msgstr "المنطقه :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_attachment_count
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: nthub_realestate
+#: model:ir.actions.server,name:nthub_realestate.auto_cancel_unit_reservation_ir_actions_server
+#: model:ir.cron,cron_name:nthub_realestate.auto_cancel_unit_reservation
+msgid "Auto Cancel Unit Reservation"
+msgstr "الإلغاء التلقائي لحجز الوحدة"
+
+#. module: nthub_realestate
+#: model:ir.actions.server,name:nthub_realestate.auto_get_delay_amount_ir_actions_server
+#: model:ir.cron,cron_name:nthub_realestate.auto_get_delay_amount
+msgid "Auto Get delay amount"
+msgstr "الحصول التلقائي على مبلغ التأخير"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__state__free
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+msgid "Available"
+msgstr "متاح"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__balance
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__balance_maintenance
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__balance
+msgid "Balance"
+msgstr "توازن :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Balance:"
+msgstr "توازن :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__balcony
+msgid "Balconies m^2"
+msgstr "البلكونات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Basic Information"
+msgstr "معلومات اساسية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__bathrooms
+msgid "Bathrooms"
+msgstr "الحمامات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__state__reserved
+msgid "Booked"
+msgstr "محجوز"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.unit_reservation_form_action
+#: model:ir.ui.menu,name:nthub_realestate.reservation_menu_item
+msgid "Booking"
+msgstr "حجز"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Booking Data"
+msgstr "بيانات الحجز"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__boolean_make_done
+msgid "Boolean Make Done"
+msgstr "تم التاكيد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__boolean_make_renewed
+msgid "Boolean Make Renewed"
+msgstr "تجديد جعل منطقية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Buyer:"
+msgstr "المشترى :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "Calculate"
+msgstr "يحسب"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_calendar
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_calendar
+msgid "Calendar"
+msgstr "التقويم"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.act_calender
+#: model:ir.actions.act_window,name:nthub_realestate.act_owner__calender
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Calender"
+msgstr "التقويم"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Calender Settlement"
+msgstr "تسوية التقويم"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Cancel"
+msgstr "الغاء"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract__state__canceled
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__state__cancel
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__unit_reservation__state__canceled
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+msgid "Canceled"
+msgstr "ملغى"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__air_condition__central
+msgid "Central"
+msgstr "وسط"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__check
+msgid "Check"
+msgstr "اليفحص"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__city
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__city
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__city
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+#, python-format
+msgid "City"
+msgstr "المدينة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Claim"
+msgstr "المطلوب"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Claimed Invoice"
+msgstr "الفاتورة المطلوبة"
+
+#. module: nthub_realestate
+#: model_terms:ir.actions.act_window,help:nthub_realestate.unit_reservation_form_action
+msgid "Click to add a new Unit Reservation"
+msgstr "انقر لإضافة حجز وحدة جديد"
+
+#. module: nthub_realestate
+#: model_terms:ir.actions.act_window,help:nthub_realestate.installment_template_form_action
+msgid "Click to add a new installment template"
+msgstr "انقر لإضافة قالب قسط جديد"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__club
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Club"
+msgstr "النادى"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Club Payment"
+msgstr "دفع النادي"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__code
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__code
+msgid "Code"
+msgstr "الكود"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Code:"
+msgstr "الكود :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__company_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Company:"
+msgstr "الشركة :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Compute"
+msgstr "احسب"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.configration_menu
+msgid "Configration"
+msgstr "الاعدادات"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.action_general_config
+msgid "Configuration"
+msgstr "الاعدادات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Confirm"
+msgstr "تاكيد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract__state__confirmed
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__state__confirmed
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__unit_reservation__state__confirmed
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+msgid "Confirmed"
+msgstr "تم التاكيد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__constructed
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__constructed
+msgid "Construction Date"
+msgstr "تاريخ العقد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__contract_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__contract_id
+msgid "Contract"
+msgstr "العقد"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "يجب أن يكون تاريخ بدء العقد أقل من تاريخ انتهاء العقد."
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__unit_reservation__state__contracted
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+msgid "Contracted"
+msgstr "التعاقد"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.contracts_menu_item
+msgid "Contracts"
+msgstr "العقود"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__country_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__country_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__country_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Country"
+msgstr "الدولة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Country:"
+msgstr "الدولة :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+msgid "Create Units"
+msgstr "انشاء وحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__create_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__create_uid
+msgid "Created by"
+msgstr "تم إنشاؤها على"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__create_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__create_date
+msgid "Created on"
+msgstr "تم إنشاؤها على"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__currency_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__currency_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__currency_id
+msgid "Currency"
+msgstr "عملة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__partner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__customer_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__customer_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__partner_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+#, python-format
+msgid "Customer"
+msgstr "العميل"
+
+#. module: nthub_realestate
+#: model:mail.template,name:nthub_realestate.loan_installment_email_template
+msgid "Customer Property Installment: Send by email"
+msgstr "تقسيط ملكية العميل: إرسال عبر البريد الإلكتروني"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__d_invoice_id
+msgid "D Invoice"
+msgstr "الفاتورة"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.open_board_my_dash_action
+#: model:ir.ui.menu,name:nthub_realestate.dash_menu
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Dashboard"
+msgstr "لوحه احصاءيات"
+
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__date
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__date_added
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__date_added
+msgid "Date Added to Notarization"
+msgstr "تاريخ الإضافة إلى التوثيق"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_club
+msgid "Date Club"
+msgstr "تاريخ النادى"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_elevator
+msgid "Date Elevator"
+msgstr "تاريخ المصعد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_garage
+msgid "Date Garage"
+msgstr "تاريخ الجراج"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__date_localization
+msgid "Date Localization"
+msgstr "تاريخ الموقع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_maintenance
+msgid "Date Maintenance"
+msgstr "تاريخ الصيانه"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_other
+msgid "Date Other"
+msgstr "تواريخ اخرى"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Date:"
+msgstr "التاريخ :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__periodicity__days
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_form_view
+msgid "Days"
+msgstr "الايام"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__reservation_days
+msgid "Days to release units reservation"
+msgstr "أيام لإصدار حجز الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__deduct
+msgid "Deducted from amount?"
+msgstr "خصم من المبلغ؟"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__delay_amount
+#, python-format
+msgid "Delay Amount"
+msgstr "مبلغ التأخير"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Delay OwnerShip Settlement"
+msgstr "تأخير تسوية الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__delay_penalty
+msgid "Delay Penalty Percentage"
+msgstr "نسبة عقوبة التأخير"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__delay_process
+msgid "Delay Penalty Process"
+msgstr "تأخير عملية العقوبة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__delay_state
+msgid "Delay State"
+msgstr "حالة التأخير"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__deposit
+msgid "First Payment"
+msgstr "الدفعة الأولى"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__deposit_count
+msgid "First Payments"
+msgstr "الدفعات الأولى"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__description
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__description
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__description
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__desc
+#, python-format
+msgid "Description"
+msgstr "الوصف"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__location_dest_id
+msgid "Destination Location"
+msgstr "مسافة الموقع"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Dismiss"
+msgstr "رفض"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract_line__delay_state__dismissed
+msgid "Dismissed"
+msgstr "مرفوض"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__display_name
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__district
+msgid "District Heating"
+msgstr "نظام التدفئة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Documents"
+msgstr "الوثائق"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__state__done
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+msgid "Done"
+msgstr "موافقة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract__state__draft
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract_line__delay_state__draft
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__state__draft
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__unit_reservation__state__draft
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__date
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__east
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__east
+msgid "Eastern border by"
+msgstr "الحدود الشرقية بواسطة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Eastern border:"
+msgstr "الحدود الشرقية:"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__electricity
+msgid "Electricity"
+msgstr "الكهرباء"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__electricity_meter
+msgid "Electricity Meter"
+msgstr "عداد الكهرباء"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Electricity Meter:"
+msgstr "عداد الكهرباء :"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__elevator
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Elevator"
+msgstr "المصعد"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Elevator Payment"
+msgstr "دفع المصعد"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__date_to
+#, python-format
+msgid "End Date"
+msgstr "تاريخ الانتهاء"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Extra Property Media"
+msgstr "وسائل الإعلام الملكية الإضافية"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__file
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__file
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__file
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__file
+#, python-format
+msgid "File"
+msgstr "الملف"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "First Party:"
+msgstr "الطرف الأول:"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__date_payment
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "First Payment Date"
+msgstr "تاريخ الدفع الأول"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__floor
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__floor
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__floor
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__floor
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Floor"
+msgstr "الدور"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+msgid "Floor Plans"
+msgstr "خطط الدور"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Floor:"
+msgstr "الدور:"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__no_of_floors
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__no_of_floors
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__no_of_floors
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Floors"
+msgstr "الدور"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_follower_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_follower_ids
+msgid "Followers"
+msgstr "المتابعون"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_partner_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعون (الشركاء)"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_regions__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__activity_type_icon
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__lift_f
+msgid "Freight Elevators"
+msgstr "مصاعد الشحن"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "From:"
+msgstr "من :"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/furniture.py:0
+#: model:ir.actions.act_window,name:nthub_realestate.furniture_action
+#: model:ir.model.fields,field_description:nthub_realestate.field_product_product__furniture
+#: model:ir.model.fields,field_description:nthub_realestate.field_product_template__furniture
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__furniture_ids
+#: model:ir.ui.menu,name:nthub_realestate.furniture_menu_action
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+#, python-format
+msgid "Furniture"
+msgstr "الاثاث"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__furniture_line_ids
+msgid "Furniture Line"
+msgstr "سجل الاثاث"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__furniture_price
+#, python-format
+msgid "Furniture Price"
+msgstr "سعر الاثاث"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__furniture_line_ids
+#, python-format
+msgid "FurnitureLine"
+msgstr "سجل الاثاث"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__garage
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Garage"
+msgstr "الجراج"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__garage
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__garage
+msgid "Garage Included"
+msgstr "يشمل الجراج"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Garage Payment"
+msgstr "دفع الجراج"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__garden
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__garden
+msgid "Garden m^2"
+msgstr "الحديقة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__gas
+msgid "Gas"
+msgstr "الغاز"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__land_area
+msgid "Gross Area m^2"
+msgstr "المساحة الإجمالية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+msgid "Group By"
+msgstr "مجموعة من"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+msgid "Group By..."
+msgstr "مجموعة من ..."
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__has_message
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__has_message
+msgid "Has Message"
+msgstr "لديه رسالة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__heating_source
+msgid "Heating Source"
+msgstr "مصدر التدفئة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__id
+msgid "ID"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_exception_icon
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_exception_icon
+msgid "Icon"
+msgstr "الرمز"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_regions__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__activity_exception_icon
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "أيقونة للإشارة إلى نشاط الاستثناء."
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_regions__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__message_needaction
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا تم تحديدها، فإن الرسائل الجديدة تتطلب انتباهك."
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_regions__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_regions__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__message_has_sms_error
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__message_has_error
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا تم تحديده، فإن بعض الرسائل تحتوي على خطأ في التسليم."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__image
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__image
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__image
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__image
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__image
+#, python-format
+msgid "Image"
+msgstr "الصوره"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__name
+#, python-format
+msgid "Image Name"
+msgstr "اسم الصوره"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Images"
+msgstr "الصور"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__maintenance_installment
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "Installment"
+msgstr "التقسيط"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__maintenance_template_id
+msgid "Installment Payment Template"
+msgstr "نموذج الدفع بالتقسيط"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.installment_template_form_action
+#: model:ir.model,name:nthub_realestate.model_installment_template
+#: model:ir.ui.menu,name:nthub_realestate.installment_template_action_menu
+msgid "Installment Template"
+msgstr "نموذج التقسيط"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Installments"
+msgstr "الاقساط"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__insurance_fee
+msgid "Insurance Fee"
+msgstr "مبلغ التامين"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__insurance_fee
+#, python-format
+msgid "Insurance fee"
+msgstr "مبلغ التامين"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__internet
+msgid "Internet"
+msgstr "الانترنت"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__invoice_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__invoice_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__invoice_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+#, python-format
+msgid "Invoice"
+msgstr "الفاتورة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+msgid "Invoice State"
+msgstr "حاله الفاتورة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__periodicity
+msgid "Invoice automatically repeat at specified interval"
+msgstr "يتم تكرار الفاتورة تلقائيًا خلال فترة زمنية محددة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__ownership_contract_line__delay_state__invoiced
+msgid "Invoiced"
+msgstr "مفوترة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__recurring_interval
+msgid "Invoicing Period"
+msgstr "فترة الفاتورة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_is_follower
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_is_follower
+msgid "Is Follower"
+msgstr "المتابع"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "LOCATION"
+msgstr "الموقع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__land_area
+msgid "Land Area m^2"
+msgstr "مساحه الارضية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image____last_update
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation____last_update
+msgid "Last Modified on"
+msgstr "تاريخ آخر تعديل"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__write_uid
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__write_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث بتاريخ"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__launching_date
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_search
+msgid "Launching Date"
+msgstr "تاريخ الإنطلاق"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__state__on_lease
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+msgid "Leased"
+msgstr "مستأجرة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__license_code
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__license_code
+msgid "License Code"
+msgstr "رمز الترخيص"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__license_date
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__license_date
+msgid "License Date"
+msgstr "تاريخ الترخيص"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__license_notarization
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__license_notarization
+msgid "License Notarization"
+msgstr "توثيق الترخيص"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Loan Installment"
+msgstr "تقسيط القرض"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Location"
+msgstr "الموقع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_main_attachment_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "المرفق الرئيسي"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__maintenance
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Maintenance"
+msgstr "الصيانة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Maintenance Installment"
+msgstr "تقسيط الصيانة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Maintenance Payment"
+msgstr "دفع الصيانة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "Mark As Done"
+msgstr "تم"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__marker_color
+msgid "Marker Color"
+msgstr "لون العلامة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_has_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسالة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__duration_month
+msgid "Month"
+msgstr "الشهر"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__periodicity__months
+msgid "Months"
+msgstr "الشهور"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__my_activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "الموعد النهائي لنشاطي"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__name
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_form_view
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_search
+#, python-format
+msgid "Name"
+msgstr "الاسم"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__rs_project_area_net
+msgid "Net Area m^2"
+msgstr "المساحة الصافية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_date_deadline
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط التالي"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_summary
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط التالي"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_type_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__renewed_contract_id
+msgid "Next Contract"
+msgstr "العقد القادم"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__air_condition__none
+msgid "None"
+msgstr "لا يوجد"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "North border:"
+msgstr "الحدود الشمالية:"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__north
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__north
+msgid "Northern border by"
+msgstr "الحدود الشمالية بواسطة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Northern border:"
+msgstr "الحدود الشمالية:"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+msgid "Not Paid"
+msgstr "غير مدفوعة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__note
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__note
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__note
+msgid "Note"
+msgstr "ملحوظة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_needaction_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_has_error_counter
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_regions__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__message_needaction_counter
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_regions__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__message_has_error_counter
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل التي بها خطأ في التسليم"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "OWNERSHIP CONTRACT DATA"
+msgstr "بيانات عقد الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__oc_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__oc_id
+msgid "Oc"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__oc_attachment_ids
+msgid "Oc Attachment"
+msgstr "المرفق"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__oc_line_ids
+msgid "Oc Line"
+msgstr "السجل"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__oil
+msgid "Oil"
+msgstr "الزيت"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__other
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Other Expenses"
+msgstr "نفقات أخرى"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Other Payment"
+msgstr "المدفوعات الأخرى"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Other Payments"
+msgstr "المدفوعات الاخرى"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/tenants.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__property_owner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__property_owner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__property_owner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_partner__is_owner
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_users__is_owner
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__partner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__partner_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+#, python-format
+msgid "Owner"
+msgstr "المالك"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Owner Contract Data"
+msgstr "بيانات عقد المالك"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__ownership_delay_account
+msgid "OwnerShip Delay Account"
+msgstr "حساب تأخير الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__ownership_extras_account
+msgid "OwnerShip Extras Account"
+msgstr "حساب إضافات الملكية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "OwnerShip Income Account"
+msgstr "حساب دخل الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__ownership_maintenance_account
+msgid "OwnerShip Maintain Account"
+msgstr "حساب الحفاظ على الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__ownership_settlement_account
+msgid "OwnerShip Settlement Account"
+msgstr "حساب تسوية الملكية"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.owner_action
+#: model:ir.ui.menu,name:nthub_realestate.owner_menu_action
+msgid "Owners"
+msgstr "الملاك"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_attachment_line__ownership_attachment_id
+msgid "Ownership Attachment"
+msgstr "مرفقات الملاك"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: model:ir.model,name:nthub_realestate.model_ownership_contract
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__contract_id_own
+#, python-format
+msgid "Ownership Contract"
+msgstr "عقد الملكية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Ownership Contract Details"
+msgstr "تفاصيل عقد ىالملكية"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_ownership_contract_line
+msgid "Ownership Contract Line"
+msgstr "سجل عقد الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_ownership_contract_maintenance_line
+msgid "Ownership Contract Maintenance"
+msgstr "صيانة عقد الملكية"
+
+#. module: nthub_realestate
+#: model:ir.actions.report,name:nthub_realestate.ownership_details_id
+msgid "Ownership Contract Report"
+msgstr "تقرير عقد الملكية"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.ownership_contract_action
+#: model:ir.ui.menu,name:nthub_realestate.ownership_contract_menu_item
+msgid "Ownership Contracts"
+msgstr "عقود الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__ownership_delay_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__ownership_delay_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__ownership_delay_line_id
+msgid "Ownership Delay"
+msgstr "تأخير الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__ownership_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__ownership_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__ownership_line_id
+msgid "Ownership Installment"
+msgstr "تقسيط الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__ownership_maintenance_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__ownership_maintenance_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__ownership_maintenance_line_id
+msgid "Ownership Installment Maintenance"
+msgstr "صيانة تقسيط الملكية"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__ownership_maintenance_line_ids
+msgid "Ownership Maintenance Line"
+msgstr "سجل صيانة الملكية"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.ownership_contract_line_action
+#: model:ir.ui.menu,name:nthub_realestate.ownership_settlement_menu_item
+msgid "Ownership Settlement"
+msgstr "تسوية الملكية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.tenants_form_view
+msgid "PARTNER TYPE"
+msgstr "نوع الشريك"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__paid
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__paid_maintenance
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__paid
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+msgid "Paid"
+msgstr "المدفوع"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Paid:"
+msgstr "المدفوع :"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/regions.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__region
+#, python-format
+msgid "Parent Region"
+msgstr "المنطقة الرئيسيه"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__air_condition__partial
+msgid "Partial"
+msgstr "جزئي"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_res_partner
+#: model:ir.ui.menu,name:nthub_realestate.partners_menu
+msgid "Partners"
+msgstr "الشركاء"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__lift
+msgid "Passenger Elevators"
+msgstr "مصاعد الركاب"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__amount
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__amount
+#, python-format
+msgid "Payment"
+msgstr "القسط"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Payment Method"
+msgstr "طريقة الدفع "
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+msgid "Payment State"
+msgstr "حالة الدفع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__delay_payment_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__payment_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__payment_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__payment_state
+msgid "Payment Status"
+msgstr "حالة الدفع"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__template_id
+#, python-format
+msgid "Payment Template"
+msgstr "نموذج الدفع"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: model:ir.model,name:nthub_realestate.model_account_payment
+#, python-format
+msgid "Payments"
+msgstr "الدفعات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__pellets
+msgid "Pellets"
+msgstr ""
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Please select first payment date!"
+msgstr "الرجاء تحديد تاريخ الدفع الأول!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "Please set destination location from setting!"
+msgstr "يرجى تحديد موقع الوجهة من الإعداد!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Please set income account for maintenance from setting!"
+msgstr "يرجى ضبط حساب الدخل للصيانة من الإعداد!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "Please set income account for ownership from setting!"
+msgstr "يرجى ضبط حساب الدخل للملكية من الإعداد!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "Please set income account for rental from setting!"
+msgstr "يرجى ضبط حساب الدخل للتأجير من الإعداد!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "Please set source location from setting!"
+msgstr "يرجى ضبط موقع المصدر من الإعداد!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#, python-format
+msgid "Please set the first payment amount!"
+msgstr "يرجى تحديد مبلغ الدفعة الأولى!"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+msgid "Posted"
+msgstr "النشر"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__pricing
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__pricing
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Price"
+msgstr "السعر"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_furniture__list_price
+#: model:ir.model.fields,help:nthub_realestate.field_owner_contract_furniture__list_price
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract_furniture__list_price
+msgid "Price at which the product is sold to customers."
+msgstr "السعر الذي يتم به بيع المنتج للعملاء."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model,name:nthub_realestate.model_product_template
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__product_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__product_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__product_id
+#, python-format
+msgid "Product"
+msgstr "العقار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.actions.act_window,name:nthub_realestate.rs_project_action
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__rs_project
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rs_project
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__rs_project
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+#, python-format
+msgid "Project"
+msgstr "العقار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__rs_project_code
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rs_project_code
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__rs_project_code
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Project Code"
+msgstr "كود العقار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+msgid "Project Images"
+msgstr "صور العقار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__property_owner_id
+#, python-format
+msgid "Project Owner"
+msgstr "مالك العقار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Project Specifications:"
+msgstr "موصفات العقار :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Project State"
+msgstr "حالة المشروع"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.main_property_type_action
+#: model:ir.ui.menu,name:nthub_realestate.main_property_type_menu_action
+msgid "Project Type"
+msgstr "نوع العقار :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+msgid "Project UNIT"
+msgstr "الشقة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__rs_project_unit
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rs_project_unit
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__rs_project_unit
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+#, python-format
+msgid "Project Unit"
+msgstr "الشقة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__rs_project_area
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__rs_project_area
+msgid "Project Unit Area m^2"
+msgstr "مساحه الوحده السكنية"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rs_project_area
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__rs_project_area
+#, python-format
+msgid "Project Unit Area m²"
+msgstr "مساحة الوحده السكنية"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Project Unit Reservation"
+msgstr "حجز وحده العقار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Project:"
+msgstr "العقار"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.rs_project_menu_action
+msgid "Projects"
+msgstr "العقارات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_property_attachment_line__prop_attachment_id
+msgid "Prop Attachment"
+msgstr "مرفق الدعامة"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.sub_properties_action
+#: model:ir.ui.menu,name:nthub_realestate.sub_property_menu_action
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+msgid "Properties"
+msgstr "الواحدات"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__property_owners_id
+#, python-format
+msgid "Properties Owner"
+msgstr "مالك الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__property_id
+msgid "Property"
+msgstr "الوحده"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__rs_project_area
+msgid "Property Area m^2"
+msgstr "مساحه الوحده"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__property_attachment_ids
+msgid "Property Attachment"
+msgstr "مرفق الوحده"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.property_description_action
+#: model:ir.ui.menu,name:nthub_realestate.property_description_menu_action
+msgid "Property Description"
+msgstr "وصف الوحده"
+
+#. module: nthub_realestate
+#: model:mail.template,subject:nthub_realestate.loan_installment_email_template
+msgid "Property Installment"
+msgstr "تقسيط العقار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.actions.act_window,name:nthub_realestate.property_status_action
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__status
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__status
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__property_status
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__status
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__status
+#: model:ir.ui.menu,name:nthub_realestate.property_status_menu_action
+#, python-format
+msgid "Property Status"
+msgstr "حالة العقار"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.property_structure_menu
+msgid "Property Structure"
+msgstr "الهيكلة العامة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__type
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__type
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__property_type
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__ptype
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__type
+#, python-format
+msgid "Property Type"
+msgstr "نوع العقار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__purchase_date
+msgid "Purchase Date"
+msgstr "تاريخ الشراء"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__product_qty
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__product_qty
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__product_qty
+#, python-format
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.real_estate_menu
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "Real Estate"
+msgstr "العقارات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__real_estate_ref
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__real_estate_ref
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__real_estate_ref
+msgid "Real Estate Ref."
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Receive First Payment"
+msgstr "استلام الدفعة الأولى"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__periodicity
+msgid "Recurrence"
+msgstr "تكرار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__reference
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__reference
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__reference
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__name
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_ownership_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+#, python-format
+msgid "Reference"
+msgstr "المرجع"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__region
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__region
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__region
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__region
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__region
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rs_project_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+#, python-format
+msgid "Region"
+msgstr "المنطقة"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.regions_actions
+#: model:ir.ui.menu,name:nthub_realestate.regions_menu_action
+msgid "Regions"
+msgstr "المناطق"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "Renew"
+msgstr "تجديد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__state__renew
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+msgid "Renewed"
+msgstr "مجدد"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Rent"
+msgstr "ايجار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rental_attachment_ids
+#, python-format
+msgid "Rental Attachment"
+msgstr "مرفق الإيجار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_attachment__rental_contract_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__rental_contract_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__contract_id_rent
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#, python-format
+msgid "Rental Contract"
+msgstr "عقد ايجار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "Rental Contract Data"
+msgstr "بيانات عقد الإيجار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "Rental Contract Details"
+msgstr "تفاصيل عقد الايجار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_bank_statement_line__rental_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_move__rental_line_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__rental_line_id
+msgid "Rental Contract Installment"
+msgstr "عقد الإيجار بالتقسيط"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rental_line_ids
+#, python-format
+msgid "Rental Contract Lines"
+msgstr "سجلات عقد الايجار"
+
+#. module: nthub_realestate
+#: model:ir.actions.report,name:nthub_realestate.rental_contract_reports
+msgid "Rental Contract Report"
+msgstr "تقرير عقد الايجار"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.rental_contract_action
+#: model:ir.ui.menu,name:nthub_realestate.real_contract_action_menu_item
+msgid "Rental Contracts"
+msgstr "عقود الإيجار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__rental_fee
+msgid "Rental Fee"
+msgstr "رسوم الإيجار"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "Rental Income Account"
+msgstr "حساب دخل الإيجار"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.rental_contract_line_action
+#: model:ir.ui.menu,name:nthub_realestate.rental_settlement_menu_item
+msgid "Rental Settlement"
+msgstr "تسوية الإيجار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__rental_settlement_account
+msgid "Rental Settlement Account"
+msgstr "حساب تسوية الإيجار"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__rental_fee
+#, python-format
+msgid "Rental fee"
+msgstr "رسوم الإيجار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__contract_count_rent
+msgid "Rentals"
+msgstr "الإيجارات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__recurring_interval
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr "كرر كل (أيام / أسبوع / شهر / سنة)"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__repetition_rate
+msgid "Repetition Rate (month)"
+msgstr "معدل التكرار (شهر)"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_account_payment__reservation_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__reservation_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__reservation_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+#, python-format
+msgid "Reservation"
+msgstr "الحجز"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__reservation_count
+msgid "Reservation Count"
+msgstr "عدد الحجوزات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__date
+msgid "Reservation Date"
+msgstr "تاريخ الحجز"
+
+#. module: nthub_realestate
+#: model:ir.model.constraint,message:nthub_realestate.constraint_unit_reservation_name_uniq
+msgid "Reservation Number record must be unique !"
+msgstr "يجب أن يكون سجل رقم الحجز فريدًا !"
+
+#. module: nthub_realestate
+#: model:ir.actions.report,name:nthub_realestate.reservation_contract_reports
+msgid "Reservation Report"
+msgstr "تقرير الحجز"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Reservation#"
+msgstr "الحجز"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Reservations"
+msgstr "الحجوزات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+msgid "Reserved"
+msgstr "محجوز"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__user_id
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+#, python-format
+msgid "Responsible"
+msgstr "المسؤول"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__activity_user_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Reverse"
+msgstr "استرداد"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__rooms
+msgid "Rooms"
+msgstr "غرف"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__rs_project_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__rs_project_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__rs_project_id
+msgid "Rs Project"
+msgstr "العقار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__rs_project_attachment_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_attachment_line__rs_project_attachment_id
+msgid "Rs Project Attachment"
+msgstr "مرفق العقار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__rs_project_floor_plans
+msgid "Rs Project Floor Plans"
+msgstr "مخططات طوابق العقار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__rs_project_image_ids
+msgid "Rs Project Image"
+msgstr "صور العقار"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__message_has_sms_error
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل القصيرة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__contract_count_own
+msgid "Sales"
+msgstr "المبيعات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__list_price
+#: model:ir.model.fields,field_description:nthub_realestate.field_owner_contract_furniture__list_price
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_furniture__list_price
+msgid "Sales Price"
+msgstr "سعر المبيعات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Salesman:"
+msgstr "بائع:"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Second Party:"
+msgstr "الطرف الثاني:"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.unit_reservation_form_view
+msgid "Sell"
+msgstr "يبيع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__pricing
+msgid "Selling Price"
+msgstr "سعر البيع"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Serial"
+msgstr "رقم التسلسل"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.setting_menu_action
+msgid "Settings"
+msgstr "الاعدادات"
+
+#. module: nthub_realestate
+#: model:ir.ui.menu,name:nthub_realestate.settlement_menu_item
+msgid "Settlement"
+msgstr "الاقساط"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__solar_electric
+msgid "Solar Electric System"
+msgstr "النظام الكهربائي الشمسي"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__state__sold
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+msgid "Sold"
+msgstr "مباعة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_config_settings__location_id
+msgid "Source Location"
+msgstr "نقل من"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__south
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__south
+msgid "Southern border by"
+msgstr "الحدود الجنوبية بواسطة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Southern border:"
+msgstr "الحدود الجنوبية:"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__date_from
+#, python-format
+msgid "Start Date"
+msgstr "بدايه التاريخ"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/property_description.py:0
+#: code:addons/nthub_realestate/models/property_status.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__state
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__state_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__state_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__name
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__state
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__state_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__state
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_owner_ship_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_sub_property_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_unit_reservation_search
+#, python-format
+msgid "State"
+msgstr "الحالة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__invoice_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__invoice_state
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__invoice_state
+msgid "Status"
+msgstr "الحالة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_regions__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__activity_state
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Status:"
+msgstr "الحالة :"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__street
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__street
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__street
+#, python-format
+msgid "Street"
+msgstr "الشارع"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Street 2..."
+msgstr "الشارع 2"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Street..."
+msgstr "الشارع ..."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__street2
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__street2
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__street2
+#, python-format
+msgid "Street2"
+msgstr "الشارع2"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__sub_properties_created
+msgid "Sub Properties Created"
+msgstr "تم انشاء الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__sub_property_id
+msgid "Sub Property"
+msgstr "الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__sub_property_images_ids
+msgid "Sub Property Images"
+msgstr "صور الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__subproperties_ids
+msgid "Subproperties"
+msgstr "الوحدات"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__surface
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__surface
+msgid "Surface"
+msgstr "السطح"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__telephone
+msgid "Telephone"
+msgstr "الموبيل"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: code:addons/nthub_realestate/models/tenants.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__partner_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract_line__customer_id
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_partner__is_tenant
+#: model:ir.model.fields,field_description:nthub_realestate.field_res_users__is_tenant
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_line_search
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.view_rental_contract_search
+#, python-format
+msgid "Tenant"
+msgstr "المستأجر"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.tenants_action
+#: model:ir.ui.menu,name:nthub_realestate.tenants_menu_action
+msgid "Tenants"
+msgstr "المستأجرين"
+
+#. module: nthub_realestate
+#: model:ir.model.constraint,message:nthub_realestate.constraint_rs_project_unique_code
+#: model:ir.model.constraint,message:nthub_realestate.constraint_sub_property_unique_code
+msgid "The code field must be unique."
+msgstr "يجب أن يكون حقل الرمز فريدًا."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "The recurring interval must be positive"
+msgstr "يجب أن يكون الفاصل الزمني المتكرر موجبًا"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "This Agreement is made by and between"
+msgstr "تم إبرام هذه الاتفاقية بين"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "This Agreement is made by and between:"
+msgstr "تم إبرام هذه الاتفاقية بين :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+msgid "To:"
+msgstr "الى"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__amount_total
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__amount_total_maintenance
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__amount_total
+msgid "Total"
+msgstr "المجموع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__total_projects_sold
+msgid "Total Projects Sold"
+msgstr "إجمالي المشاريع المباعة"
+
+#. module: nthub_realestate
+#: model:ir.actions.act_window,name:nthub_realestate.act_total_amount
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.dashboard_form_view
+msgid "Total Sold Out"
+msgstr "إجمالي المبيعات"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+msgid "Total:"
+msgstr "المجموع :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_furniture__transfer
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "Transfer"
+msgstr "نقل"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.res_config_settings_view_form_nthub_realestate
+msgid "Transfer Furniture Products"
+msgstr "نقل منتجات الأثاث"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property_type.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__name
+#, python-format
+msgid "Type"
+msgstr "النوع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_regions__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__activity_exception_decoration
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع نشاط الاستثناء المسجل."
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Type:"
+msgstr "النوع :"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__unit_code
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__unit_code
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__unit_code
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.report_ownership_contract
+#, python-format
+msgid "Unit Code"
+msgstr "رمز الوحدة"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_unit_reservation
+msgid "Unit Reservation"
+msgstr "حجز الوحدة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Unit Specifications:"
+msgstr "مواصفات الوحدة :"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Unit:"
+msgstr "الوحدة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__props_per_floor
+msgid "Units Per Floor"
+msgstr "مساحة ارضيه الوحدة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__air_condition__unknown
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__unknown
+msgid "Unknown"
+msgstr "غير معروف"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+msgid "Update Furniture"
+msgstr "تحديث الأثاث"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_floor_plans__video_url
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_images__video_url
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__video_url
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property_image__video_url
+#, python-format
+msgid "Video URL"
+msgstr "رابط الفيديو"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.ownership_contract_line_list_view
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_line_list_view
+msgid "View Invoice"
+msgstr "عرض الفاتورة"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__water_meter
+msgid "Water Meter"
+msgstr "عداد مياه"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Water Meter:"
+msgstr "عداد مياه :"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_line__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_ownership_contract_maintenance_line__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_desc__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_status__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project_type__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__website_message_ids
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,help:nthub_realestate.field_installment_template__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_line__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_ownership_contract_maintenance_line__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_regions__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_rental_contract__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_desc__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_status__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_rs_project_type__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_sub_property__website_message_ids
+#: model:ir.model.fields,help:nthub_realestate.field_unit_reservation__website_message_ids
+msgid "Website communication history"
+msgstr "تاريخ اتصالات الموقع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__periodicity__weeks
+msgid "Weeks"
+msgstr "الاسابيع"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__west
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__west
+msgid "Western border by"
+msgstr "الحدود الغربية بواسطة"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rental_contract_templates
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.reservation_templates
+msgid "Western border:"
+msgstr "الحدود الغربية:"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__sub_property__heating_source__wood
+msgid "Wood"
+msgstr "الخشب"
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_installment_template__duration_year
+msgid "Year"
+msgstr "السنه"
+
+#. module: nthub_realestate
+#: model:ir.model.fields.selection,name:nthub_realestate.selection__rental_contract__periodicity__years
+msgid "Years"
+msgstr "السنين"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no Payment template!"
+msgstr "لا يمكنك تأكيد العقد بدون نموذج الدفع!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no Tenant selected!"
+msgstr "لا يمكنك تأكيد العقد دون تحديد أي مستأجر!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no customer selected!"
+msgstr "لا يمكنك تأكيد العقد دون تحديد أي عميل!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no end date!"
+msgstr "لا يمكنك تأكيد عقد بدون تاريخ انتهاء!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no installment line!"
+msgstr "لا يمكنك تأكيد العقد بدون خط تقسيط!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no payment date!"
+msgstr "لا يمكنك تأكيد العقد بدون تاريخ الدفع!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no rental fee!"
+msgstr "لا يمكنك تأكيد العقد بدون رسوم إيجار!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no rental line!"
+msgstr "لا يمكنك تأكيد العقد بدون خط إيجار!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no rs_project unit selected!"
+msgstr "لا يمكنك تأكيد العقد مع عدم تحديد وحدة rs_project!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no rs_project_unit selected!"
+msgstr "لا يمكنك تأكيد العقد دون تحديد وحده العقار !"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not confirm a contract with no start date!"
+msgstr "لا يمكنك تأكيد العقد بدون تاريخ بدء!"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/ownership_contract.py:0
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#, python-format
+msgid "You can not delete a contract not in draft state"
+msgstr "لا يمكنك حذف عقد ليس في حالة المسودة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/unit_reservation.py:0
+#, python-format
+msgid "You can not delete a reservation not in draft state"
+msgstr "لا يمكنك حذف حجز ليس في حالة المسودة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "You cannot validate a reverse if no Products are reserved."
+msgstr "لا يمكنك التحقق من صحة العكس إذا لم يتم حجز أي منتجات."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "You cannot validate a reverse if no quantities are reserved."
+msgstr "لا يمكنك التحقق من صحة العكس إذا لم يتم حجز أي كميات."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "You cannot validate a transfer if no Products are reserved."
+msgstr "لا يمكنك التحقق من صحة النقل إذا لم يتم حجز أي منتجات."
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#, python-format
+msgid "You cannot validate a transfer if no quantities are reserved."
+msgstr "لا يمكنك التحقق من صحة النقل إذا لم يتم حجز أي كميات."
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.regions_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.rs_project_form
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.sub_property_form
+msgid "ZIP"
+msgstr "كود المنطقة"
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/main_property.py:0
+#: code:addons/nthub_realestate/models/regions.py:0
+#: code:addons/nthub_realestate/models/sub_property.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_regions__zip
+#: model:ir.model.fields,field_description:nthub_realestate.field_rs_project__zip
+#: model:ir.model.fields,field_description:nthub_realestate.field_sub_property__zip
+#, python-format
+msgid "Zip"
+msgstr "كود المنطقة"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_furniture
+msgid "furniture"
+msgstr "الاثاث"
+
+#. module: nthub_realestate
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_form_view
+#: model_terms:ir.ui.view,arch_db:nthub_realestate.installment_template_list_view
+msgid "installment template"
+msgstr "نموذج التقسيط"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project
+msgid "main.property"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_owner_contract_furniture
+msgid "owner contract furniture"
+msgstr "أثاث عقد المالك"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_ownership_attachment_line
+msgid "ownership.attachment.line"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_property_attachment_line
+msgid "property.attachment.line"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_regions
+msgid "regions"
+msgstr "المناطق"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rental_contract_furniture
+msgid "rental contract furniture"
+msgstr "أثاث عقد الإيجار"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rental_contract_attachment
+msgid "rental.attachment.line"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rental_contract
+msgid "rental.contract"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rental_contract_line
+msgid "rental.contract.line"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_attachment_line
+msgid "rs.project.attachment.line"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_desc
+msgid "rs.project.desc"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_floor_plans
+msgid "rs.project.floor.plans"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_images
+msgid "rs.project.images"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_status
+msgid "rs.project.status"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_rs_project_type
+msgid "rs.project.type"
+msgstr ""
+
+#. module: nthub_realestate
+#. odoo-python
+#: code:addons/nthub_realestate/models/rental_contract.py:0
+#: model:ir.model.fields,field_description:nthub_realestate.field_rental_contract__state
+#, python-format
+msgid "state"
+msgstr "الحالة"
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_sub_property
+msgid "sub.property"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model,name:nthub_realestate.model_sub_property_image
+msgid "sub.property.image"
+msgstr ""
+
+#. module: nthub_realestate
+#: model:ir.model.fields,field_description:nthub_realestate.field_unit_reservation__pricing
+msgid "ٍPricing"
+msgstr "السعر"

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Form View for Contract Setup -->
+        <record id="view_contract_setup_form" model="ir.ui.view">
+            <field name="name">contract.setup.form</field>
+            <field name="model">contract.setup</field>
+            <field name="arch" type="xml">
+                <form string="Contract Setup | إعداد العقد">
+                    <header>
+                        <button name="action_confirm" string="Confirm | تأكيد" type="object" 
+                                class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_done" string="Done | إنجاز" type="object" 
+                                class="oe_highlight" invisible="state != 'confirmed'"/>
+                        <button name="action_print_contract_setup" string="Print | طباعة" type="object" class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                    </header>
+                    
+                    <sheet>
+                        <!-- العنوان الرئيسي -->
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" class="text-center"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="date" string="Date | التاريخ"/>
+                                <field name="project_id" string="Project | المشروع"/>
+                                <field name="project_title" string="Project Title | عنوان المشروع" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <!-- تبويب معلومات المنشأة -->
+                            <page string="Company Information | معلومات المنشأة">
+                                <group>
+                                    <group string="Basic Information | المعلومات الأساسية">
+                                        <field name="company_name" string="Company Name | اسـم المنـشـأة"/>
+                                        <field name="unified_number" string="Unified Number | الرقــم الموحد"/>
+                                        <field name="establishment_number" string="Establishment Number | رقم المنشأة"/>
+                                        <field name="commercial_register_source" string="Register Source | مصـدر السجل التجاري"/>
+                                        <field name="commercial_register_date" string="Register Date | تاريـخ السـجــل التـجـاري"/>
+                                    </group>
+                                    <group string="Address Information | معلومات العنوان">
+                                        <field name="main_address" string="Main Address | عـنوان المـركز الرئـيـسـي"/>
+                                        <field name="postal_code" string="Postal Code | الرمز البريدي"/>
+                                        <field name="city" string="City | المدينة"/>
+                                        <field name="zip_code" string="ZIP Code | الرمز"/>
+                                        <field name="phone" string="Phone | رقم الهـــاتـف"/>
+                                        <field name="fax" string="Fax | رقــم الفـاكـس"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- تبويب المفوض بالتوقيع -->
+                            <page string="Authorized Person | المفوض بالتوقيع">
+                                <group>
+                                    <group string="Personal Information | المعلومات الشخصية">
+                                        <field name="authorized_signatory" string="Authorized Signatory | اسـم المفـوض بالتـوقـيـع"/>
+                                        <field name="nationality" string="Nationality | جـنـســيـتـه"/>
+                                        <field name="contractual_status" string="Contractual Status | صـفـتـه التـعــاقـديـة"/>
+                                    </group>
+                                    <group string="Identification | معلومات الهوية">
+                                        <field name="id_passport_number" string="ID/Passport Number | رقم الهوية / جواز السفر"/>
+                                        <field name="id_issue_place" string="ID Issue Place | مكان إصدارها"/>
+                                        <field name="mobile_number" string="Mobile Number | رقــم الجـــوال"/>
+                                        <field name="absher_mobile" string="Absher Mobile | رقم جوال أبشر"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- تبويب الوحدة والنشاط -->
+                            <page string="Unit &amp; Activity | الوحدة والنشاط">
+                                <group>
+                                    <group string="Unit Information | معلومات الوحدة">
+                                        <field name="unit_id" string="Unit/Office | الوحدة/المكتب" 
+                                               options="{'no_create': True, 'no_edit': True}"/>
+                                        <field name="unit_office_number" string="Unit/Office Number | رقم العين / المكتب رقم"/>
+                                        <field name="unit_area" string="Unit Area (m²) | المساحة (م²)"/>
+                                        <field name="activity" string="Activity | النشــــــــــــاط"/>
+                                        <field name="trade_name" string="Trade Name | الإسم التجاري / الماركــــة"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- تبويب القيم المالية -->
+                            <page string="Financial Details | التفاصيل المالية">
+                                <group>
+                                    <group string="Rental Information | معلومات الإيجار">
+                                        <field name="rental_value" string="Rental Value | القيمة الإيجارية"/>
+                                        <field name="services_value" string="Services Value | قيمة الخدمات"/>
+                                        <field name="total_value" string="Total Value | إجمالي" readonly="1"/>
+                                        <field name="vat_amount" string="VAT Amount | قيمة الضريبة"/>
+                                    </group>
+                                    <group string="Contract Duration | مدة العقد">
+                                        <field name="contract_duration" string="Contract Duration | مدة العقد"/>
+                                        <field name="contract_start_date" string="Contract Start Date | تاريخ بداية العقد"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- تبويب الملاحظات -->
+                            <page string="Notes &amp; Sales Manager | الملاحظات ومسئول المبيعات">
+                                <group>
+                                    <group string="Notes | ملاحظات أخرى">
+                                        <field name="notes_1" string="Notes 1 | ملاحظة 1"/>
+                                        <field name="notes_2" string="Notes 2 | ملاحظة 2"/>
+                                    </group>
+                                    <group string="Sales Information | معلومات المبيعات">
+                                        <field name="sales_manager" string="Sales Manager | اسم مسئول المبيعات"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <chatter>
+
+                    </chatter>
+                </form>
+            </field>
+        </record>
+        
+        <!-- list View for Contract Setup -->
+        <record id="view_contract_setup_list" model="ir.ui.view">
+            <field name="name">contract.setup.list</field>
+            <field name="model">contract.setup</field>
+            <field name="arch" type="xml">
+                <list string="Contract Setup | إعداد العقود">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="project_id"/>
+                    <field name="company_name"/>
+                    <field name="authorized_signatory"/>
+                    <field name="unit_id"/>
+                    <field name="total_value"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- Search View for Contract Setup -->
+        <record id="view_contract_setup_search" model="ir.ui.view">
+            <field name="name">contract.setup.search</field>
+            <field name="model">contract.setup</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract Setup">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="company_name"/>
+                    <field name="authorized_signatory"/>
+                    <field name="unit_id"/>
+                    
+                    <filter string="Draft | مسودة" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Confirmed | مؤكد" name="confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter string="Done | منجز" name="done" domain="[('state','=','done')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="State | الحالة" name="group_state" context="{'group_by':'state'}"/>
+                        <filter string="Date | التاريخ" name="group_date" context="{'group_by':'date'}"/>
+                        <filter string="Project | المشروع" name="group_project" context="{'group_by':'project_id'}"/>
+                        <filter string="Company | الشركة" name="group_company" context="{'group_by':'company_name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Action for Contract Setup -->
+        <record id="action_contract_setup" model="ir.actions.act_window">
+            <field name="name">Contract Setup | إعداد العقود</field>
+            <field name="res_model">contract.setup</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new contract setup | إنشاء إعداد عقد جديد
+                </p>
+                <p>
+                    Here you can manage contract setup information with all required details.<br/>
+                    يمكنك هنا إدارة معلومات إعداد العقود مع جميع التفاصيل المطلوبة.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

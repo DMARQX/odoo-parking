@@ -1,0 +1,81 @@
+// Code Solution Theme - View Styles
+// List, Kanban, Form Views
+
+// List View
+.o_list_view {
+    .o_list_table {
+        thead {
+            th {
+                font-weight: 600;
+                color: $o-gray-700;
+                background-color: $o-gray-100;
+                border-bottom: 2px solid $o-gray-200;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    background-color: rgba($o-cs-action, 0.05);
+                }
+
+                &.o_data_row.o_selected_row {
+                    background-color: rgba($o-cs-primary, 0.1);
+                }
+            }
+        }
+    }
+}
+
+// Kanban View
+.o_kanban_view {
+    .o_kanban_record {
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-sm;
+        transition: all 0.2s ease;
+
+        &:hover {
+            box-shadow: $box-shadow;
+            transform: translateY(-1px);
+        }
+    }
+
+    .o_kanban_group_header {
+        font-weight: 600;
+        color: $o-gray-800;
+    }
+}
+
+// Form View
+.o_form_view {
+    .o_form_sheet {
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-sm;
+    }
+
+    .o_group_title {
+        color: $o-cs-primary;
+        font-weight: 600;
+    }
+}
+
+// Stat Buttons
+.oe_button_box {
+    .oe_stat_button {
+        border-radius: $border-radius-sm;
+        
+        &:hover {
+            background-color: rgba($o-cs-action, 0.05);
+        }
+    }
+}
+
+// Status Bar
+.o_statusbar_status {
+    .o_arrow_button {
+        &.o_arrow_button_current {
+            background-color: $o-cs-primary;
+            color: $o-white;
+        }
+    }
+}

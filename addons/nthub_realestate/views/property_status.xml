@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+
+        <!--   define form_property.type-->
+        <record model="ir.ui.view" id="view_property_status_form">
+            <field name="name">property.status.form</field>
+            <field name="model">rs.project.status</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--    define action_property_type-->
+        <record id="property_status_action" model="ir.actions.act_window">
+            <field name="name">Property Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rs.project.status</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

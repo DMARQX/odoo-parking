@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Actions -->
+    
+    <!-- Rental Quotation Action -->
+    <record id="action_rental_quotation" model="ir.actions.act_window">
+        <field name="name">Rental Quotations</field>
+        <field name="res_model">rental.quotation</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first rental quotation
+            </p>
+            <p>
+                Generate professional quotations for rental properties with built-in approval workflow.
+            </p>
+        </field>
+    </record>
+
+    <!-- Draft Quotations Action -->
+    <record id="action_rental_quotation_draft" model="ir.actions.act_window">
+        <field name="name">Draft Quotations</field>
+        <field name="res_model">rental.quotation</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'draft')]</field>
+        <field name="context">{'default_state': 'draft'}</field>
+    </record>
+
+    <!-- Pending Approval Action -->
+    <record id="action_rental_quotation_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approval</field>
+        <field name="res_model">rental.quotation</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ['submitted', 'under_review'])]</field>
+    </record>
+
+    <!-- My Approvals Action -->
+    <record id="action_rental_quotation_my_approvals" model="ir.actions.act_window">
+        <field name="name">My Approvals</field>
+        <field name="res_model">rental.quotation</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('can_approve', '=', True)]</field>
+        <field name="context">{'search_default_filter_pending_approval': 1}</field>
+    </record>
+
+    <!-- Approved Quotations Action -->
+    <record id="action_rental_quotation_approved" model="ir.actions.act_window">
+        <field name="name">Approved Quotations</field>
+        <field name="res_model">rental.quotation</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'approved')]</field>
+    </record>
+
+    <!-- Approval Rules Action -->
+    <record id="action_rental_approval_rule" model="ir.actions.act_window">
+        <field name="name">Approval Rules</field>
+        <field name="res_model">rental.approval.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_active': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure approval rules
+            </p>
+            <p>
+                Set up approval workflow rules based on amount, customer type, or other conditions.
+            </p>
+        </field>
+    </record>
+
+    <!-- Approval History Action -->
+    <record id="action_rental_quotation_approval" model="ir.actions.act_window">
+        <field name="name">Approval History</field>
+        <field name="res_model">rental.quotation.approval</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <!-- Menus -->
+    
+    <!-- Main Menu - Opens Dashboard Directly -->
+    <menuitem id="menu_rental_quotation_main" 
+              name="Rental Quotations" 
+              sequence="30"
+              action="action_rental_quotation_dashboard_client"
+             />
+
+    <!-- Quotations Submenu -->
+    <menuitem id="menu_rental_quotation_quotations" 
+              name="Quotations" 
+              parent="menu_rental_quotation_main" 
+              sequence="10"/>
+
+    <!-- All Quotations -->
+    <menuitem id="menu_rental_quotation_all" 
+              name="All Quotations" 
+              parent="menu_rental_quotation_quotations" 
+              action="action_rental_quotation" 
+              sequence="10"/>
+
+    <!-- Draft Quotations -->
+    <menuitem id="menu_rental_quotation_draft" 
+              name="Draft" 
+              parent="menu_rental_quotation_quotations" 
+              action="action_rental_quotation_draft" 
+              sequence="20"/>
+
+    <!-- Pending Approval -->
+    <menuitem id="menu_rental_quotation_pending" 
+              name="Pending Approval" 
+              parent="menu_rental_quotation_quotations" 
+              action="action_rental_quotation_pending" 
+              sequence="30"/>
+
+    <!-- My Approvals -->
+    <menuitem id="menu_rental_quotation_my_approvals" 
+              name="My Approvals" 
+              parent="menu_rental_quotation_quotations" 
+              action="action_rental_quotation_my_approvals" 
+              sequence="40"
+              groups="rental_quotation.group_rental_quotation_approver"/>
+
+    <!-- Approved -->
+    <menuitem id="menu_rental_quotation_approved" 
+              name="Approved" 
+              parent="menu_rental_quotation_quotations" 
+              action="action_rental_quotation_approved" 
+              sequence="50"/>
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_rental_quotation_config" 
+              name="Configuration" 
+              parent="menu_rental_quotation_main" 
+              sequence="90"
+              groups="rental_quotation.group_rental_quotation_admin"/>
+
+    <!-- Approval Rules -->
+    <menuitem id="menu_rental_approval_rules" 
+              name="Approval Rules" 
+              parent="menu_rental_quotation_config" 
+              action="action_rental_approval_rule" 
+              sequence="10"/>
+
+    <!-- Approval History -->
+    <menuitem id="menu_rental_approval_history" 
+              name="Approval History" 
+              parent="menu_rental_quotation_config" 
+              action="action_rental_quotation_approval" 
+              sequence="20"/>
+
+    <!-- Terms & Conditions Templates -->
+    <menuitem id="menu_quotation_terms_template" 
+              name="Terms &amp; Conditions" 
+              parent="menu_rental_quotation_config" 
+              action="action_quotation_terms_template" 
+              sequence="50"/>
+
+    <!-- Reports Submenu -->
+    <menuitem id="menu_rental_quotation_reports" 
+              name="Reports" 
+              parent="menu_rental_quotation_main" 
+              sequence="80"/>
+
+</odoo>

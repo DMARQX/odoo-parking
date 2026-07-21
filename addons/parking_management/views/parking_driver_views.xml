@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="parking_driver_tree" model="ir.ui.view">
+        <field name="name">parking.driver.tree</field>
+        <field name="model">parking.driver</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="id_number"/>
+                <field name="license_number"/>
+                <field name="license_expiry"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="parking_driver_form" model="ir.ui.view">
+        <field name="name">parking.driver.form</field>
+        <field name="model">parking.driver</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Personal Info">
+                            <field name="name" required="1"/>
+                            <field name="phone" required="1"/>
+                            <field name="id_number"/>
+                        </group>
+                        <group string="License Info">
+                            <field name="license_number"/>
+                            <field name="license_expiry"/>
+                        </group>
+                    </group>
+                    <group string="Additional">
+                        <field name="address" placeholder="Full address..."/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="parking_driver_search" model="ir.ui.view">
+        <field name="name">parking.driver.search</field>
+        <field name="model">parking.driver</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="id_number"/>
+                <field name="license_number"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_parking_driver" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">parking.driver</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="parking_driver_search"/>
+        <field name="help">Manage drivers for vehicle transfers.</field>
+    </record>
+
+    <menuitem id="menu_parking_driver"
+        name="Drivers"
+        parent="menu_parking_config"
+        action="action_parking_driver"
+        sequence="30"/>
+
+</odoo>

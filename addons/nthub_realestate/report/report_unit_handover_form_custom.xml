@@ -1,0 +1,99 @@
+<odoo>
+
+       <record id="action_report_unit_handover_form_custom" model="ir.actions.report">
+            <field name="name">Unit Handover Form</field>
+            <field name="model">unit.handover.form</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.report_unit_handover_form_custom</field>
+            <field name="report_file">nthub_realestate.report_unit_handover_form_custom</field>
+            <field name="binding_model_id" ref="model_unit_handover_form"/>
+            <field name="binding_type">report</field>
+        </record>
+
+<template id="report_unit_handover_form_custom">
+  <t t-call="web.html_container">
+    <t t-foreach="docs" t-as="doc">
+      <t t-call="web.external_layout">
+      <div class="page">
+
+        <h2 style="text-align: center;">Unit(s) Handover Form</h2>
+
+        <table class="table table-sm" style="margin-bottom: 20px;">
+          <tr>
+            <td><strong>Date:</strong></td>
+            <td><span t-field="doc.date"/></td>
+            <td><strong>Unit(s) #:</strong></td>
+            <td><span t-field="doc.unit_number"/></td>
+          </tr>
+          <tr>
+            <td><strong>Total Area:</strong></td>
+            <td><span t-field="doc.total_area"/></td>
+            <td><strong>Office #:</strong></td>
+            <td><span t-field="doc.office_number"/></td>
+          </tr>
+          <tr>
+            <td><strong>Tenant's:</strong></td>
+            <td><span t-field="doc.tenant_name"/></td>
+            <td><strong>Contact Person:</strong></td>
+            <td><span t-field="doc.contact_person"/></td>
+          </tr>
+        </table>
+
+        <table class="table table-sm table-bordered" style="width:100%;">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Available</th>
+            </tr>
+          </thead>
+          <tbody>
+            <t t-foreach="doc.handover_item_ids" t-as="item">
+              <tr>
+                <td><span t-esc="item.item_name"/></td>
+                <td><span t-esc="item.description"/></td>
+                <td><span t-esc="'Yes' if item.checked else 'No'"/></td>
+              </tr>
+            </t>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 50px;">
+          <table class="table table-sm" style="width:100%;">
+            <tr>
+              <td><strong>Landlord's Consultant</strong></td>
+              <td><strong>Tenant's Rep.</strong></td>
+            </tr>
+            <tr>
+              <td>
+                <p>Name: <span t-field="doc.consultant_name"/></p>
+                <p>Signature:</p>
+                <div t-if="doc.consultant_signature">
+                  <img t-att-src="image_data_uri(doc.consultant_signature)" style="max-height:80px; max-width:200px;"/>
+                </div>
+                <p>Date: <span t-field="doc.consultant_date"/></p>
+              </td>
+              <td>
+                <p>Name: <span t-field="doc.tenant_rep_name"/></p>
+                <p>Signature:</p>
+                <div t-if="doc.tenant_signature">
+                  <img t-att-src="image_data_uri(doc.tenant_signature)" style="max-height:80px; max-width:200px;"/>
+                </div>
+                <p>Date: <span t-field="doc.tenant_date"/></p>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+<p style="text-align:center; margin-top: 50px;">
+  For any more Information Please call:
+  <span t-esc="doc.company_id.phone or 'N/A'"/>
+</p>
+
+      </div>
+      </t>
+    </t>
+  </t>
+</template>
+
+</odoo>

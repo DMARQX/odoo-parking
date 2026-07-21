@@ -1,0 +1,168 @@
+/* تنسيق لوحة تحكم عروض الأسعار */
+
+.rental_quotation_dashboard_section {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.dashboard-section-header {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 10px;
+}
+
+/* KPI Cards */
+.kpi-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    background-color: white !important;
+    color: #333 !important;
+    border: 1px solid #e9ecef !important;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.kpi-card .card-body {
+    padding: 20px;
+}
+
+.kpi-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #6c757d !important;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #333 !important;
+    text-shadow: none;
+}
+
+/* رسوم بيانية */
+.chart-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+}
+
+.chart-card .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.chart-card .card-title i {
+    color: #007bff;
+}
+
+.chart-container {
+    min-height: 350px;
+    position: relative;
+}
+
+/* قائمة أحدث الكوتيشن */
+.recent-quotations-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.recent-quotation-item {
+    border: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.recent-quotation-item:hover {
+    background-color: #e3f2fd !important;
+    border-color: #007bff;
+    transform: translateX(5px);
+}
+
+/* ألوان الـ badges */
+.badge-success {
+    background-color: #28a745;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+}
+
+/* تحسين الخطوط للإنجليزية */
+.rental_quotation_dashboard_section {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    direction: ltr;
+    text-align: left;
+}
+
+/* تحسين التجاوب */
+@media (max-width: 768px) {
+    .kpi-card {
+        margin-bottom: 15px;
+    }
+    
+    .kpi-value {
+        font-size: 24px;
+    }
+    
+    .chart-container {
+        min-height: 280px;
+    }
+    
+    .dashboard-section-header {
+        font-size: 18px;
+    }
+}
+
+/* تحسين الألوان للوضع الليلي */
+@media (prefers-color-scheme: dark) {
+    .rental_quotation_dashboard_section {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    
+    .chart-card {
+        background-color: #2d2d2d;
+        color: #ffffff;
+    }
+    
+    .dashboard-section-header {
+        color: #ffffff;
+    }
+    
+    .recent-quotation-item {
+        background-color: #3d3d3d !important;
+        border-color: #5d5d5d;
+        color: #ffffff;
+    }
+    
+    .recent-quotation-item:hover {
+        background-color: #4d4d4d !important;
+    }
+}

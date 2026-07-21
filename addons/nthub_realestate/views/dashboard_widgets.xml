@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Dashboard Statistics Widget -->
+        <record model="ir.ui.view" id="dashboard_stats_widget">
+            <field name="name">Dashboard Statistics Widget</field>
+            <field name="model">dashboard.real.estate</field>
+            <field name="arch" type="xml">
+                <kanban class="o_dashboard_stats">
+                    <field name="total_projects"/>
+                    <field name="total_properties"/>
+                    <field name="total_rentals"/>
+                    <field name="total_ownerships"/>
+                    <field name="total_revenue"/>
+                    <field name="pending_settlements"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-primary text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Projects</h5>
+                                                <h3><t t-esc="record.total_projects.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-success text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Properties</h5>
+                                                <h3><t t-esc="record.total_properties.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-info text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Rentals</h5>
+                                                <h3><t t-esc="record.total_rentals.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-warning text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Ownerships</h5>
+                                                <h3><t t-esc="record.total_ownerships.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-danger text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Revenue</h5>
+                                                <h3><t t-esc="record.total_revenue.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="card text-center bg-secondary text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Pending</h5>
+                                                <h3><t t-esc="record.pending_settlements.value"/></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Dashboard Statistics Action -->
+        <record model="ir.actions.act_window" id="action_dashboard_stats">
+            <field name="name">Dashboard Statistics</field>
+            <field name="res_model">dashboard.real.estate</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="nthub_realestate.dashboard_stats_widget"/>
+        </record>
+    </data>
+</odoo> 

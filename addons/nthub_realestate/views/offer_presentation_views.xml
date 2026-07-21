@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Request for Quotation Form View -->
+        <record id="offer_presentation_form_view" model="ir.ui.view">
+            <field name="name">offer.presentation.form</field>
+            <field name="model">offer.presentation</field>
+            <field name="arch" type="xml">
+                <form string="Request for Quotation Form">
+                    <header>
+                        <button name="action_print_offer_form" 
+                                type="object" 
+                                string="Print Form"
+                                class="oe_highlight"/>
+                        <button name="action_create_rental_quotation" 
+                                type="object" 
+                                string="Create Rental Quotation / إنشاء عارض سعر"
+                                class="btn-primary"
+                                invisible="quotation_count &gt; 0"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="company_name" placeholder="Company Name..."/>
+                            </h1>
+                            <field name="company_id" invisible="1"/>
+                            <field name="quotation_count" invisible="1"/>
+                        </div>
+                        
+                        <group>
+                            <group string="Company Information / معلومات الشركة">
+                                <field name="presentation_date" string="Presentation Date / تاريخ العرض"/>
+                                <field name="company_name" string="Company Name / اسم الشركة"/>
+                                <field name="project_id" string="Project / المشروع" options="{'no_create': True, 'no_edit': True}"/>
+                                <field name="responsible_name" string="Responsible Name / اسم المسئول"/>
+                                <field name="responsible_department" string="Responsible Department / الجهة المسئولة"/>
+                                <field name="phone_number" string="Phone Number / رقم الهاتف"/>
+                                <field name="fax_number" string="Fax Number / رقم الفاكس"/>
+                            </group>
+                            
+                            <group string="Contact Information / معلومات التواصل">
+                                <field name="mobile_number" string="Mobile Number / رقم الجوال"/>
+                                <field name="email" string="Email / البريد الإلكتروني"/>
+                                <field name="center_name" string="Center/Project Name / اسم المركز/المشروع"/>
+                                <field name="communication_method" string="Communication Method / طريقة التواصل"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Office/Unit Details / تفاصيل المكاتب/الوحدات">
+                                <field name="offer_line_ids">
+                                    <list editable="bottom">
+                                        <field name="unit_id" string="Unit / الوحدة" 
+                                               options="{'no_create': True, 'no_edit': True}"
+                                               context="{'default_rs_project_id': parent.project_id}"/>
+                                        <field name="unit_name" string="Unit Name / اسم الوحدة"/>
+                                        <field name="office_number" string="Unit Code / كود الوحدة"/>
+                                        <field name="area" string="Area (m²) / المساحة"/>
+                                        <field name="unit_type" string="Type / النوع"/>
+                                        <field name="activity" string="Activity / النشاط"/>
+                                        <field name="brand" string="Brand / الماركة"/>
+                                        <field name="rental_price_per_sqm" string="Rental Price/m² / سعر الإيجار/م²"/>
+                                        <field name="project_service_fee_percent" string="Service Fee % / نسبة الخدمة"/>
+                                        <field name="service_fee" string="Service Fee / رسوم الخدمة" readonly="1"/>
+                                        <field name="rental_value" string="Total / الإجمالي" readonly="1" sum="Total"/>
+                                    </list>
+                                </field>
+                            </page>
+                            
+                            <page string="Notes &amp; Signature / ملاحظات وتوقيع">
+                                <group>
+                                    <field name="notes" string="Notes / ملاحظات" nolabel="1" colspan="2"/>
+                                </group>
+                                <separator string="Signature / التوقيع"/>
+                                <group>
+                                    <field name="marketer_name" string="Marketer Name / اسم المسوق"/>
+                                    <field name="signature" string="Signature / التوقيع"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Request for Quotation list View -->
+        <record id="offer_presentation_list_view" model="ir.ui.view">
+            <field name="name">offer.presentation.list</field>
+            <field name="model">offer.presentation</field>
+            <field name="arch" type="xml">
+                <list string="Request for Quotation">
+                    <field name="presentation_date"/>
+                    <field name="company_name"/>
+                    <field name="project_id"/>
+                    <field name="responsible_name"/>
+                    <field name="phone_number"/>
+                    <field name="email"/>
+                    <field name="communication_method"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Request for Quotation Search View -->
+        <record id="offer_presentation_search_view" model="ir.ui.view">
+            <field name="name">offer.presentation.search</field>
+            <field name="model">offer.presentation</field>
+            <field name="arch" type="xml">
+                <search string="Search Request for Quotation">
+                    <field name="company_name"/>
+                    <field name="responsible_name"/>
+                    <field name="email"/>
+                    <field name="phone_number"/>
+                    <filter string="This Month" name="this_month" 
+                            domain="[('presentation_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                    ('presentation_date', '&lt;', (context_today() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Date" name="group_date" domain="[]" context="{'group_by': 'presentation_date'}"/>
+                        <filter string="Communication Method" name="group_communication" domain="[]" context="{'group_by': 'communication_method'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="offer_presentation_action" model="ir.actions.act_window">
+            <field name="name">Request for Quotation</field>
+            <field name="res_model">offer.presentation</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new request for quotation
+                </p>
+                <p>
+                    Track and manage requests for quotation to clients
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+<!--        <menuitem id="offer_presentation_menu" -->
+<!--                  name="Offer Presentations" -->
+<!--                  parent="menu_real_estate_dashboard_root" -->
+<!--                  action="offer_presentation_action" -->
+<!--                  sequence="15"/>-->
+
+    </data>
+</odoo>

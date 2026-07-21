@@ -1,0 +1,45 @@
+<!--This XML file does not appear to have any style information associated with it. The document list is shown below.-->
+<odoo>
+    <data>
+        <!-- Define a view for the tenants list -->
+        <record id="tenants_form_view" model="ir.ui.view">
+            <field name="name">tenant.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="before">
+                    <group string="PARTNER TYPE">
+                        <field name="is_tenant"/>
+                        <field name="is_owner"/>
+                        <field name="commercial_registration_number"/>
+                        <field name="unified_number"/>
+                        <field name="vat"/>
+                        <field name="commercial_registration_expiry"/>
+                        <field name="commercial_status"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <!-- Define a action for the tenants  -->
+        <record id="tenants_action" model="ir.actions.act_window">
+            <field name="name">Tenants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="context">{"default_is_tenant": True}</field>
+            <field name="domain">[('is_tenant', '=', True)]</field>
+        </record>
+        <!-- Define a action for the owner  -->
+        <record id="owner_action" model="ir.actions.act_window">
+            <field name="name">Owners</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="context">{"default_is_owner": True}</field>
+            <field name="domain">[('is_owner', '=', True)]</field>
+        </record>
+    </data>
+</odoo>

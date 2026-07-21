@@ -1,0 +1,102 @@
+.mk_apps_sidebar_panel {
+    @include mk-disable-scrollbar();
+    background: linear-gradient(180deg, #312E81 0%, #1E1B4B 100%);
+    width: var(--mk-sidebar-width, 0);
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    .mk_apps_sidebar {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+	    white-space: nowrap;
+	    .mk_apps_sidebar_menu {
+	    	padding: 8px;
+		    > li {
+		        margin: 2px 0;
+		        border-radius: 8px;
+		        > a {
+		            cursor: pointer;
+	                font-size: 13px;
+	                font-weight: 400;
+	                overflow: hidden;
+	                padding: 10px 12px;
+	                text-decoration: none;
+	                color: #E0E7FF;
+	                text-overflow: ellipsis;
+	                display: flex;
+	                align-items: center;
+	                border-radius: 8px;
+	                transition: all 0.2s ease;
+	                .mk_apps_sidebar_icon {
+				        width: 24px;
+				        height: 24px;
+	    			    margin-right: 8px;
+	    			    border-radius: 6px;
+				    }
+		        }
+		    }
+	        > li.active > a {
+			    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+			    color: #fff;
+			    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+	        }
+	        > li:hover:not(.active) > a {
+			    background: rgba(255, 255, 255, 0.1);
+			    color: #fff;
+	        }
+	    }
+	}
+}
+
+.mk_sidebar_type_large {
+	--mk-sidebar-width: #{$mk-sidebar-large-width};
+}
+
+.mk_sidebar_type_small {
+	--mk-sidebar-width: #{$mk-sidebar-small-width};
+	.mk_apps_sidebar_name {
+		display: none;
+	}
+	.mk_apps_sidebar_icon {
+		margin-right: 0 !important;
+	}
+   	.mk_apps_sidebar_logo {
+		display: none;
+	}
+}
+
+.mk_sidebar_type_invisible {
+	--mk-sidebar-width: 0;
+}
+
+.editor_has_snippets_hide_backend_navbar,
+.o_home_menu_background,
+.o_fullscreen {
+	--mk-sidebar-width: 0;
+}
+
+.editor_has_snippets_hide_backend_navbar .mk_apps_sidebar_panel {
+    transition: width 300ms;
+}
+
+@include media-breakpoint-only(md) {
+	.mk_sidebar_type_large {
+		--mk-sidebar-width: #{$mk-sidebar-small-width};
+		.mk_apps_sidebar_name {
+			display: none;
+		}
+		.mk_apps_sidebar_icon {
+			margin-right: 0 !important;
+		}
+	   	.mk_apps_sidebar_logo {
+			display: none;
+		}
+	}
+}
+
+@include media-breakpoint-down(md) {
+	.mk_sidebar_type_large, .mk_sidebar_type_small {
+		--mk-sidebar-width: 0;
+	}
+}

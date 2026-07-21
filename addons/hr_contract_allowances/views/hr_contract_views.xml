@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Inherit HR Contract Form View -->
+        <record id="view_hr_contract_form_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.form.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                
+                <!-- Add allowances button to header -->
+                <xpath expr="//header" position="inside">
+                    <button name="action_view_allowances" type="object" string="View Allowances" 
+                           class="btn-info" invisible="allowances_count == 0"/>
+                    <button name="action_add_allowance" type="object" string="Add Allowance" 
+                           class="btn-primary"/>
+                </xpath>
+                
+                <!-- Add allowances stat button -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_allowances" type="object" class="oe_stat_button" icon="fa-money">
+                        <field name="allowances_count" widget="statinfo" string="Allowances"/>
+                    </button>
+                </xpath>
+                
+                <!-- Add allowances summary fields -->
+                <xpath expr="//div[@name='wage']" position="after">
+                    <field name="total_allowances" widget="monetary"/>
+                    <field name="total_salary_with_allowances" widget="monetary"/>
+                </xpath>
+                
+                <!-- Add allowances tab -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Allowances | البدلات" name="allowances">
+                        <group>
+                            <group>
+                                <field name="allowances_count" readonly="1"/>
+                                <field name="total_allowances" widget="monetary" readonly="1"/>
+                                <field name="total_salary_with_allowances" widget="monetary" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <field name="allowance_ids" context="{'default_contract_id': id, 'default_date_start': date_start}">
+                            <list string="Allowances" editable="bottom">
+                                <field name="allowance_type_id" options="{'no_create': True}"/>
+                                <field name="allowance_name" readonly="1"/>
+                                <field name="is_percentage_based" invisible="1"/>
+                                <field name="percentage" invisible="not is_percentage_based"/>
+                                <field name="amount" widget="monetary"/>
+                                <field name="is_taxable" readonly="1"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="state" widget="badge"/>
+                                <field name="currency_id" invisible="1"/>
+                            </list>
+                            <form string="Allowance">
+                                <group>
+                                    <group>
+                                        <field name="allowance_type_id" options="{'no_create': True}"/>
+                                        <field name="allowance_name" readonly="1"/>
+                                        <field name="is_percentage_based" invisible="1"/>
+                                        <field name="percentage" invisible="not is_percentage_based"/>
+                                        <field name="amount" widget="monetary"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="is_taxable" readonly="1"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="state"/>
+                                    </group>
+                                </group>
+                                <group string="Notes">
+                                    <field name="notes" nolabel="1"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+                
+            </field>
+        </record>
+        
+        <!-- Inherit HR Contract Tree View -->
+        <record id="view_hr_contract_tree_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.tree.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='wage']" position="after">
+                    <field name="total_allowances" widget="monetary" optional="show"/>
+                    <field name="total_salary_with_allowances" widget="monetary" optional="hide"/>
+                    <field name="allowances_count" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Add Allowances to HR Contract Search -->
+        <record id="view_hr_contract_search_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.search.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@expand='0']" position="inside">
+                    <filter string="Has Allowances" name="has_allowances" domain="[('allowance_ids', '!=', False)]"/>
+                    <filter string="No Allowances" name="no_allowances" domain="[('allowance_ids', '=', False)]"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

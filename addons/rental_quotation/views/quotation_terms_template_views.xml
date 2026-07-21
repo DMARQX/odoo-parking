@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_quotation_terms_template_tree" model="ir.ui.view">
+        <field name="name">quotation.terms.template.tree</field>
+        <field name="model">quotation.terms.template</field>
+        <field name="arch" type="xml">
+            <list string="Terms &amp; Conditions Templates">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="language"/>
+                <field name="template_type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_quotation_terms_template_form" model="ir.ui.view">
+        <field name="name">quotation.terms.template.form</field>
+        <field name="model">quotation.terms.template</field>
+        <field name="arch" type="xml">
+            <form string="Terms &amp; Conditions Template">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g., Residential Terms / شروط العقود السكنية"/>
+                            <field name="language" widget="radio"/>
+                            <field name="template_type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Salutation / التحية" name="salutation">
+                            <field name="salutation_html" widget="html" placeholder="Enter greeting text here (will appear above rental fees table)..."/>
+                        </page>
+                        
+                        <page string="Lease Agreement Requirements &amp; Conditions / شروط ومتطلبات عقد الإيجار" name="content">
+                            <field name="content_html" widget="html" placeholder="Enter lease requirements and conditions content here (supports Arabic/English HTML)..."/>
+                        </page>
+                        
+                        <page string="Internal Notes / ملاحظات داخلية" name="notes">
+                            <field name="note" placeholder="Internal notes about this template (not shown in quotations)..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_quotation_terms_template_search" model="ir.ui.view">
+        <field name="name">quotation.terms.template.search</field>
+        <field name="model">quotation.terms.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Terms Templates">
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                <filter string="Residential" name="residential" domain="[('template_type', '=', 'residential')]"/>
+                <filter string="Commercial" name="commercial" domain="[('template_type', '=', 'commercial')]"/>
+                <filter string="General" name="general" domain="[('template_type', '=', 'general')]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Template Type" name="group_type" context="{'group_by': 'template_type'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_quotation_terms_template" model="ir.actions.act_window">
+        <field name="name">Terms &amp; Conditions Templates</field>
+        <field name="res_model">quotation.terms.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Terms &amp; Conditions Template
+            </p>
+            <p>
+                Templates allow you to create reusable terms and conditions content
+                that can be easily applied to quotations. Support Arabic/English HTML content.
+            </p>
+        </field>
+    </record>
+
+</odoo>

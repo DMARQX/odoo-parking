@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_inspection_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                    <t t-set="is_ar" t-value="o._is_arabic_context()"/>
+                    <t t-set="lbl_title" t-value="'تقرير فحص المركبة' if is_ar else 'Vehicle Inspection Report'"/>
+                    <t t-set="lbl_details" t-value="'تفاصيل الفحص' if is_ar else 'Inspection Details'"/>
+                    <t t-set="lbl_vehicle" t-value="'المركبة' if is_ar else 'Vehicle'"/>
+                    <t t-set="lbl_date" t-value="'التاريخ' if is_ar else 'Date'"/>
+                    <t t-set="lbl_inspector" t-value="'الفحص' if is_ar else 'Inspector'"/>
+                    <t t-set="lbl_status" t-value="'الحالة' if is_ar else 'Status'"/>
+                    <t t-set="lbl_checkpoint" t-value="'نقطة الفحص' if is_ar else 'Checkpoint'"/>
+                    <t t-set="lbl_result" t-value="'النتيجة' if is_ar else 'Result'"/>
+                    <t t-set="lbl_notes" t-value="'ملاحظات' if is_ar else 'Notes'"/>
+                    <t t-set="lbl_pass" t-value="'ناجح' if is_ar else 'Pass'"/>
+                    <t t-set="lbl_fail" t-value="'راسب' if is_ar else 'Fail'"/>
+                    <t t-set="lbl_na" t-value="'غير متاح' if is_ar else 'N/A'"/>
+                    <t t-set="lbl_general_notes" t-value="'ملاحظات عامة' if is_ar else 'General Notes'"/>
+                    <t t-set="lbl_photos" t-value="'صور العيوب' if is_ar else 'Defect Photos'"/>
+                    <t t-set="lbl_signature" t-value="'توقيع الفاحص' if is_ar else 'Inspector Signature'"/>
+                    <t t-set="lbl_pms" t-value="'نظام إدارة المواقف' if is_ar else 'Parking Management System'"/>
+                    <t t-set="lbl_generated" t-value="'تم الإنشاء' if is_ar else 'Generated'"/>
+                    <t t-set="cat_labels" t-value="{'exterior': 'خارجي' if is_ar else 'Exterior', 'interior': 'داخلي' if is_ar else 'Interior', 'mechanical': 'ميكانيكا' if is_ar else 'Mechanical', 'electrical': 'كهرباء' if is_ar else 'Electrical', 'documents': 'مستندات' if is_ar else 'Documents', 'other': 'أخرى' if is_ar else 'Other'}"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+
+                        <!-- Top Bar -->
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <!-- Header -->
+                        <table style="width: 100%; margin: 16px 0 20px 0;">
+                            <tr>
+                                <td style="width: 80px; vertical-align: middle;">
+                                    <img t-if="env.company.logo" t-att-src="image_data_uri(env.company.logo)" style="max-height: 60px; max-width: 80px;"/>
+                                </td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    <div style="font-size: 18px; font-weight: bold; color: #0f172a;" t-esc="lbl_title"/>
+                                    <div style="font-size: 10px; color: #C9A04E; margin-top: 2px;">
+                                        <span t-esc="o.name"/> — <span t-esc="o.vehicle_id.display_name"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="border-bottom: 2px solid #C9A04E; margin-bottom: 16px;"></div>
+
+                        <!-- Inspection Info -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; border-top: 3px solid #0f172a; margin-bottom: 16px;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_details"/>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                <tr>
+                                    <td style="padding: 6px 12px; color: #666; width: 20%;"><strong t-esc="lbl_vehicle"/>:</td>
+                                    <td style="padding: 6px 12px; width: 30%;" t-esc="o.vehicle_id.display_name or o.vehicle_id.license_plate"/>
+                                    <td style="padding: 6px 12px; color: #666; width: 20%;"><strong t-esc="lbl_date"/>:</td>
+                                    <td style="padding: 6px 12px; width: 30%;" t-esc="o.date"/>
+                                </tr>
+                                <tr style="background: #F8F9FC;">
+                                    <td style="padding: 6px 12px; color: #666;"><strong t-esc="lbl_inspector"/>:</td>
+                                    <td style="padding: 6px 12px;" t-esc="o.inspector_id.display_name"/>
+                                    <td style="padding: 6px 12px; color: #666;"><strong t-esc="lbl_status"/>:</td>
+                                    <td style="padding: 6px 12px;">
+                                        <span t-esc="dict(o._fields['state'].selection).get(o.state)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <t t-set="categories" t-value="['exterior', 'interior', 'mechanical', 'electrical', 'documents', 'other']"/>
+
+                        <t t-foreach="categories" t-as="cat">
+                            <t t-set="lines" t-value="o.line_ids.filtered(lambda l: l.category == cat)"/>
+                            <t t-if="lines">
+                                <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 12px; border-top: 3px solid #C9A04E;">
+                                    <div style="background: #F8F9FC; padding: 6px 12px; border-bottom: 1px solid #E0E0E0;">
+                                        <strong style="font-size: 10px; color: #0f172a; text-transform: uppercase;"><t t-esc="cat_labels[cat]"/></strong>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #0f172a; color: #ffffff;">
+                                                <th style="padding: 5px 10px; font-size: 8px; text-align: start;" t-esc="lbl_checkpoint"/>
+                                                <th style="padding: 5px 10px; font-size: 8px; text-align: center; width: 80px;" t-esc="lbl_result"/>
+                                                <th style="padding: 5px 10px; font-size: 8px; text-align: start;" t-esc="lbl_notes"/>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="lines" t-as="line" style="border-bottom: 1px solid #E0E0E0;">
+                                                <td style="padding: 4px 10px; font-size: 10px;" t-esc="line.checkpoint_id.name"/>
+                                                <td style="padding: 4px 10px; font-size: 10px; text-align: center;">
+                                                    <t t-if="line.result == 'pass'">
+                                                        <span style="color: #00A86B; font-weight: bold;" t-esc="'✓ ' + lbl_pass"/>
+                                                    </t>
+                                                    <t t-elif="line.result == 'fail'">
+                                                        <span style="color: #DC3545; font-weight: bold;" t-esc="'✗ ' + lbl_fail"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span style="color: #999;" t-esc="'— ' + lbl_na"/>
+                                                    </t>
+                                                </td>
+                                                <td style="padding: 4px 10px; font-size: 10px;" t-esc="line.notes or ''"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                        </t>
+
+                        <t t-if="o.notes">
+                            <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 12px;">
+                                <div style="background: #F8F9FC; padding: 6px 12px; border-bottom: 1px solid #E0E0E0;">
+                                    <strong style="font-size: 10px; color: #0f172a;" t-esc="lbl_general_notes"/>
+                                </div>
+                                <div style="padding: 8px 12px; font-size: 10px;" t-esc="o.notes"/>
+                            </div>
+                        </t>
+
+                        <t t-if="o.line_ids.filtered(lambda l: l.image)">
+                            <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 12px;">
+                                <div style="background: #F8F9FC; padding: 6px 12px; border-bottom: 1px solid #E0E0E0;">
+                                    <strong style="font-size: 10px; color: #0f172a;" t-esc="lbl_photos"/>
+                                </div>
+                                <div style="padding: 8px 12px;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <t t-foreach="o.line_ids.filtered(lambda l: l.image)" t-as="line">
+                                                <td style="padding: 4px; text-align: center; width: 33%;">
+                                                    <p style="margin: 0; font-size: 9px; color: #666;"><t t-esc="line.checkpoint_id.name"/></p>
+                                                    <img t-att-src="'data:image/png;base64,' + line.image" style="max-height: 120px; max-width: 100%;"/>
+                                                    <p t-if="line.notes" style="margin: 2px 0; font-size: 8px; color: #999;" t-esc="line.notes"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Signature -->
+                        <div style="margin-top: 30px; border: 1px solid #E0E0E0; border-radius: 4px; padding: 12px 20px; text-align: center;">
+                            <div style="border-bottom: 1px solid #C9A04E; margin-bottom: 8px; padding-bottom: 8px;">
+                                <span style="font-size: 14px; color: #ccc; letter-spacing: 2px;">_________________________</span>
+                            </div>
+                            <p style="margin: 0; font-size: 10px; font-weight: bold; color: #0f172a;" t-esc="lbl_signature"/>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 20px;">
+                            <div style="height: 4px; background: #C9A04E;"></div>
+                            <div style="height: 6px; background: #0f172a;"></div>
+                            <div style="margin-top: 6px; text-align: center; font-size: 8px; color: #999;">
+                                <t t-esc="lbl_pms"/> — <t t-esc="lbl_generated"/> <span t-esc="datetime.datetime.now().strftime('%%Y-%%m-%%d %%H:%%M')"/>
+                            </div>
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_inspection" model="ir.actions.report">
+        <field name="name">Inspection Report</field>
+        <field name="model">parking.vehicle.inspection</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_inspection_pdf</field>
+        <field name="report_file">parking_management.report_inspection_pdf</field>
+        <field name="binding_model_id" ref="model_parking_vehicle_inspection"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Inspection_%s' % (object.name or '')</field>
+    </record>
+</odoo>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_parking_contract" model="ir.sequence">
+        <field name="name">Parking Contract</field>
+        <field name="code">parking.contract</field>
+        <field name="prefix">CTR/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_parking_location" model="ir.sequence">
+        <field name="name">Parking Location Code</field>
+        <field name="code">parking.location</field>
+        <field name="prefix">BR-</field>
+        <field name="padding">3</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_parking_spot" model="ir.sequence">
+        <field name="name">Parking Spot Number</field>
+        <field name="code">parking.spot</field>
+        <field name="prefix">SP-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="parking_service_wash" model="parking.service">
+        <field name="name">Car Wash</field>
+        <field name="price">50.0</field>
+        <field name="category">wash</field>
+        <field name="description">Complete exterior and interior car wash</field>
+    </record>
+    <record id="parking_service_cover" model="parking.service">
+        <field name="name">Car Cover</field>
+        <field name="price">30.0</field>
+        <field name="category">cover</field>
+        <field name="description">Premium car cover to protect from sun and dust</field>
+    </record>
+    <record id="parking_service_polish" model="parking.service">
+        <field name="name">Polishing</field>
+        <field name="price">80.0</field>
+        <field name="category">polish</field>
+        <field name="description">Full car polishing service</field>
+    </record>
+    <record id="parking_price_standard" model="parking.price.template">
+        <field name="name">Standard Parking Rate</field>
+        <field name="spot_type">standard</field>
+        <field name="price_per_month">300.0</field>
+        <field name="price_per_year">3000.0</field>
+        <field name="deposit_amount">100.0</field>
+    </record>
+    <record id="parking_price_large" model="parking.price.template">
+        <field name="name">Large Vehicle Rate</field>
+        <field name="spot_type">large</field>
+        <field name="price_per_month">450.0</field>
+        <field name="price_per_year">4500.0</field>
+        <field name="deposit_amount">150.0</field>
+    </record>
+    <record id="parking_price_vip" model="parking.price.template">
+        <field name="name">VIP Rate</field>
+        <field name="spot_type">vip</field>
+        <field name="price_per_month">600.0</field>
+        <field name="price_per_year">6000.0</field>
+        <field name="deposit_amount">200.0</field>
+    </record>
+
+    <!-- Inspection Sequence -->
+    <record id="seq_parking_vehicle_inspection" model="ir.sequence">
+        <field name="name">Vehicle Inspection</field>
+        <field name="code">parking.vehicle.inspection</field>
+        <field name="prefix">INSP/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Vehicle Transfer Sequence -->
+    <record id="seq_parking_vehicle_transfer" model="ir.sequence">
+        <field name="name">Vehicle Transfer</field>
+        <field name="code">parking.vehicle.transfer</field>
+        <field name="prefix">TR/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Default Checkpoints -->
+    <record id="checkpoint_exterior_01" model="parking.vehicle.checkpoint">
+        <field name="name">Body / Paint Condition</field>
+        <field name="category">exterior</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="checkpoint_exterior_02" model="parking.vehicle.checkpoint">
+        <field name="name">Windshield / Glass</field>
+        <field name="category">exterior</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="checkpoint_exterior_03" model="parking.vehicle.checkpoint">
+        <field name="name">Lights (Headlights, Taillights, Signals)</field>
+        <field name="category">exterior</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="checkpoint_exterior_04" model="parking.vehicle.checkpoint">
+        <field name="name">Tires Condition &amp; Pressure</field>
+        <field name="category">exterior</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="checkpoint_exterior_05" model="parking.vehicle.checkpoint">
+        <field name="name">Wheels / Rims</field>
+        <field name="category">exterior</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="checkpoint_exterior_06" model="parking.vehicle.checkpoint">
+        <field name="name">Mirrors</field>
+        <field name="category">exterior</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="checkpoint_interior_01" model="parking.vehicle.checkpoint">
+        <field name="name">Seats Condition</field>
+        <field name="category">interior</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="checkpoint_interior_02" model="parking.vehicle.checkpoint">
+        <field name="name">Dashboard / Controls</field>
+        <field name="category">interior</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="checkpoint_interior_03" model="parking.vehicle.checkpoint">
+        <field name="name">Carpet / Floor Mats</field>
+        <field name="category">interior</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="checkpoint_interior_04" model="parking.vehicle.checkpoint">
+        <field name="name">Air Conditioning</field>
+        <field name="category">interior</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="checkpoint_interior_05" model="parking.vehicle.checkpoint">
+        <field name="name">Audio System</field>
+        <field name="category">interior</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="checkpoint_mechanical_01" model="parking.vehicle.checkpoint">
+        <field name="name">Engine / Oil Level</field>
+        <field name="category">mechanical</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="checkpoint_mechanical_02" model="parking.vehicle.checkpoint">
+        <field name="name">Brakes</field>
+        <field name="category">mechanical</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="checkpoint_mechanical_03" model="parking.vehicle.checkpoint">
+        <field name="name">Transmission</field>
+        <field name="category">mechanical</field>
+        <field name="sequence">30</field>
+    </record>
+    <!-- Default Terms & Conditions -->
+    <record id="parking_terms_default" model="parking.terms.conditions">
+        <field name="name">General Terms &amp; Conditions</field>
+        <field name="is_default" eval="True"/>
+        <field name="sequence" eval="10"/>
+        <field name="content"><![CDATA[
+<h4>General Terms and Conditions</h4>
+<ol>
+<li><b>Contract Period:</b> This contract is valid from the start date until the end date specified above.</li>
+<li><b>Payment:</b> The customer agrees to pay the full subscription amount as per the agreed schedule.</li>
+<li><b>Vehicle Access:</b> Only registered vehicles listed in the contract are permitted to use the parking spot.</li>
+<li><b>Responsibility:</b> The parking facility is not responsible for any loss, theft, or damage to the vehicle or its contents.</li>
+<li><b>Compliance:</b> The customer must comply with all parking facility rules and regulations.</li>
+<li><b>Subletting:</b> The parking spot cannot be sublet or transferred to another party without written consent.</li>
+<li><b>Termination:</b> Either party may terminate this contract with a notice period as per facility policy.</li>
+<li><b>Maintenance:</b> The customer must keep the parking spot clean and report any damages immediately.</li>
+<li><b>Security:</b> The customer must display the parking permit at all times while on the premises.</li>
+<li><b>Governing Law:</b> This contract is governed by the laws of the Kingdom of Saudi Arabia.</li>
+</ol>
+<p>By signing this contract, you acknowledge that you have read, understood, and agree to all terms and conditions stated above.</p>
+        ]]></field>
+    </record>
+
+    <record id="checkpoint_documents_01" model="parking.vehicle.checkpoint">
+        <field name="name">Vehicle Registration (Istimara)</field>
+        <field name="category">documents</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="checkpoint_documents_02" model="parking.vehicle.checkpoint">
+        <field name="name">Owner ID (ID/Iqama)</field>
+        <field name="category">documents</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="checkpoint_documents_03" model="parking.vehicle.checkpoint">
+        <field name="name">Insurance Document</field>
+        <field name="category">documents</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Default Parking Service Product -->
+    <record id="product_parking_service" model="product.product">
+        <field name="name">Parking Service</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_1"/>
+        <field name="list_price">0.0</field>
+        <field name="invoice_policy">order</field>
+        <field name="service_type">manual</field>
+    </record>
+
+    <!-- Recurring Invoice Cron -->
+    <record id="cron_generate_parking_invoices" model="ir.cron">
+        <field name="name">Parking: Generate Recurring Invoices</field>
+        <field name="cron_name">Parking: Generate Recurring Invoices</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_generate_recurring_invoices()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

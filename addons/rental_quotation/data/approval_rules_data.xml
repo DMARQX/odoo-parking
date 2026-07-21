@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Default Approval Rules -->
+        
+        <!-- Rule 1: Low Value Quotations (Auto-approve for experienced sales) -->
+        <record id="approval_rule_low_value" model="rental.approval.rule">
+            <field name="name">Low Value Quotations (Under 5,000)</field>
+            <field name="active">True</field>
+            <field name="sequence">10</field>
+            <field name="approval_level">1</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">0</field>
+            <field name="max_amount">5000</field>
+            <field name="approver_type">manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="auto_approve_after_hours">24</field>
+            <field name="description">Low value quotations require supervisor approval</field>
+        </record>
+
+        <!-- Rule 2: Medium Value Quotations -->
+        <record id="approval_rule_medium_value" model="rental.approval.rule">
+            <field name="name">Medium Value Quotations (5,000 - 20,000)</field>
+            <field name="active">True</field>
+            <field name="sequence">20</field>
+            <field name="approval_level">1</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">5000</field>
+            <field name="max_amount">20000</field>
+            <field name="approver_type">department_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="escalate_after_hours">48</field>
+            <field name="description">Medium value quotations require department manager approval</field>
+        </record>
+
+        <!-- Rule 3: High Value Quotations (Two-level approval) -->
+        <record id="approval_rule_high_value_l1" model="rental.approval.rule">
+            <field name="name">High Value Quotations L1 (Over 20,000)</field>
+            <field name="active">True</field>
+            <field name="sequence">30</field>
+            <field name="approval_level">1</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">20000</field>
+            <field name="approver_type">department_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="escalate_after_hours">24</field>
+            <field name="description">High value quotations - First level approval</field>
+        </record>
+
+        <record id="approval_rule_high_value_l2" model="rental.approval.rule">
+            <field name="name">High Value Quotations L2 (Over 20,000)</field>
+            <field name="active">True</field>
+            <field name="sequence">31</field>
+            <field name="approval_level">2</field>
+            <field name="rule_type">amount</field>
+            <field name="min_amount">20000</field>
+            <field name="approver_type">company_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="description">High value quotations - Second level approval</field>
+        </record>
+
+        <!-- Rule 4: High Discount Quotations -->
+        <record id="approval_rule_high_discount" model="rental.approval.rule">
+            <field name="name">High Discount Quotations (Over 15%)</field>
+            <field name="active">True</field>
+            <field name="sequence">40</field>
+            <field name="approval_level">1</field>
+            <field name="rule_type">discount</field>
+            <field name="max_discount_percentage">15</field>
+            <field name="approver_type">department_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="description">Quotations with discount over 15% require special approval</field>
+        </record>
+
+        <!-- Rule 5: Very High Discount Quotations (Two-level) -->
+        <record id="approval_rule_very_high_discount_l1" model="rental.approval.rule">
+            <field name="name">Very High Discount L1 (Over 25%)</field>
+            <field name="active">True</field>
+            <field name="sequence">50</field>
+            <field name="approval_level">1</field>
+            <field name="rule_type">discount</field>
+            <field name="max_discount_percentage">25</field>
+            <field name="approver_type">department_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="description">Very high discount quotations - First level approval</field>
+        </record>
+
+        <record id="approval_rule_very_high_discount_l2" model="rental.approval.rule">
+            <field name="name">Very High Discount L2 (Over 25%)</field>
+            <field name="active">True</field>
+            <field name="sequence">51</field>
+            <field name="approval_level">2</field>
+            <field name="rule_type">discount</field>
+            <field name="max_discount_percentage">25</field>
+            <field name="approver_type">company_manager</field>
+            <field name="send_email_notification">True</field>
+            <field name="send_system_notification">True</field>
+            <field name="description">Very high discount quotations - Final approval</field>
+        </record>
+
+    </data>
+</odoo>

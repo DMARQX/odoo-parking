@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         PURCHASE ORDER FORM VIEW EXTENSION
+         Add Smart Button to link back to Maintenance Job Order
+         ============================================================ -->
+    <record id="view_purchase_order_form_inherit_maintenance" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.maintenance</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Job Order Smart Button in button box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_maintenance_job_order" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-wrench"
+                        invisible="not x_maintenance_job_id">
+                    <field name="x_maintenance_job_id" widget="statinfo" string="Job Order"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- ============================================================
+         PURCHASE ORDER LIST VIEW EXTENSION  
+         Add Job Order column
+         ============================================================ -->
+    <record id="view_purchase_order_list_inherit_maintenance" model="ir.ui.view">
+        <field name="name">purchase.order.list.inherit.maintenance</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_maintenance_job_id" string="Job Order" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- ============================================================
+         PURCHASE ORDER SEARCH VIEW EXTENSION
+         Add Job Order filter and group by
+         ============================================================ -->
+    <record id="view_purchase_order_search_inherit_maintenance" model="ir.ui.view">
+        <field name="name">purchase.order.search.inherit.maintenance</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_maintenance_job_id" string="Job Order"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Job Order" name="group_job_order" context="{'group_by': 'x_maintenance_job_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

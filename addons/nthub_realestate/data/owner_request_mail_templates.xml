@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Template for when request moves to "In Progress" -->
+        <record id="email_template_owner_request_in_progress" model="mail.template">
+            <field name="name">Owner Request: In Progress</field>
+            <field name="model_id" ref="nthub_realestate.model_owner_request"/>
+            <field name="subject">Your Request "{{ object.subject }}" is Now In Progress</field>
+            <!-- FIX: Wrapped in CDATA -->
+            <field name="email_from"><![CDATA["{{ object.company_id.name or user.company_id.name }}" <{{ object.company_id.email or user.email }}>]]></field>
+            <field name="email_to">{{ object.owner_id.email_formatted }}</field>
+            <!-- FIX: Wrapped in CDATA -->
+            <field name="body_html" type="html">
+                <html>
+                <div style="margin: 0px; padding: 0px; font-family: sans-serif;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Dear <t t-out="object.owner_id.name or 'Owner'"/>,
+                        <br/><br/>
+                        This is an update regarding your request: <strong><t t-out="object.subject"/></strong>.
+                        <br/><br/>
+                        We are pleased to inform you that we have started working on it, and its status is now <strong>In Progress</strong>.
+                        <br/><br/>
+                        We will notify you again once it is completed.
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="object.company_id.name or 'The Management Team'"/>
+                    </p>
+                </div>
+               </html>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+
+    </data>
+</odoo>

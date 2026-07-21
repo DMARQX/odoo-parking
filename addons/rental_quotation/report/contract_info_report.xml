@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Paper Format for Contract Info Report -->
+        <record id="paperformat_contract_info" model="report.paperformat">
+            <field name="name">Contract Info A4</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">40</field>
+            <field name="margin_left">20</field>
+            <field name="margin_right">20</field>
+            <field name="header_line">false</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Report Action -->
+        <record id="action_report_contract_info" model="ir.actions.report">
+            <field name="name">Contract Information Form</field>
+            <field name="model">rental.contract.info</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">rental_quotation.report_contract_info_template</field>
+            <field name="report_file">rental_quotation.report_contract_info_template</field>
+            <field name="print_report_name">'Contract Info - %s' % (object.partner_id.name or 'Unknown')</field>
+            <field name="paperformat_id" ref="paperformat_contract_info"/>
+            <field name="binding_model_id" ref="model_rental_contract_info"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="report_contract_info_template">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.html_container">
+                    <t t-call="web.external_layout">
+                    <div class="page" dir="rtl">
+                        
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&amp;display=swap');
+                            
+                            body, * {
+                                font-family: 'Noto Sans Arabic', Arial, sans-serif !important;
+                                direction: rtl;
+                                text-align: right;
+                            }
+                            
+                            .page {
+                                direction: rtl;
+                                font-size: 12px;
+                                line-height: 1.4;
+                                margin: 0;
+                                padding: 20px;
+                            }
+                            
+                            /* Header with Logo */
+                            .form-header {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-bottom: 20px;
+                                border-bottom: 2px solid #000;
+                                padding-bottom: 15px;
+                            }
+                            
+                            .logo-section {
+                                width: 120px;
+                                height: 120px;
+                                border: 2px solid #000;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background-color: #f8f8f8;
+                            }
+                            
+                            .title-section {
+                                flex: 1;
+                                text-align: center;
+                                margin: 0 20px;
+                            }
+                            
+                            .form-title {
+                                font-size: 18px;
+                                font-weight: bold;
+                                margin: 5px 0;
+                                text-decoration: underline;
+                            }
+                            
+                            .form-subtitle {
+                                font-size: 14px;
+                                margin: 3px 0;
+                            }
+                            
+                            .date-section {
+                                text-align: left;
+                                direction: ltr;
+                                width: 120px;
+                                border: 1px solid #000;
+                                padding: 5px;
+                                background-color: #f0f0f0;
+                            }
+                            
+                            /* Main Form Table */
+                            .form-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 15px 0;
+                                border: 2px solid #000;
+                            }
+                            
+                            .form-table td, .form-table th {
+                                border: 1px solid #000;
+                                padding: 8px;
+                                vertical-align: middle;
+                                text-align: right;
+                                font-size: 11px;
+                            }
+                            
+                            .row-number {
+                                width: 25px;
+                                text-align: center;
+                                font-weight: bold;
+                                background-color: #f5f5f5;
+                            }
+                            
+                            .field-label {
+                                width: 180px;
+                                font-weight: bold;
+                                background-color: #f9f9f9;
+                                text-align: right;
+                                padding-right: 10px;
+                            }
+                            
+                            .field-value {
+                                background-color: #fff;
+                                min-height: 25px;
+                                padding: 5px 10px;
+                            }
+                            
+                            .field-value-large {
+                                min-height: 40px;
+                            }
+                            
+                            /* Special styling for specific rows */
+                            .company-header {
+                                background-color: #e8e8e8;
+                                font-weight: bold;
+                                text-align: center;
+                                font-size: 13px;
+                            }
+                            
+                            .unified-number-row {
+                                background-color: #f0f0f0;
+                            }
+                            
+                            .phone-section {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+                            
+                            .phone-label {
+                                font-weight: bold;
+                                margin-left: 10px;
+                            }
+                            
+                            /* Financial section styling */
+                            .financial-row {
+                                background-color: #fff8dc;
+                            }
+                            
+                            .financial-row .field-label {
+                                background-color: #daa520;
+                                color: white;
+                                font-weight: bold;
+                            }
+                            
+                            .vat-row {
+                                background-color: #f0f8ff;
+                            }
+                            
+                            /* Contract duration section */
+                            .duration-section {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                            }
+                            
+                            .duration-input {
+                                border: 1px solid #000;
+                                padding: 2px 5px;
+                                min-width: 100px;
+                                text-align: center;
+                            }
+                            
+                            /* Notes section */
+                            .notes-section {
+                                margin-top: 20px;
+                            }
+                            
+                            .notes-row {
+                                height: 60px;
+                            }
+                            
+                            .notes-row .field-value {
+                                height: 50px;
+                                vertical-align: top;
+                            }
+                            
+                            /* Signature section */
+                            .signature-section {
+                                margin-top: 30px;
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 20px;
+                            }
+                            
+                            .signature-box {
+                                flex: 1;
+                                border: 1px solid #000;
+                                height: 80px;
+                                text-align: center;
+                                padding-top: 50px;
+                                font-weight: bold;
+                            }
+                            
+                            /* Print optimizations */
+                            @media print {
+                                .page {
+                                    margin: 0;
+                                    padding: 10px;
+                                }
+                                
+                                .form-table {
+                                    page-break-inside: avoid;
+                                }
+                                
+                                .signature-section {
+                                    page-break-inside: avoid;
+                                }
+                            }
+                        </style>
+
+                        <!-- Header Section -->
+                        <div class="form-header">
+                            <div class="logo-section">
+                                <t t-if="doc.env.company.logo">
+                                    <img t-att-src="image_data_uri(doc.env.company.logo)" style="max-width: 100px; max-height: 100px;" alt="Company Logo"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="font-weight: bold; text-align: center;">شعار الشركة</div>
+                                </t>
+                            </div>
+                            
+                            <div class="title-section">
+                                <div class="form-title">معلومات خاصة بإعداد عقد إيجار طريق الملك خالد - جدة</div>
+                                <div class="form-subtitle">نظام إدارة المعلومات العقارية</div>
+                            </div>
+                            
+                            <div class="date-section">
+                                <div>التاريخ: <span t-field="doc.date" t-options="{'format': 'yyyy/MM/dd'}"/></div>
+                            </div>
+                        </div>
+
+                        <!-- Main Form Table -->
+                        <table class="form-table">
+                            <!-- Row 0: Date -->
+                            <tr>
+                                <td class="row-number">0</td>
+                                <td class="field-label">التــــاريخ</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.date" t-options="{'format': 'yyyy/MM/dd'}"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 1: Company Name -->
+                            <tr>
+                                <td class="row-number">1</td>
+                                <td class="field-label">اســــم المنشــــأة</td>
+                                <td class="field-value company-header">
+                                    <span t-field="doc.company_name"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 2: Unified Number -->
+                            <tr class="unified-number-row">
+                                <td class="row-number">2</td>
+                                <td class="field-label">الرقم الموحد</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.unified_number"/> - رقم المنشأة <span t-field="doc.establishment_number"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 3: Commercial Registry Source -->
+                            <tr>
+                                <td class="row-number">3</td>
+                                <td class="field-label">مصدر السجل التجاري</td>
+                                <td class="field-value">
+                                    <span t-field="doc.commercial_registry_source"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 4: Commercial Registry Date -->
+                            <tr>
+                                <td class="row-number">4</td>
+                                <td class="field-label">تاريخ السجــل التجــاري</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.commercial_registry_date" t-options="{'format': 'dd/MM/yyyy'}"/> هـ
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 5: Main Office Address -->
+                            <tr>
+                                <td class="row-number">5</td>
+                                <td class="field-label">عنوان المركز الرئيسي</td>
+                                <td class="field-value">
+                                    <span t-field="doc.main_office_address"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 6: Postal Address -->
+                            <tr>
+                                <td class="row-number">6</td>
+                                <td class="field-label">العنوان البريــدي</td>
+                                <td class="field-value">
+                                    المدينة: جدة الرمز: <span t-field="doc.postal_code"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 7: Phone Number -->
+                            <tr>
+                                <td class="row-number">7</td>
+                                <td class="field-label">رقــم الهــاتــف</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.phone"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 8: Fax Number -->
+                            <tr>
+                                <td class="row-number">8</td>
+                                <td class="field-label">رقــم الفــاكس</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.fax"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 9: Authorized Person -->
+                            <tr>
+                                <td class="row-number">9</td>
+                                <td class="field-label">اسم المفوض بالتوقيع</td>
+                                <td class="field-value">
+                                    <span t-field="doc.authorized_person"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 10: Nationality -->
+                            <tr>
+                                <td class="row-number">10</td>
+                                <td class="field-label">جنسيــــته</td>
+                                <td class="field-value">
+                                    <span t-field="doc.nationality"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 11: Contractual Capacity -->
+                            <tr>
+                                <td class="row-number">11</td>
+                                <td class="field-label">صفتــه التعاقديــة</td>
+                                <td class="field-value">
+                                    <span t-field="doc.contractual_capacity"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 12: ID/Passport Number -->
+                            <tr>
+                                <td class="row-number">12</td>
+                                <td class="field-label">رقم الهوية / جواز السفر</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.id_passport_number"/>
+                                    <span style="float: right;">مكان إصدار هوية الخدمات الإلكترونية</span>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 13: Mobile Number -->
+                            <tr>
+                                <td class="row-number">13</td>
+                                <td class="field-label">رقـــم الجــوال</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <span t-field="doc.mobile_number"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 14: Absher Mobile -->
+                            <tr>
+                                <td class="row-number">14</td>
+                                <td class="field-label">رقم التعين / المكتب رقم</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    مكتب رقم <span t-field="doc.absher_mobile"/>
+                                    المساحة: <span t-field="doc.office_area"/> م²
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 15: Activity -->
+                            <tr>
+                                <td class="row-number">15</td>
+                                <td class="field-label">النشــــاط</td>
+                                <td class="field-value">
+                                    <span t-field="doc.activity"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 16: Trade Name -->
+                            <tr>
+                                <td class="row-number">16</td>
+                                <td class="field-label">الاســـم التجـــاري / الماركــــة</td>
+                                <td class="field-value">
+                                    <span t-field="doc.trade_name"/>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 17: Financial Information -->
+                            <tr class="financial-row">
+                                <td class="row-number">17</td>
+                                <td class="field-label">القيمة الإيجارية</td>
+                                <td class="field-value" style="direction: ltr; text-align: left;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>VAT</span>
+                                        <span><span t-field="doc.vat_amount" t-options="{'precision': 2}"/> 289,120</span>
+                                        <span>إجمالي</span>
+                                        <span>الخدمات</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Row 18: Contract Duration -->
+                            <tr>
+                                <td class="row-number">18</td>
+                                <td class="field-label">مدة العقد</td>
+                                <td class="field-value">
+                                    <div class="duration-section">
+                                        <span><span t-field="doc.contract_duration"/> سنوات</span>
+                                        <span>من تاريخ</span>
+                                        <span class="duration-input"><span t-field="doc.contract_start_date" t-options="{'format': 'yyyy/MM/dd'}"/></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Empty rows for additional notes -->
+                            <tr>
+                                <td class="row-number">21</td>
+                                <td class="field-value" colspan="2" style="height: 30px;"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-number">22</td>
+                                <td class="field-value" colspan="2" style="height: 30px;"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-number">23</td>
+                                <td class="field-value" colspan="2" style="height: 30px;"></td>
+                            </tr>
+                            
+                            <!-- Notes Section -->
+                            <tr class="notes-row">
+                                <td class="row-number">24</td>
+                                <td class="field-label">ملاحظات أخرى</td>
+                                <td class="field-value field-value-large">
+                                    <div>-1</div>
+                                    <div t-if="doc.notes_1"><span t-field="doc.notes_1"/></div>
+                                </td>
+                            </tr>
+                            <tr class="notes-row">
+                                <td class="row-number">25</td>
+                                <td class="field-value" colspan="2">
+                                    <div>-2</div>
+                                    <div t-if="doc.notes_2"><span t-field="doc.notes_2"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Signature Section -->
+                        <div class="signature-section">
+                            <div class="signature-box">
+                                اسم مسئول المبيعات / <span t-field="doc.sales_manager_signature"/>
+                                <div style="margin-top: 10px;">التوقيع ..................................</div>
+                            </div>
+                            <div class="signature-box">
+                                <div style="margin-bottom: 20px;"></div>
+                                <div>التوقيع ..................................</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

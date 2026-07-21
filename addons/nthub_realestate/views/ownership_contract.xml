@@ -1,0 +1,294 @@
+<odoo>
+    <data>
+        <!--        search -->
+        <record model="ir.ui.view" id="view_owner_ship_contract_search">
+            <field name="name">OwnerShip.contract.search</field>
+            <field name="model">ownership.contract</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Reference" filter_domain="[('name','ilike',self)]"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','ilike',self)]"/>
+                    <field name="user_id" filter_domain="[('user_id','ilike',self)]"/>
+                    <field name="rs_project" filter_domain="[('rs_project','ilike',self)]"/>
+                    <field name="rs_project_code" filter_domain="[('rs_project_code','ilike',self)]"/>
+                    <field name="rs_project_unit" filter_domain="[('rs_project_unit','ilike',self)]"/>
+                    <field name="unit_code" filter_domain="[('unit_code','ilike',self)]"/>
+                    <filter name="state" string="Confirmed"
+                            domain="[('state','=','confirmed')]"/>
+                    <filter name="state" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                    <filter name="state" string="Canceled"
+                            domain="[('state','=','canceled')]"/>
+                    <group expand="0" string="Responsible">
+                        <filter string="Responsible" name="group_by_user_id" context="{'group_by': 'user_id'}"/>
+                        <filter string="Customer" name="group_by_partner_id" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Ptoject" name="group_by_rs_project" context="{'group_by': 'rs_project'}"/>
+                        <filter string="State" name="group_by_state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!--        list_sub_properties-->
+        <record model="ir.ui.view" id="ownership_contract_list">
+            <field name="name">ownership contract list</field>
+            <field name="model">ownership.contract</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="rs_project" options="{'no_create': True}"/>
+                    <field name="rs_project_code"/>
+                    <field name="rs_project_unit"/>
+                    <field name="unit_code"/>
+                    <field name="pricing"/>
+                    <field name="state"
+                           decoration-success="state=='confirmed'"
+                           decoration-info="state=='draft'"
+                           decoration-danger="state=='cancel'"
+                           widget="badge"/>
+                </list>
+            </field>
+        </record>
+        <!--        form_sub_properties-->
+        <record model="ir.ui.view" id="ownership_contract_form">
+            <field name="name">ownership contract form</field>
+            <field name="model">ownership.contract</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object"
+                                class="oe_highlight"
+                                invisible="state != 'draft'"/>
+                        <button name="action_cancel" string="Cancel" type="object"
+                                class="oe_highlight"
+                                invisible="state != 'confirmed'"/>
+                        <button name="compute_action" string="Compute" type="object"
+                                class="oe_highlight"
+                                invisible="state != 'draft'"/>
+                        <!--                        <button name="send_email_to_partner" string="send" type="object"-->
+                        <!--                                                class="oe_highlight"/>-->
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,canceled"/>
+                    </header>
+                    <sheet>
+                        <group string="OWNERSHIP CONTRACT DATA">
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id" readonly="state != 'draft'"/>
+                                <field name="user_id" readonly="state != 'draft'"/>
+
+                            </group>
+                            <group>
+                                <field name="date" readonly="state != 'draft'"/>
+                                <field name="reservation_id" readonly="state != 'draft'"/>
+                                <field name="company_id" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        <group string="LOCATION">
+                            <group>
+                                <field name="rs_project" readonly="state != 'draft'"/>
+                                <field name="rs_project_code" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="no_of_floors" readonly="state != 'draft'"/>
+                                <field name="region" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        <group string="Project UNIT">
+                            <group>
+                                <field name="rs_project_unit" readonly="state != 'draft'"/>
+                                <field name="unit_code" readonly="state != 'draft'"/>
+                                <field name="floor" readonly="state != 'draft'"/>
+                                <field name="address" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="type" readonly="state != 'draft'"/>
+                                <field name="status" readonly="state != 'draft'"/>
+                                <field name="rs_project_area" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        <group string="Other Payments">
+                            <group>
+                                <label for="maintenance"/>
+                                <div class="o_row">
+                                    <field name="maintenance" required="1"
+                                           readonly="state != 'draft'"/>
+                                    <field name="maintenance_installment"
+                                           readonly="state != 'draft'"/>
+                                    <field name="maintenance_template_id"
+                                           readonly="state != 'draft'" invisible="maintenance_installment == False"
+                                           required="maintenance_installment == True"/>
+                                    <field name="date_maintenance" class="field_rule_type"
+                                           readonly="state != 'draft'" required="maintenance &gt; 0"/>
+
+                                </div>
+                                <label for="club"/>
+                                <div class="o_row">
+                                    <field name="club" required="1" readonly="state != 'draft'"/>
+                                    <field name="date_club" class="field_rule_type"
+                                           readonly="state != 'draft'" required="club &gt; 0"/>
+                                </div>
+                                <label for="garage"/>
+                                <div class="o_row">
+                                    <field name="garage" required="1" readonly="state != 'draft'"/>
+                                    <field name="date_garage" class="field_rule_type"
+                                           readonly="state != 'draft'" required="garage &gt; 0"/>
+                                </div>
+                            </group>
+                            <group>
+                                <label for="elevator"/>
+                                <div class="o_row">
+                                    <field name="elevator" required="1" readonly="state != 'draft'"/>
+                                    <field name="date_elevator" class="field_rule_type"
+                                           readonly="state != 'draft'" required="elevator &gt; 0"/>
+                                </div>
+                                <label for="other"/>
+                                <div class="o_row">
+                                    <field name="other" required="1" readonly="state != 'draft'"/>
+                                    <field name="date_other" class="field_rule_type"
+                                           readonly="state != 'draft'" required="other &gt; 0"/>
+                                </div>
+                            </group>
+                        </group>
+                        <group string="Payment Method">
+                            <group>
+                                <field name="date_payment" readonly="state != 'draft'"/>
+                                <field name="pricing" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="template_id" readonly="state != 'draft'"/>
+                                <field name="furniture_price"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Installments">
+                                <field string="Installments" name="oc_line_ids">
+                                    <list string="Installments" editable="bottom" delete="0">
+                                        <field name="oc_id" column_invisible="1" readonly="1"/>
+                                        <field name="serial" readonly="1"/>
+                                        <field name="date" required="1" readonly="1"/>
+                                        <field name="name" required="1" style="font-weight: bold;" readonly="1"/>
+                                        <field name="amount" required="1" readonly="1"/>
+                                        <field name="amount_residual"/>
+                                        <field name="invoice_id" column_invisible="1"/>
+                                        <field name="d_invoice_id" column_invisible="1"/>
+                                        <field name="invoice_state" widget="badge"
+                                               decoration-success="invoice_state == 'posted'"
+                                               decoration-info="invoice_state == 'draft'" optional="show"/>
+                                        <field name="payment_state" widget="badge"
+                                               decoration-danger="payment_state == 'not_paid'"
+                                               decoration-warning="payment_state in ('partial', 'in_payment')"
+                                               decoration-success="payment_state in ('paid', 'reversed')"
+                                               invisible="payment_state == 'invoicing_legacy'"/>
+                                        <button string="View Invoice" name="view_invoice" type="object"
+                                                style="background-color:rgba(0, 160, 74, 0.5);color: #333;"
+                                                invisible="invoice_id == False"/>
+                                        <field name="delay_amount" readonly="1"/>
+                                        <field name="delay_state" widget="badge"
+                                               decoration-success="invoice_state == 'invoiced'"
+                                               decoration-danger="invoice_state == 'dismissed'"
+                                               decoration-info="invoice_state == 'draft'" optional="show"/>
+                                        <field name="delay_payment_state" widget="badge"
+                                               decoration-danger="payment_state == 'not_paid'"
+                                               decoration-warning="payment_state in ('partial', 'in_payment')"
+                                               decoration-success="payment_state in ('paid', 'reversed')"
+                                               invisible="payment_state in ('invoicing_legacy')"/>
+
+                                        <button string="Claim" name="create_delay_invoice" type="object"
+                                                style="background-color:rgba(0, 160, 74, 0.5);color: #333;"
+                                                invisible="delay_state != 'draft' or d_invoice_id != False"/>
+
+                                        <button string="Claimed Invoice" name="view_delay_invoice" type="object"
+                                                style="background-color: rgba(0, 160, 74, 0.5); color: #333;"
+                                                invisible="delay_state != 'invoiced' or d_invoice_id == False"/>
+                                        <button string="Dismiss" name="set_delay_state_dismissed" type="object"
+                                                style="background-color:rgba(0, 160, 74, 0.5);color: #333;"
+                                                invisible="delay_state != 'draft'"/>
+
+                                    </list>
+                                </field>
+                                <group>
+                                    <field name="amount_total"/>
+                                    <field name="paid"/>
+                                    <field name="balance"/>
+                                </group>
+                            </page>
+                            <page string="Maintenance">
+                                <field name="ownership_maintenance_line_ids"
+                                       readonly="state != 'draft'">
+                                    <list string="Maintenance" editable="bottom">
+                                        <field name="oc_id" column_invisible="1" readonly="1"/>
+                                        <field name="serial" readonly="1"/>
+                                        <field name="date" required="1" readonly="1"/>
+                                        <field name="name" required="1" style="font-weight: bold;" readonly="1"/>
+                                        <field name="amount" required="1" readonly="1"/>
+                                        <field name="amount_residual"/>
+                                        <field name="invoice_id" column_invisible="1"/>
+                                        <field name="invoice_state" widget="badge"
+                                               decoration-success="invoice_state == 'posted'"
+                                               decoration-info="invoice_state == 'draft'" optional="show"/>
+                                        <field name="payment_state" widget="badge"
+                                               decoration-danger="payment_state == 'not_paid'"
+                                               decoration-warning="payment_state in ('partial', 'in_payment')"
+                                               decoration-success="payment_state in ('paid', 'reversed')"
+                                               invisible="payment_state in ('invoicing_legacy')"/>
+                                        <button string="View Invoice" name="view_invoice" type="object"
+                                                style="background-color:rgba(0, 160, 74, 0.5);color: #333;"
+                                                invisible="invoice_id == False"/>
+                                    </list>
+                                </field>
+                                <group>
+                                    <field name="paid_maintenance"/>
+                                    <field name="paid_maintenance"/>
+                                    <field name="balance_maintenance"/>
+                                </group>
+                            </page>
+                            <page string="Furniture">
+                                <field name="furniture_line_ids">
+                                    <list create="0" edit="0">
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="product_qty"/>
+                                        <field name="list_price"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Documents">
+                                <field string="Documents" name="oc_attachment_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="file"/>
+                                        <field name="ownership_attachment_id" invisible="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+<chatter/>
+                </form>
+            </field>
+        </record>
+        <!--        action_ownership_contract-->
+        <record id="ownership_contract_action" model="ir.actions.act_window">
+            <field name="name">Ownership Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ownership.contract</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Define a delay amount cron job -->
+        <record model="ir.cron" id="auto_get_delay_amount">
+            <field name="name">Auto Get delay amount</field>
+            <field name="model_id" ref="model_ownership_contract_line"/>
+            <field name="state">code</field>
+            <field name="code">model.get_delay_amount()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_rental_quotation_root" 
+                  name="Rental Quotations" 
+                  sequence="50"/>
+
+        <!-- Sub Menus -->
+        <menuitem id="menu_rental_quotation_quotations" 
+                  name="Quotations" 
+                  parent="menu_rental_quotation_root" 
+                  action="action_rental_quotation" 
+                  sequence="10"/>
+
+        <menuitem id="menu_rental_quotation_approval_rules" 
+                  name="Approval Rules" 
+                  parent="menu_rental_quotation_root" 
+                  action="action_rental_approval_rule" 
+                  sequence="30"/>
+
+        <menuitem id="menu_rental_quotation_dashboard" 
+                  name="Dashboard" 
+                  parent="menu_rental_quotation_root" 
+                  action="action_rental_quotation_dashboard" 
+                  sequence="5"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_rental_quotation_config" 
+                  name="Configuration" 
+                  parent="menu_rental_quotation_root" 
+                  sequence="90"/>
+
+        <menuitem id="menu_rental_quotation_approval_config" 
+                  name="Approval Settings" 
+                  parent="menu_rental_quotation_config" 
+                  action="action_rental_approval_rule" 
+                  sequence="10"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,359 @@
+<odoo>
+    <data>
+        <!--        kanban to sub_properties_image-->
+        <record id="view_sub_property_image_kanban" model="ir.ui.view">
+            <field name="name">sub.property.image.kanban</field>
+            <field name="model">sub.property.image</field>
+            <field name="arch" type="xml">
+                <kanban sample="1" class="o_kanban_sub_property_image_templates">
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <field name="image" widget="image"/>
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!-- Define a view for the sub_property form -->
+        <record id="view_sub_property_image_form" model="ir.ui.view">
+            <field name="name">sub.property.image.kanban</field>
+            <field name="model">sub.property.image</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="video_url"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--   define a view list_sub_properties-->
+        <record model="ir.ui.view" id="sub_property_list">
+            <field name="name">sub property list</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="rs_project_id"/>
+                    <field name="region"/>
+                    <field name="floor"/>
+                    <field name="ptype"/>
+                    <field name="status"/>
+                    <field name="rooms"/>
+                    <field name="partner_id" string="Owner"/>
+                    <field name="tenant_id" string="Tenant"/>
+                    <field name="rental_price_per_sqm"/>
+                    <field name="electricity_price_per_sqm"/>
+                    <field name="service_fee"/>
+                    <field name="rental_fee"/>
+                    <field name="total_rental_fee"/>
+                    <field name="state"
+                           decoration-success="state in ('sold', 'on_lease')"
+                           decoration-info="state=='free'"
+                           decoration-warning="state=='reserved'" widget="badge"/>
+                </list>
+            </field>
+        </record>
+        <!--  define a view form_sub_properties-->
+        <record model="ir.ui.view" id="sub_property_form">
+            <field name="name">sub property form</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="transfer_furniture_products" class="btn-primary"
+                                invisible="state == 'sold'"
+                                string="Transfer" type="object"/>
+                        <button name="action_transfer_reverse" class="btn-primary"
+                                invisible="state == 'sold'"
+                                string="Reverse" type="object"/>
+<!--      <button name="action_duplicate_unit" class="btn-primary"-->
+<!--                                invisible="state == 'sold'"-->
+<!--                                string="Unit repetition" type="object"/>-->
+
+                        <button name="make_reservation"
+                                invisible="state != 'free'"
+                                string="Reservation" type="object"/>
+                        <button name="action_send_owner_portal_invite" type="object"
+                                string="Owner Portal / بوابة المالك" class="btn-info"
+                                invisible="not show_owner_portal_button"
+                                confirm="This will create a portal user for the owner and send login credentials via email. Continue?"/>
+                        <button name="action_send_tenant_portal_invite" type="object"
+                                string="Tenant Portal / بوابة المستأجر" class="btn-warning"
+                                invisible="not show_tenant_portal_button"
+                                confirm="This will create a portal user for the tenant and send login credentials via email. Continue?"/>
+                        <field name="state"/>
+                        <field name="show_owner_portal_button" invisible="1"/>
+                        <field name="show_tenant_portal_button" invisible="1"/>
+<!--                        <field name="state"-->
+<!--                               widget="statusbar"-->
+<!--                               clickable="true"-->
+<!--                               statusbar_visible="free,reserved,on_lease,sold"/>-->
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="view_reservations"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    invisible="reservation_count ==  0">
+                                <field name="reservation_count" widget="statinfo" string="Reservations"/>
+                            </button>
+                        </div>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="state != 'free'"/>
+<!--                                <field name="code" readonly="state != 'free'"/>-->
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" readonly="state != 'free'"/>
+                                <field name="tenant_id" readonly="state not in ('free', 'on_lease')"/>
+                                <field name="video_url" readonly="state != 'free'"/>
+                            </group>
+                            <group>
+                                <field name="rs_project_id" readonly="state != 'free'"/>
+                                <field name="region" readonly="state != 'free'"/>
+                                <field name="company_id" readonly="state != 'free'"/>
+<!--                                <field name="repeat_count" />-->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Basic Information">
+                                <group>
+                                    <group>
+                                        <field name="ptype" readonly="state != 'free'"/>
+                                        <field name="rental_price_per_sqm" readonly="state != 'free'" help="Price per square meter for rental calculation"/>
+                                        <field name="electricity_price_per_sqm" readonly="state != 'free'" help="Electricity price per square meter"/>
+                                        <field name="project_service_fee_percent" readonly="1"/>
+                                        <field name="service_fee" readonly="1" force_save="1" help="Computed as: Rental Fee × (Project Service Fee % / 100)"/>
+                                        <field name="rental_fee" readonly="1" force_save="1" help="Automatically calculated: (Rental Price + Electricity Price) × Area"/>
+                                        <field name="total_rental_fee" readonly="1" force_save="1" help="Total rental fee including service fee: Rental Fee + Service Fee" style="font-weight: bold;"/>
+                                        <field name="insurance_fee" readonly="state != 'free'"/>
+                                        <field name="status" readonly="state != 'free'"/>
+                                        <field name="rs_project_area" readonly="state != 'free'"/>
+                                        <field name="rs_project_area_net" readonly="state != 'free'" invisible="1"/>
+                                        <field name="land_area" readonly="state != 'free'" invisible="1"/>
+                                        <field name="constructed" readonly="state != 'free'"/>
+                                        <field name="air_condition" readonly="state != 'free'"/>
+                                        <field name="rooms" readonly="state != 'free'"/>
+                                        <field name="bathrooms" readonly="state != 'free'"/>
+                                        <field name="telephone" readonly="state != 'free'"/>
+                                        <field name="internet" readonly="state != 'free'"/>
+                                        <field name="pricing" readonly="state != 'free'"/>
+                                        <field name="floor" readonly="state != 'free'"/>
+                                    </group>
+                                    <group>
+                                        <field name="surface" readonly="state != 'free'"/>
+                                        <field name="garage" readonly="state != 'free'"/>
+                                        <field name="garden" readonly="state != 'free'" invisible="1"/>
+                                        <field name="balcony" readonly="state != 'free'" invisible="1"/>
+                                        <field name="solar_electric" readonly="state != 'free'"/>
+                                        <field name="heating_source" readonly="state != 'free'"/>
+                                        <field name="desc" readonly="state != 'free'"/>
+                                        <field name="electricity_meter" readonly="state != 'free'"/>
+                                        <field name="water_meter" readonly="state != 'free'"/>
+                                        <field name="north" readonly="state != 'free'"/>
+                                        <field name="south" readonly="state != 'free'"/>
+                                        <field name="east" readonly="state != 'free'"/>
+                                        <field name="west" readonly="state != 'free'"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Furniture">
+                                <field name="furniture_ids">
+                                    <list editable="bottom">
+                                        <field name="check"/>
+                                        <field name="product_id" readonly="transfer == True"/>
+                                        <field name="description" readonly="transfer == True"/>
+                                        <field name="product_qty" readonly="transfer == True"/>
+                                        <field name="list_price" readonly="transfer == True"/>
+                                        <field name="transfer" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Additional Information">
+                                <group>
+                                    <field name="license_code" readonly="state != 'free'"/>
+                                    <field name="license_date" readonly="state != 'free'"/>
+                                    <field name="date_added" readonly="state != 'free'"/>
+                                    <field name="license_notarization" readonly="state != 'free'"/>
+                                </group>
+                            </page>
+                            <page string="Address">
+                                <group>
+                                    <span class="o_form_label o_td_label" name="address">
+                                        <b>Address</b>
+                                    </span>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"
+                                               readonly="state != 'free'"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                               readonly="state != 'free'"/>
+                                        <field name="city" placeholder="City" class="o_address_city"
+                                               readonly="state != 'free'"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State"
+                                               readonly="state != 'free'"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                               readonly="state != 'free'"/>
+                                        <div class="d-flex justify-content-between">
+                                            <field name="country_id" placeholder="Country" class="o_address_country"
+                                                   readonly="state != 'free'"/>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Images">
+                                <group name="sub_property_images_ids" string="Extra Property Media">
+                                    <field name="sub_property_images_ids" class="o_website_sale_image_list"
+                                           context="{'default_name': name}" mode="kanban"
+                                           options="{'create_text':'Add a Media'}" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Documents">
+                                <field string="Documents" name="property_attachment_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="file"/>
+                                        <field name="prop_attachment_id" invisible="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Notes">
+                                <field name="note" colspan="4" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+<chatter/>
+                </form>
+            </field>
+        </record>
+        <!-- define a search_view-->
+        <record model="ir.ui.view" id="view_sub_property_search">
+            <field name="name">sub.search</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" filter_domain="[('name','ilike',self)]"/>
+                    <field name="code" filter_domain="[('code','ilike',self)]"/>
+                    <field name="region" filter_domain="[('region','ilike',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id','ilike',self)]"/>
+                    <field name="rs_project_id" filter_domain="[('rs_project_id','ilike',self)]"/>
+                    <field name="rental_price_per_sqm"/>
+                    <field name="electricity_price_per_sqm"/>
+                    <field name="rental_fee"/>
+
+                    <filter name="filter_free" string="Available"
+                            domain="[('state','=','free')]"/>
+                    <filter name="filter_reserved" string="Reserved"
+                            domain="[('state','=','reserved')]"/>
+                    <filter name="filter_lease" string="Leased"
+                            domain="[('state','=','on_lease')]"/>
+                    <filter name="filter_sold" string="Sold"
+                            domain="[('state','=','sold')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Owner" name="group_by_partner_id"
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="Region" name="group_by_region"
+                                context="{'group_by': 'region'}"/>
+                        <filter string="Project" name="group_by_rs_project_id"
+                                context="{'group_by': 'rs_project_id'}"/>
+                        <filter string="State" name="group_by_state"
+                                context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- define a list view sub_property -->
+        <record model="ir.ui.view" id="view_sub_property_list">
+            <field name="name">sub.list</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="region"/>
+                    <field name="partner_id"/>
+                    <field name="floor"/>
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+        <!--        kanban-->
+        <record id="view_sub_property_kanban" model="ir.ui.view">
+            <field name="name">sub.property.kanban</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
+                    <field name="id"/>
+                    <progressbar field="state"
+                                 colors="{&quot;free&quot;: &quot;success&quot;, &quot;reserved&quot;: &quot;warning&quot;, &quot;sold&quot;: &quot;danger&quot;, &quot;on_lease&quot;:&quot;info&quot;}"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                                <field name="image" widget="image" class="o_kanban_image_fill_left"
+                                       options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                        </div>
+                                    </div>
+                                    <ul>
+                                        <li/>
+                                        <li class="o_text_overflow" style="font-size: 13px;">
+                                            <b>Name :</b>
+                                            <field name="name"/>
+                                        </li>
+                                        <li class="o_force_ltr" style="font-size: 13px;">
+                                            <b>Owner :</b>
+                                            <field name="partner_id"/>
+                                        </li>
+                                        <li class="o_force_ltr" style="font-size: 13px;">
+                                            <b>Project :</b>
+                                            <field name="rs_project_id"/>
+                                        </li>
+                                        <li class="o_force_ltr" style="font-size: 13px;">
+                                            <b>State :</b>
+                                            <field name="state" decoration-success="state in ('sold', 'on_lease')"
+                                                   decoration-info="state=='free'"
+                                                   decoration-warning="state=='reserved'"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ownership_graph">
+            <field name="name">OwnerShip Graph</field>
+            <field name="model">sub.property</field>
+            <field name="arch" type="xml">
+                <graph type="bar" sample="1">
+                    <field name="rs_project_id" type="bar" limit="5"/>
+                    <field name="state"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- define the action_sub_properties-->
+        <record id="sub_properties_action" model="ir.actions.act_window">
+            <field name="name">Properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sub.property</field>
+            <field name="view_mode">list,form,kanban,graph</field>
+        </record>
+    </data>
+</odoo>

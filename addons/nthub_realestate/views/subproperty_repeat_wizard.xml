@@ -1,0 +1,22 @@
+<odoo>
+        <data>
+
+    <record id="view_subproperty_repeat_wizard_form" model="ir.ui.view">
+    <field name="name">subproperty.repeat.wizard.form</field>
+    <field name="model">subproperty.repeat.wizard</field>
+    <field name="arch" type="xml">
+        <form string="تكرار الوحدة">
+            <group>
+                <field name="last_subproperty_id" readonly="1"/>
+                <field name="current_floor" readonly="1"/>
+                <field name="current_unit" readonly="1"/>
+            </group>
+            <footer>
+                <button name="action_repeat_unit" type="object" string="تكرار التالية" class="btn-primary"/>
+                <button string="إنهاء" special="cancel" class="btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+</record>
+        </data>
+</odoo>

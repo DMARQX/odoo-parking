@@ -1,0 +1,76 @@
+# Code Solution Theme - Translation File
+# Arabic Translation for Odoo 18
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 18 Code Solution Theme\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: Code Solution\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#. module: code_solution_theme
+msgid "Code Solution Theme"
+msgstr "ثيم كود سليوشن"
+
+#. module: code_solution_theme
+msgid "Professional Backend Theme with Arabic & English Support"
+msgstr "ثيم احترافي للواجهة الخلفية مع دعم اللغة العربية والإنجليزية"
+
+#. module: code_solution_theme
+msgid "Developed by Code Solution"
+msgstr "تم التطوير بواسطة كود سليوشن"
+
+#. module: code_solution_theme
+msgid "Powered by"
+msgstr "مدعوم من"
+
+#. module: code_solution_theme
+msgid "Dark Mode"
+msgstr "الوضع الداكن"
+
+#. module: code_solution_theme
+msgid "Light Mode"
+msgstr "الوضع الفاتح"
+
+#. module: code_solution_theme
+msgid "Toggle Sidebar"
+msgstr "تبديل الشريط الجانبي"
+
+#. module: code_solution_theme
+msgid "Settings"
+msgstr "الإعدادات"
+
+#. module: code_solution_theme
+msgid "Theme Settings"
+msgstr "إعدادات الثيم"
+
+#. module: code_solution_theme
+msgid "Primary Color"
+msgstr "اللون الأساسي"
+
+#. module: code_solution_theme
+msgid "Secondary Color"
+msgstr "اللون الثانوي"
+
+#. module: code_solution_theme
+msgid "Save"
+msgstr "حفظ"
+
+#. module: code_solution_theme
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: code_solution_theme
+msgid "Apply"
+msgstr "تطبيق"
+
+#. module: code_solution_theme
+msgid "Reset"
+msgstr "إعادة تعيين"

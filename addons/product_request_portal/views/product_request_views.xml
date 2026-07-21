@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Product Request List View -->
+        <record id="view_product_request_list" model="ir.ui.view">
+            <field name="name">product.request.list</field>
+            <field name="model">product.request</field>
+            <field name="arch" type="xml">
+                <list string="Product Requests / طلبات المنتجات" decoration-info="state=='draft'" decoration-success="state=='approved'" decoration-muted="state=='cancelled'">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="request_date"/>
+                    <field name="source_location_id"/>
+                    <field name="dest_location_id"/>
+                    <field name="total_quantity"/>
+                    <field name="line_count"/>
+                    <field name="state" widget="badge"/>
+                    <field name="approval_date"/>
+                    <field name="approved_by"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Product Request Form View -->
+        <record id="view_product_request_form" model="ir.ui.view">
+            <field name="name">product.request.form</field>
+            <field name="model">product.request</field>
+            <field name="arch" type="xml">
+                <form string="Product Request / طلب المنتجات">
+                    <header>
+                        <button name="action_submit" string="Submit / إرسال" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_approve" string="Approve / اعتماد" type="object" class="oe_highlight" invisible="state != 'submitted'" groups="stock.group_stock_manager"/>
+                        <button name="action_receive" string="Receive / استلام" type="object" class="oe_highlight" invisible="state != 'approved'"/>
+                        <button name="action_cancel" string="Cancel / إلغاء" type="object" invisible="state in ['received', 'cancelled']"/>
+                        <button name="action_reset_to_draft" string="Reset to Draft / إعادة تعيين" type="object" invisible="state not in ['submitted', 'cancelled']" groups="stock.group_stock_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,received"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_picking" class="oe_stat_button" icon="fa-truck" invisible="not internal_transfer_id">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Internal Transfer</span>
+                                    <span class="o_stat_text">تحويل داخلي</span>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="user_id" readonly="state != 'draft'"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="request_date" readonly="state != 'draft'"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="source_location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                                <field name="dest_location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                                <field name="total_quantity"/>
+                                <field name="line_count"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Approval Information / معلومات الاعتماد" invisible="state == 'draft'">
+                            <group>
+                                <field name="approval_date" readonly="1"/>
+                                <field name="approved_by" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="received_date" readonly="1"/>
+                                <field name="internal_transfer_id" readonly="1" invisible="not internal_transfer_id"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Request Lines / بنود الطلب" name="lines">
+                                <field name="request_line_ids" readonly="state != 'draft'">
+                                    <list string="Request Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" required="1"/>
+                                        <field name="quantity" required="1"/>
+                                        <field name="product_uom_id" readonly="1"/>
+                                        <field name="available_quantity"/>
+                                        <field name="description"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Notes / ملاحظات" name="notes">
+                                <field name="notes" placeholder="Enter any additional notes here... / أدخل أي ملاحظات إضافية هنا..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Product Request Search View -->
+        <record id="view_product_request_search" model="ir.ui.view">
+            <field name="name">product.request.search</field>
+            <field name="model">product.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Product Requests">
+                    <field name="name" string="Request Number / رقم الطلب"/>
+                    <field name="user_id" string="Requester / الطالب"/>
+                    <field name="source_location_id" string="Source Warehouse / المخزن المصدر"/>
+                    <field name="dest_location_id" string="Destination Warehouse / مخزن الوجهة"/>
+                    <field name="request_line_ids" string="Products / المنتجات"/>
+                    
+                    <filter string="My Requests / طلباتي" name="my_requests" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Draft / مسودة" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Submitted / مُرسل" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                    <filter string="Approved / معتمد" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <filter string="Received / مُستلم" name="received" domain="[('state', '=', 'received')]"/>
+                    
+                    <separator/>
+                    <filter string="This Month / هذا الشهر" name="this_month" domain="[('request_date', '>=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <filter string="This Week / هذا الأسبوع" name="this_week" domain="[('request_date', '>=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                    
+                    <group expand="0" string="Group By / تجميع حسب">
+                        <filter string="Requester / الطالب" name="group_user" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Status / الحالة" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Source Warehouse / المخزن المصدر" name="group_source" domain="[]" context="{'group_by': 'source_location_id'}"/>
+                        <filter string="Request Date / تاريخ الطلب" name="group_date" domain="[]" context="{'group_by': 'request_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Product Request Kanban View -->
+        <record id="view_product_request_kanban" model="ir.ui.view">
+            <field name="name">product.request.kanban</field>
+            <field name="model">product.request</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="request_date"/>
+                    <field name="total_quantity"/>
+                    <field name="line_count"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong><field name="name"/></strong>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span class="badge badge-pill badge-info"><field name="state"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span class="text-muted">
+                                                <i class="fa fa-user"/> <field name="user_id"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span class="text-muted">
+                                                <i class="fa fa-calendar"/> <field name="request_date"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span class="text-muted">
+                                                <field name="line_count"/> items, <field name="total_quantity"/> qty
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Product Request Action -->
+        <record id="action_product_request" model="ir.actions.act_window">
+            <field name="name">Product Requests / طلبات المنتجات</field>
+            <field name="res_model">product.request</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_product_request_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first product request!
+                </p>
+                <p>
+                    Product requests allow users to request products from warehouses through the portal.
+                    The requests go through an approval workflow before creating internal transfers.
+                </p>
+                <p>
+                    أنشئ أول طلب منتجات!
+                </p>
+                <p>
+                    تسمح طلبات المنتجات للمستخدمين بطلب المنتجات من المخازن عبر البورتال.
+                    تمر الطلبات عبر سير عمل الموافقة قبل إنشاء التحويلات الداخلية.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

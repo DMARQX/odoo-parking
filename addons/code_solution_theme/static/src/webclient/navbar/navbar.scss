@@ -1,0 +1,140 @@
+// = Code Solution Navbar
+// ============================================================================
+.o_main_navbar {
+    --NavBar-entry-color--active: #{$o-component-active-color};
+    --NavBar-entry-borderColor-active: #{$o-cs-primary};
+    --NavBar-entry-backgroundColor--active: #{$o-component-active-bg};
+    --NavBar-entry-backgroundColor--hover: #{$o-gray-200};
+    --NavBar-entry-backgroundColor--focus: #{$o-gray-200};
+
+    --Dropdown_menu-margin-y: #{map-get($spacers, 1)};
+
+    background: linear-gradient(135deg, $o-cs-primary 0%, $o-cs-secondary 100%) !important;
+    
+    .o_menu_toggle {
+        color: var(--NavBar-menuToggle-color, #{$o-white});
+    }
+
+    // All navbar text should be white
+    .o_menu_brand,
+    .o_navbar_apps_menu .dropdown-toggle,
+    .o_menu_sections .nav-link,
+    .o_menu_systray .nav-link,
+    .o_menu_systray .dropdown-toggle {
+        color: rgba(255, 255, 255, 0.9) !important;
+        
+        &:hover, &:focus {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+    }
+
+    // Logo/Brand
+    .o_menu_brand {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    // Menu section buttons (Dashboards, Configuration, etc.) - Make them match gradient
+    .o_menu_sections {
+        .dropdown-toggle,
+        .nav-link,
+        > .dropdown > .dropdown-toggle,
+        .o_nav_entry {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+            border: none !important;
+            color: #fff !important;
+            border-radius: 6px !important;
+            margin: 0 4px !important;
+            padding: 6px 14px !important;
+            font-weight: 500 !important;
+            
+            &:hover, &:focus {
+                background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%) !important;
+                color: #fff !important;
+            }
+        }
+    }
+    
+    // Control Panel buttons in navbar
+    .o_control_panel_actions,
+    .o_cp_buttons {
+        .btn, .btn-secondary, .btn-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+            border: none !important;
+            color: #fff !important;
+        }
+    }
+}
+
+// RTL Support for Navbar
+html[dir="rtl"] .o_main_navbar {
+    .o_menu_sections {
+        margin-right: auto;
+        margin-left: 0;
+    }
+}
+
+// ============================================================================
+// Global Button Styles - Consistent gradient for all action buttons
+// ============================================================================
+.o_control_panel .o_cp_buttons .btn,
+.o_control_panel .o_cp_buttons .btn-secondary,
+.o_control_panel .o_cp_buttons .btn-primary,
+.o_control_panel_actions .btn,
+.o_control_panel_actions .btn-secondary,
+.o_apps_view .o_cp_buttons .btn,
+.o_kanban_view .o_cp_buttons .btn,
+button.btn-secondary,
+button.btn-primary {
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
+    
+    &:hover, &:focus {
+        background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%) !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4) !important;
+        transform: translateY(-1px);
+        color: #fff !important;
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Activate buttons in Apps/Modules view
+.o_kanban_record .btn-primary,
+.o_kanban_record .btn-secondary,
+.o_kanban_record .o_module_button,
+.o_kanban_view .btn-primary {
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    border-radius: 4px !important;
+    
+    &:hover {
+        background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%) !important;
+    }
+}
+
+// Learn More / Module Info buttons - lighter style
+.o_kanban_record .btn-outline-secondary,
+.o_kanban_record .btn-link,
+.o_kanban_record a.btn {
+    background: transparent !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #475569 !important;
+    
+    &:hover {
+        background: #F1F5F9 !important;
+        border-color: #94A3B8 !important;
+        color: #1E293B !important;
+    }
+}

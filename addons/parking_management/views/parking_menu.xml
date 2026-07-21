@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_parking_spot" model="ir.actions.act_window">
+        <field name="name">Spots</field>
+        <field name="res_model">parking.spot</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+    <record id="action_parking_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">parking.vehicle</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_parking_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">parking.contract</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_parking_contract_history" model="ir.actions.act_window">
+        <field name="name">Check In/Out</field>
+        <field name="res_model">parking.contract.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_parking_location" model="ir.actions.act_window">
+        <field name="name">Branches</field>
+        <field name="res_model">parking.location</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_parking_price_template" model="ir.actions.act_window">
+        <field name="name">Price Templates</field>
+        <field name="res_model">parking.price.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_parking_service" model="ir.actions.act_window">
+        <field name="name">Additional Services</field>
+        <field name="res_model">parking.service</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="menu_parking_root" model="ir.ui.menu">
+        <field name="name">Parking</field>
+        <field name="sequence">10</field>
+        <field name="web_icon">parking_management,static/description/icon.png</field>
+        <field name="action" ref="action_parking_spot"/>
+        <field name="groups_id" eval="[(4, ref('group_parking_user')), (4, ref('group_parking_manager'))]"/>
+    </record>
+    <record id="menu_parking_operations" model="ir.ui.menu">
+        <field name="name">Operations</field>
+        <field name="parent_id" ref="menu_parking_root"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="menu_parking_contract" model="ir.ui.menu">
+        <field name="name">Contracts</field>
+        <field name="parent_id" ref="menu_parking_operations"/>
+        <field name="action" ref="action_parking_contract"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="menu_parking_spot" model="ir.ui.menu">
+        <field name="name">Spots</field>
+        <field name="parent_id" ref="menu_parking_operations"/>
+        <field name="action" ref="action_parking_spot"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="menu_parking_vehicle" model="ir.ui.menu">
+        <field name="name">Vehicles</field>
+        <field name="parent_id" ref="menu_parking_operations"/>
+        <field name="action" ref="action_parking_vehicle"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="menu_parking_history" model="ir.ui.menu">
+        <field name="name">Check In/Out</field>
+        <field name="parent_id" ref="menu_parking_operations"/>
+        <field name="action" ref="action_parking_contract_history"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="menu_parking_config" model="ir.ui.menu">
+        <field name="name">Configuration</field>
+        <field name="parent_id" ref="menu_parking_root"/>
+        <field name="sequence">50</field>
+    </record>
+    <record id="menu_parking_location" model="ir.ui.menu">
+        <field name="name">Branches</field>
+        <field name="parent_id" ref="menu_parking_config"/>
+        <field name="action" ref="action_parking_location"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="menu_parking_price" model="ir.ui.menu">
+        <field name="name">Price Templates</field>
+        <field name="parent_id" ref="menu_parking_config"/>
+        <field name="action" ref="action_parking_price_template"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="menu_parking_service" model="ir.ui.menu">
+        <field name="name">Additional Services</field>
+        <field name="parent_id" ref="menu_parking_config"/>
+        <field name="action" ref="action_parking_service"/>
+        <field name="sequence">30</field>
+    </record>
+</odoo>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Arabic Residential Terms Template -->
+        <record id="terms_template_arabic_residential" model="quotation.terms.template">
+            <field name="name">شروط العقود السكنية</field>
+            <field name="sequence">10</field>
+            <field name="template_type">residential</field>
+            <field name="content_html"><![CDATA[
+                <div style="font-family: 'Traditional Arabic', Arial, sans-serif; font-size: 12px; line-height: 1.8;">
+                    <h3 style="color: #333; margin-bottom: 10px;">الشروط والأحكام</h3>
+                    <ol style="padding-right: 20px; margin: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>الدفع:</strong> يجب دفع المبلغ المستحق خلال 30 يوم من تاريخ التوقيع على العقد.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التأخير:</strong> في حالة التأخر عن الدفع، يحق للمؤجر فرض غرامة تأخير قدرها 2% من المبلغ المستحق شهرياً.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التنازل:</strong> لا يحق للمستأجر التنازل عن العقد أو تأجير الوحدة من الباطن دون موافقة خطية من المالك.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>الصيانة:</strong> الصيانة الدورية والأعطال الطارئة على عاتق المؤجر، أما الأضرار الناتجة عن سوء الاستخدام فعلى عاتق المستأجر.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التأمين:</strong> يجب على المستأجر دفع مبلغ التأمين المحدد قبل استلام الوحدة، ويسترد عند انتهاء العقد بعد التأكد من سلامة الوحدة.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>الإخلاء:</strong> في حالة رغبة المستأجر بإخلاء الوحدة، يجب إشعار المالك قبل 60 يوم على الأقل.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>القوة القاهرة:</strong> في حالة حدوث أي ظروف قاهرة تمنع تنفيذ العقد، لا يتحمل أي طرف المسؤولية.
+                        </li>
+                    </ol>
+                </div>
+            ]]></field>
+        </record>
+        
+        <!-- Arabic Commercial Terms Template -->
+        <record id="terms_template_arabic_commercial" model="quotation.terms.template">
+            <field name="name">شروط العقود التجارية</field>
+            <field name="sequence">20</field>
+            <field name="template_type">commercial</field>
+            <field name="content_html"><![CDATA[
+                <div style="font-family: 'Traditional Arabic', Arial, sans-serif; font-size: 12px; line-height: 1.8;">
+                    <h3 style="color: #333; margin-bottom: 10px;">الشروط والأحكام للعقود التجارية</h3>
+                    <ol style="padding-right: 20px; margin: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>الدفعات:</strong> يتم الدفع على دفعات نصف سنوية مقدماً، مع ضرورة تقديم شيك مصرفي معتمد.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>الاستخدام:</strong> يلتزم المستأجر باستخدام الوحدة للأغراض التجارية المتفق عليها فقط.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التراخيص:</strong> المستأجر مسؤول عن استخراج جميع التراخيص والتصاريح اللازمة لممارسة النشاط التجاري.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التعديلات:</strong> يجب الحصول على موافقة خطية من المالك قبل إجراء أي تعديلات أو تجديدات في الوحدة.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>الإعلانات:</strong> يحظر وضع أي لافتات أو إعلانات خارجية دون الحصول على موافقة المالك المسبقة.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>ساعات العمل:</strong> يجب الالتزام بساعات العمل المسموح بها في المنطقة والمبنى.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>التجديد:</strong> في حالة الرغبة بتجديد العقد، يجب إشعار المالك قبل انتهاء العقد بـ 90 يوم على الأقل.
+                        </li>
+                    </ol>
+                </div>
+            ]]></field>
+        </record>
+        
+        <!-- English Residential Terms Template -->
+        <record id="terms_template_english_residential" model="quotation.terms.template">
+            <field name="name">Residential Terms &amp; Conditions</field>
+            <field name="sequence">30</field>
+            <field name="template_type">residential</field>
+            <field name="content_html"><![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.8;">
+                    <h3 style="color: #333; margin-bottom: 10px;">Terms &amp; Conditions</h3>
+                    <ol style="padding-left: 20px; margin: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>Payment:</strong> The tenant must pay the rent within 30 days from the contract signing date.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Late Payment:</strong> A late payment penalty of 2% per month will be charged on overdue amounts.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Subletting:</strong> The tenant shall not sublet or assign the premises without prior written consent from the landlord.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Maintenance:</strong> Regular maintenance and emergency repairs are the landlord's responsibility. Damages caused by misuse are the tenant's responsibility.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Security Deposit:</strong> The tenant must pay the specified security deposit before taking possession. It will be refunded upon lease termination after property inspection.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Termination:</strong> The tenant must give at least 60 days' notice before vacating the premises.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Force Majeure:</strong> Neither party shall be liable for failure to perform obligations due to force majeure events.
+                        </li>
+                    </ol>
+                </div>
+            ]]></field>
+        </record>
+        
+        <!-- English Commercial Terms Template -->
+        <record id="terms_template_english_commercial" model="quotation.terms.template">
+            <field name="name">Commercial Terms &amp; Conditions</field>
+            <field name="sequence">40</field>
+            <field name="template_type">commercial</field>
+            <field name="content_html"><![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.8;">
+                    <h3 style="color: #333; margin-bottom: 10px;">Commercial Terms &amp; Conditions</h3>
+                    <ol style="padding-left: 20px; margin: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>Payment:</strong> Rent shall be paid semi-annually in advance via certified bank check.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Usage:</strong> The tenant agrees to use the premises solely for the agreed commercial purposes.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Licenses:</strong> The tenant is responsible for obtaining all necessary licenses and permits for business operations.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Alterations:</strong> Written approval from the landlord is required before making any modifications or renovations.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Signage:</strong> External signs or advertisements require prior written approval from the landlord.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Operating Hours:</strong> The tenant must comply with the permitted operating hours for the area and building.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Renewal:</strong> To renew the lease, the tenant must notify the landlord at least 90 days before expiration.
+                        </li>
+                    </ol>
+                </div>
+            ]]></field>
+        </record>
+        
+    </data>
+</odoo>

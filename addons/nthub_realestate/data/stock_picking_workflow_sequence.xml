@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Stock Picking Workflow -->
+        <record id="seq_stock_picking_workflow" model="ir.sequence">
+            <field name="name">Stock Picking Workflow Sequence</field>
+            <field name="code">stock.picking.workflow</field>
+            <field name="prefix">SPW/</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</odoo>

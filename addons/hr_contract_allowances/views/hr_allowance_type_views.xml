@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Allowance Type list View -->
+        <record id="view_hr_allowance_type_list" model="ir.ui.view">
+            <field name="name">hr.allowance.type.list</field>
+            <field name="model">hr.allowance.type</field>
+            <field name="arch" type="xml">
+                <list string="Allowance Types | أنواع البدلات">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="name_arabic"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <field name="is_taxable"/>
+                    <field name="is_mandatory"/>
+                    <field name="percentage_of_salary"/>
+                    <field name="default_amount"/>
+                    <field name="default_percentage"/>
+                    <field name="allowance_count"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- Allowance Type Form View -->
+        <record id="view_hr_allowance_type_form" model="ir.ui.view">
+            <field name="name">hr.allowance.type.form</field>
+            <field name="model">hr.allowance.type</field>
+            <field name="arch" type="xml">
+                <form string="Allowance Type | نوع البدل">
+                    <header>
+                        <button name="action_view_allowances" type="object" string="View Allowances" 
+                               invisible="allowance_count == 0" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_allowances" type="object" class="oe_stat_button" icon="fa-money">
+                                <field name="allowance_count" widget="statinfo" string="Allowances"/>
+                            </button>
+                        </div>
+                        
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" 
+                               invisible="active"/>
+                               
+                        <group>
+                            <group>
+                                <field name="name" placeholder="e.g., Transportation Allowance"/>
+                                <field name="name_arabic" placeholder="مثال: بدل المواصلات"/>
+                                <field name="code" placeholder="e.g., TRANSPORT"/>
+                                <field name="category"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="is_taxable"/>
+                                <field name="is_mandatory"/>
+                                <field name="percentage_of_salary"/>
+                                <field name="default_amount" invisible="percentage_of_salary"/>
+                                <field name="default_percentage" invisible="not percentage_of_salary"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Description | الوصف">
+                            <field name="description" nolabel="1" placeholder="Enter detailed description of this allowance type..."/>
+                        </group>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Allowance Type Search View -->
+        <record id="view_hr_allowance_type_search" model="ir.ui.view">
+            <field name="name">hr.allowance.type.search</field>
+            <field name="model">hr.allowance.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Allowance Types">
+                    <field name="name"/>
+                    <field name="name_arabic"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Taxable" name="taxable" domain="[('is_taxable', '=', True)]"/>
+                    <filter string="Non-Taxable" name="non_taxable" domain="[('is_taxable', '=', False)]"/>
+                    <separator/>
+                    <filter string="Mandatory" name="mandatory" domain="[('is_mandatory', '=', True)]"/>
+                    <filter string="Optional" name="optional" domain="[('is_mandatory', '=', False)]"/>
+                    <separator/>
+                    <filter string="Percentage Based" name="percentage_based" domain="[('percentage_of_salary', '=', True)]"/>
+                    <filter string="Fixed Amount" name="fixed_amount" domain="[('percentage_of_salary', '=', False)]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_by_category" context="{'group_by': 'category'}"/>
+                        <filter string="Taxable" name="group_by_taxable" context="{'group_by': 'is_taxable'}"/>
+                        <filter string="Mandatory" name="group_by_mandatory" context="{'group_by': 'is_mandatory'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Allowance Type Action -->
+        <record id="action_hr_allowance_type" model="ir.actions.act_window">
+            <field name="name">Allowance Types | أنواع البدلات</field>
+            <field name="res_model">hr.allowance.type</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first allowance type!
+                </p>
+                <p>
+                    Define different types of allowances that can be assigned to employee contracts.
+                    You can set whether they are mandatory, taxable, or calculated as a percentage of salary.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

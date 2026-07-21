@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Quotation Info Form View -->
+        <record id="view_quotation_info_form" model="ir.ui.view">
+            <field name="name">quotation.info.form</field>
+            <field name="model">rental.quotation.info</field>
+            <field name="arch" type="xml">
+                <form string="نموذج المعلومات الخاص بتقديم العرض">
+                    <header>
+                        <button name="action_print_quotation_info" 
+                                string="طباعة النموذج" 
+                                type="object" 
+                                class="oe_highlight" 
+                                icon="fa-print"/>
+                        <button name="action_create_quotation" 
+                                string="إنشاء كوتيشن" 
+                                type="object" 
+                                class="btn-primary" 
+                                icon="fa-plus-circle"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="partner_id" placeholder="اختر العميل" options="{'no_create': True}"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="معلومات الشركة الأساسية">
+                                <field name="date"/>
+                                <field name="responsible_person" required="1"/>
+                                <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="mobile"/>
+                                <field name="email" widget="email"/>
+                                <field name="project_id" options="{'no_create': True}"/>
+                                <field name="center_name"/>
+                            </group>
+                            
+                            <group string="معلومات التواصل والإدارة">
+                                <field name="communication_method"/>
+                                <field name="marketer_name"/>
+                                <field name="sales_manager_approval"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="تفاصيل العقارات">
+                                <field name="available_property_ids" invisible="1"/>
+                                <field name="property_ids">
+                                    <list editable="bottom">
+                                        <field name="property_id" domain="[('id', 'in', parent.available_property_ids)]" options="{'no_create': True}"/>
+                                        <field name="property_number"/>
+                                        <field name="area"/>
+                                        <field name="activity"/>
+                                        <field name="brand"/>
+                                        <field name="rental_value"/>
+                                    </list>
+                                </field>
+                            </page>
+                            
+                            <page string="ملاحظات">
+                                <field name="notes" placeholder="اكتب ملاحظاتك هنا..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Quotation Info list View -->
+        <record id="view_quotation_info_list" model="ir.ui.view">
+            <field name="name">quotation.info.list</field>
+            <field name="model">rental.quotation.info</field>
+            <field name="arch" type="xml">
+                <list string="نماذج معلومات العروض">
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="responsible_person"/>
+                    <field name="phone"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="marketer_name"/>
+                    <field name="communication_method"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Quotation Info Search View -->
+        <record id="view_quotation_info_search" model="ir.ui.view">
+            <field name="name">quotation.info.search</field>
+            <field name="model">rental.quotation.info</field>
+            <field name="arch" type="xml">
+                <search string="البحث في نماذج العروض">
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="responsible_person"/>
+                    <field name="phone"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="marketer_name"/>
+                    <filter string="هذا الشهر" name="this_month" domain="[('date','&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <filter string="هذا الأسبوع" name="this_week" domain="[('date','&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="إتصال" name="phone_call" domain="[('communication_method','=','phone_call')]"/>
+                    <filter string="زيارة" name="visit" domain="[('communication_method','=','visit')]"/>
+                    <filter string="إستهداف" name="targeting" domain="[('communication_method','=','targeting')]"/>
+                    <group expand="0" string="تجميع حسب">
+                        <filter string="طريقة التواصل" name="group_communication" context="{'group_by':'communication_method'}"/>
+                        <filter string="المسوق" name="group_marketer" context="{'group_by':'marketer_name'}"/>
+                        <filter string="التاريخ" name="group_date" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for Quotation Info -->
+        <record id="action_quotation_info" model="ir.actions.act_window">
+            <field name="name">نماذج معلومات العروض</field>
+            <field name="res_model">rental.quotation.info</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    إنشاء نموذج معلومات عرض جديد
+                </p>
+                <p>
+                    استخدم هذا النموذج لجمع معلومات العملاء قبل إنشاء العروض والكوتيشن
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Maintenance Request Sequence -->
+        <record id="seq_maintenance_request" model="ir.sequence">
+            <field name="name">Maintenance Request Sequence</field>
+            <field name="code">maintenance.request</field>
+            <field name="prefix">MR/%(y)s%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <!-- Maintenance Job Order Sequence -->
+        <record id="seq_maintenance_job_order" model="ir.sequence">
+            <field name="name">Maintenance Job Order Sequence</field>
+            <field name="code">maintenance.job.order</field>
+            <field name="prefix">JO/%(day)s/%(month)s/%(y)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+        </record>
+    </data>
+</odoo>

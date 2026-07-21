@@ -1,0 +1,68 @@
+<odoo>
+  <record id="view_drawing_submittal_form" model="ir.ui.view">
+    <field name="name">drawing.submittal.form</field>
+    <field name="model">drawing.submittal</field>
+    <field name="arch" type="xml">
+      <form string="Drawing Submittal">
+        <sheet>
+          <group>
+            <field name="name" readonly="1"/>
+            <field name="contract_id"/>
+            <field name="submission_date"/>
+            <field name="tenant_id" readonly="1"/>
+            <field name="drawing_description"/>
+            <field name="copies"/>
+          </group>
+          <notebook>
+            <page string="Architectural">
+              <field name="architectural_comments"/>
+              <field name="architectural_status"/>
+            </page>
+            <page string="Electrical">
+              <field name="electrical_comments"/>
+              <field name="electrical_status"/>
+            </page>
+            <page string="HVAC">
+              <field name="hvac_comments"/>
+              <field name="hvac_status"/>
+            </page>
+            <page string="Drainage Water">
+              <field name="drainage_comments"/>
+              <field name="drainage_status"/>
+            </page>
+            <page string="Fire Fighting">
+              <field name="firefighting_comments"/>
+              <field name="firefighting_status"/>
+            </page>
+            <page string="Low Current">
+              <field name="low_current_comments"/>
+              <field name="low_current_status"/>
+            </page>
+            <page string="Fire Alarm">
+              <field name="fire_alarm_comments"/>
+              <field name="fire_alarm_status"/>
+            </page>
+          </notebook>
+          <group>
+            <field name="guideline_note"/>
+            <field name="signed_by"/>
+            <field name="signed_date"/>
+            <field name="signature" widget="image" class="oe_avatar"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_drawing_submittal" model="ir.actions.act_window">
+    <field name="name">Drawing Submittals</field>
+    <field name="res_model">drawing.submittal</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+
+
+
+
+
+</odoo>

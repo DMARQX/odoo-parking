@@ -1,0 +1,163 @@
+// Code Solution Theme - Systray (Top right icons)
+// User menu, notifications, activities, etc.
+
+.o_menu_systray {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    // Systray items (icons)
+    .o-dropdown, .dropdown {
+        .dropdown-toggle {
+            padding: 6px 10px !important;
+            border-radius: $border-radius-sm;
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.15s ease;
+
+            &:hover, &:focus {
+                background-color: rgba(255, 255, 255, 0.15) !important;
+                color: #fff !important;
+            }
+
+            // Badge/Counter
+            .badge {
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                min-width: 16px;
+                height: 16px;
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 4px;
+                border-radius: 8px;
+                background-color: #EF4444 !important;
+                color: $o-white;
+            }
+        }
+
+        // Dropdown menus
+        .dropdown-menu {
+            min-width: 280px;
+            max-width: 350px;
+            padding: 0;
+            border-radius: $border-radius-lg;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid $o-gray-200;
+            overflow: hidden;
+
+            // Header
+            .dropdown-header {
+                background-color: $o-gray-100;
+                padding: 12px 16px;
+                font-weight: 600;
+                color: $o-gray-800;
+                border-bottom: 1px solid $o-gray-200;
+            }
+
+            // Items
+            .dropdown-item {
+                padding: 10px 16px;
+                color: $o-gray-700;
+                transition: all 0.15s ease;
+
+                &:hover, &:focus {
+                    background-color: rgba($o-cs-action, 0.08);
+                    color: $o-cs-primary;
+                }
+
+                // Item with icon
+                .fa, .oi {
+                    margin-right: 10px;
+                    color: $o-gray-500;
+                    width: 16px;
+                    text-align: center;
+                }
+            }
+
+            // Footer
+            .dropdown-footer {
+                background-color: $o-gray-100;
+                padding: 10px 16px;
+                border-top: 1px solid $o-gray-200;
+            }
+        }
+    }
+
+    // User Menu
+    .o_user_menu {
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            img {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .oe_topbar_name {
+                font-weight: 500;
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .dropdown-menu {
+            .dropdown-item {
+                &.text-danger {
+                    color: #EF4444;
+
+                    &:hover {
+                        background-color: rgba(239, 68, 68, 0.1);
+                    }
+                }
+            }
+        }
+    }
+
+    // Activities
+    .o_ActivityMenu {
+        .dropdown-menu {
+            max-height: 400px;
+            overflow-y: auto;
+
+            .o_mail_activity_item {
+                padding: 12px 16px;
+                border-bottom: 1px solid $o-gray-100;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    background-color: rgba($o-cs-action, 0.05);
+                }
+            }
+        }
+    }
+
+    // Messaging
+    .o_MessagingMenu {
+        .dropdown-menu {
+            width: 350px;
+            max-height: 500px;
+        }
+    }
+}
+
+// RTL Support
+html[dir="rtl"] {
+    .o_menu_systray {
+        .dropdown-menu .dropdown-item {
+            .fa, .oi {
+                margin-right: 0;
+                margin-left: 10px;
+            }
+        }
+    }
+}

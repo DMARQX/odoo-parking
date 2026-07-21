@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="nthub_realestate.RealEstateDashboard">
+        <div class="o_form_view o_form_nosheet">
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card text-center shadow-sm p-3">
+                            <h5 class="card-title">Total Sold</h5>
+                            <div id="total_sold" class="display-6">...</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card text-center shadow-sm p-3">
+                            <h5 class="card-title">Delayed OwnerShip Settlements</h5>
+                            <div id="delayed_settlements" class="display-6">...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

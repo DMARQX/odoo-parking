@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Dashboard Main Template -->
+    <template id="rental_quotation_dashboard_template" name="Rental Quotation Dashboard">
+        <div class="rental-dashboard-container">
+            <div class="dashboard-header">
+                <h1>لوحة تحكم عروض الأسعار التأجيرية</h1>
+                <div class="dashboard-filters">
+                    <select id="dashboard-period" class="form-control">
+                        <option value="today">اليوم</option>
+                        <option value="week">هذا الأسبوع</option>
+                        <option value="month">هذا الشهر</option>
+                        <option value="year">هذا العام</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="kpi-cards-row">
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="total-quotations">0</h3>
+                        <p>إجمالي العروض</p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <i class="fa fa-check"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="approved-quotations">0</h3>
+                        <p>العروض المعتمدة</p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <i class="fa fa-clock"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="pending-quotations">0</h3>
+                        <p>العروض المعلقة</p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="total-revenue">0</h3>
+                        <p>إجمالي الإيرادات</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h4>عروض الأسعار الشهرية</h4>
+                    <canvas id="monthly-quotations-chart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>توزيع حالات العروض</h4>
+                    <canvas id="quotations-status-chart"></canvas>
+                </div>
+            </div>
+            
+            <div class="dashboard-tables">
+                <div class="table-container">
+                    <h4>أحدث العروض</h4>
+                    <table class="table table-striped" id="recent-quotations-table">
+                        <thead>
+                            <tr>
+                                <th>رقم العرض</th>
+                                <th>العميل</th>
+                                <th>القيمة</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الإنشاء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="table-container">
+                    <h4>أفضل البائعين</h4>
+                    <table class="table table-striped" id="top-sellers-table">
+                        <thead>
+                            <tr>
+                                <th>البائع</th>
+                                <th>عدد العروض</th>
+                                <th>القيمة المجمعة</th>
+                                <th>نسبة التحويل</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Dashboard Widget -->
+    <template id="rental_quotation_dashboard_widget" name="Dashboard Widget">
+        <div class="rental_dashboard_widget">
+            <div class="widget-header">
+                <h3>ملخص عروض الأسعار</h3>
+                <button type="button" class="btn btn-primary" id="refresh-dashboard">
+                    <i class="fa fa-refresh"></i> تحديث
+                </button>
+            </div>
+            <div class="widget-content">
+                <div class="summary-cards">
+                    <div class="summary-card pending">
+                        <span class="count" id="pending-count">0</span>
+                        <span class="label">في الانتظار</span>
+                    </div>
+                    <div class="summary-card approved">
+                        <span class="count" id="approved-count">0</span>
+                        <span class="label">معتمدة</span>
+                    </div>
+                    <div class="summary-card rejected">
+                        <span class="count" id="rejected-count">0</span>
+                        <span class="label">مرفوضة</span>
+                    </div>
+                </div>
+                <canvas id="mini-chart"></canvas>
+            </div>
+        </div>
+    </template>
+
+</odoo>

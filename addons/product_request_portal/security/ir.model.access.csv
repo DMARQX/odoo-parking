@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_request_user,product_request_user,model_product_request,base.group_user,1,1,1,1
+access_product_request_portal,product_request_portal,model_product_request,base.group_portal,1,1,1,0
+access_product_request_line_user,product_request_line_user,model_product_request_line,base.group_user,1,1,1,1
+access_product_request_line_portal,product_request_line_portal,model_product_request_line,base.group_portal,1,1,1,0
+access_product_request_manager,product_request_manager,model_product_request,stock.group_stock_manager,1,1,1,1
+access_product_request_line_manager,product_request_line_manager,model_product_request_line,stock.group_stock_manager,1,1,1,1

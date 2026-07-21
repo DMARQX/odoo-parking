@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="parking_report_wizard_form" model="ir.ui.view">
+        <field name="name">parking.report.wizard.form</field>
+        <field name="model">parking.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Detailed Report">
+                <group>
+                    <group string="Filters">
+                        <field name="branch_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="contract_status"/>
+                    </group>
+                    <group string="Report Sections">
+                        <field name="include_spots"/>
+                        <field name="include_contracts"/>
+                        <field name="include_vehicles"/>
+                        <field name="include_services"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_comprehensive_report" string="Generate PDF Report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_parking_detailed_report_wizard" model="ir.actions.act_window">
+        <field name="name">Comprehensive Report</field>
+        <field name="res_model">parking.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_parking_detailed_report" name="Comprehensive Report" parent="menu_parking_reports" action="action_parking_detailed_report_wizard" sequence="50"/>
+
+    <record id="action_report_parking_comprehensive" model="ir.actions.report">
+        <field name="name">Comprehensive Parking Report</field>
+        <field name="model">parking.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_comprehensive</field>
+        <field name="report_file">parking_comprehensive_report</field>
+        <field name="binding_model_id" ref="model_parking_report_wizard"/>
+        <field name="binding_type">report</field>
+        <field name="multi">False</field>
+        <field name="print_report_name">'Comprehensive-Report-%s' % (time.strftime('%%Y-%%m-%%d'))</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- COMPREHENSIVE REPORT QWEB TEMPLATE -->
+    <!-- ============================================================ -->
+
+    <template id="report_parking_comprehensive">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="data" t-value="wizard._get_report_data()"/>
+                <t t-set="is_ar" t-value="wizard._is_arabic_context()"/>
+                <t t-set="lbl_title" t-value="'تقرير المواقف الشامل' if is_ar else 'Comprehensive Parking Report'"/>
+                <t t-set="lbl_from" t-value="'من' if is_ar else 'From'"/>
+                <t t-set="lbl_to" t-value="'إلى' if is_ar else 'To'"/>
+                <t t-set="lbl_date" t-value="'التاريخ' if is_ar else 'Date'"/>
+                <t t-set="lbl_available" t-value="'متاح' if is_ar else 'Available'"/>
+                <t t-set="lbl_reserved" t-value="'محجوز' if is_ar else 'Reserved'"/>
+                <t t-set="lbl_occupied" t-value="'مشغول' if is_ar else 'Occupied'"/>
+                <t t-set="lbl_total" t-value="'الإجمالي' if is_ar else 'Total'"/>
+                <t t-set="lbl_active" t-value="'نشط' if is_ar else 'Active'"/>
+                <t t-set="lbl_expired" t-value="'منتهي' if is_ar else 'Expired'"/>
+                <t t-set="lbl_near_expiry" t-value="'قريب الانتهاء' if is_ar else 'Near Expiry'"/>
+                <t t-set="lbl_spot" t-value="'الموقف' if is_ar else 'Spot'"/>
+                <t t-set="lbl_branch" t-value="'الفرع' if is_ar else 'Branch'"/>
+                <t t-set="lbl_status" t-value="'الحالة' if is_ar else 'Status'"/>
+                <t t-set="lbl_type" t-value="'النوع' if is_ar else 'Type'"/>
+                <t t-set="lbl_vehicle" t-value="'المركبة' if is_ar else 'Vehicle'"/>
+                <t t-set="lbl_contract" t-value="'العقد' if is_ar else 'Contract'"/>
+                <t t-set="lbl_customer" t-value="'العميل' if is_ar else 'Customer'"/>
+                <t t-set="lbl_end_date" t-value="'تاريخ الانتهاء' if is_ar else 'End Date'"/>
+                <t t-set="lbl_amount" t-value="'المبلغ' if is_ar else 'Amount'"/>
+                <t t-set="lbl_plate" t-value="'اللوحة' if is_ar else 'Plate'"/>
+                <t t-set="lbl_brand" t-value="'العلامة' if is_ar else 'Brand'"/>
+                <t t-set="lbl_model" t-value="'الطراز' if is_ar else 'Model'"/>
+                <t t-set="lbl_owner" t-value="'المالك' if is_ar else 'Owner'"/>
+                <t t-set="lbl_services" t-value="'الخدمات' if is_ar else 'Services'"/>
+                <t t-set="lbl_total_v" t-value="'إجمالي المركبات' if is_ar else 'Total Vehicles'"/>
+                <t t-set="lbl_pms" t-value="'نظام إدارة المواقف' if is_ar else 'Parking Management System'"/>
+                <t t-set="lbl_generated" t-value="'تم الإنشاء' if is_ar else 'Generated'"/>
+                    <style>@page { margin: 0; padding: 0; } html, body { margin: 0; padding: 0; } .page { margin: 0; padding: 0; }</style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+
+                        <!-- Top Bar -->
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #1B3A5C;"></div>
+
+                        <!-- Title Header -->
+                        <div style="border-bottom: 2px solid #C9A04E; padding-bottom: 10px; margin: 16px 0 20px 0;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 80px; vertical-align: middle;">
+                                        <img t-if="env.company.logo" t-att-src="image_data_uri(env.company.logo)" style="max-height: 60px; max-width: 80px;"/>
+                                    </td>
+                                    <td style="vertical-align: middle; text-align: center;">
+                                        <h1 style="color: #1B3A5C; margin: 0; font-size: 20px;" t-esc="lbl_title"/>
+                                        <p style="color: #888; margin: 4px 0; font-size: 10px;">
+                                            <span t-esc="data['branch_name']"/>
+                                            <span t-if="data['branch_name'] and (data['date_from'] or data['date_to'])"> | </span>
+                                            <t t-if="data['date_from'] or data['date_to']">
+                                                <t t-esc="lbl_from"/>: <span t-esc="str(data['date_from'] or '')"/> <t t-esc="lbl_to"/>: <span t-esc="str(data['date_to'] or '')"/>
+                                            </t>
+                                            <span t-if="not data['date_from'] and not data['date_to']" t-esc="''"/>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- ======================= -->
+                        <!-- SPOTS SUMMARY SECTION -->
+                        <!-- ======================= -->
+                        <div t-if="data['include_spots']" style="margin-bottom: 30px;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-inline-start: 4px solid #C9A04E; margin-bottom: 12px;">
+                                <h2 style="color: #1B3A5C; margin: 0; font-size: 14px;" t-esc="'1. ' + ('ملخص المواقف' if is_ar else 'Spots Summary')"/>
+                            </div>
+
+                            <!-- KPI Cards -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #00A86B;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_available"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #00A86B;" t-esc="data['available_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #F4A940;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_reserved"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #F4A940;" t-esc="data['reserved_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #DC3545;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_occupied"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #DC3545;" t-esc="data['occupied_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #4A90D9;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_total"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #4A90D9;" t-esc="len(data['spots'])"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Table -->
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="background: #1B3A5C; color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_spot"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_branch"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_status"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_type"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_vehicle"/>
+                                </tr>
+                                <tr t-foreach="data['spots']" t-as="s">
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; font-weight: bold;" t-esc="s.name"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="s.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;"><span t-esc="s.status"/></td>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="s.spot_type"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="s.current_vehicle_plate or '—'"/>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- =========================== -->
+                        <!-- CONTRACTS SUMMARY SECTION -->
+                        <!-- =========================== -->
+                        <div t-if="data['include_contracts']" style="margin-bottom: 30px;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-inline-start: 4px solid #C9A04E; margin-bottom: 12px;">
+                                <h2 style="color: #1B3A5C; margin: 0; font-size: 14px;" t-esc="'2. ' + ('ملخص العقود' if is_ar else 'Contracts Summary')"/>
+                            </div>
+
+                            <!-- KPI Cards -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #00A86B;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_active"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #00A86B;" t-esc="data['active_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #DC3545;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_expired"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #DC3545;" t-esc="data['expired_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #F4A940;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_near_expiry"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #F4A940;" t-esc="data['near_expiry_count']"/>
+                                    </td>
+                                    <td style="padding: 10px; border: 1px solid #E0E0E0; text-align: center; width: 25%; border-inline-start: 4px solid #4A90D9;">
+                                        <div style="font-size: 9px; color: #666;" t-esc="lbl_total"/>
+                                        <div style="font-size: 22px; font-weight: bold; color: #4A90D9;" t-esc="len(data['contracts'])"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Table -->
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="background: #1B3A5C; color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_contract"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_customer"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_branch"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_status"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_end_date"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px; text-align: right;" t-esc="lbl_amount"/>
+                                </tr>
+                                <tr t-foreach="data['contracts']" t-as="c">
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; font-weight: bold;" t-esc="c.name"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.partner_id.name"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.state"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.end_date"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f} SAR'.format(c.amount_total)"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Total Amount -->
+                            <div style="margin-top: 8px; text-align: right; padding: 6px 10px; background: #1B3A5C; border-radius: 3px;">
+                                    <span style="font-size: 11px; color: #fff; font-weight: bold;">
+                                    <t t-esc="lbl_total"/>: <span style="color: #C9A04E;" t-esc="'{:,.2f} SAR'.format(data['total_amount'])"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ========================== -->
+                        <!-- VEHICLES REGISTRY SECTION -->
+                        <!-- ========================== -->
+                        <div t-if="data['include_vehicles']" style="margin-bottom: 30px;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-inline-start: 4px solid #C9A04E; margin-bottom: 12px;">
+                                <h2 style="color: #1B3A5C; margin: 0; font-size: 14px;" t-esc="'3. ' + ('سجل المركبات' if is_ar else 'Vehicles Registry')"/>
+                            </div>
+
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="background: #1B3A5C; color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;">#</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_plate"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_brand"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_model"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_owner"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_contract"/>
+                                </tr>
+                                <tr t-foreach="data['vehicles']" t-as="v">
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; color: #888;" t-esc="v_index + 1"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; font-weight: bold;" t-esc="v.license_plate or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="v.brand or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="v.model or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="v.owner_id.name or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;">
+                                        <t t-foreach="v.contract_ids" t-as="ctr">
+                                            <span t-esc="ctr.name"/>
+                                            <t t-if="not ctr_last">, </t>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="margin-top: 8px; padding: 5px 8px; background: #F8F9FC; border: 1px solid #E0E0E0; border-radius: 3px;">
+                                <strong style="font-size: 10px; color: #1B3A5C;" t-esc="lbl_total_v"/>: 
+                                <span style="font-size: 10px;" t-esc="data['total_vehicles']"/>
+                            </div>
+                        </div>
+
+                        <!-- ============================= -->
+                        <!-- ADDITIONAL SERVICES SECTION -->
+                        <!-- ============================= -->
+                        <div t-if="data['include_services']" style="margin-bottom: 30px;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-inline-start: 4px solid #C9A04E; margin-bottom: 12px;">
+                                <h2 style="color: #1B3A5C; margin: 0; font-size: 14px;" t-esc="'4. ' + ('الخدمات الإضافية' if is_ar else 'Additional Services')"/>
+                            </div>
+
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="background: #1B3A5C; color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_contract"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_customer"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_branch"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_spot"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px;" t-esc="lbl_services"/>
+                                    <th style="padding: 6px 8px; border: 1px solid #1B3A5C; font-size: 9px; letter-spacing: 0.5px; text-align: right;" t-esc="lbl_total"/>
+                                </tr>
+                                <tr t-foreach="data['services_contracts']" t-as="c">
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; font-weight: bold;" t-esc="c.name"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.partner_id.name"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.location_id.display_name or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;" t-esc="c.spot_id.name or '—'"/>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px;">
+                                        <t t-foreach="c.service_line_ids" t-as="line">
+                                            <div><span t-esc="line.name"/><t t-if="line.quantity != 1"> × <span t-esc="line.quantity"/></t></div>
+                                        </t>
+                                    </td>
+                                    <td style="padding: 5px 8px; border: 1px solid #E0E0E0; font-size: 10px; text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f} SAR'.format(c.services_total)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 20px;">
+                            <div style="height: 4px; background: #C9A04E;"></div>
+                            <div style="height: 6px; background: #1B3A5C;"></div>
+                            <div style="margin-top: 6px; text-align: center; font-size: 8px; color: #999;">
+                                <t t-esc="lbl_pms"/> — <t t-esc="lbl_generated"/> <span t-esc="datetime.datetime.now().strftime('%%Y-%%m-%%d %%H:%%M')"/>
+                            </div>
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

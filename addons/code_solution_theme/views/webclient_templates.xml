@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Custom Company Name in Title -->
+    <template id="code_solution_title" inherit_id="web.layout" name="Code Solution Title">
+        <xpath expr="//title" position="replace">
+            <title><t t-esc="title or 'Odoo'"/> | Code Solution</title>
+        </xpath>
+    </template>
+    
+</odoo>

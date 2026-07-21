@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Arabic Default Template -->
+        <record id="default_arabic_terms_template" model="quotation.terms.template">
+            <field name="name">قالب الشروط الافتراضي - عربي</field>
+            <field name="language">ar</field>
+            <field name="template_type">general</field>
+            <field name="sequence">1</field>
+            <field name="active" eval="True"/>
+            
+            <field name="salutation_html"><![CDATA[
+<div style="text-align: right; direction: rtl; line-height: 1.6;">
+    <p style="margin: 0; padding: 5px 0;">
+        السلام عليكم و رحمة الله و بركاته ،،،
+    </p>
+    <p style="margin: 5px 0; padding: 5px 0; line-height: 1.4;">
+        بناءً على رغبتكم في استئجار مكتب في المشروع بجدة،
+        فإنه يسعدنا أن نعرض لكم خدماتنا المُتمثلة في الوساطة لتأجير المكاتب المذكور أدناه 
+        فيما بينكم وبين المالك، آملين أن ينال استحسانكم و قبولكم.
+    </p>
+</div>
+            ]]></field>
+            
+            <field name="content_html"><![CDATA[
+<div style="text-align: right; direction: rtl; line-height: 1.4; font-size: 10px;">
+    <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 11px;">
+        علماً بأنه وفي حال موافقتكم على العرض المُقدم، يرجى التكرم بسداد المبالغ التالية:
+    </p>
+    
+    <div style="line-height: 1.4; margin-right: 15px; font-size: 10px;">
+        <p style="margin: 5px 0;">
+            • إصدار شيك مصرفي أو حوالة بنكية قيمة 50% 
+            من إجمالي القيمة الإيجارية المتفق عليه لأمر صاحب السمو الملكي الأمير/ سعود بن فهد بن عبدالعزيز آل سعود.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • يتعين على المستأجر سداد مبلغ الضمان بقيمة 5% 
+            من إجمالي القيمة الإيجارية المتفق عليها، لمحفظة إيجار قبل توثيق العقد.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • رسوم استهلاك الكهرباء و التكييف تبلغ 105 
+            ريال للمتر المربع سنوياً تدفع على دفعتين متساويتين سنوية، 
+            الأولى عند توقيع العقد و الثانية بعد ستة أشهر.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • إصدار شيك مصرفي أو حوالة بنكية لأمر السادة / شركة سقيفة الصفا المحدودة، 
+            بنسبة 2.50% 
+            من إجمالي القيمة الإيجارية المتفق عليها عمولة تأجير تسدد مباشرة عند التوقيع على العقد و لمرة واحدة.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • إصدار شيك مصرفي أو حوالة بنكية لأمر السادة / شركة سقيفة الصفا المحدودة، 
+            بنسبة 7.50% 
+            من إجمالي القيمة الإيجارية المتفق عليها أتعاب إدارية تسدد مباشرة عند التوقيع على العقد و لمرة واحدة 
+            و ذلك مقابل (إصدار العروض و العقود و متابعة توثيقها من الطرفين و متابعة تنفيذ المستأجرين لأعمال 
+            الديكور وفقاً لمتطلبات السلامة في المبنى و متابعة تحصيل الإيجارات).
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • الإيجار السنوي شامل الخدمات و رسوم استهلاك الكهرباء و التكييف لا يشمل ضريبة القيمة المضافة.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • عمولة التأجير و الأتعاب الإدارية لا تشمل ضريبة القيمة المضافة.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • تزويدنا بصورة من السجل التجاري، شهادة ضريبة القيمة المضافة، و العنوان الوطني للمنشأة.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • وكالة شرعية و هوية الشخص المفوض بالتوقيع على العقود.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • جوال أبشر و العنوان الوطني للشخص المفوض بالتوقيع على العقود.
+        </p>
+        
+        <p style="margin: 10px 0;">
+            • يخضع هذا العرض لموافقة المالك.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • تبلغ صلاحية هذا العرض خمسة أيام من التاريخ الموجود أعلاه.
+        </p>
+    </div>
+</div>
+            ]]></field>
+            
+            <field name="note">Default Arabic template with standard terms and conditions for rental quotations.</field>
+        </record>
+        
+        <!-- English Default Template -->
+        <record id="default_english_terms_template" model="quotation.terms.template">
+            <field name="name">Default Terms Template - English</field>
+            <field name="language">en</field>
+            <field name="template_type">general</field>
+            <field name="sequence">2</field>
+            <field name="active" eval="True"/>
+            
+            <field name="salutation_html"><![CDATA[
+<div style="line-height: 1.6;">
+    <p style="margin: 0; padding: 5px 0;">
+        Peace be upon you,
+    </p>
+    <p style="margin: 5px 0; padding: 5px 0; line-height: 1.4;">
+        In reference to our meeting regarding the project and your interest in leasing Office, it is our pleasure to present this offer 
+        for the space required. We look forward to your acceptance and approval of this offer.
+    </p>
+</div>
+            ]]></field>
+            
+            <field name="content_html"><![CDATA[
+<div style="line-height: 1.4; font-size: 10px;">
+    <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 11px;">
+        Once this offer is approved please provide Saqifat al Safa with the following requirements to proceed in documenting a lease agreement:
+    </p>
+    
+    <div style="line-height: 1.4; margin-left: 15px; font-size: 10px;">
+        <p style="margin: 5px 0;">
+            • Kindly issue a certified cheque for (50%) of the total rent including service fees to HRH Prince Saud Bin Fahad Bin Abdulaziz Al Saud.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Tenant Pays the Security deposit to EJAR Portfolio amounting of 5% of the total rental value before signing the contract.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • The fees for electricity, water and A/C consumption will be 105 SR annually for each square meter. The lease agreement will outline the payment mechanism.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Kindly issue a certified cheque for 2.5% of the total annual rent including service fees as leasing commission to Saqifat al Safa Company Ltd., to be paid only one time to confirm the office space booking.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Kindly issue a certified cheque for 7.5% of the total annual rent including service fees as an Administrative fee to Saqifat al Safa Company Ltd., to be paid only one time. (Issuance of offers &amp; contracts, follow-up signature of the contract from both parties, follow-up implementation of tenants for the work of decoration in accordance with the requirements of safety in the building, etc......)
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Annual Rent, Electricity fees, leasing commission, and management fees are exclusive of any applicable Add Value Tax (VAT)
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Valid copy of the Commercial Registration.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Copy of (VAT) Registration Certificate.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • Including a copy of his/her ID.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • This offer is valid for 05 days, From the above date.
+        </p>
+        
+        <p style="margin: 5px 0;">
+            • This offer is subject to the owner's approval.
+        </p>
+    </div>
+</div>
+            ]]></field>
+            
+            <field name="note">Default English template with standard terms and conditions for rental quotations.</field>
+        </record>
+        
+    </data>
+</odoo>

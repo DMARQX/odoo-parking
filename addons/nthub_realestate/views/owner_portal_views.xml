@@ -1,0 +1,1450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ======================================================= -->
+    <!--  1. MAIN PORTAL PAGES                                   -->
+    <!-- ======================================================= -->
+
+    <!-- Dashboard Page -->
+    <template id="portal_my_properties" name="My Properties">
+        <t t-call="portal.portal_layout">
+            <t t-call="nthub_realestate.portal_owner_styles"/>
+            <div class="container py-5">
+                <div class="mb-5">
+                    <h2 class="fw-bolder display-6">Dashboard</h2>
+                    <p class="text-muted fs-5">Welcome back, <t t-esc="request.env.user.name"/>!</p>
+                </div>
+                <div class="row g-4 mb-5">
+                    <t t-call="nthub_realestate.portal_owner_stat_cards"/>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-8"><t t-call="nthub_realestate.portal_owner_projects_widget"/></div>
+                    <div class="col-lg-4"><t t-call="nthub_realestate.portal_owner_requests_widget"/></div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- List of All Requests Page - Modern Design with Better Icons -->
+    <template id="portal_owner_requests_list" name="My Requests">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load Google Fonts - Cairo for Arabic -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+            
+            <style type="text/css">
+            /* CSS Variables - Soft Color Palette (Same as Dashboard) */
+            :root {
+                --owner-primary: #5C6BC0;
+                --owner-primary-light: #7986CB;
+                --owner-primary-dark: #3F51B5;
+                --owner-secondary: #78909C;
+                --owner-success: #66BB6A;
+                --owner-success-light: #E8F5E9;
+                --owner-warning: #FFA726;
+                --owner-warning-light: #FFF3E0;
+                --owner-danger: #EF5350;
+                --owner-danger-light: #FFEBEE;
+                --owner-info: #42A5F5;
+                --owner-info-light: #E3F2FD;
+                --owner-purple: #AB47BC;
+                --owner-purple-light: #F3E5F5;
+                --owner-teal: #26A69A;
+                --owner-teal-light: #E0F2F1;
+                --owner-bg: #F5F7FA;
+                --owner-sidebar-bg: #FFFFFF;
+                --owner-card-bg: #FFFFFF;
+                --owner-text: #37474F;
+                --owner-text-muted: #78909C;
+                --owner-border: #E0E0E0;
+                --owner-shadow: rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
+                --font-family: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+            * { font-family: var(--font-family) !important; }
+            
+            /* Layout */
+            .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); font-family: var(--font-family); }
+            
+            /* Sidebar - Light Theme (Same as Dashboard) */
+            .owner-sidebar { 
+                width: var(--sidebar-width); 
+                background: var(--owner-sidebar-bg); 
+                border-right: 1px solid var(--owner-border); 
+                position: fixed; 
+                left: 0; 
+                top: 0; 
+                height: 100vh; 
+                z-index: 1000; 
+                box-shadow: 2px 0 10px var(--owner-shadow); 
+                display: flex; 
+                flex-direction: column; 
+            }
+            .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+            .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sidebar-logo svg { color: white; width: 24px; height: 24px; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+            .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+            .sidebar-nav .nav-link .nav-icon { width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; color: var(--owner-text-muted); transition: all 0.2s ease; }
+            .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+            .sidebar-nav .nav-link:hover .nav-icon { color: var(--owner-primary); }
+            .sidebar-nav .nav-link.active { background-color: rgba(92, 107, 192, 0.1); color: var(--owner-primary); border-left-color: var(--owner-primary); font-weight: 600; }
+            .sidebar-nav .nav-link.active .nav-icon { color: var(--owner-primary); }
+            
+            /* Main Content */
+            .owner-main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; min-height: 100vh; }
+            
+            /* Request Page Styles */
+            .req-page { padding: 0; }
+            .req-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+            .req-title { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin: 0; }
+            .req-subtitle { color: var(--owner-text-muted); margin: 0.25rem 0 0 0; }
+            .btn-new-req { background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); color: white; border: none; padding: 0.875rem 1.75rem; border-radius: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.625rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(92, 107, 192, 0.35); }
+            .btn-new-req:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(92, 107, 192, 0.45); color: white; }
+            .btn-new-req svg { width: 18px; height: 18px; }
+            .req-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+            .req-stat-box { background: var(--owner-card-bg); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px var(--owner-shadow); text-align: center; position: relative; overflow: hidden; transition: all 0.3s ease; min-height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+            .req-stat-box:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--owner-shadow); }
+            .req-stat-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+            .req-stat-box h4 { font-size: 2.25rem; font-weight: 700; margin: 0.5rem 0 0.25rem 0; line-height: 1; }
+            .req-stat-box span { color: var(--owner-text-muted); font-size: 0.9rem; font-weight: 500; }
+            .req-stat-box .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+            .req-stat-box .stat-icon svg { width: 22px; height: 22px; }
+            .req-stat-box.total::before { background: linear-gradient(90deg, var(--owner-primary), var(--owner-primary-dark)); }
+            .req-stat-box.total h4 { color: var(--owner-primary); }
+            .req-stat-box.total .stat-icon { background: rgba(92, 107, 192, 0.15); }
+            .req-stat-box.total .stat-icon svg { color: var(--owner-primary); }
+            .req-stat-box.new-stat::before { background: linear-gradient(90deg, var(--owner-info), #64B5F6); }
+            .req-stat-box.new-stat h4 { color: var(--owner-info); }
+            .req-stat-box.new-stat .stat-icon { background: var(--owner-info-light); }
+            .req-stat-box.new-stat .stat-icon svg { color: var(--owner-info); }
+            .req-stat-box.progress::before { background: linear-gradient(90deg, var(--owner-warning), #FFB74D); }
+            .req-stat-box.progress h4 { color: var(--owner-warning); }
+            .req-stat-box.progress .stat-icon { background: var(--owner-warning-light); }
+            .req-stat-box.progress .stat-icon svg { color: var(--owner-warning); }
+            .req-stat-box.done::before { background: linear-gradient(90deg, var(--owner-success), #81C784); }
+            .req-stat-box.done h4 { color: var(--owner-success); }
+            .req-stat-box.done .stat-icon { background: var(--owner-success-light); }
+            .req-stat-box.done .stat-icon svg { color: var(--owner-success); }
+            .req-list { display: flex; flex-direction: column; gap: 0; }
+            .req-table { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); overflow: hidden; }
+            .req-table-header { display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 100px; gap: 1rem; padding: 1rem 1.5rem; background: var(--owner-bg); border-bottom: 1px solid var(--owner-border); font-weight: 600; color: var(--owner-text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+            .req-table-row { display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 100px; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--owner-border); align-items: center; transition: all 0.2s ease; }
+            .req-table-row:last-child { border-bottom: none; }
+            .req-table-row:hover { background: var(--owner-bg); }
+            .req-subject { font-weight: 600; color: var(--owner-text); }
+            .req-project { color: var(--owner-text-muted); font-size: 0.9rem; }
+            .req-date { color: var(--owner-text-muted); font-size: 0.9rem; }
+            .req-item { background: var(--owner-card-bg); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px var(--owner-shadow); display: flex; align-items: center; gap: 1.25rem; transition: all 0.3s ease; border-left: 4px solid transparent; }
+            .req-item:hover { transform: translateX(4px); box-shadow: 0 8px 24px var(--owner-shadow); }
+            .req-item.st-new { border-left-color: var(--owner-info); }
+            .req-item.st-in_progress { border-left-color: var(--owner-warning); }
+            .req-item.st-done { border-left-color: var(--owner-success); }
+            .req-item.st-cancelled { border-left-color: var(--owner-secondary); }
+            .req-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .req-icon svg { width: 26px; height: 26px; }
+            .req-icon.financial { background: var(--owner-success-light); color: var(--owner-success); }
+            .req-icon.maintenance { background: var(--owner-warning-light); color: var(--owner-warning); }
+            .req-icon.info { background: var(--owner-info-light); color: var(--owner-info); }
+            .req-icon.other { background: var(--owner-purple-light); color: var(--owner-purple); }
+            .req-content { flex: 1; min-width: 0; }
+            .req-content h5 { margin: 0 0 0.5rem 0; font-weight: 600; color: var(--owner-text); font-size: 1rem; }
+            .req-meta { display: flex; gap: 1.25rem; color: var(--owner-text-muted); font-size: 0.85rem; flex-wrap: wrap; }
+            .req-meta span { display: flex; align-items: center; gap: 0.375rem; }
+            .req-meta svg { width: 16px; height: 16px; opacity: 0.7; }
+            .req-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
+            .req-badge { padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.375rem; }
+            .req-badge svg { width: 14px; height: 14px; }
+            .req-badge.new { background: var(--owner-info-light); color: var(--owner-info); }
+            .req-badge.in_progress { background: var(--owner-warning-light); color: var(--owner-warning); }
+            .req-badge.done { background: var(--owner-success-light); color: var(--owner-success); }
+            .req-badge.cancelled { background: #ECEFF1; color: var(--owner-secondary); }
+            .btn-view { background: var(--owner-bg); border: 1px solid var(--owner-border); padding: 0.5rem 1rem; border-radius: 8px; color: var(--owner-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.375rem; transition: all 0.2s ease; }
+            .btn-view svg { width: 16px; height: 16px; }
+            .btn-view:hover { background: var(--owner-primary); color: white; border-color: var(--owner-primary); }
+            .req-empty { background: var(--owner-card-bg); border-radius: 16px; padding: 4rem 2rem; text-align: center; box-shadow: 0 2px 12px var(--owner-shadow); }
+            .req-empty .empty-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--owner-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+            .req-empty .empty-icon svg { width: 40px; height: 40px; color: var(--owner-text-muted); }
+            .req-empty h4 { color: var(--owner-text); margin-bottom: 0.5rem; font-size: 1.25rem; font-weight: 600; }
+            .req-empty p { color: var(--owner-text-muted); margin-bottom: 1.5rem; max-width: 300px; margin-left: auto; margin-right: auto; }
+            @media (max-width: 991.98px) {
+                .owner-sidebar { transform: translateX(-100%); }
+                .owner-main-content { margin-left: 0; }
+                .req-stats { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (max-width: 575.98px) {
+                .req-stats { grid-template-columns: 1fr; }
+            }
+            </style>
+            
+            <div class="owner-dashboard-wrapper">
+                <!-- Sidebar - Light Theme (Same as Dashboard) -->
+                <aside class="owner-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span>My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span>Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span>Receivables</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Requests</div>
+                            <a href="/my/requests" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span>My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="owner-main-content">
+                    <div class="req-page">
+                <div class="req-header">
+                    <div>
+                        <h1 class="req-title">My Requests</h1>
+                        <p class="req-subtitle">View and manage all your submitted requests</p>
+                    </div>
+                    <a href="/my/requests/new" class="btn-new-req">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        New Request
+                    </a>
+                </div>
+                
+                <div class="req-stats">
+                    <div class="req-stat-box total">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                        </div>
+                        <h4 t-esc="len(requests) if requests else 0"></h4>
+                        <span>Total Requests</span>
+                    </div>
+                    <div class="req-stat-box new-stat">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>
+                        </div>
+                        <h4 t-esc="len([r for r in (requests or []) if r.state == 'new'])"></h4>
+                        <span>New</span>
+                    </div>
+                    <div class="req-stat-box progress">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                        </div>
+                        <h4 t-esc="len([r for r in (requests or []) if r.state == 'in_progress'])"></h4>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="req-stat-box done">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h4 t-esc="len([r for r in (requests or []) if r.state == 'done'])"></h4>
+                        <span>Completed</span>
+                    </div>
+                </div>
+                
+                <t t-if="requests">
+                    <div class="req-table">
+                        <div class="req-table-header">
+                            <span>Subject</span>
+                            <span>Project</span>
+                            <span>Date</span>
+                            <span>Status</span>
+                            <span>Action</span>
+                        </div>
+                        <t t-foreach="requests" t-as="req">
+                            <div class="req-table-row">
+                                <span class="req-subject" t-esc="req.subject"></span>
+                                <span class="req-project" t-esc="req.project_id.name or '-'"></span>
+                                <span class="req-date" t-esc="req.create_date.strftime('%d %b %Y')"></span>
+                                <span>
+                                    <span t-if="req.state == 'new'" class="req-badge new">New</span>
+                                    <span t-if="req.state == 'in_progress'" class="req-badge in_progress">In Progress</span>
+                                    <span t-if="req.state == 'done'" class="req-badge done">Completed</span>
+                                    <span t-if="req.state == 'cancelled'" class="req-badge cancelled">Cancelled</span>
+                                </span>
+                                <a t-attf-href="/my/request/#{req.id}" class="btn-view">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    View
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                
+                <t t-if="not requests">
+                    <div class="req-empty">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" /></svg>
+                        </div>
+                        <h4>No Requests Yet</h4>
+                        <p>You haven't submitted any requests. Click the button below to create your first one.</p>
+                        <a href="/my/requests/new" class="btn-new-req">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            Create New Request
+                        </a>
+                    </div>
+                </t>
+                    </div><!-- /.req-page -->
+                </main><!-- /.owner-main-content -->
+            </div><!-- /.owner-dashboard-wrapper -->
+        </t>
+    </template>
+
+    <!-- New Request Form Page -->
+    <template id="portal_owner_request_form" name="New Owner Request">
+        <t t-call="portal.portal_layout">
+            <t t-call="nthub_realestate.portal_owner_styles"/>
+            <div class="container py-5">
+                <div class="card shadow-sm border-0 rounded-4 col-lg-8 mx-auto">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder mb-4">Submit a New Request</h2>
+                        <form action="/my/requests/new" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="mb-3"><label for="subject" class="form-label fw-bold">Subject</label><input type="text" name="subject" class="form-control" required="1"/></div>
+                            <div class="row"><div class="col-md-6 mb-3"><label for="project_id" class="form-label fw-bold">Related Project (Optional)</label><select name="project_id" class="form-select"><option value="">None</option><t t-foreach="projects" t-as="p"><option t-att-value="p.id" t-esc="p.name"/></t></select></div><div class="col-md-6 mb-3"><label for="request_type" class="form-label fw-bold">Request Type</label><select name="request_type" class="form-select" required="1"><option value="financial">Financial Report</option><option value="maintenance">Maintenance Query</option><option value="info" selected="1">Information Request</option><option value="other">Other</option></select></div></div>
+                            <div class="mb-3"><label for="description" class="form-label fw-bold">Details</label><textarea name="description" class="form-control" rows="5"></textarea></div>
+                            <div class="mb-4"><label for="attachments" class="form-label fw-bold">Attachments (Optional)</label><input type="file" name="attachments" class="form-control" multiple="multiple"/></div>
+                            <div class="d-flex justify-content-end"><a href="/my/properties" class="btn btn-light me-2">Cancel</a><button type="submit" class="btn btn-primary">Submit Request</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Request Detail Page -->
+    <template id="portal_owner_request_view" name="Owner Request">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            
+            <!-- Load Google Fonts - Cairo for Arabic -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+            
+            <style type="text/css">
+            /* CSS Variables - Soft Color Palette (Same as Dashboard) */
+            :root {
+                --owner-primary: #5C6BC0;
+                --owner-primary-light: #7986CB;
+                --owner-primary-dark: #3F51B5;
+                --owner-secondary: #78909C;
+                --owner-success: #66BB6A;
+                --owner-success-light: #E8F5E9;
+                --owner-warning: #FFA726;
+                --owner-warning-light: #FFF3E0;
+                --owner-danger: #EF5350;
+                --owner-danger-light: #FFEBEE;
+                --owner-info: #42A5F5;
+                --owner-info-light: #E3F2FD;
+                --owner-purple: #AB47BC;
+                --owner-purple-light: #F3E5F5;
+                --owner-bg: #F5F7FA;
+                --owner-sidebar-bg: #FFFFFF;
+                --owner-card-bg: #FFFFFF;
+                --owner-text: #37474F;
+                --owner-text-muted: #78909C;
+                --owner-border: #E0E0E0;
+                --owner-shadow: rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
+                --font-family: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+            * { font-family: var(--font-family) !important; }
+            
+            /* Layout */
+            .owner-dashboard-wrapper { display: flex; min-height: 100vh; background-color: var(--owner-bg); }
+            
+            /* Sidebar - Light Theme */
+            .owner-sidebar { 
+                width: var(--sidebar-width); 
+                background: var(--owner-sidebar-bg); 
+                border-right: 1px solid var(--owner-border); 
+                position: fixed; 
+                left: 0; 
+                top: 0; 
+                height: 100vh; 
+                z-index: 1000; 
+                box-shadow: 2px 0 10px var(--owner-shadow); 
+                display: flex; 
+                flex-direction: column; 
+            }
+            .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--owner-border); display: flex; align-items: center; gap: 1rem; }
+            .sidebar-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sidebar-logo svg { color: white; width: 24px; height: 24px; }
+            .sidebar-logo-text h5 { margin: 0; font-weight: 700; color: var(--owner-text); font-size: 1.1rem; }
+            .sidebar-logo-text small { color: var(--owner-text-muted); font-size: 0.8rem; }
+            .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+            .nav-section { margin-bottom: 1.5rem; }
+            .nav-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--owner-text-muted); padding: 0 1.5rem; margin-bottom: 0.5rem; }
+            .sidebar-nav .nav-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--owner-text); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; margin: 2px 0; }
+            .sidebar-nav .nav-link .nav-icon { width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; color: var(--owner-text-muted); transition: all 0.2s ease; }
+            .sidebar-nav .nav-link:hover { background-color: var(--owner-bg); color: var(--owner-primary); }
+            .sidebar-nav .nav-link:hover .nav-icon { color: var(--owner-primary); }
+            .sidebar-nav .nav-link.active { background-color: rgba(92, 107, 192, 0.1); color: var(--owner-primary); border-left-color: var(--owner-primary); font-weight: 600; }
+            .sidebar-nav .nav-link.active .nav-icon { color: var(--owner-primary); }
+            
+            /* Main Content */
+            .owner-main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; min-height: 100vh; }
+            
+            /* Request Detail Styles */
+            .req-detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+            .req-detail-title { font-size: 1.75rem; font-weight: 700; color: var(--owner-text); margin: 0; }
+            .btn-back { background: var(--owner-card-bg); border: 1px solid var(--owner-border); padding: 0.625rem 1.25rem; border-radius: 10px; color: var(--owner-text); font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease; }
+            .btn-back:hover { background: var(--owner-bg); color: var(--owner-primary); border-color: var(--owner-primary); }
+            .btn-back svg { width: 18px; height: 18px; }
+            
+            .detail-card { background: var(--owner-card-bg); border-radius: 16px; box-shadow: 0 2px 12px var(--owner-shadow); margin-bottom: 1.5rem; overflow: hidden; }
+            .detail-card-header { background: var(--owner-bg); padding: 1rem 1.5rem; border-bottom: 1px solid var(--owner-border); font-weight: 600; color: var(--owner-text); display: flex; align-items: center; gap: 0.75rem; }
+            .detail-card-header svg { width: 20px; height: 20px; color: var(--owner-primary); }
+            .detail-card-body { padding: 1.5rem; }
+            
+            .detail-row { display: flex; padding: 0.875rem 0; border-bottom: 1px solid var(--owner-border); }
+            .detail-row:last-child { border-bottom: none; }
+            .detail-label { width: 140px; color: var(--owner-text-muted); font-weight: 500; font-size: 0.9rem; flex-shrink: 0; }
+            .detail-value { flex: 1; color: var(--owner-text); font-weight: 500; }
+            
+            .status-badge { padding: 0.375rem 0.875rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.375rem; }
+            .status-badge.new { background: var(--owner-info-light); color: var(--owner-info); }
+            .status-badge.in_progress { background: var(--owner-warning-light); color: var(--owner-warning); }
+            .status-badge.done { background: var(--owner-success-light); color: var(--owner-success); }
+            .status-badge.cancelled { background: #ECEFF1; color: var(--owner-secondary); }
+            
+            /* Conversation Section */
+            .conversation-input { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--owner-bg); border-radius: 12px; }
+            .conversation-input textarea { flex: 1; border: 1px solid var(--owner-border); border-radius: 10px; padding: 0.75rem 1rem; resize: none; min-height: 80px; font-size: 0.95rem; }
+            .conversation-input textarea:focus { outline: none; border-color: var(--owner-primary); box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.1); }
+            .btn-send { background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-primary-dark) 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; transition: all 0.2s ease; align-self: flex-end; }
+            .btn-send:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(92, 107, 192, 0.35); }
+            .btn-send svg { width: 18px; height: 18px; }
+            
+            .conversation-empty { text-align: center; padding: 3rem 2rem; color: var(--owner-text-muted); }
+            .conversation-empty svg { width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.5; }
+            
+            @media (max-width: 991.98px) {
+                .owner-sidebar { transform: translateX(-100%); }
+                .owner-main-content { margin-left: 0; }
+            }
+            </style>
+            
+            <div class="owner-dashboard-wrapper">
+                <!-- Sidebar - Light Theme -->
+                <aside class="owner-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        <div class="sidebar-logo-text">
+                            <h5>Owner Portal</h5>
+                            <small>Real Estate Management</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">
+                            <div class="nav-section-title">Main Menu</div>
+                            <a href="/my/properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/my/my-properties" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                                <span>My Properties</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Financials</div>
+                            <a href="/my/collected-payments" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                                <span>Collected Payments</span>
+                            </a>
+                            <a href="/my/receivables" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                <span>Receivables</span>
+                            </a>
+                        </div>
+                        
+                        <div class="nav-section">
+                            <div class="nav-section-title">Requests</div>
+                            <a href="/my/requests" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                                <span>My Requests</span>
+                            </a>
+                            <a href="/my/requests/new" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>New Request</span>
+                            </a>
+                        </div>
+                    </nav>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="owner-main-content">
+                    <div class="req-detail-header">
+                        <h1 class="req-detail-title" t-esc="request_obj.subject"/>
+                        <a href="/my/requests" class="btn-back">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                            Back to Requests
+                        </a>
+                    </div>
+                    
+                    <!-- Request Details Card -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            Request Details
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="detail-row">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">
+                                    <span t-if="request_obj.state == 'new'" class="status-badge new">New</span>
+                                    <span t-if="request_obj.state == 'in_progress'" class="status-badge in_progress">In Progress</span>
+                                    <span t-if="request_obj.state == 'done'" class="status-badge done">Completed</span>
+                                    <span t-if="request_obj.state == 'cancelled'" class="status-badge cancelled">Cancelled</span>
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Request Type</span>
+                                <span class="detail-value" t-esc="dict(request_obj.fields_get(['request_type'])['request_type']['selection'])[request_obj.request_type]"/>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Project</span>
+                                <span class="detail-value" t-esc="request_obj.project_id.name or 'N/A'"/>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Submitted On</span>
+                                <span class="detail-value"><t t-esc="request_obj.create_date.strftime('%d %b %Y, %H:%M')"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description Card (if exists) -->
+                    <t t-if="request_obj.description">
+                        <div class="detail-card">
+                            <div class="detail-card-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" /></svg>
+                                Description
+                            </div>
+                            <div class="detail-card-body">
+                                <p style="white-space: pre-wrap; margin: 0;" t-esc="request_obj.description"/>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <!-- Conversation Card -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                            Conversation
+                        </div>
+                        <div class="detail-card-body">
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="request_obj"/>
+                            </t>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================================================= -->
+<!--  PROPERTY DETAIL PAGE (FINAL CORRECTED VERSION)         -->
+<!-- ======================================================= -->
+<template id="portal_property_view" name="Property Details">
+    <t t-call="portal.portal_layout">
+        <t t-call="nthub_realestate.portal_owner_styles"/>
+        <div class="container py-4">
+            <div class="mb-3">
+                <a href="/my/properties" class="btn btn-sm btn-light border">
+                    <i class="fa fa-arrow-left me-2"/>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Property Details Card -->
+            <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-auto text-center"><div class="property-image-placeholder bg-light rounded-3 d-flex flex-column align-items-center justify-content-center p-3"><t t-if="property.image"><img t-att-src="image_data_uri(property.image)" class="img-fluid rounded-3" style="max-width: 150px; max-height: 150px; object-fit: cover;" alt="Property Image"/></t><t t-else=""><i class="fa fa-image fa-3x text-primary mb-2"/><h6 class="text-muted mb-1">Property Image</h6></t></div></div>
+                    <div class="col-md"><div class="row g-3"><div class="col-md-6"><label class="form-label text-muted fw-bold mb-1">Property Name</label><input type="text" class="form-control" readonly="1" t-att-value="property.name"/></div><div class="col-md-6"><label class="form-label text-muted fw-bold mb-1">Property Code</label><input type="text" class="form-control" readonly="1" t-att-value="property.code"/></div><div class="col-md-6"><label class="form-label text-muted fw-bold mb-1">Owner</label><input type="text" class="form-control" readonly="1" t-att-value="property.partner_id.name"/></div><div class="col-md-6"><label class="form-label text-muted fw-bold mb-1">Region</label><input type="text" class="form-control" readonly="1" t-att-value="property.region.name"/></div></div></div>
+                    <div class="col-lg-3"><div class="vstack gap-3"><div class="card border rounded-4"><div class="card-header bg-light fw-bold">Total Units</div><div class="card-body text-center py-2"><h4 class="fw-bolder mb-0" t-esc="property.quantity"/></div></div><div class="card border rounded-4"><div class="card-header bg-light fw-bold">Available</div><div class="card-body text-center py-2"><h4 class="fw-bolder text-success mb-0" t-esc="property.available_units_count"/></div></div><div class="card border rounded-4"><div class="card-header bg-light fw-bold">On Lease</div><div class="card-body text-center py-2"><h4 class="fw-bolder text-warning mb-0" t-esc="property.rented_units_count"/></div></div></div></div>
+                </div>
+            </div>
+
+            <!-- Financial Stats -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-primary text-white fw-bold">
+                            <i class="fa fa-line-chart me-2"/>Monthly Revenue
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bolder text-primary mb-0">
+                                <t t-esc="'%.2f' % (monthly_revenue or 0.0)"/> 
+                                <small class="text-muted" t-esc="property.company_id.currency_id.symbol"/>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-primary text-white fw-bold">
+                            <i class="fa fa-money me-2"/>Total Receivables
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bolder text-primary mb-0">
+                                <t t-esc="'%.2f' % (total_receivables or 0.0)"/> 
+                                <small class="text-muted" t-esc="property.company_id.currency_id.symbol"/>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contract Agreement Card -->
+            <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+                <h4 class="fw-bold">Contract Agreement</h4>
+                <t t-if="not property.contract_approved">
+                    <p>Please review and sign your property management contract to finalize the agreement.</p>
+                    <a t-att-href="'/my/property/%s/contract' % property.id" class="btn btn-primary mt-2" style="max-width: 250px;">
+                        <i class="fa fa-file-text-o me-2"/>View and Sign Contract
+                    </a>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-success mb-0">
+                        <p class="fw-bold mb-1"><i class="fa fa-check-circle me-2"/>Contract Approved!</p>
+                        You signed this on <span t-field="property.contract_approval_date" t-options='{"widget": "datetime"}'/>.
+                        <a t-att-href="'/my/property/%s/contract' % property.id" class="alert-link">View Signed Document</a>.
+                    </div>
+                </t>
+            </div>
+
+            <!-- Units Table with Collapsible Payment History -->
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-light fw-bold">Units in this Property</div>
+                <div class="table-responsive">
+                    <table class="table table-hover o_portal_my_doc_table mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-3" style="width: 5%;"/>
+                                <th>Unit Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end">Rental Fee</th>
+                                <th class="text-end pe-4">Total Collected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="not units_with_data">
+                                <tr><td colspan="5" class="text-center text-muted py-5">No units have been defined for this property yet.</td></tr>
+                            </t>
+                            <t t-foreach="units_with_data" t-as="data">
+                                <tr class="align-middle" data-bs-toggle="collapse" t-att-data-bs-target="'#unit_payments_%s' % data['unit'].id" role="button" aria-expanded="false">
+                                    <td class="ps-3"><i class="fa fa-chevron-right"/></td>
+                                    <td class="fw-bold" t-esc="data['unit'].name"/>
+                                    <td class="text-center">
+                                        <span t-attf-class="badge rounded-pill #{'badge-soft-warning' if data['unit'].state == 'on_lease' else 'badge-soft-success' if data['unit'].state == 'free' else 'badge-soft-secondary'}" t-esc="dict(data['unit'].fields_get(['state'])['state']['selection'])[data['unit'].state]"/>
+                                    </td>
+                                    <td class="text-end" t-esc="data['unit'].rental_fee" t-options='{"widget": "monetary", "display_currency": property.company_id.currency_id}'/>
+                                    <td class="text-end pe-4" t-esc="data['collected_amount']" t-options='{"widget": "monetary", "display_currency": property.company_id.currency_id}'/>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="p-0 border-0">
+                                        <div t-att-id="'unit_payments_%s' % data['unit'].id" class="collapse">
+                                            <div class="p-3 bg-light-subtle">
+                                                <h6 class="fw-bold border-bottom pb-2 mb-2">Payment History for Unit <t t-esc="data['unit'].name"/></h6>
+                                                <t t-if="not data['payment_lines']">
+                                                    <p class="text-muted mb-0 fst-italic">No payment records found for this unit.</p>
+                                                </t>
+                                                <t t-else="">
+                                                    <table class="table table-sm table-bordered table-striped">
+                                                        <thead class="table-secondary">
+                                                            <tr><th>Due Date</th><th>Reference</th><th class="text-end">Total Amount</th><th class="text-end">Amount Due</th><th class="text-center">Payment Status</th></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr t-foreach="data['payment_lines']" t-as="line">
+                                                                <td><span t-field="line.date"/></td>
+                                                                <td><span t-field="line.name"/></td>
+                                                                <!-- FIX APPLIED HERE -->
+                                                                <td class="text-end"><span t-field="line.amount" t-options='{"widget": "monetary", "display_currency": line.currency_id or property.company_id.currency_id}'/></td>
+                                                                <!-- AND FIX APPLIED HERE -->
+                                                                <td class="text-end"><span t-field="line.amount_residual" t-options='{"widget": "monetary", "display_currency": line.currency_id or property.company_id.currency_id}'/></td>
+                                                                <td class="text-center"><span t-if="line.payment_state == 'paid'" class="badge bg-success">Paid</span><span t-if="line.payment_state == 'in_payment'" class="badge bg-warning text-dark">In Payment</span><span t-if="line.payment_state == 'not_paid'" class="badge bg-danger">Not Paid</span><span t-if="line.payment_state == 'partial'" class="badge bg-info text-dark">Partial</span><span t-if="not line.payment_state" class="badge bg-secondary">N/A</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+
+    <!-- Contract Page -->
+
+
+        <!-- ======================================================= -->
+    <!--  CONTRACT SIGNATURE PAGE (FINAL VERSION)                -->
+    <!-- ======================================================= -->
+<!-- ======================================================= -->
+<!--  CONTRACT SIGNATURE PAGE (FINAL CORRECTED VERSION)      -->
+<!-- ======================================================= -->
+
+
+
+    <!-- ======================================================= -->
+<!--  CONTRACT SIGNATURE PAGE (FINAL CORRECTED VERSION)      -->
+<!-- ======================================================= -->
+
+
+    <!-- ======================================================= -->
+<!--  CONTRACT SIGNATURE PAGE (FINAL ROBUST VERSION)         -->
+<!-- ======================================================= -->
+
+<!-- ======================================================= -->
+<!--  CONTRACT SIGNATURE PAGE (FINAL DEFENSIVE VERSION)      -->
+<!-- ======================================================= -->
+<template id="portal_property_contract" name="Property Contract">
+    <t t-call="portal.portal_layout">
+        <t t-call="nthub_realestate.portal_owner_styles"/>
+
+        <!-- External assets for rich text editor and signature pad -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.css" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+        <div id="contract_page_container" class="container py-4">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="mb-3">
+                <a t-att-href="'/my/property/%s' % property.id" class="btn btn-sm btn-light border">
+                    <i class="fa fa-arrow-left me-2"/>Back to Property
+                </a>
+            </div>
+            <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+                <h2 class="fw-bolder mb-4">Property Management Contract</h2>
+
+                <!-- Read-Only View (After Signing) -->
+                <div t-if="property.contract_approved">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading"><i class="fa fa-check-circle"/> Contract Approved!</h4>
+                        <p>You approved this contract on <span t-field="property.contract_approval_date" t-options='{"widget": "datetime"}'/>.</p>
+                    </div>
+                    <div id="contract_content_readonly" class="mb-4">
+                         <t t-foreach="range(1, 15)" t-as="i">
+                            <t t-if="property['contract_article_%s' % i]"><h4 class="mt-4">Article <t t-esc="i"/></h4><div t-raw="property['contract_article_%s' % i]"/></t>
+                         </t>
+                    </div>
+                    <hr/>
+                    <p class="fw-bold mb-2">Your Signature:</p>
+                    <img t-att-src="'data:image/png;base64,%s' % property.contract_signature" style="max-width: 300px; background-color: #FFF; border: 1px solid #DDD;"/>
+                </div>
+
+                <!-- Editable View (Before Signing) -->
+                <div t-else="">
+                    <div id="contract_content_editable" class="mb-4">
+                        <p class="text-muted">You can edit the articles below. When ready, click "Approve and Sign" at the bottom.</p>
+                         <t t-foreach="range(1, 15)" t-as="i">
+                             <div class="mb-3">
+                                 <label class="form-label fw-bold">Article <t t-esc="i"/></label>
+                                 <textarea t-att-name="'contract_article_%s' % i" class="form-control summernote-editor"><t t-raw="property['contract_article_%s' % i]"/></textarea>
+                             </div>
+                         </t>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#signatureModal">
+                            <i class="fa fa-check-circle me-2"/>Approve and Sign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signature Modal -->
+        <div class="modal fade" id="signatureModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title">Confirm Signature</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <p>Please sign below to finalize your approval.</p>
+                        <div id="signature_pad_container" style="border: 1px solid #ced4da; border-radius: .25rem; height: 200px; width: 100%;"><canvas style="height: 100%; width: 100%;"></canvas></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="clear_signature">Clear</button>
+                        <button type="button" class="btn btn-primary" id="confirm_signature_btn"><span class="spinner-border spinner-border-sm d-none"></span> Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JAVASCRIPT FOR CONTRACT PAGE (DEFENSIVE VERSION) -->
+        <script type="text/javascript">
+        odoo.define('nthub_realestate.contract_approval_process', function (require) {
+            'use strict';
+            var publicWidget = require('web.public.widget');
+
+            publicWidget.registry.ContractApproval = publicWidget.Widget.extend({
+                selector: '#contract_page_container',
+                events: {
+                    'click #confirm_signature_btn': '_onConfirmSignature',
+                    'click #clear_signature': '_onClearSignature',
+                },
+
+                start: function () {
+                    this._super.apply(this, arguments);
+                    this.signaturePad = null;
+                    this._initializeSummernote();
+                    this._initializeModalEvents();
+                },
+
+                _initializeSummernote: function() {
+                    this.$('.summernote-editor').summernote({ height: 150, toolbar: [['style', ['bold', 'italic', 'underline']],['para', ['ul', 'ol']]] });
+                },
+
+                _initializeModalEvents: function() {
+                    var self = this;
+                    var signatureModalEl = this.el.querySelector('#signatureModal');
+
+                    if (signatureModalEl) {
+                        signatureModalEl.addEventListener('shown.bs.modal', function() {
+                            // Use a timeout to ensure the modal is fully rendered and sized
+                            setTimeout(function() {
+                                try {
+                                    // Check if the SignaturePad library is loaded
+                                    if (typeof SignaturePad === 'undefined') {
+                                        console.error('SignaturePad library not loaded.');
+                                        alert('Error: The signature library could not be loaded. Please check your connection and try again.');
+                                        return;
+                                    }
+
+                                    var canvas = self.el.querySelector('#signature_pad_container canvas');
+                                    if (!canvas) {
+                                        console.error('Canvas element for signature pad not found.');
+                                        return;
+                                    }
+
+                                    self.signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgb(255, 255, 255)' });
+                                    self._resizeCanvas();
+
+                                    window.addEventListener('resize', self._resizeCanvas.bind(self));
+                                } catch (e) {
+                                    console.error('Error initializing signature pad:', e);
+                                    alert('An unexpected error occurred while setting up the signature pad.');
+                                }
+                            }, 150); // Increased timeout slightly for more reliability
+                        });
+
+                        signatureModalEl.addEventListener('hidden.bs.modal', function() {
+                             window.removeEventListener('resize', self._resizeCanvas.bind(self));
+                        });
+                    }
+                },
+
+                _resizeCanvas: function() {
+                    if (!this.signaturePad) return;
+                    var canvas = this.signaturePad.canvas;
+                    var ratio = Math.max(window.devicePixelRatio || 1, 1);
+                    canvas.width = canvas.offsetWidth * ratio;
+                    canvas.height = canvas.offsetHeight * ratio;
+                    canvas.getContext("2d").scale(ratio, ratio);
+                    this.signaturePad.clear();
+                },
+
+                _onClearSignature: function() {
+                    if (this.signaturePad) { this.signaturePad.clear(); }
+                },
+
+                _onConfirmSignature: function (ev) {
+                    var $btn = $(ev.currentTarget);
+                    if (!this.signaturePad || this.signaturePad.isEmpty()) {
+                        return alert("Please provide a signature first.");
+                    }
+                    $btn.attr('disabled', 'disabled').find('.spinner-border').removeClass('d-none');
+
+                    var articles = {};
+                    this.$('.summernote-editor').each(function() {
+                        articles[$(this).attr('name')] = $(this).summernote('code');
+                    });
+
+                    fetch(window.location.pathname, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this.$('input[name="csrf_token"]').val() },
+                        body: JSON.stringify({ articles: articles, signature: this.signaturePad.toDataURL() })
+                    })
+                    .then(response => {
+                        if (!response.ok) { return response.json().then(err => { throw new Error(err.error || 'Server error'); }); }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') { window.location.reload(); } else { throw new Error(data.error); }
+                    })
+                    .catch(error => {
+                        alert("An error occurred: " + error.message);
+                        $btn.removeAttr('disabled').find('.spinner-border').addClass('d-none');
+                    });
+                },
+            });
+        });
+        </script>
+    </t>
+</template>
+
+
+    <!-- ======================================================= -->
+    <!--  2. SHARED COMPONENTS - WIDGETS                         -->
+    <!-- ======================================================= -->
+
+    <template id="portal_owner_stat_cards">
+        <!-- 1. Total Projects Card -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Total Projects</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <h3 class="fw-bolder mb-0" t-esc="property_count"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Available Units Card -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Available Units</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <h3 class="fw-bolder mb-0 text-orange" t-esc="available_units"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Rented Units Card -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Rented Units</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <h3 class="fw-bolder mb-0 text-success" t-esc="rented_units"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Monthly Revenue Card -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Monthly Revenue</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <h3 class="fw-bolder mb-0 text-purple" t-esc="monthly_revenue" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5. Total Collected Card (Clickable) -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <a href="/my/collected-payments" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-4 h-100" style="cursor: pointer; transition: transform 0.2s;">
+                    <div class="card-header bg-light fw-bold">Total Collected</div>
+                    <div class="card-body text-center d-flex align-items-center justify-content-center">
+                        <h3 class="fw-bolder mb-0 text-info" t-esc="total_collected" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <!-- 6. Total Receivables Card (Posted invoices not yet paid) -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <a href="/my/receivables" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-4 h-100" style="cursor: pointer; transition: transform 0.2s;">
+                    <div class="card-header bg-light fw-bold">Total Receivables</div>
+                    <div class="card-body text-center d-flex align-items-center justify-content-center">
+                        <h3 class="fw-bolder mb-0 text-danger" t-esc="total_receivables" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <!-- 7. Vendor Quotes Pending Approval -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <a href="/my/vendor_quotes" class="text-decoration-none">
+                <div class="card shadow-sm border rounded-4 h-100" style="cursor: pointer; transition: transform 0.2s;">
+                    <div class="card-header bg-light fw-bold">
+                        Pending Approvals
+                    </div>
+                    <div class="card-body text-center d-flex align-items-center justify-content-center">
+                        <div>
+                            <h3 class="fw-bolder mb-1" t-esc="pending_vendor_quotes or 0"/>
+                            <small class="text-muted">Vendor Quotes</small>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <!-- 8. Total Available Area for Rent -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Available Area</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <div>
+                        <h3 class="fw-bolder mb-0 text-orange">
+                            <t t-esc="'%.2f' % (total_available_area or 0)"/> m²
+                        </h3>
+                        <small class="text-muted">For Rent</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 9. Total Rented Area -->
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-header bg-light fw-bold">Rented Area</div>
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <div>
+                        <h3 class="fw-bolder mb-0 text-success">
+                            <t t-esc="'%.2f' % (total_rented_area or 0)"/> m²
+                        </h3>
+                        <small class="text-muted">Currently Rented</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_owner_projects_widget" name="Portal Owner's Projects List">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Your Projects</h4>
+        </div>
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless o_portal_my_doc_table mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Project</th>
+                            <th class="text-center">Total Units</th>
+                            <th class="text-center">Rented</th>
+                            <th class="text-center">Available</th>
+                            <th class="text-end">Contract Value</th>
+                            <th class="text-end">Total Receivables</th>
+                            <th class="text-end pe-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="not properties">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <i class="fa fa-home fa-3x mb-3"/>
+                                    <h4>No Projects Found</h4>
+                                    <p>There are currently no projects assigned to your account.</p>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-foreach="properties" t-as="prop">
+                            <tr class="align-middle">
+                                <td class="ps-4">
+                                    <div class="fw-bold" t-esc="prop.name"/>
+                                    <small class="text-muted" t-if="prop.street" t-esc="prop.street"/>
+                                </td>
+                                <td class="text-center fw-bold" t-esc="prop.quantity"/>
+                                <td class="text-center fw-bold text-success" t-esc="prop.rented_units_count"/>
+                                <td class="text-center fw-bold text-orange" t-esc="prop.available_units_count"/>
+                                <td class="text-end fw-bold text-primary">
+                                    <t t-esc="'%.2f' % (project_financials.get(prop.id, {}).get('contract_value', 0.0))"/>
+                                    <small class="text-muted" t-esc="company_currency.symbol"/>
+                                </td>
+                                <td class="text-end fw-bold text-danger">
+                                    <t t-esc="'%.2f' % (project_financials.get(prop.id, {}).get('total_receivables', 0.0))"/>
+                                    <small class="text-muted" t-esc="company_currency.symbol"/>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a t-att-href="'/my/property/' + str(prop.id)" class="btn btn-sm btn-outline-secondary">
+                                        View Details <i class="fa fa-chevron-right small ms-2"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_owner_requests_widget" name="Portal Owner's Requests Widget">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-light fw-bold">
+                My Requests
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="flex-grow-1 overflow-auto pe-2" style="max-height: 250px;">
+                    <t t-if="not requests">
+                        <div class="text-center text-muted p-4 h-100 d-flex flex-column justify-content-center">
+                            <i class="fa fa-inbox fa-2x text-black-50 mb-2"/>
+                            <div>You have no open requests.</div>
+                        </div>
+                    </t>
+                    <table class="table table-hover table-borderless" t-if="requests">
+                        <thead >
+                            <tr>
+                                <th class="text-right">Subject</th>
+                                <th class="text-right">Request Type</th>
+                                <th class="text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="requests" t-as="req" class="align-middle">
+                                <td class="text-right"><a t-att-href="'/my/request/%s' % req.id" class="text-decoration-none text-dark" t-esc="req.subject"/></td>
+                                <td class="text-right text-muted"><t t-esc="dict(req.fields_get(['request_type'])['request_type']['selection'])[req.request_type]"/></td>
+                                <td class="text-right"><span t-if="req.state == 'new'" class="badge badge-soft-info">New</span><span t-if="req.state == 'in_progress'" class="badge badge-soft-warning">In Progress</span><span t-if="req.state == 'done'" class="badge badge-soft-success">Done</span><span t-if="req.state == 'cancelled'" class="badge badge-soft-secondary">Cancelled</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-auto pt-3 d-grid gap-2">
+                    <a href="/my/requests/new" class="btn btn-portal-primary-custom">Submit New Request</a>
+                    <a href="/my/requests" class="btn btn-portal-light-custom">View All Requests</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ======================================================= -->
+    <!--  3. CONSOLIDATED AND CLEANED CSS STYLES                 -->
+    <!-- ======================================================= -->
+    <template id="portal_owner_styles">
+        <style type="text/css">
+            /* <![CDATA[ */
+            body {
+                background-color: #f8f9fa;
+            }
+            .list-group-item-action {
+                transition: all 0.2s ease-in-out;
+            }
+            .list-group-item-action:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+            }
+            .owner-detail-header-bg {
+                background: linear-gradient(135deg, #6246be 0%, #4f46e5 100%);
+                color: white;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                padding: 2rem 0;
+                margin-bottom: 1rem;
+            }
+            .header-icon-large {
+                width: 70px;
+                height: 70px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20px;
+                font-size: 30px;
+            }
+            .text-primary-dark {
+                color: #4f46e5 !important;
+            }
+            .stat-icon {
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px;
+                font-size: 20px;
+            }
+            .stat-card-sm {
+                width: 120px;
+                height: 90px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #e7f0ff;
+                font-size: 0.9rem;
+            }
+            .property-image-placeholder {
+                width: 180px;
+                height: 180px;
+                border: 1px dashed #d1e2ff;
+            }
+            .property-units-section {
+                background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+                color: white;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .unit-card-v2 {
+                border: 1px solid #e9ecef;
+                transition: all 0.2s ease-in-out;
+            }
+            .unit-card-v2:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+            }
+            .unit-card-number {
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+            }
+            .unit-price-box {
+                background-color: #f0fdf4;
+                border-radius: 8px;
+                padding: 0.75rem 1rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .request-item-custom {
+                background-color: #f8fafc;
+                border: 1px solid #e2e8f0;
+                text-decoration: none; color: inherit;
+                transition: all 0.2s ease-in-out;
+            }
+            .request-item-custom:hover {
+                transform: scale(1.02);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                border-color: #cbd5e1;
+            }
+            .bg-primary-soft { background-color: #e7f0ff; }
+            .text-primary { color: #0d6efd !important; }
+            .bg-orange-soft { background-color: #fff4e5; }
+            .text-orange { color: #fd7e14 !important; }
+            .bg-success-soft { background-color: #e6f7f0; }
+            .text-success { color: #198754 !important; }
+            .bg-purple-soft { background-color: #f3e7ff; }
+            .text-purple { color: #6f42c1 !important; }
+            .bg-info-soft { background-color: #d1ecf1; }
+            .bg-warning-soft { background-color: #fff3cd; }
+            .badge.badge-soft-success { color: #1a744f; background-color: #d1f7e5; }
+            .badge.badge-soft-warning { color: #856404; background-color: #fff3cd; }
+            .badge.badge-soft-secondary { color: #566573; background-color: #e9ecef; }
+            .badge.badge-soft-info { color: #0c5460; background-color: #d1ecf1; }
+            .btn-portal-primary-custom {
+                background-color: #6c5f78 !important;
+                border-color: #6c5f78 !important;
+                color: #fff !important;
+                padding: 0.75rem;
+                font-weight: 600;
+            }
+            .btn-portal-light-custom {
+                background-color: #f0f0f0 !important;
+                border-color: #f0f0f0 !important;
+                color: #333 !important;
+                padding: 0.75rem;
+                font-weight: 600;
+            }
+            /* ]]> */
+        </style>
+    </template>
+
+    <!-- Collected Payments List Page -->
+    <template id="portal_owner_collected_payments" name="Collected Payments">
+        <t t-call="portal.portal_layout">
+            <t t-call="nthub_realestate.portal_owner_styles"/>
+            <div class="container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bolder mb-2">Collected Payments</h2>
+                        <p class="text-muted mb-0">
+                            <span class="fw-bold" t-esc="payment_count"/> payments | 
+                            Total: <span class="fw-bold text-info" t-esc="total_collected" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                        </p>
+                    </div>
+                    <a href="/my/properties" class="btn btn-light border">
+                        <i class="fa fa-arrow-left me-2"/>Back to Dashboard
+                    </a>
+                </div>
+                
+                <div class="card shadow-sm border-0 rounded-4">
+                    <t t-if="not paid_payments">
+                        <div class="card-body text-center text-muted p-5">
+                            <i class="fa fa-inbox fa-4x text-black-50 mb-3" style="opacity: 0.5;"/>
+                            <h4>No collected payments yet.</h4>
+                        </div>
+                    </t>
+                    
+                    <t t-if="paid_payments">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-borderless mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4">Date</th>
+                                        <th>Tenant</th>
+                                        <th>Contract</th>
+                                        <th>Project</th>
+                                        <th>Unit</th>
+                                        <th>Invoice</th>
+                                        <th class="text-end pe-4">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="paid_payments" t-as="payment" class="align-middle">
+                                        <td class="ps-4">
+                                            <span t-esc="payment['date']" t-options='{"widget": "date"}'/>
+                                        </td>
+                                        <td class="fw-bold">
+                                            <t t-esc="payment['tenant'].name"/>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary" t-esc="payment['contract'].name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="payment['project'].name if payment['project'] else 'N/A'"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="payment['unit'].name if payment['unit'] else 'N/A'"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="payment['invoice']">
+                                                <span class="badge badge-soft-success" t-esc="payment['invoice'].name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">-</span>
+                                            </t>
+                                        </td>
+                                        <td class="text-end pe-4 fw-bold text-success">
+                                            <t t-esc="payment['amount']" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Total Receivables List Page -->
+    <template id="portal_owner_receivables" name="Total Receivables">
+        <t t-call="portal.portal_layout">
+            <t t-call="nthub_realestate.portal_owner_styles"/>
+            <div class="container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bolder mb-2">Total Receivables</h2>
+                        <p class="text-muted mb-0">
+                            <span class="fw-bold" t-esc="invoice_count"/> unpaid items | 
+                            Total Due: <span class="fw-bold text-danger" t-esc="total_receivables" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                        </p>
+                    </div>
+                    <a href="/my/properties" class="btn btn-light border">
+                        <i class="fa fa-arrow-left me-2"/>Back to Dashboard
+                    </a>
+                </div>
+                
+                <div class="card shadow-sm border-0 rounded-4">
+                    <t t-if="not receivable_invoices">
+                        <div class="card-body text-center text-muted p-5">
+                            <i class="fa fa-check-circle fa-4x text-success mb-3"/>
+                            <h4>No outstanding receivables!</h4>
+                            <p>All invoices have been paid.</p>
+                        </div>
+                    </t>
+                    
+                    <t t-if="receivable_invoices">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-borderless mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4">Reference</th>
+                                        <th>Tenant</th>
+                                        <th>Project</th>
+                                        <th>Unit</th>
+                                        <th>Date</th>
+                                        <th>Due Date</th>
+                                        <th class="text-end">Total Amount</th>
+                                        <th class="text-end">Amount Due</th>
+                                        <th class="text-center pe-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="receivable_invoices" t-as="rec" class="align-middle">
+                                        <td class="ps-4">
+                                            <t t-if="rec.get('invoice')">
+                                                <span class="badge bg-secondary" t-esc="rec['invoice'].name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="badge bg-warning text-dark">Pending Invoice</span>
+                                            </t>
+                                        </td>
+                                        <td class="fw-bold">
+                                            <t t-esc="rec['tenant'].name if rec.get('tenant') else 'N/A'"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="rec['project'].name if rec.get('project') else 'N/A'"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="rec['unit'].name if rec.get('unit') else 'N/A'"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="rec['date']" t-options='{"widget": "date"}'/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="rec['due_date']" t-options='{"widget": "date"}'/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-esc="rec['amount_total']" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                        </td>
+                                        <td class="text-end fw-bold text-danger">
+                                            <t t-esc="rec['amount_residual']" t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                        </td>
+                                        <td class="text-center pe-4">
+                                            <span t-if="rec['payment_state'] == 'not_paid'" class="badge bg-danger">Not Paid</span>
+                                            <span t-if="rec['payment_state'] == 'partial'" class="badge bg-warning text-dark">Partial</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="owner_message_view_form" model="ir.ui.view">
+        <field name="name">owner.message.form</field>
+        <field name="model">owner.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <header><field name="state" widget="statusbar"/></header>
+                <sheet>
+                    <group>
+                        <field name="subject"/>
+                        <field name="owner_id"/>
+                        <field name="related_document_id"/>
+                    </group>
+
+                </sheet>
+                             <chatter/>
+
+            </form>
+        </field>
+    </record>
+    <record id="action_owner_message" model="ir.actions.act_window">
+        <field name="name">Owner Messages</field>
+        <field name="res_model">owner.message</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="owner_request_view_form" model="ir.ui.view">
+        <field name="name">owner.request.form</field>
+        <field name="model">owner.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_progress" string="Start Progress" type="object" class="btn-primary" invisible="state != 'new'"
+                           />
+                    <button name="action_mark_as_done" string="Mark as Done" type="object" class="btn-primary" invisible="state != 'in_progress'"
+                          />
+                    <button name="action_cancel" string="Cancel" type="object"  invisible="state not in ['new', 'in_progress']"
+                           />
+                    <button name="action_reset_to_new" string="Reset to New" type="object" invisible="state not in ['done', 'cancelled']"
+                           />
+                    <field name="state" widget="statusbar" clickable="1"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="subject" placeholder="Request Subject..."/></h1></div>
+                    <group>
+                        <field name="owner_id"/>
+                        <field name="project_id"/>
+                        <field name="request_type"/>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <field name="description" placeholder="Provide details of your request..."/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                                             <chatter/>
+
+            </form>
+        </field>
+    </record>
+    <record id="action_owner_request" model="ir.actions.act_window"><field name="name">Owner Requests</field><field name="res_model">owner.request</field><field name="view_mode">list,form</field></record>
+<!--    <menuitem id="menu_owner_messages" name="Owner Messages" parent="nthub_realestate.rental_menu_root" action="action_owner_message" sequence="30"/>-->
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Client Action for New Dashboard -->
+    <record id="action_rental_quotation_dashboard_client" model="ir.actions.client">
+        <field name="name">Rental Quotation Dashboard</field>
+        <field name="tag">rental_quotation_dashboard_action</field>
+    </record>
+
+</odoo>

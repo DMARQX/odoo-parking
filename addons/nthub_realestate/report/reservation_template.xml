@@ -1,0 +1,302 @@
+<odoo>
+    <data>
+
+        <!-- Define the report for reservation contracts -->
+        <record id="reservation_contract_reports" model="ir.actions.report">
+            <field name="name">Reservation Report</field>
+            <field name="model">unit.reservation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.reservation_templates</field>
+            <field name="report_file">nthub_realestate.reservation_templates</field>
+            <field name="binding_model_id" ref="model_unit_reservation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template for the Reservation Report -->
+        <template id="nthub_realestate.reservation_templates">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="oe_structure"/>
+                    <div class="page">
+                        <!-- Reservation Contract Details Header -->
+                        <h3 style="text-align:center; color: white; background-color: blue; padding: 10px;">Reservation#
+                            <t t-foreach="docs" t-as="o">
+                                <span t-esc="o.name"/>
+                            </t>
+                        </h3>
+                        <br/>
+
+                        <!-- Reservation Contract Table -->
+                        <t t-foreach="docs" t-as="o">
+                            <table class="table table-bordered">
+                                <tr style="text-align:center; color: black; padding: 10px;">
+                                    <th>Project:</th>
+                                    <th>Unit:</th>
+                                    <th>Date:</th>
+                                </tr>
+                                <tr style="text-align:center; color: black; padding: 10px;">
+                                    <td>
+                                        <span t-esc="o.rs_project.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o.rs_project_unit.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o.date"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Agreement Details -->
+                            <h5>This Agreement is made by and between:</h5>
+                            <table class="table-striped table">
+                                <tr>
+                                    <td>
+                                        <h6>First Party:</h6>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Company:
+                                                    <td>
+                                                        <span t-esc="o.company_id.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Salesman:
+                                                    <td>
+                                                        <span t-esc="o.user_id.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Address:
+                                                    <td>
+                                                        <span t-esc="o.user_id.street"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <h5>Second Party:</h5>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Buyer (Arabic) / المشتري:
+                                                    <td>
+                                                        <span t-esc="o.partner_id.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Buyer (English):
+                                                    <td>
+                                                        <span t-esc="o.partner_id.name_en or '-'"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Country:
+                                                    <td>
+                                                        <span t-esc="o.partner_id.country_id.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Address:
+                                                    <td>
+                                                        <span t-esc="o.partner_id.street"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Project Specifications Table -->
+                            <h5>Project Specifications:</h5>
+                            <table class="table-striped table">
+                                <tr>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Project
+                                                    <td>
+                                                        <span t-esc="o.rs_project.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Northern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project.north"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Western border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project.west"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Code:
+                                                    <td>
+                                                        <span t-esc="o.rs_project.code"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Southern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project.south"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Eastern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project.east"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Unit Specifications Table -->
+                            <h5>Unit Specifications:</h5>
+                            <table class="table-striped table">
+                                <tr>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Unit:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Status:
+                                                    <td>
+                                                        <span t-esc="o.status.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Floor:
+                                                    <td>
+                                                        <span t-esc="o.floor"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Electricity Meter:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.electricity_meter"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Northern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.north"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Eastern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.east"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    Code:
+                                                    <td>
+                                                        <span t-esc="o.unit_code"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Type:
+                                                    <td>
+                                                        <span t-esc="o.type.name"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Area:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_area"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Water Meter:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.water_meter"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Southern border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.south"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Western border:
+                                                    <td>
+                                                        <span t-esc="o.rs_project_unit.south"/>
+                                                    </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

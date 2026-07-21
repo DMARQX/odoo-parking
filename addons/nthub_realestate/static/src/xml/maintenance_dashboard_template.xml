@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="nthub_realestate.MaintenanceDashboardTemplate" owl="1">
+        <div class="o_action_manager">
+            <div class="o_control_panel"/>
+            <div class="o_content">
+                <section class="p-4 maintenance_dashboard_section">
+
+                    <!-- ==================== MAINTENANCE REQUESTS SECTION ==================== -->
+                    <h4 class="dashboard-section-header">
+                        <i class="fa fa-wrench me-2"/>Maintenance Requests
+                    </h4>
+                    
+                    <!-- Request KPIs Row -->
+                    <div class="row mt-3">
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('rental.maintenance.request', [], 'All Requests')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-list-alt fa-2x text-primary"/></div>
+                                    <div class="kpi-title">Total Requests</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.total_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-blue" t-on-click="() => this.openListView('rental.maintenance.request', [['x_status', '=', 'submitted']], 'Submitted Requests')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-paper-plane fa-2x"/></div>
+                                    <div class="kpi-title">Submitted</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.submitted_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-yellow" t-on-click="() => this.openListView('rental.maintenance.request', [['x_status', '=', 'under_review']], 'Under Review')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-eye fa-2x"/></div>
+                                    <div class="kpi-title">Under Review</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.under_review_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-purple" t-on-click="() => this.openListView('rental.maintenance.request', [['x_status', '=', 'in_progress']], 'In Progress')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-spinner fa-2x"/></div>
+                                    <div class="kpi-title">In Progress</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.in_progress_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-cyan" t-on-click="() => this.openListView('rental.maintenance.request', [['x_status', 'in', ['pending_supervisor_approval', 'pending_tenant_approval']]], 'Pending Approval')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-clock-o fa-2x"/></div>
+                                    <div class="kpi-title">Pending Approval</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.pending_approval_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-green" t-on-click="() => this.openListView('rental.maintenance.request', [['x_status', '=', 'closed']], 'Closed Requests')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-check-circle fa-2x"/></div>
+                                    <div class="kpi-title">Closed</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.closed_requests"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request Charts Row -->
+                    <div class="row mt-3">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-pie-chart me-2"/>Requests by Type</h5>
+                                    <div class="chart-container" id="requestTypeChart" t-ref="requestTypeChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-bar-chart me-2"/>Requests by Status</h5>
+                                    <div class="chart-container" id="requestStatusChart" t-ref="requestStatusChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-exclamation-triangle me-2"/>Requests by Priority</h5>
+                                    <div class="chart-container" id="priorityChart" t-ref="priorityChart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== JOB ORDERS SECTION ==================== -->
+                    <h4 class="dashboard-section-header mt-4">
+                        <i class="fa fa-briefcase me-2"/>Job Orders
+                    </h4>
+                    
+                    <!-- Job Order KPIs Row -->
+                    <div class="row mt-3">
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-white" t-on-click="() => this.openListView('maintenance.job.order', [], 'All Job Orders')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-tasks fa-2x text-primary"/></div>
+                                    <div class="kpi-title">Total Jobs</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.total_jobs"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-blue" t-on-click="() => this.openListView('maintenance.job.order', [['state', '=', 'sent_to_contractor']], 'Sent to Contractor')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-send fa-2x"/></div>
+                                    <div class="kpi-title">Sent to Contractor</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.sent_to_contractor"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-purple" t-on-click="() => this.openListView('maintenance.job.order', [['state', '=', 'in_progress']], 'In Progress Jobs')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-cogs fa-2x"/></div>
+                                    <div class="kpi-title">In Progress</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.in_progress_jobs"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-yellow" t-on-click="() => this.openListView('maintenance.job.order', [['state', '=', 'completed_by_contractor']], 'Completed by Contractor')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-check fa-2x"/></div>
+                                    <div class="kpi-title">Completed</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.completed_by_contractor"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-cyan" t-on-click="() => this.openListView('maintenance.job.order', [['state', 'in', ['pending_supervisor_approval', 'pending_tenant_approval']]], 'Pending Approval')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-hourglass-half fa-2x"/></div>
+                                    <div class="kpi-title">Pending Approval</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.pending_supervisor + state.dashboardData.pending_tenant"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 mb-3">
+                            <div class="kpi-card bg-card-green" t-on-click="() => this.openListView('maintenance.job.order', [['state', '=', 'closed']], 'Closed Jobs')">
+                                <div class="card-body">
+                                    <div class="kpi-icon"><i class="fa fa-check-circle fa-2x"/></div>
+                                    <div class="kpi-title">Closed</div>
+                                    <div class="kpi-value" t-esc="state.dashboardData.closed_jobs"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job Charts Row -->
+                    <div class="row mt-3">
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-bar-chart me-2"/>Job Orders by Status</h5>
+                                    <div class="chart-container" id="jobStatusChart" t-ref="jobStatusChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-pie-chart me-2"/>Job Orders by Type</h5>
+                                    <div class="chart-container" id="jobTypeChart" t-ref="jobTypeChart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TREND & ACTIVITY SECTION ==================== -->
+                    <h4 class="dashboard-section-header mt-4">
+                        <i class="fa fa-line-chart me-2"/>Trends &amp; Activity
+                    </h4>
+                    
+                    <div class="row mt-3">
+                        <div class="col-lg-8 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-area-chart me-2"/>Monthly Requests Trend</h5>
+                                    <div class="chart-container" id="monthlyTrendChart" t-ref="monthlyTrendChart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-history me-2"/>Recent Requests</h5>
+                                    <div class="recent-activity-list">
+                                        <t t-foreach="state.dashboardData.recent_requests || []" t-as="req" t-key="req.id">
+                                            <div class="activity-item" t-on-click="() => this.openFormView('rental.maintenance.request', req.id, req.name)">
+                                                <div class="activity-header">
+                                                    <span class="activity-name" t-esc="req.name"/>
+                                                    <span class="activity-badge" t-att-class="'badge bg-' + (req.priority === 'Urgent' ? 'danger' : req.priority === 'High' ? 'warning' : 'secondary')" t-esc="req.priority"/>
+                                                </div>
+                                                <div class="activity-details">
+                                                    <span class="text-muted" t-esc="req.type"/> - <span t-esc="req.status"/>
+                                                </div>
+                                                <div class="activity-date text-muted">
+                                                    <i class="fa fa-calendar me-1"/><t t-esc="req.date"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-if="!state.dashboardData.recent_requests || state.dashboardData.recent_requests.length === 0">
+                                            <div class="text-center text-muted py-3">
+                                                <i class="fa fa-inbox fa-2x mb-2"/><br/>
+                                                No recent requests
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Job Orders -->
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="chart-card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-briefcase me-2"/>Recent Job Orders</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Job #</th>
+                                                    <th>Date</th>
+                                                    <th>Contractor</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.dashboardData.recent_jobs || []" t-as="job" t-key="job.id">
+                                                    <tr class="cursor-pointer" t-on-click="() => this.openFormView('maintenance.job.order', job.id, job.name)">
+                                                        <td><strong t-esc="job.name"/></td>
+                                                        <td t-esc="job.date"/>
+                                                        <td t-esc="job.contractor"/>
+                                                        <td>
+                                                            <span class="badge bg-info" t-esc="job.state"/>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">
+                                                                <i class="fa fa-eye"/> View
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="!state.dashboardData.recent_jobs || state.dashboardData.recent_jobs.length === 0">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center text-muted py-3">
+                                                            <i class="fa fa-inbox fa-2x mb-2"/><br/>
+                                                            No recent job orders
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,308 @@
+<odoo>
+    <data>
+
+        <!-- Define the report -->
+        <record id="rental_contract_reports" model="ir.actions.report">
+            <field name="name">Rental Contract Report</field>
+            <field name="model">rental.contract</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.rental_contract_templates</field>
+            <field name="report_file">nthub_realestate.rental_contract_templates</field>
+            <field name="binding_model_id" ref="model_rental_contract"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template for the Rental Contract Report -->
+        <template id="nthub_realestate.rental_contract_templates">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="oe_structure"/>
+                    <div class="page">
+                        <!-- Rental Contract Details Header -->
+                        <h3 style="text-align:center; color: white; background-color: blue; padding: 10px;">Rental
+                            Contract Details
+                            <t t-foreach="docs" t-as="o">
+                                <span t-esc="o.name"/>
+                            </t>
+                        </h3>
+                        <br/>
+
+                        <!-- Rental Contract Table -->
+                        <t t-foreach="docs" t-as="o">
+                            <h5>Rental Contract</h5>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Date:</th>
+                                        <th>Project:</th>
+                                        <th>Unit:</th>
+                                        <th>From:</th>
+                                        <th>To:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.date"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_code"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.date_from"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.date_to"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Agreement Details -->
+                            <h5>This Agreement is made by and between</h5>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Company:</th>
+                                        <th>Address:</th>
+                                        <th>Tenant (Arabic) / المستأجر:</th>
+                                        <th>Tenant (English):</th>
+                                        <th>Address:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.company_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.company_id.street"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.partner_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.partner_id.name_en or '-'"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.partner_id.street"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Project Specifications Table -->
+                            <h5>Project Specifications:</h5>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>North border:</th>
+                                        <th>Western border:</th>
+                                        <th>Code:</th>
+                                        <th>Southern border:</th>
+                                        <th>Eastern border:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.rs_project.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.north"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.west"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_code"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.south"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.east"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Unit Specifications Table -->
+                            <h5>Unit Specifications:</h5>
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Unit:</th>
+                                        <th>Status:</th>
+                                        <th>Floor:</th>
+                                        <th>Electricity Meter:</th>
+                                        <th>North border:</th>
+                                        <th>Eastern border:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.status.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.floor"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.electricity_meter"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.north"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.east"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Additional Unit Specifications -->
+                            <table class="table-striped table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Code:</th>
+                                        <th>Type:</th>
+                                        <th>Area:</th>
+                                        <th>Water Meter:</th>
+                                        <th>Southern border:</th>
+                                        <th>Western border:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_area"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project.rs_project_area"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.water_meter"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.south"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="o.rs_project_unit.south"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Installments Table -->
+                            <div class="line-break">
+                                <table class="table table-sm o_main_table">
+                                    <thead>
+                                        <h6>Installment</h6>
+                                        <tr>
+                                            <th>
+                                                <strong>#</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Due Date</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Name</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Amount</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Invoice</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Status</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Payment Status</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.rental_line_ids" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <span t-field="line.serial"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.date"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.name"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.amount"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.invoice_id.name"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.invoice_state"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.payment_state"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Total, Paid, Balance Table -->
+                            <style>
+                                .table5 {
+                                text-align: right;
+                                font-size: 16px;
+                                line-height: 0.5;
+                                }
+                            </style>
+                            <table style="border-collapse: collapse;width: 100%;" class="table5 table-condensed">
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Total">Total:</td>
+                                    <td name="Total Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.amount_total"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Paid">Paid:</td>
+                                    <td name="Delay Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.paid"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_subtotal" style="">
+                                    <td name="Balance">
+                                        Balance:
+                                    </td>
+                                    <td name="Total After Delay Amount" class="text-right">
+                                        <t t-foreach="docs" t-as="line">
+                                            <span t-esc="line.balance"/>€
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

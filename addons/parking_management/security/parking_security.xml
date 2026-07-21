@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <!-- ==================== APPLICATION CATEGORY ==================== -->
+    <record id="module_category_parking" model="ir.module.category">
+        <field name="name">Parking</field>
+        <field name="description">Parking Management System - Control permissions for each parking feature</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- BASE: READ-ONLY ACCESS (Visible in Settings → Users → Access Rights) -->
+    <!-- ================================================================ -->
+    <record id="group_parking_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="comment">Read-only access to all parking data. Users can view contracts, spots, vehicles, inspections, and configuration.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- CONTRACTS PERMISSIONS -->
+    <!-- ================================================================ -->
+    <record id="group_parking_contract" model="res.groups">
+        <field name="name">Contracts: Create / Edit</field>
+        <field name="comment">Can create and modify parking contracts and view contract history.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_contract_delete" model="res.groups">
+        <field name="name">Contracts: Delete</field>
+        <field name="comment">Can delete contracts and contract history records.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_contract'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- INVOICING -->
+    <!-- ================================================================ -->
+    <record id="group_parking_invoicing" model="res.groups">
+        <field name="name">Invoicing</field>
+        <field name="comment">Can create invoices from parking contracts.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- CHECK IN / CHECK OUT -->
+    <!-- ================================================================ -->
+    <record id="group_parking_checkinout" model="res.groups">
+        <field name="name">Check In / Check Out</field>
+        <field name="comment">Can register check-in and check-out operations for vehicles.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- SPOTS -->
+    <!-- ================================================================ -->
+    <record id="group_parking_spot" model="res.groups">
+        <field name="name">Spots: Manage</field>
+        <field name="comment">Can create, edit, and configure parking spots.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_spot_delete" model="res.groups">
+        <field name="name">Spots: Delete</field>
+        <field name="comment">Can delete parking spots.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_spot'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- VEHICLES -->
+    <!-- ================================================================ -->
+    <record id="group_parking_vehicle" model="res.groups">
+        <field name="name">Vehicles: Manage</field>
+        <field name="comment">Can create, edit, and manage vehicles.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_vehicle_delete" model="res.groups">
+        <field name="name">Vehicles: Delete</field>
+        <field name="comment">Can delete vehicles.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_vehicle'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- INSPECTIONS -->
+    <!-- ================================================================ -->
+    <record id="group_parking_inspection" model="res.groups">
+        <field name="name">Inspections: Manage</field>
+        <field name="comment">Can create, edit, and manage vehicle inspections.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_inspection_delete" model="res.groups">
+        <field name="name">Inspections: Delete</field>
+        <field name="comment">Can delete inspection records.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_inspection'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- CONFIGURATION -->
+    <!-- ================================================================ -->
+    <record id="group_parking_config_location" model="res.groups">
+        <field name="name">Configuration: Branches</field>
+        <field name="comment">Can manage branches/locations.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_config_pricing" model="res.groups">
+        <field name="name">Configuration: Pricing &amp; Services</field>
+        <field name="comment">Can manage price templates and additional services.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <record id="group_parking_config_checkpoint" model="res.groups">
+        <field name="name">Configuration: Checkpoints</field>
+        <field name="comment">Can manage vehicle checkpoints.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- TERMS & CONDITIONS -->
+    <!-- ================================================================ -->
+    <record id="group_parking_terms_conditions" model="res.groups">
+        <field name="name">Terms &amp; Conditions: Manage</field>
+        <field name="comment">Can create, edit, and manage Terms &amp; Conditions templates.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- MANAGER: FULL ACCESS (Implies all groups above) -->
+    <!-- ================================================================ -->
+    <record id="group_parking_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="comment">Full access to all parking features including deletion. This group implies all other parking permissions.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_parking_contract_delete')),
+            (4, ref('group_parking_invoicing')),
+            (4, ref('group_parking_checkinout')),
+            (4, ref('group_parking_spot_delete')),
+            (4, ref('group_parking_vehicle_delete')),
+            (4, ref('group_parking_inspection_delete')),
+            (4, ref('group_parking_config_location')),
+            (4, ref('group_parking_config_pricing')),
+            (4, ref('group_parking_config_checkpoint')),
+            (4, ref('group_parking_terms_conditions')),
+        ]"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- MODEL ACCESS RULES -->
+    <!-- ================================================================ -->
+
+    <!-- === parking.location === -->
+    <record id="access_parking_location_user_read" model="ir.model.access">
+        <field name="name">parking.location.user.read</field>
+        <field name="model_id" ref="model_parking_location"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_location_config" model="ir.model.access">
+        <field name="name">parking.location.config</field>
+        <field name="model_id" ref="model_parking_location"/>
+        <field name="group_id" ref="group_parking_config_location"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_location_manager" model="ir.model.access">
+        <field name="name">parking.location.manager</field>
+        <field name="model_id" ref="model_parking_location"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.spot === -->
+    <record id="access_parking_spot_user_read" model="ir.model.access">
+        <field name="name">parking.spot.user.read</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_spot_manage" model="ir.model.access">
+        <field name="name">parking.spot.manage</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="group_id" ref="group_parking_spot"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_spot_delete" model="ir.model.access">
+        <field name="name">parking.spot.delete</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="group_id" ref="group_parking_spot_delete"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_spot_manager" model="ir.model.access">
+        <field name="name">parking.spot.manager</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.spot.status.log === -->
+    <record id="access_parking_spot_log_user_read" model="ir.model.access">
+        <field name="name">parking.spot.log.user.read</field>
+        <field name="model_id" ref="model_parking_spot_status_log"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_spot_log_manage" model="ir.model.access">
+        <field name="name">parking.spot.log.manage</field>
+        <field name="model_id" ref="model_parking_spot_status_log"/>
+        <field name="group_id" ref="group_parking_spot"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_spot_log_manager" model="ir.model.access">
+        <field name="name">parking.spot.log.manager</field>
+        <field name="model_id" ref="model_parking_spot_status_log"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.vehicle === -->
+    <record id="access_parking_vehicle_user_read" model="ir.model.access">
+        <field name="name">parking.vehicle.user.read</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_vehicle_manage" model="ir.model.access">
+        <field name="name">parking.vehicle.manage</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="group_id" ref="group_parking_vehicle"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_vehicle_delete" model="ir.model.access">
+        <field name="name">parking.vehicle.delete</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="group_id" ref="group_parking_vehicle_delete"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_vehicle_manager" model="ir.model.access">
+        <field name="name">parking.vehicle.manager</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.contract === -->
+    <record id="access_parking_contract_user_read" model="ir.model.access">
+        <field name="name">parking.contract.user.read</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_contract_manage" model="ir.model.access">
+        <field name="name">parking.contract.manage</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="group_id" ref="group_parking_contract"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_contract_delete" model="ir.model.access">
+        <field name="name">parking.contract.delete</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="group_id" ref="group_parking_contract_delete"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_contract_manager" model="ir.model.access">
+        <field name="name">parking.contract.manager</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.contract.history === -->
+    <record id="access_parking_contract_history_user_read" model="ir.model.access">
+        <field name="name">parking.contract.history.user.read</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_contract_history_manage" model="ir.model.access">
+        <field name="name">parking.contract.history.manage</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="group_id" ref="group_parking_contract"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_contract_history_delete" model="ir.model.access">
+        <field name="name">parking.contract.history.delete</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="group_id" ref="group_parking_contract_delete"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_contract_history_manager" model="ir.model.access">
+        <field name="name">parking.contract.history.manager</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.service === -->
+    <record id="access_parking_service_user_read" model="ir.model.access">
+        <field name="name">parking.service.user.read</field>
+        <field name="model_id" ref="model_parking_service"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_service_config" model="ir.model.access">
+        <field name="name">parking.service.config</field>
+        <field name="model_id" ref="model_parking_service"/>
+        <field name="group_id" ref="group_parking_config_pricing"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_service_manager" model="ir.model.access">
+        <field name="name">parking.service.manager</field>
+        <field name="model_id" ref="model_parking_service"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.price.template === -->
+    <record id="access_parking_price_template_user_read" model="ir.model.access">
+        <field name="name">parking.price.template.user.read</field>
+        <field name="model_id" ref="model_parking_price_template"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_price_template_config" model="ir.model.access">
+        <field name="name">parking.price.template.config</field>
+        <field name="model_id" ref="model_parking_price_template"/>
+        <field name="group_id" ref="group_parking_config_pricing"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_price_template_manager" model="ir.model.access">
+        <field name="name">parking.price.template.manager</field>
+        <field name="model_id" ref="model_parking_price_template"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.vehicle.checkpoint === -->
+    <record id="access_parking_checkpoint_user_read" model="ir.model.access">
+        <field name="name">parking.checkpoint.user.read</field>
+        <field name="model_id" ref="model_parking_vehicle_checkpoint"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_checkpoint_config" model="ir.model.access">
+        <field name="name">parking.checkpoint.config</field>
+        <field name="model_id" ref="model_parking_vehicle_checkpoint"/>
+        <field name="group_id" ref="group_parking_config_checkpoint"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_checkpoint_manager" model="ir.model.access">
+        <field name="name">parking.checkpoint.manager</field>
+        <field name="model_id" ref="model_parking_vehicle_checkpoint"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.vehicle.inspection === -->
+    <record id="access_parking_inspection_user_read" model="ir.model.access">
+        <field name="name">parking.inspection.user.read</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_inspection_manage" model="ir.model.access">
+        <field name="name">parking.inspection.manage</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection"/>
+        <field name="group_id" ref="group_parking_inspection"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_inspection_delete" model="ir.model.access">
+        <field name="name">parking.inspection.delete</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection"/>
+        <field name="group_id" ref="group_parking_inspection_delete"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_inspection_manager" model="ir.model.access">
+        <field name="name">parking.inspection.manager</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.vehicle.inspection.line === -->
+    <record id="access_parking_inspection_line_user_read" model="ir.model.access">
+        <field name="name">parking.inspection.line.user.read</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection_line"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_inspection_line_manage" model="ir.model.access">
+        <field name="name">parking.inspection.line.manage</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection_line"/>
+        <field name="group_id" ref="group_parking_inspection"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_inspection_line_manager" model="ir.model.access">
+        <field name="name">parking.inspection.line.manager</field>
+        <field name="model_id" ref="model_parking_vehicle_inspection_line"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- === parking.terms.conditions === -->
+    <record id="access_parking_terms_conditions_user_read" model="ir.model.access">
+        <field name="name">parking.terms.conditions.user.read</field>
+        <field name="model_id" ref="model_parking_terms_conditions"/>
+        <field name="group_id" ref="group_parking_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_terms_conditions_manage" model="ir.model.access">
+        <field name="name">parking.terms.conditions.manage</field>
+        <field name="model_id" ref="model_parking_terms_conditions"/>
+        <field name="group_id" ref="group_parking_terms_conditions"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="access_parking_terms_conditions_manager" model="ir.model.access">
+        <field name="name">parking.terms.conditions.manager</field>
+        <field name="model_id" ref="model_parking_terms_conditions"/>
+        <field name="group_id" ref="group_parking_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL ACCESS (Read-only for customer portal users) -->
+    <!-- ================================================================ -->
+    <record id="access_parking_contract_portal" model="ir.model.access">
+        <field name="name">parking.contract.portal</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_vehicle_portal" model="ir.model.access">
+        <field name="name">parking.vehicle.portal</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_spot_portal" model="ir.model.access">
+        <field name="name">parking.spot.portal</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_location_portal" model="ir.model.access">
+        <field name="name">parking.location.portal</field>
+        <field name="model_id" ref="model_parking_location"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_vehicle_movement_portal" model="ir.model.access">
+        <field name="name">parking.vehicle.movement.portal</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="access_parking_contract_history_portal" model="ir.model.access">
+        <field name="name">parking.contract.history.portal</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL RECORD RULES (Restrict to own records) -->
+    <!-- ================================================================ -->
+    <record id="rule_parking_contract_portal" model="ir.rule">
+        <field name="name">Parking Contract: Portal users see only their contracts</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="rule_parking_vehicle_portal" model="ir.rule">
+        <field name="name">Parking Vehicle: Portal users see only their vehicles</field>
+        <field name="model_id" ref="model_parking_vehicle"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('owner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="rule_parking_contract_history_portal" model="ir.rule">
+        <field name="name">Parking Contract History: Portal users see only their history</field>
+        <field name="model_id" ref="model_parking_contract_history"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('contract_id.partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="rule_parking_vehicle_movement_portal" model="ir.rule">
+        <field name="name">Parking Movement: Portal users see only their movements</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('contract_id.partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+</odoo>

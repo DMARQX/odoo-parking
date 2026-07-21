@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Email template -->
+    <data noupdate="1">
+        <record id="loan_installment_email_template" model="mail.template">
+            <field name="name">Customer Property Installment: Send by email</field>
+            <field name="model_id" ref="nthub_realestate.model_ownership_contract_line"/>
+            <field name="subject">Property Installment</field>
+            <field name="email_from">{{ object.oc_id.company_id.email }}</field>
+            <field name="email_to">{{ object.oc_id.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <html>
+                    Dear Customer:
+                    <t t-esc="ctx.get('user_name')"/>
+                    <br/>
+                    <head>your Property Installment In This Month</head>
+                    <table border="1" style="width:100%">
+                        <thead style="background-color: gray;">
+                            <tr>
+                                <th align="center">Payment Date</th>
+                                <th align="center">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <t t-esc="ctx.get('deadline')"/>
+                                </td>
+                                <td>
+                                    <t t-esc="ctx.get('amount')"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <b>Regards,</b>
+                    <br/>
+                    <t t-out="object.oc_id.company_id.name"></t>
+                </html>
+
+            </field>
+        </record>
+    </data>
+</odoo>

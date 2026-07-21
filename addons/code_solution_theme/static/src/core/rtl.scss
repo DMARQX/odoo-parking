@@ -1,0 +1,64 @@
+// Code Solution Theme - RTL Support (Arabic)
+// Right-to-Left language support
+
+html[dir="rtl"] {
+    // Navbar RTL
+    .o_main_navbar {
+        .o_menu_sections {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        
+        .o_menu_systray {
+            flex-direction: row-reverse;
+        }
+    }
+
+    // Form RTL
+    .o_form_view {
+        .o_inner_group {
+            direction: rtl;
+        }
+
+        .o_field_widget {
+            text-align: right;
+        }
+    }
+
+    // List RTL
+    .o_list_view {
+        .o_list_table {
+            direction: rtl;
+            
+            th, td {
+                text-align: right;
+            }
+        }
+    }
+
+    // Sidebar/Menu RTL
+    .o_action_manager {
+        direction: rtl;
+    }
+
+    // Dropdown RTL
+    .dropdown-menu {
+        text-align: right;
+    }
+
+    // Buttons RTL
+    .btn-group {
+        flex-direction: row-reverse;
+    }
+
+    // Search Panel RTL
+    .o_search_panel {
+        border-right: none;
+        border-left: 1px solid $o-gray-200;
+    }
+
+    // Control Panel RTL
+    .o_control_panel {
+        direction: rtl;
+    }
+}

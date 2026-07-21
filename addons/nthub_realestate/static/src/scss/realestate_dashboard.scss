@@ -1,0 +1,333 @@
+/*
+============================================
+  Dashboard SCSS - Replicating the Freight Design
+============================================
+*/
+
+// --- Core Variables & Overrides ---
+$dashboard-bg: #f5f6f8; // A very light, clean background
+
+.o_action_manager {
+  overflow: auto !important;
+}
+
+.realestate_dashboard_section {
+  background-color: $dashboard-bg !important;
+  font-family: 'Inter', sans-serif;
+
+  .dashboard-section-header {
+    color: #2b3547;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dde2e7;
+  }
+}
+
+
+// --- KPI Card Styles (from your freight dashboard) ---
+.kpi-card {
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  height: 100%;
+  color: white; // Default text color for cards
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .card-body {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+
+    .kpi-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 1rem;
+    }
+
+    .kpi-title {
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.9;
+    }
+
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+  }
+}
+
+// --- Specific Card Colors (from your freight dashboard) ---
+.bg-card-green {
+    background-color: #e6fffa !important;
+    color: #17deba !important;
+}
+.bg-card-yellow {
+    background-color: #fef5e5 !important;
+    color: #ffae1f !important;
+}
+.bg-card-red {
+    background-color: #fdede8 !important;
+    color: #fa896a !important;
+}
+.bg-card-blue {
+    background-color: #e8f7ff !important;
+    color: #4abeff !important;
+}
+.bg-card-purple {
+    background-color: #ecf2ff !important;
+    color: #5d87ff !important;
+}
+.bg-card-cyan {
+    background-color: #d7f2ff !important;
+    color: #2c9ee6 !important;
+}
+
+/* New style for white cards as requested */
+.bg-card-white {
+    background-color: #ffffff !important;
+    color: #2b3547 !important; /* Dark text for visibility on white */
+    border: 1px solid #dde2e7 !important; /* Light border to stand out */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .kpi-icon {
+      filter: invert(1); /* Invert icon color to be visible */
+    }
+}
+
+
+// --- Chart Card Styles ---
+.chart-card {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  height: 100%;
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 1rem;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 350px;
+  }
+}
+
+// ==========================================
+// MAINTENANCE DASHBOARD STYLES
+// ==========================================
+
+.maintenance_dashboard_section {
+  background-color: $dashboard-bg !important;
+  font-family: 'Inter', sans-serif;
+
+  .dashboard-section-header {
+    color: #2b3547;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dde2e7;
+    
+    i {
+      color: #5d87ff;
+    }
+  }
+
+  // Smaller KPI cards for maintenance dashboard
+  .kpi-card {
+    .card-body {
+      min-height: 120px;
+      padding: 1rem;
+      
+      .kpi-icon {
+        margin-bottom: 0.5rem;
+        
+        i {
+          font-size: 1.5rem;
+        }
+      }
+      
+      .kpi-title {
+        font-size: 0.85rem;
+      }
+      
+      .kpi-value {
+        font-size: 1.75rem;
+      }
+    }
+  }
+
+  // Chart container adjustments
+  .chart-card {
+    .chart-container {
+      height: 300px;
+    }
+  }
+
+  // Recent Activity List
+  .recent-activity-list {
+    max-height: 300px;
+    overflow-y: auto;
+
+    .activity-item {
+      padding: 0.75rem;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .activity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.25rem;
+
+        .activity-name {
+          font-weight: 600;
+          color: #2b3547;
+        }
+
+        .activity-badge {
+          font-size: 0.7rem;
+        }
+      }
+
+      .activity-details {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+
+      .activity-date {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  // Table styles
+  .table-responsive {
+    .table {
+      margin-bottom: 0;
+
+      th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+        color: #495057;
+      }
+
+      td {
+        vertical-align: middle;
+      }
+
+      .cursor-pointer {
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// ENTERPRISE-STYLE APP GRID
+// ==========================================
+
+.re_app_grid_container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
+}
+
+.re_app_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+.re_app_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 0.75rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 110px;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    text-decoration: none;
+    
+    .re_app_icon {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.re_app_icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  i {
+    color: white;
+  }
+}
+
+.re_app_name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  opacity: 0.95;
+}

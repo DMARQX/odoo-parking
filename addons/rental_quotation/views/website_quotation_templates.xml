@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Website Quotation Templates -->
+        <template id="website_quotation_templates" name="Website Quotation Templates">
+            <div class="quotation-website-content">
+                <h2>Online Quotation System</h2>
+                <p>Request your rental quotation online</p>
+                
+                <div class="quotation-form">
+                    <!-- Basic form template for website -->
+                    <form>
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" name="customer_name" class="form-control"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="customer_email" class="form-control"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Property Requirements</label>
+                            <textarea name="requirements" class="form-control"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </template>
+
+    </data>
+</odoo>

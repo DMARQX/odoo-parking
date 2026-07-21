@@ -1,0 +1,120 @@
+<odoo>
+
+  <!-- list View -->
+  <record id="view_job_order_form_list" model="ir.ui.view">
+    <field name="name">job.order.form.list</field>
+    <field name="model">job.order.form</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="date"/>
+        <field name="project_id"/>
+        <field name="location"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Form View -->
+  <record id="view_job_order_form_form" model="ir.ui.view">
+    <field name="name">job.order.form.form</field>
+    <field name="model">job.order.form</field>
+    <field name="arch" type="xml">
+      <form string="Job Order Form">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="date"/>
+            <field name="project_id"/>
+            <field name="location"/>
+            <field name="request_start"/>
+            <field name="request_completion"/>
+            <field name="store_incharge"/>
+          </group>
+
+          <notebook>
+            <page string="Requested Material">
+              <field name="requested_material_ids">
+                <list editable="bottom">
+                  <field name="description"/>
+                  <field name="model"/>
+                  <field name="tracking"/>
+                  <field name="asset_number"/>
+                  <field name="serial_number"/>
+                  <field name="qty"/>
+                  <field name="is_new"/>
+                  <field name="issue_person_name"/>
+                  <field name="signature" widget="signature"/>
+                  <field name="date"/>
+                </list>
+              </field>
+            </page>
+
+            <page string="To Purchase">
+              <field name="purchase_material_ids">
+                <list editable="bottom">
+                  <field name="description"/>
+                  <field name="model"/>
+                  <field name="qty"/>
+                  <field name="quotation_1"/>
+                  <field name="quotation_2"/>
+                  <field name="quotation_3"/>
+                  <field name="approval_date"/>
+                  <field name="receiving_status"/>
+                </list>
+              </field>
+            </page>
+
+            <page string="Used Material">
+              <field name="used_material_ids">
+                <list editable="bottom">
+                  <field name="description"/>
+                  <field name="model"/>
+                  <field name="tracking"/>
+                  <field name="asset_number"/>
+                  <field name="serial_number"/>
+                  <field name="qty"/>
+                  <field name="status"/>
+                  <field name="date"/>
+                  <field name="remarks"/>
+                </list>
+              </field>
+            </page>
+
+            <page string="Stock Update">
+              <field name="stock_update_ids">
+                <list editable="bottom">
+                  <field name="description"/>
+                  <field name="model"/>
+                  <field name="tracking"/>
+                  <field name="asset_number"/>
+                  <field name="qty"/>
+                  <field name="data_sending"/>
+                  <field name="data_receiving"/>
+                  <field name="remarks"/>
+                </list>
+              </field>
+            </page>
+
+            <page string="Comments">
+              <field name="comments"/>
+              <field name="record_file" filename="record_filename"/>
+              <field name="record_name"/>
+              <field name="record_signature" widget="signature"/>
+            </page>
+          </notebook>
+
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Action -->
+  <record id="action_job_order_form" model="ir.actions.act_window">
+    <field name="name">Job Order Forms</field>
+    <field name="res_model">job.order.form</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- Menu -->
+
+</odoo>

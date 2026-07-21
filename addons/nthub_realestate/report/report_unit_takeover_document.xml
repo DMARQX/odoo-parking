@@ -1,0 +1,90 @@
+<odoo>
+
+       <record id="action_report_unit_takeover_form" model="ir.actions.report">
+            <field name="name">Unit Takeover Form</field>
+            <field name="model">unit.takeover.form</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nthub_realestate.report_unit_takeover_document</field>
+            <field name="report_file">nthub_realestate.report_unit_takeover_document</field>
+            <field name="binding_model_id" ref="model_unit_takeover_form"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    <template id="report_unit_takeover_document">
+  <t t-call="web.html_container">
+    <t t-foreach="docs" t-as="doc">
+      <t t-call="web.external_layout">
+      <div class="page">
+
+        <h2 style="text-align:center">Unit Takeover Form</h2>
+        <p><strong>Date:</strong> <span t-field="doc.date"/></p>
+        <p><strong>Unit(s) #:</strong> <span t-field="doc.unit_number"/></p>
+        <p><strong>Total Area:</strong> <span t-field="doc.total_area"/> m²</p>
+        <p><strong>Tenant:</strong> <span t-field="doc.tenant_name"/></p>
+        <p><strong>Contact Person:</strong> <span t-field="doc.contact_person"/></p>
+        <p><strong>Office #:</strong> <span t-field="doc.office_number"/></p>
+
+        <br/>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Available</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr t-foreach="doc.takeover_item_ids" t-as="item">
+              <td><span t-field="item.item_name"/></td>
+              <td><span t-field="item.description"/></td>
+              <td>
+                <t t-if="item.checked">✔</t>
+                <t t-if="not item.checked">✘</t>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <br/>
+
+<br/><br/>
+<table class="table table-sm" style="width: 100%; border: 1px solid black;">
+    <thead>
+      <tr>
+        <th>Landlord's Consultant</th>
+        <th>Saqifat Al Safa</th>
+        <th>Tenant's Rep.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Name: <t t-esc="doc.consultant_name"/></td>
+        <td>Name: Saqifat Al Safa</td>
+        <td>Name: <t t-esc="doc.tenant_rep_name"/></td>
+      </tr>
+      <tr>
+        <td>
+          Signature: <img t-if="doc.consultant_signature" t-att-src="'data:image/png;base64,%s' % doc.consultant_signature.decode()" style="height:40px;"/>
+        </td>
+        <td>
+          Signature: <img t-if="doc.saqifa_signature" t-att-src="'data:image/png;base64,%s' % doc.saqifa_signature.decode()" style="height:40px;"/>
+        </td>
+        <td>
+          Signature: <img t-if="doc.tenant_signature" t-att-src="'data:image/png;base64,%s' % doc.tenant_signature.decode()" style="height:40px;"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Date: <t t-esc="doc.consultant_date"/></td>
+        <td>Date: <t t-esc="doc.saqifa_date"/></td>
+        <td>Date: <t t-esc="doc.tenant_date"/></td>
+      </tr>
+    </tbody>
+</table>
+
+      </div>
+      </t>
+    </t>
+  </t>
+</template>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="nthub_realestate.RealEstateDashboardTemplate" owl="1">
+        <div class="p-3" style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <h3>📊 Project State</h3>
+                <iframe src="/web#action=act_ownership_state&amp;disable_customization=1" style="width: 100%; height: 300px; border: none;"></iframe>
+
+                <h3>📅 Rental Calendar</h3>
+                <iframe src="/web#action=act_calender&amp;disable_customization=1" style="width: 100%; height: 300px; border: none;"></iframe>
+            </div>
+            <div style="flex: 1;">
+                <h3>💰 Total Sold Out</h3>
+                <iframe src="/web#action=act_total_amount&amp;disable_customization=1" style="width: 100%; height: 300px; border: none;"></iframe>
+
+                <h3>⏱ Delay OwnerShip</h3>
+                <iframe src="/web#action=act_delay_state&amp;disable_customization=1" style="width: 100%; height: 300px; border: none;"></iframe>
+
+                <h3>📅 OwnerShip Calendar</h3>
+                <iframe src="/web#action=act_owner_t_calender&amp;disable_customization=1" style="width: 100%; height: 300px; border: none;"></iframe>
+            </div>
+        </div>
+    </t>
+</templates>

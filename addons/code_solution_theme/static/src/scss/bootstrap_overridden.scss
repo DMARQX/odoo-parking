@@ -1,0 +1,21 @@
+///
+/// Code Solution Theme - Bootstrap Overrides
+///
+
+// Override Bootstrap primary color
+$primary: $o-cs-primary;
+$secondary: $o-gray-200;
+$success: #10B981;
+$info: $o-cs-action;
+$warning: #F59E0B;
+$danger: #EF4444;
+
+// Border radius - more modern rounded corners
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 0.75rem;
+
+// Shadows - subtle and modern
+$box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);

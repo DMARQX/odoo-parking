@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    <!-- Tenant Maintenance Jobs List View -->
+    <template id="portal_tenant_maintenance_jobs" name="My Maintenance Jobs">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="mb-3">Maintenance Jobs Awaiting Your Approval</h1>
+                        
+                        <t t-if="total_count > 0">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Order</th>
+                                            <th>Unit/Area</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="job_orders" t-as="job">
+                                            <tr>
+                                                <td>
+                                                    <strong><t t-esc="job.name"/></strong>
+                                                </td>
+                                                <td><t t-esc="job.x_unit_area.name or '-'"/></td>
+                                                <td>
+                                                    <t t-esc="job.job_description[:50] + '...' if len(job.job_description or '') > 50 else job.job_description or '-'"/>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-warning">Pending Approval</span>
+                                                </td>
+                                                <td>
+                                                    <a t-attf-href="/my/maintenance_job/{{ job.id }}" class="btn btn-sm btn-primary">View</a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="alert alert-info">
+                                <p>No maintenance jobs pending your approval.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Tenant Maintenance Job Detail View -->
+    <template id="portal_tenant_maintenance_job_detail" name="Maintenance Job Details">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="mb-4"><t t-esc="job_order.name"/></h1>
+                        
+                        <!-- Messages -->
+                        <t t-if="kw.get('message')">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <t t-esc="kw.get('message')"/>
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span aria-hidden="true">&amp;times;</span>
+                                </button>
+                            </div>
+                        </t>
+                        <t t-if="kw.get('error')">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <t t-esc="kw.get('error')"/>
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span aria-hidden="true">&amp;times;</span>
+                                </button>
+                            </div>
+                        </t>
+                        
+                        <!-- Job Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Job Information</h5>
+                                        <p><strong>Job Order:</strong> <t t-esc="job_order.name"/></p>
+                                        <p><strong>Unit/Area:</strong> <t t-esc="job_order.x_unit_area.name or '-'"/></p>
+                                        <p><strong>Status:</strong> <span class="badge badge-warning">Tenant Approve</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Contractor Information</h5>
+                                        <p><strong>Contractor:</strong> <t t-esc="job_order.assigned_contractor_id.name or '-'"/></p>
+                                        <p><strong>Started:</strong> <t t-esc="job_order.job_start_datetime.strftime('%d/%m/%Y %H:%M') if job_order.job_start_datetime else '-'"/></p>
+                                        <p><strong>Completed:</strong> <t t-esc="job_order.job_end_datetime.strftime('%d/%m/%Y %H:%M') if job_order.job_end_datetime else '-'"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Job Description -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Job Description</h5>
+                                <p><t t-esc="job_order.job_description or 'No description provided'" t-att-class="'' if job_order.job_description else 'text-muted'"/></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Requested Materials -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Requested Materials</h5>
+                                <t t-if="requested_materials">
+                                    <ul class="list-group list-group-flush">
+                                        <t t-foreach="requested_materials" t-as="mat">
+                                            <li class="list-group-item">
+                                                <strong><t t-esc="mat.description_text"/></strong>
+                                                <br/>
+                                                <small class="text-muted">Qty: <t t-esc="mat.requested_qty"/> <t t-esc="mat.requested_uom_id.name or ''"/></small>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </t>
+                                <t t-else="">
+                                    <p class="text-muted">No materials requested.</p>
+                                </t>
+                            </div>
+                        </div>
+                        
+                        <!-- Corrective Action Taken -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Corrective Action Taken</h5>
+                                <p><t t-esc="job_order.corrective_action or 'No action details provided'" t-att-class="'' if job_order.corrective_action else 'text-muted'"/></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Materials Summary -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Issued Materials</h5>
+                                        <t t-if="issued_materials">
+                                            <ul class="list-unstyled">
+                                                <t t-foreach="issued_materials" t-as="mat">
+                                                    <li><t t-esc="mat.product_id.name"/> (Qty: <t t-esc="mat.issue_qty"/> <t t-esc="mat.uom_id.name or ''"/>)</li>
+                                                </t>
+                                            </ul>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted">No materials issued.</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Purchased Materials</h5>
+                                        <t t-if="purchased_materials">
+                                            <ul class="list-unstyled">
+                                                <t t-foreach="purchased_materials" t-as="mat">
+                                                    <li><t t-esc="mat.product_id.name"/> (Qty: <t t-esc="mat.purchase_qty"/> <t t-esc="mat.uom_id.name or ''"/>)</li>
+                                                </t>
+                                            </ul>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted">No materials purchased.</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Approval/Rejection Section (only show if pending supervisor approval) -->
+                        <t t-if="job_order.state == 'pending_supervisor_approval'">
+                            <div class="card mb-4 border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h5 class="mb-0">Your Approval is Required</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Please review the job completion details above and either approve or reject the work.</p>
+                                
+                                    <!-- Approve Button -->
+                                    <form method="POST" t-attf-action="/my/maintenance_job/{{ job_order.id }}/approve" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            <i class="fa fa-check"></i> Approve Job
+                                        </button>
+                                    </form>
+                                
+                                    <!-- Reject Button (triggers modal) -->
+                                    <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#rejectModal">
+                                        <i class="fa fa-times"></i> Reject Job
+                                    </button>
+                                
+                                    <!-- Return to list button -->
+                                    <a href="/my/maintenance_jobs" class="btn btn-secondary btn-lg">
+                                        <i class="fa fa-arrow-left"></i> Back to List
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="alert alert-info">
+                                <p>This job has been <strong><t t-esc="job_order.state.replace('_', ' ').title()"/></strong>. No further approval actions are available.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rejection Modal -->
+            <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="rejectModalLabel">Reject Job - Provide Reason</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&amp;times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" t-attf-action="/my/maintenance_job/{{ job_order.id }}/reject">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="rejection_reason">Reason for Rejection *</label>
+                                    <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="5" required="" placeholder="Please explain why you are rejecting this job completion..."></textarea>
+                                    <small class="form-text text-muted">This reason will be sent to the supervisor for review.</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Reject Job</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    </data>
+</odoo>

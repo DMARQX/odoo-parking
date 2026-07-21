@@ -1,0 +1,106 @@
+// Code Solution Theme - Core Styles
+// Buttons, Inputs, and other core components
+
+// Buttons
+.btn-primary {
+    background: linear-gradient(135deg, $o-cs-primary 0%, darken($o-cs-primary, 5%) 100%);
+    border: none;
+    box-shadow: 0 2px 4px rgba($o-cs-primary, 0.3);
+    
+    &:hover {
+        background: linear-gradient(135deg, darken($o-cs-primary, 5%) 0%, darken($o-cs-primary, 10%) 100%);
+        box-shadow: 0 4px 8px rgba($o-cs-primary, 0.4);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.btn-secondary {
+    border-color: $o-gray-300;
+    
+    &:hover {
+        background-color: $o-gray-100;
+        border-color: $o-gray-400;
+    }
+}
+
+// Input Fields
+.form-control, .form-select {
+    border-radius: $border-radius-sm;
+    border-color: $o-gray-300;
+    
+    &:focus {
+        border-color: $o-cs-action;
+        box-shadow: 0 0 0 3px rgba($o-cs-action, 0.1);
+    }
+}
+
+// Cards
+.card {
+    border-radius: $border-radius;
+    border: 1px solid $o-gray-200;
+    box-shadow: $box-shadow-sm;
+}
+
+// Dropdown Menus
+.dropdown-menu {
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-lg;
+    border: 1px solid $o-gray-200;
+    
+    .dropdown-item {
+        border-radius: $border-radius-sm;
+        margin: 2px 4px;
+        
+        &:hover, &:focus {
+            background-color: rgba($o-cs-action, 0.1);
+            color: $o-cs-primary;
+        }
+
+        &.active, &:active {
+            background-color: $o-cs-primary;
+            color: $o-white;
+        }
+    }
+}
+
+// Modals
+.modal-content {
+    border-radius: $border-radius-lg;
+    box-shadow: $box-shadow-lg;
+    border: none;
+}
+
+.modal-header {
+    border-bottom: 1px solid $o-gray-200;
+    background-color: $o-gray-100;
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+}
+
+// Badges
+.badge {
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+// Scrollbars
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: $o-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $o-gray-400;
+    border-radius: 4px;
+    
+    &:hover {
+        background: $o-gray-500;
+    }
+}

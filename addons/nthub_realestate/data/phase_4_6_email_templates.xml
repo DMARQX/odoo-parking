@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- EMAIL TEMPLATE: Purchase Approval Request -->
+        <record id="email_purchase_approval_request" model="mail.template">
+            <field name="name">Purchase Requisition - Approval Request</field>
+            <field name="model_id" ref="model_maintenance_purchase_requisition"/>
+            <field name="subject">Purchase Requisition ${object.name} - Approval Required</field>
+            <field name="email_from">${object.env.user.email}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Purchase Requisition Approval Request</h2>
+                    <div style="background-color: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                        <p><strong>Requisition Number:</strong> ${object.name}</p>
+                        <p><strong>Job Order:</strong> ${object.job_order_id.name}</p>
+                        <p><strong>Product:</strong> ${object.product_id.name}</p>
+                        <p><strong>Quantity:</strong> ${object.estimated_qty} units</p>
+                    </div>
+                    <p>This requisition requires your approval. Please review the details.</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- EMAIL TEMPLATE: Material Request Receipt Confirmation -->
+        <record id="email_material_receipt_confirmation" model="mail.template">
+            <field name="name">Material Request - Receipt Confirmed</field>
+            <field name="model_id" ref="model_maintenance_job_material_request"/>
+            <field name="subject">Material Request ${object.name} - Receipt Confirmed</field>
+            <field name="email_from">${object.env.user.email}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Material Receipt Confirmation</h2>
+                    <div style="background-color: #e8f5e9; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                        <p><strong>Request Number:</strong> ${object.name}</p>
+                        <p><strong>Product:</strong> ${object.product_id.name}</p>
+                        <p><strong>Quantity Received:</strong> ${object.qty_issued} of ${object.qty_requested} units</p>
+                    </div>
+                    <p>The materials have been successfully received and recorded in the system.</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- EMAIL TEMPLATE: Job Completion - Tenant Approval -->
+        <record id="email_job_completion_tenant_approval" model="mail.template">
+            <field name="name">Job Completion - Tenant Approval Request</field>
+            <field name="model_id" ref="model_job_order_completion_result"/>
+            <field name="subject">Job Completion - Please Review and Approve</field>
+            <field name="email_from">${object.env.user.email}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Job Completion Review</h2>
+                    <div style="background-color: #e3f2fd; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                        <p><strong>Job Order:</strong> ${object.job_order_id.name}</p>
+                        <p><strong>Completion Date:</strong> ${object.completion_date.strftime('%Y-%m-%d') if object.completion_date else 'N/A'}</p>
+                    </div>
+                    <p>The maintenance work has been completed. Please review the checklist and approve or report any defects.</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- EMAIL TEMPLATE: Defect Reported -->
+        <record id="email_defect_reported" model="mail.template">
+            <field name="name">Defect Reported - Rework Required</field>
+            <field name="model_id" ref="model_job_order_defect"/>
+            <field name="subject">Defect Reported - ${object.name}</field>
+            <field name="email_from">${object.env.user.email}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Defect Report</h2>
+                    <div style="background-color: #fff3e0; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                        <p><strong>Defect ID:</strong> ${object.name}</p>
+                        <p><strong>Job Order:</strong> ${object.job_order_id.name}</p>
+                        <p><strong>Severity:</strong> ${object.severity.upper()}</p>
+                        <p><strong>Description:</strong> ${object.description}</p>
+                    </div>
+                    <p>A defect has been reported. Please review and take appropriate action.</p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

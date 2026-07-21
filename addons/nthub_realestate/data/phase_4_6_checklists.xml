@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ELECTRICAL MAINTENANCE CHECKLIST -->
+    <record id="checklist_electrical_basic" model="job.order.completion.checklist">
+        <field name="name">Electrical Work - Basic Checklist</field>
+        <field name="maintenance_type">electrical</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="checklist_item_elec_1" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_electrical_basic"/>
+        <field name="description">All electrical connections are secure and properly terminated</field>
+        <field name="is_required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="checklist_item_elec_2" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_electrical_basic"/>
+        <field name="description">All safety switches and circuit breakers functioning correctly</field>
+        <field name="is_required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="checklist_item_elec_3" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_electrical_basic"/>
+        <field name="description">Grounding and earthing properly installed</field>
+        <field name="is_required">True</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="checklist_item_elec_4" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_electrical_basic"/>
+        <field name="description">No visible damage or wear on wiring and equipment</field>
+        <field name="is_required">True</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="checklist_item_elec_5" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_electrical_basic"/>
+        <field name="description">Proper labeling on all switches and breakers</field>
+        <field name="is_required">False</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- MECHANICAL MAINTENANCE CHECKLIST -->
+    <record id="checklist_mechanical_basic" model="job.order.completion.checklist">
+        <field name="name">Mechanical Work - Basic Checklist</field>
+        <field name="maintenance_type">mechanical</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="checklist_item_mech_1" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_mechanical_basic"/>
+        <field name="description">All fasteners properly tightened and secured</field>
+        <field name="is_required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="checklist_item_mech_2" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_mechanical_basic"/>
+        <field name="description">Equipment operating smoothly without unusual noise or vibration</field>
+        <field name="is_required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="checklist_item_mech_3" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_mechanical_basic"/>
+        <field name="description">Proper lubrication applied where required</field>
+        <field name="is_required">True</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="checklist_item_mech_4" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_mechanical_basic"/>
+        <field name="description">Alignment verified and adjusted if needed</field>
+        <field name="is_required">False</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- CIVIL MAINTENANCE CHECKLIST -->
+    <record id="checklist_civil_basic" model="job.order.completion.checklist">
+        <field name="name">Civil Work - Basic Checklist</field>
+        <field name="maintenance_type">civil</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="checklist_item_civil_1" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_civil_basic"/>
+        <field name="description">All cracks and damage professionally repaired</field>
+        <field name="is_required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="checklist_item_civil_2" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_civil_basic"/>
+        <field name="description">Surface finish is uniform and properly applied</field>
+        <field name="is_required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="checklist_item_civil_3" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_civil_basic"/>
+        <field name="description">Waterproofing properly sealed and cured</field>
+        <field name="is_required">True</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="checklist_item_civil_4" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_civil_basic"/>
+        <field name="description">Drainage systems functioning correctly</field>
+        <field name="is_required">False</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- GENERAL MAINTENANCE CHECKLIST -->
+    <record id="checklist_general_basic" model="job.order.completion.checklist">
+        <field name="name">General Maintenance - Basic Checklist</field>
+        <field name="maintenance_type">general</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="checklist_item_gen_1" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_general_basic"/>
+        <field name="description">Work area cleaned and debris removed</field>
+        <field name="is_required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="checklist_item_gen_2" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_general_basic"/>
+        <field name="description">All requested tasks completed</field>
+        <field name="is_required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="checklist_item_gen_3" model="job.order.completion.item">
+        <field name="checklist_id" ref="checklist_general_basic"/>
+        <field name="description">No damage to surrounding areas</field>
+        <field name="is_required">True</field>
+        <field name="sequence">30</field>
+    </record>
+</odoo>

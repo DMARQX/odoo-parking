@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================================================================== -->
+    <!-- CONTRACTOR PORTAL - JOB LIST -->
+    <!-- ================================================================== -->
+    <template id="portal_contractor_jobs" name="My Jobs - Contractor Portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Jobs</t>
+            </t>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-primary"><t t-esc="total_count"/></h3>
+                            <p class="text-muted mb-0">Total Jobs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-warning"><t t-esc="pending_count"/></h3>
+                            <p class="text-muted mb-0">Pending</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-info"><t t-esc="in_progress_count"/></h3>
+                            <p class="text-muted mb-0">In Progress</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-success"><t t-esc="completed_count"/></h3>
+                            <p class="text-muted mb-0">Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="'active' if filterby == 'all' else ''" href="/my/contractor/jobs?filterby=all">
+                        All (<t t-esc="total_count"/>)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="'active' if filterby == 'pending' else ''" href="/my/contractor/jobs?filterby=pending">
+                        Pending (<t t-esc="pending_count"/>)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="'active' if filterby == 'in_progress' else ''" href="/my/contractor/jobs?filterby=in_progress">
+                        In Progress (<t t-esc="in_progress_count"/>)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="'active' if filterby == 'completed' else ''" href="/my/contractor/jobs?filterby=completed">
+                        Completed (<t t-esc="completed_count"/>)
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Jobs Table -->
+            <t t-if="jobs" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Job Order #</th>
+                        <th>Request #</th>
+                        <th>Building / Unit</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Assigned Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="jobs" t-as="job">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/my/contractor/job/#{job.id}">
+                                    <t t-esc="job.name"/>
+                                </a>
+                            </td>
+                            <td>
+                                <t t-if="job.maintenance_request_id">
+                                    <t t-esc="job.maintenance_request_id.name"/>
+                                </t>
+                            </td>
+                            <td>
+                                <t t-if="job.maintenance_request_id.x_building_id">
+                                    <strong><t t-esc="job.maintenance_request_id.x_building_id.name"/></strong><br/>
+                                </t>
+                                <t t-if="job.maintenance_request_id.x_unit_area">
+                                    <small class="text-muted"><t t-esc="job.maintenance_request_id.x_unit_area.name"/></small>
+                                </t>
+                            </td>
+                            <td>
+                                <span class="badge badge-pill badge-info">
+                                    <t t-esc="dict(job._fields['maintenance_request_id'].comodel_name and request.env['rental.maintenance.request']._fields['x_request_type'].selection).get(job.maintenance_request_id.x_request_type, 'N/A')"/>
+                                </span>
+                            </td>
+                            <td>
+                                <t t-if="job.priority == 'urgent'">
+                                    <span class="badge badge-danger">Urgent</span>
+                                </t>
+                                <t t-elif="job.priority == 'high'">
+                                    <span class="badge badge-warning">High</span>
+                                </t>
+                                <t t-elif="job.priority == 'routine'">
+                                    <span class="badge badge-info">Routine</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge badge-secondary">Low</span>
+                                </t>
+                            </td>
+                            <td>
+                                <t t-esc="job.job_assigned_time.strftime('%Y-%m-%d %H:%M') if job.job_assigned_time else 'N/A'"/>
+                            </td>
+                            <td>
+                                <t t-if="job.state == 'sent_to_contractor'">
+                                    <span class="badge badge-warning">Pending</span>
+                                </t>
+                                <t t-elif="job.state == 'in_progress'">
+                                    <span class="badge badge-info">In Progress</span>
+                                </t>
+                                <t t-elif="job.state == 'completed_by_contractor'">
+                                    <span class="badge badge-primary">Completed</span>
+                                </t>
+                                <t t-elif="job.state == 'pending_tenant_approval'">
+                                    <span class="badge badge-secondary">Awaiting Tenant</span>
+                                </t>
+                                <t t-elif="job.state == 'pending_supervisor_approval'">
+                                    <span class="badge badge-secondary">Awaiting Approval</span>
+                                </t>
+                                <t t-elif="job.state == 'closed'">
+                                    <span class="badge badge-success">Closed</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge badge-secondary"><t t-esc="job.state"/></span>
+                                </t>
+                            </td>
+                            <td class="text-end">
+                                <a t-attf-href="/my/contractor/job/#{job.id}" class="btn btn-sm btn-primary">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            
+            <t t-else="">
+                <div class="alert alert-info text-center" role="alert">
+                    <h4>No jobs assigned yet</h4>
+                    <p>You will see your assigned maintenance jobs here.</p>
+                </div>
+            </t>
+
+        </t>
+    </template>
+
+    <!-- ================================================================== -->
+    <!-- CONTRACTOR PORTAL - JOB DETAIL -->
+    <!-- ================================================================== -->
+    <template id="portal_contractor_job_detail" name="Job Details - Contractor Portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <!-- Success/Error Messages -->
+            <t t-if="request.params.get('message') == 'started'">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> Work has been started.
+                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                </div>
+            </t>
+            <t t-if="request.params.get('message') == 'material_requested'">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> Material request submitted.
+                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                </div>
+            </t>
+            <t t-if="request.params.get('message') == 'completed'">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> Job marked as completed.
+                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                </div>
+            </t>
+            <t t-if="request.params.get('message') == 'approval_requested'">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> Supervisor approval requested.
+                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                </div>
+            </t>
+            <t t-if="request.params.get('error')">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error!</strong> <t t-esc="request.params.get('error')"/>
+                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                </div>
+            </t>
+
+            <!-- Job Header -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h2>Job Order: <t t-esc="job.name"/></h2>
+                    <p class="text-muted">
+                        Request: <t t-esc="maintenance_request.name if maintenance_request else 'N/A'"/>
+                    </p>
+                </div>
+                <div class="col-md-4 text-right">
+                    <!-- Action Buttons -->
+                    <t t-if="job.state == 'sent_to_contractor'">
+                        <form method="post" t-attf-action="/my/contractor/job/#{job.id}/start" class="d-inline">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fa fa-play"/> Start Work
+                            </button>
+                        </form>
+                    </t>
+                    
+                    <t t-if="job.state == 'in_progress'">
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#completeJobModal">
+                            <i class="fa fa-check"/> Complete Job
+                        </button>
+                    </t>
+                    
+                    <t t-if="job.state == 'completed_by_contractor'">
+                        <form method="post" t-attf-action="/my/contractor/job/#{job.id}/request_approval" class="d-inline">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fa fa-paper-plane"/> Request Approval
+                            </button>
+                        </form>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Job Information Cards -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Job Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="40%">Status:</th>
+                                    <td>
+                                        <t t-if="job.state == 'sent_to_contractor'">
+                                            <span class="badge badge-warning">Pending</span>
+                                        </t>
+                                        <t t-elif="job.state == 'in_progress'">
+                                            <span class="badge badge-info">In Progress</span>
+                                        </t>
+                                        <t t-elif="job.state == 'completed_by_contractor'">
+                                            <span class="badge badge-primary">Completed</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-secondary"><t t-esc="job.state"/></span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Priority:</th>
+                                    <td>
+                                        <t t-if="job.priority == 'urgent'">
+                                            <span class="badge badge-danger">Urgent</span>
+                                        </t>
+                                        <t t-elif="job.priority == 'high'">
+                                            <span class="badge badge-warning">High</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-info"><t t-esc="job.priority"/></span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Building:</th>
+                                    <td><t t-esc="maintenance_request.x_building_id.name if maintenance_request and maintenance_request.x_building_id else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Unit:</th>
+                                    <td><t t-esc="maintenance_request.x_unit_area.name if maintenance_request and maintenance_request.x_unit_area else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Tenant:</th>
+                                    <td><t t-esc="maintenance_request.partner_id.name if maintenance_request else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Tenant Mobile:</th>
+                                    <td><t t-esc="maintenance_request.x_tenant_mobile if maintenance_request else 'N/A'"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">Timing Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="40%">Assigned:</th>
+                                    <td><t t-esc="job.job_assigned_time.strftime('%Y-%m-%d %H:%M') if job.job_assigned_time else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Work Started:</th>
+                                    <td><t t-esc="job.work_start_datetime.strftime('%Y-%m-%d %H:%M') if job.work_start_datetime else 'Not started'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Work Ended:</th>
+                                    <td><t t-esc="job.work_end_datetime.strftime('%Y-%m-%d %H:%M') if job.work_end_datetime else 'Not completed'"/></td>
+                                </tr>
+                                <tr t-if="job.work_start_datetime and job.work_end_datetime">
+                                    <th>Duration:</th>
+                                    <td>
+                                        <t t-set="duration" t-value="(job.work_end_datetime - job.work_start_datetime).total_seconds() / 3600"/>
+                                        <t t-esc="'%.1f hours' % duration"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Description -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Problem Description</h5>
+                </div>
+                <div class="card-body">
+                    <p><t t-esc="maintenance_request.description if maintenance_request else 'No description'"/></p>
+                </div>
+            </div>
+
+            <!-- Corrective Action -->
+            <t t-if="job.corrective_action">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Corrective Action Taken</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><t t-esc="job.corrective_action"/></p>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Material Management Tabs -->
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab-material-requests">
+                                Material Requests (<t t-esc="len(material_requests)"/>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-issued-materials">
+                                Issued Materials (<t t-esc="len(material_issues)"/>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-purchase-materials">
+                                Materials to Purchase (<t t-esc="len(material_purchases)"/>)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- Material Requests Tab -->
+                        <div class="tab-pane fade show active" id="tab-material-requests">
+                            <!-- Request Form -->
+                            <t t-if="job.state in ['sent_to_contractor', 'in_progress']">
+                                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#requestMaterialModal">
+                                    <i class="fa fa-plus"/> Request Material
+                                </button>
+                            </t>
+
+                            <!-- Requests Table -->
+                            <t t-if="material_requests">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Qty</th>
+                                            <th>Type</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="material_requests" t-as="req">
+                                            <tr>
+                                                <td><t t-esc="req.description_text"/></td>
+                                                <td><t t-esc="req.requested_qty"/> <t t-esc="req.requested_uom_id.name if req.requested_uom_id else ''"/></td>
+                                                <td><t t-esc="req.type_of_material"/></td>
+                                                <td><t t-esc="req.request_priority"/></td>
+                                                <td><span t-attf-class="badge badge-#{{'requested': 'warning', 'issued': 'success', 'to_purchase': 'info'}.get(req.state, 'secondary')}"><t t-esc="req.state"/></span></td>
+                                                <td><t t-esc="req.remark"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted text-center py-4">No material requests yet</p>
+                            </t>
+                        </div>
+
+                        <!-- Issued Materials Tab -->
+                        <div class="tab-pane fade" id="tab-issued-materials">
+                            <t t-if="material_issues">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>Serial/Lot</th>
+                                            <th>Issued By</th>
+                                            <th>Issue Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="material_issues" t-as="issue">
+                                            <tr>
+                                                <td><t t-esc="issue.product_id.name if issue.product_id else issue.name"/></td>
+                                                <td><t t-esc="issue.issue_qty"/> <t t-esc="issue.uom_id.name if issue.uom_id else ''"/></td>
+                                                <td><t t-esc="issue.serial_no or 'N/A'"/></td>
+                                                <td><t t-esc="issue.issued_by.name if issue.issued_by else 'N/A'"/></td>
+                                                <td><t t-esc="issue.issue_date.strftime('%Y-%m-%d %H:%M') if issue.issue_date else 'N/A'"/></td>
+                                                <td><span t-attf-class="badge badge-#{{'draft': 'secondary', 'issued': 'success', 'returned': 'info'}.get(issue.state, 'secondary')}"><t t-esc="issue.state"/></span></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted text-center py-4">No materials issued yet</p>
+                            </t>
+                        </div>
+
+                        <!-- Materials to Purchase Tab -->
+                        <div class="tab-pane fade" id="tab-purchase-materials">
+                            <t t-if="material_purchases">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Qty Requested</th>
+                                            <th>Qty Received</th>
+                                            <th>Supplier</th>
+                                            <th>Target Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="material_purchases" t-as="purchase">
+                                            <tr>
+                                                <td><t t-esc="purchase.product_id.name if purchase.product_id else purchase.description_text"/></td>
+                                                <td><t t-esc="purchase.purchase_qty"/> <t t-esc="purchase.uom_id.name if purchase.uom_id else ''"/></td>
+                                                <td><t t-esc="purchase.received_qty"/></td>
+                                                <td><t t-esc="purchase.supplier_id.name if purchase.supplier_id else 'N/A'"/></td>
+                                                <td><t t-esc="purchase.target_date.strftime('%Y-%m-%d') if purchase.target_date else 'N/A'"/></td>
+                                                <td><span t-attf-class="badge badge-#{{'draft': 'secondary', 'approved': 'success', 'po_created': 'info', 'received': 'success'}.get(purchase.state, 'secondary')}"><t t-esc="purchase.state"/></span></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted text-center py-4">No materials to purchase</p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Request Modal -->
+            <div class="modal fade" id="requestMaterialModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form method="post" t-attf-action="/my/contractor/job/#{job.id}/request_materials">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Request Material</h5>
+                                <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="description_text">Material Description *</label>
+                                    <input type="text" class="form-control" name="description_text" required="1" 
+                                           placeholder="e.g., AC compressor 2 ton split"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="requested_qty">Quantity *</label>
+                                            <input type="number" class="form-control" name="requested_qty" 
+                                                   value="1" min="0.01" step="0.01" required="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="type_of_material">Type</label>
+                                            <select class="form-control" name="type_of_material">
+                                                <option value="general">General</option>
+                                                <option value="electrical">Electrical</option>
+                                                <option value="mechanical">Mechanical</option>
+                                                <option value="low_current">Low Current</option>
+                                                <option value="civil">Civil</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="request_priority">Priority</label>
+                                    <select class="form-control" name="request_priority">
+                                        <option value="routine">Routine</option>
+                                        <option value="low">Low</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="remark">Remark (brand, spec, etc.)</label>
+                                    <textarea class="form-control" name="remark" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Job Modal -->
+            <div class="modal fade" id="completeJobModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form method="post" t-attf-action="/my/contractor/job/#{job.id}/complete">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title">Complete Job</h5>
+                                <button type="button" class="close text-white" data-dismiss="modal">&amp;times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="corrective_action">Corrective Action Taken *</label>
+                                    <textarea class="form-control" name="corrective_action" rows="5" required="1" 
+                                              placeholder="Describe what was done to fix the problem..."></textarea>
+                                    <small class="form-text text-muted">
+                                        Please provide a detailed description of the work performed.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-success">Complete Job</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+
+</odoo>

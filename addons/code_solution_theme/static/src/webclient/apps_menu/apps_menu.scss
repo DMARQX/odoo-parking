@@ -1,0 +1,120 @@
+// Code Solution Theme - Apps Menu Grid
+// Enterprise-style grid layout for app switcher
+
+// Target the dropdown menu container
+.o_navbar_apps_menu .dropdown-menu,
+.o-dropdown--menu {
+    &:has(.o_app) {
+        min-width: 450px !important;
+        max-width: 500px !important;
+        padding: 16px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+}
+
+// App items - grid boxes
+.o_app {
+    width: 95px !important;
+    height: 85px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 6px !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+    background-color: #f8f9fa !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    
+    &:hover {
+        background-color: #e8f4fd !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+    }
+    
+    // App icon
+    img, .o_app_icon {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 8px !important;
+        object-fit: cover;
+    }
+    
+    // App name
+    .o_app_name {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+        text-align: center;
+        line-height: 1.2;
+        max-width: 85px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+// Menu Sections (Top navbar menu items)
+.o_menu_sections {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .nav-link, .dropdown-toggle {
+        padding: 6px 12px !important;
+        border-radius: $border-radius-sm;
+        font-weight: 500;
+        transition: all 0.15s ease;
+
+        &:hover, &:focus {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        &.active, &.show {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+        }
+    }
+
+    // Submenu dropdown
+    .dropdown-menu {
+        min-width: 200px;
+        padding: 8px;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-lg;
+        border: 1px solid $o-gray-200;
+
+        .dropdown-item {
+            padding: 8px 12px;
+            border-radius: $border-radius-sm;
+            font-weight: 500;
+            color: $o-gray-700;
+            transition: all 0.15s ease;
+
+            &:hover, &:focus {
+                background-color: rgba($o-cs-action, 0.1);
+                color: $o-cs-primary;
+            }
+
+            &.active {
+                background-color: $o-cs-primary;
+                color: $o-white;
+            }
+        }
+    }
+}
+
+// RTL Support
+html[dir="rtl"] {
+    .o_navbar_apps_menu .dropdown-menu .dropdown-item {
+        &:hover {
+            transform: translateX(-4px);
+        }
+    }
+}

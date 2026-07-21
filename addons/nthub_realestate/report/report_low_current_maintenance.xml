@@ -1,0 +1,101 @@
+<odoo>
+
+    <record id="action_report_low_current_maintenance" model="ir.actions.report">
+    <field name="name">Low Current Preventive Maintenance Form</field>
+    <field name="model">low.current.maintenance.form</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">nthub_realestate.report_low_current_maintenance</field>
+    <field name="report_file">nthub_realestate.report_low_current_maintenance</field>
+    <field name="binding_model_id" ref="model_low_current_maintenance_form"/>
+            <field name="binding_type">report</field>
+</record>
+
+  <template id="report_low_current_maintenance">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+        <div class="page" style="font-family:Arial; font-size:13px;">
+
+          <!-- Header -->
+          <div style="text-align:center; margin-bottom:15px;">
+            <h3 style="margin:5px 0;">LOW CURRENT PREVENTIVE MAINTENANCE FORM</h3>
+          </div>
+
+          <!-- Basic Info -->
+          <div style="margin-bottom:15px;">
+            <p><strong>Date:</strong> <t t-esc="doc.date"/></p>
+            <p><strong>Project:</strong> <t t-esc="doc.project_id.name"/></p>
+            <p><strong>Location:</strong> <t t-esc="doc.location"/></p>
+          </div>
+
+          <!-- Table -->
+          <table class="table table-sm table-bordered" style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="background-color:#f2f2f2;">
+                <th style="border:1px solid #000; width:5%;">S #</th>
+                <th style="border:1px solid #000;">Work Description</th>
+                <th style="border:1px solid #000;">System Details</th>
+                <th style="border:1px solid #000; width:10%;">Status</th>
+                <th style="border:1px solid #000;">Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="doc.work_line_ids" t-as="line">
+                <td style="border:1px solid #000; text-align:center;">
+                </td>
+                <td style="border:1px solid #000;"><t t-esc="line.work_description or ''"/></td>
+                <td style="border:1px solid #000;"><t t-esc="line.system_details or ''"/></td>
+                <td style="border:1px solid #000; text-align:center;">
+                  <t t-if="line.status == 'done'">✔</t>
+                  <t t-if="line.status == 'pending'">✘</t>
+                  <t t-if="line.status == 'n/a'">N/A</t>
+                </td>
+                <td style="border:1px solid #000;"><t t-esc="line.remarks or ''"/></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Additional Work -->
+          <div style="margin-top:20px;">
+            <p><strong>Additional Work Required:</strong></p>
+            <p><t t-esc="doc.additional_work or ''"/></p>
+            <p><strong>Referral Task to Another Contractor:</strong></p>
+            <p><t t-esc="doc.referral_task or ''"/></p>
+          </div>
+
+          <!-- Signatures -->
+          <div style="margin-top:30px;">
+            <table style="width:100%; font-size:12px;">
+              <tr>
+                <td style="width:33%; text-align:center;">
+                  <strong>Contractor</strong><br/>
+                  <t t-esc="doc.contractor_name or ''"/><br/>
+                  <t t-if="doc.contractor_signature">
+                    <img t-att-src="'data:image/png;base64,%s' % doc.contractor_signature.decode('utf-8')" style="max-height:60px;"/>
+                  </t>
+                </td>
+                <td style="width:33%; text-align:center;">
+                  <strong>Saqifat Al Safa</strong><br/>
+                  <t t-esc="doc.saqifa_name or ''"/><br/>
+                  <t t-if="doc.saqifa_signature">
+                    <img t-att-src="'data:image/png;base64,%s' % doc.saqifa_signature.decode('utf-8')" style="max-height:60px;"/>
+                  </t>
+                </td>
+                <td style="width:33%; text-align:center;">
+                  <strong>Landlord Consultant</strong><br/>
+                  <t t-esc="doc.landlord_consultant_name or ''"/><br/>
+                  <t t-if="doc.landlord_signature">
+                    <img t-att-src="'data:image/png;base64,%s' % doc.landlord_signature.decode('utf-8')" style="max-height:60px;"/>
+                  </t>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--<template id="portal_custom_navbar" name="Custom Portal Navbar" inherit_id="web.navbar">-->
+<!--    <xpath expr="//nav[contains(@class, 'o_main_navbar')]" position="attributes">-->
+<!--        <attribute name="t-attf-class">-->
+<!--            o_main_navbar {{ 'o_portal_navbar_custom' if request.env.user.share else '' }}-->
+<!--        </attribute>-->
+<!--    </xpath>-->
+<!--    <xpath expr="//div[contains(@class, 'o_user_menu')]" position="before">-->
+<!--        <t t-if="request.env.user.share and request.env.user.partner_id.is_owner">-->
+<!--            <a href="/my/properties/new" class="btn btn-primary rounded-pill me-3 px-3">-->
+<!--                <i class="fa fa-plus me-1"></i> Add Property-->
+<!--            </a>-->
+<!--        </t>-->
+<!--    </xpath>-->
+<!--</template>-->
+
+    <!-- 2. CSS Styling -->
+    <template id="custom_portal_assets" name="Custom Portal Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <style type="text/css">
+                .o_portal_navbar_custom {
+                    background-color: #ffffff !important;
+                    border-bottom: 1px solid #dee2e6;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                }
+                .o_portal_navbar_custom .o_menu_brand,
+                .o_portal_navbar_custom .o_menu_sections,
+                .o_portal_navbar_custom .o_menu_apps,
+                .o_portal_navbar_custom .o_debug_manager,
+                .o_portal_navbar_custom .o_db_manager {
+                    display: none !important;
+                }
+                .o_portal_navbar_custom .o_menu_brand_item {
+                    display: block !important;
+                }
+                .o_portal_navbar_custom .o_user_menu .dropdown-toggle::after {
+                    display: none;
+                }
+                .o_portal_navbar_custom .o_user_menu_avatar {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #10b981;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                }
+            </style>
+        </xpath>
+    </template>
+
+    <!-- 3. Login Error Message -->
+    <template id="login_portal_error_message" name="Portal Login Error" inherit_id="web.login">
+        <xpath expr="//form" position="before">
+            <t t-if="request.params.get('portal_error')">
+                <div class="alert alert-danger" role="alert">
+                    <strong>Access Denied:</strong> Your account does not have permission to access the portal. Please contact support.
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

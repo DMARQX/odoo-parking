@@ -1,0 +1,400 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_rs_project_dashboard_list">
+            <field name="name">Project.list</field>
+            <field name="model">rs.project</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="region"/>
+                    <field name="partner_id"/>
+                    <field name="company_id"/>
+                    <field name="count_of_proprety"/>
+                    <field name="total_projects_sold"/>
+                </list>
+            </field>
+        </record>
+        <!-- Define a view for the Project list -->
+
+        <record model="ir.ui.view" id="view_rs_project_list">
+            <field name="name">Project.list</field>
+            <field name="model">rs.project</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="region"/>
+                    <field name="partner_id"/>
+                    <field name="launching_date"/>
+                    <field name="property_type"/>
+                    <field name="property_status"/>
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+        <!--        form_Project-->
+        <record model="ir.ui.view" id="rs_project_form">
+            <field name="name">Projects</field>
+            <field name="model">rs.project</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!-- النظام التقليدي -->
+                        <button name="generate_subproperties" string="Create Units"
+                                class="btn-primary" type="object"
+                                invisible="is_create_unit == True"/>
+                                      
+                        <button name="action_create_portal_user" string="Create Portal User"
+                                class="btn-primary" type="object"/>
+
+                        <button name="action_generate_next_unit" string="Create Units"
+                                class="btn-primary" type="object"
+                                invisible="can_add_more_units != True"/>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div name="button_box" class="oe_button_box">
+                            <button type="object" name="get_number_propreties" class="oe_stat_button" icon="fa-cubes">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value" widget="statinfo">
+                                        <field name="quantity" widget="statinfo" nolabel="1" class="mr4" readonly="0"/>
+                                    </span>
+                                    <span class="o_stat_text">Property</span>
+                                </div>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="sub_properties_created == True"/>
+                                <field name="code" readonly="sub_properties_created == True"/>
+                                <field name="region" readonly="sub_properties_created == True"/>
+                                <field name="partner_id" readonly="sub_properties_created == True"/>
+                                <field name="sub_properties_created" invisible="1" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="purchase_date"
+                                       readonly="sub_properties_created == True"/>
+                                <field name="launching_date"
+                                       readonly="sub_properties_created == True"/>
+                                <field name="company_id" readonly="sub_properties_created == True"/>
+                                <field name="project_service_fee_percent"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Basic Information">
+                                <group>
+                                    <group>
+                                        <field name="property_type"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="property_status"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="rs_project_area"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="land_area"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="constructed"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="lift" readonly="sub_properties_created == True"/>
+                                        <field name="lift_f"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="pricing"
+                                               readonly="sub_properties_created == True"/>
+                                    </group>
+                                    <group>
+                                        <!-- Traditional System -->
+                                        <field name="no_of_floors"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="props_per_floor"
+                                               readonly="sub_properties_created == True"/>
+                                        
+                                        <field name="surface"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="garage"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="garden"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="north" readonly="sub_properties_created == True"/>
+                                        <field name="south" readonly="sub_properties_created == True"/>
+                                        <field name="east" readonly="sub_properties_created == True"/>
+                                        <field name="west" readonly="sub_properties_created == True"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Units">
+                                <field string="Units" name="subproperties_ids"
+                                       readonly="sub_properties_created == True">
+                                    <list>
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                        <field name="rs_project_id"/>
+                                        <field name="region"/>
+                                        <field name="desc"/>
+                                        <field name="ptype"/>
+                                        <field name="status"/>
+                                        <field name="rooms"/>
+                                        <field name="state"/>
+                                                  <button name="action_duplicate_unit"
+                    string="Duplication"
+                    type="object"
+                    icon="fa-plus-square"/>
+                                    </list>
+                                </field>
+                            </page>
+                            
+                            <page string="Address">
+                                <group>
+                                    <span class="o_form_label o_td_label" name="address">
+                                        <b>Address</b>
+                                    </span>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="city" placeholder="City" class="o_address_city"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State"
+                                               readonly="sub_properties_created == True"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                               readonly="sub_properties_created == True"/>
+                                        <div class="d-flex justify-content-between">
+                                            <field name="country_id" placeholder="Country" class="o_address_country"
+                                                   readonly="sub_properties_created == True"/>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Images">
+                                <group name="rs_project_template_images" string="Project Images">
+                                    <field name="rs_project_image_ids" class="o_website_sale_image_list"
+                                           context="{'default_name': name}" mode="kanban"
+                                           options="{'create_text':'Add a Media'}" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Floor Plans">
+                                <group name="rs_project_floor_plans" string="Floor Plans">
+                                    <field name="rs_project_floor_plans" class="o_website_sale_image_list"
+                                           context="{'default_name': name}" mode="kanban"
+                                           options="{'create_text':'Add a Media'}" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string=" Aditional Document">
+                                <field string="Documents" name="rs_project_attachment_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="file"/>
+                                        <field name="rs_project_attachment_id" invisible="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Aditional Information">
+                                <group>
+                                    <field name="license_code"
+                                           readonly="sub_properties_created == True"/>
+                                    <field name="license_date"
+                                           readonly="sub_properties_created == True"/>
+                                    <field name="date_added"
+                                           readonly="sub_properties_created == True"/>
+                                    <field name="license_notarization"
+                                           readonly="sub_properties_created == True"/>
+                                </group>
+                            </page>
+                            <page string="Notes">
+                                <field name="note" colspan="4" nolabel="1"/>
+                            </page>
+
+                            <page string="Contract details">
+                                <group>
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (1): المقدمة</h3>
+                                    <field name="contract_article_1" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (2): تعيين الطرف الثاني ونطاق العمل</h3>
+                                    <field name="contract_article_2" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (3): تفصيل واجبات الطرفان</h3>
+                                    <field name="contract_article_3" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (4): مكاتب الطرف الثاني</h3>
+                                    <field name="contract_article_4" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (5): الأتعاب وشروط الدفع</h3>
+                                    <field name="contract_article_5" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (6): تأخير الأتعاب</h3>
+                                    <field name="contract_article_6" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (7): موجبات الفسخ</h3>
+                                    <field name="contract_article_7" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (8): القوة القاهرة</h3>
+                                    <field name="contract_article_8" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (9): شروط خاصة</h3>
+                                    <field name="contract_article_9" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (10): شروط عامة</h3>
+                                    <field name="contract_article_10" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (11): حماية الطرفان من الأضرار</h3>
+                                    <field name="contract_article_11" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (12): النظام الواجب التطبيق</h3>
+                                    <field name="contract_article_12" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (13): المراسلات</h3>
+                                    <field name="contract_article_13" nolabel="1" colspan="2"/>
+
+                                    <h3 style="font-size: 17px;  text-align: right;">المادة رقم (14): كامل الاتفاق</h3>
+                                    <field name="contract_article_14" nolabel="1" colspan="2"/>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+<chatter/>
+                </form>
+            </field>
+        </record>
+        <!--        action_project-->
+        <record id="rs_project_action" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">rs.project</field>
+            <field name="view_mode">list,form,kanban</field>
+        </record>
+        <!--        search_view-->
+        <record model="ir.ui.view" id="view_rs_project_search">
+            <field name="name">Project.search</field>
+            <field name="model">rs.project</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name" filter_domain="[('name','ilike',self)]"/>
+                    <field name="code" filter_domain="[('code','ilike',self)]"/>
+                    <field name="region" filter_domain="[('region','ilike',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id','ilike',self)]"/>
+                    <field name="launching_date" filter_domain="[('launching_date','ilike',self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Owner" name="group_by_partner_id"
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="Region" name="group_by_region"
+                                context="{'group_by': 'region'}"/>
+                        <filter string="Launching Date" name="group_by_launching_date"
+                                context="{'group_by': 'launching_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!--        Project_image_kanban-->
+        <record id="view_rs_project_image_kanban" model="ir.ui.view">
+            <field name="name">Project.images.kanban</field>
+            <field name="model">rs.project.images</field>
+            <field name="arch" type="xml">
+                <kanban sample="1" class="o_kanban_rs_project_image_templates">
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <field name="image" widget="image"/>
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--        Project_image_form-->
+        <record id="view_rs_project_image_form" model="ir.ui.view">
+            <field name="name">Project.images.form</field>
+            <field name="model">rs.project.images</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="video_url"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--        project_floor_plan_kanban-->
+        <record id="view_rs_project_floor_plans_kanban" model="ir.ui.view">
+            <field name="name">project.floor.plans.kanban</field>
+            <field name="model">rs.project.floor.plans</field>
+            <field name="arch" type="xml">
+                <kanban sample="1" class="o_kanban_rs_project_floor_plans_templates">
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <field name="image" widget="image"/>
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--        rs_project_floor_plan_form-->
+        <record id="view_rs_project_floor_plans_form" model="ir.ui.view">
+            <field name="name">project.floor.plans.form</field>
+            <field name="model">rs.project.floor.plans</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="video_url"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--        kanban-->
+        <record id="view_rs_project_kanban" model="ir.ui.view">
+            <field name="name">project.kanban</field>
+            <field name="model">rs.project</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
+                    <field name="id"/>
+                    <progressbar field="state"
+                                 colors="{&quot;free&quot;: &quot;success&quot;, &quot;reserved&quot;: &quot;warning&quot;, &quot;sold&quot;: &quot;danger&quot;, &quot;on_lease&quot;:&quot;info&quot;}"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                                <field name="image" widget="image" class="o_kanban_image_fill_left"
+                                       options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                        </div>
+                                    </div>
+                                    <ul>
+                                        <li/>
+                                        <li class="o_text_overflow" style="font-size: 12px;">
+                                            <b>Name :</b>
+                                            <field name="name"/>
+                                        </li>
+                                        <li class="o_force_ltr" style="font-size: 12px;">
+                                            <b>Region :</b>
+                                            <field name="region"/>
+                                        </li>
+                                        <li class="o_force_ltr" style="font-size: 12px;">
+                                            <b>Owner :</b>
+                                            <field name="partner_id"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    </data>
+</odoo>
