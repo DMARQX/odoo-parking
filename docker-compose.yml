@@ -8,18 +8,18 @@ services:
       - POSTGRES_DB=postgres
     restart: always
     volumes:
-      - odoo_db_data:/var/lib/postgresql/data
+      - odoo_parking_db_data:/var/lib/postgresql/data
     networks:
-      custom_net:
-        ipv4_address: 172.20.0.10
+      parking_net:
+        ipv4_address: 172.24.0.10
   odoo18:
     image: odoo:18
     user: root
     depends_on:
       - db
     ports:
-      - "10018:8069"
-      - "20018:8072"
+      - "10020:8069"
+      - "20020:8072"
     tty: true
     command: --
     environment:
@@ -27,19 +27,19 @@ services:
       - USER=odoo
       - PASSWORD=odoo18@2024
     volumes:
-      - /opt/odoo-mazakelastol/addons:/mnt/extra-addons
-      - /opt/odoo-mazakelastol/etc:/etc/odoo
+      - /opt/odoo-parking-v1/addons:/mnt/extra-addons
+      - /opt/odoo-parking-v1/etc:/etc/odoo
     restart: always
     networks:
-      custom_net:
-        ipv4_address: 172.20.0.11
+      parking_net:
+        ipv4_address: 172.24.0.11
 networks:
-  custom_net:
+  parking_net:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+        - subnet: 172.24.0.0/24
+          gateway: 172.24.0.1
 volumes:
-  odoo_db_data:
-    external: true
+  odoo_parking_db_data:
+    external: false
