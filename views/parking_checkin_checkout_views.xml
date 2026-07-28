@@ -168,7 +168,7 @@
     <delete id="menu_parking_checkin_dashboard" model="ir.ui.menu"/>
     <menuitem id="menu_parking_vehicle_movement"
               name="سجل الحركات"
-              parent="parking_management.menu_parking_reports"
+              parent="parking_management.menu_parking_operations"
               action="action_parking_vehicle_movement"
               sequence="45"
               groups="base.group_user"/>

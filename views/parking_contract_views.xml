@@ -19,6 +19,18 @@
             </list>
         </field>
     </record>
+
+    <record id="action_report_parking_contract" model="ir.actions.report">
+        <field name="name">Print Contract</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_contract</field>
+        <field name="report_file">parking_management.report_parking_contract</field>
+        <field name="print_report_name">('Contract - ' + object.name)</field>
+    </record>
+
     <record id="parking_contract_form" model="ir.ui.view">
         <field name="name">parking.contract.form</field>
         <field name="model">parking.contract</field>
@@ -168,16 +180,5 @@
                 </group>
             </search>
         </field>
-    </record>
-    
-    <record id="action_report_parking_contract" model="ir.actions.report">
-        <field name="name">Print Contract</field>
-        <field name="binding_model_id" ref="model_parking_contract"/>
-        <field name="binding_type">report</field>
-        <field name="model">parking.contract</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">parking_management.report_parking_contract</field>
-        <field name="report_file">parking_management.report_parking_contract</field>
-        <field name="print_report_name">('Contract - ' + object.name)</field>
     </record>
 </odoo>
