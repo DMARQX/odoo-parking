@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_contracts_page" name="Parking Contracts">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/my">Home</a></li>
+                    <li class="breadcrumb-item active">Contracts</li>
+                </ol>
+            </t>
+            <t t-set="title">My Parking Contracts</t>
+            <div class="o_portal_docs">
+                <t t-if="not contracts">
+                    <div class="alert alert-info" role="alert">
+                        No contracts found.
+                    </div>
+                </t>
+                <t t-else="">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Contract</th>
+                                <th>Spot</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="contracts" t-as="c">
+                                <td><a t-attf-href="/my/contract/{{ c.id }}"><t t-esc="c.name"/></a></td>
+                                <td><t t-esc="c.spot_id.full_name"/></td>
+                                <td><t t-esc="c.start_date"/></td>
+                                <td><t t-esc="c.end_date"/></td>
+                                <td><t t-esc="c.amount_total"/></td>
+                                <td><t t-esc="c.state"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_contract_detail" name="Parking Contract Detail">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/my">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/my/contracts">Contracts</a></li>
+                    <li class="breadcrumb-item active"><t t-esc="contract.name"/></li>
+                </ol>
+            </t>
+            <t t-set="title">Contract <t t-esc="contract.name"/></t>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Contract Details</h4>
+                    <table class="table">
+                        <tr><td>Status</td><td><t t-esc="contract.state"/></td></tr>
+                        <tr><td>Spot</td><td><t t-esc="contract.spot_id.full_name"/></td></tr>
+                        <tr><td>Branch</td><td><t t-esc="contract.location_id.name"/></td></tr>
+                        <tr><td>Start Date</td><td><t t-esc="contract.start_date"/></td></tr>
+                        <tr><td>End Date</td><td><t t-esc="contract.end_date"/></td></tr>
+                        <tr><td>Subscription</td><td><t t-esc="contract.subscription_type"/></td></tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h4>Pricing</h4>
+                    <table class="table">
+                        <tr><td>Base Price</td><td><t t-esc="contract.price_per_month"/></td></tr>
+                        <tr><td>Total Amount</td><td><t t-esc="contract.amount_total"/></td></tr>
+                        <tr><td>Deposit</td><td><t t-esc="contract.deposit_amount"/></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row" t-if="contract.vehicle_ids">
+                <div class="col-12">
+                    <h4>Vehicles</h4>
+                    <table class="table">
+                        <thead><tr><th>Plate</th><th>Brand</th><th>Model</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="contract.vehicle_ids" t-as="v">
+                                <td><t t-esc="v.license_plate"/></td>
+                                <td><t t-esc="v.brand"/></td>
+                                <td><t t-esc="v.model"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" t-if="contract.invoice_ids">
+                <div class="col-12">
+                    <h4>Invoices</h4>
+                    <table class="table">
+                        <thead><tr><th>Invoice</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="contract.invoice_ids" t-as="inv">
+                                <td><t t-esc="inv.name"/></td>
+                                <td><t t-esc="inv.invoice_date"/></td>
+                                <td><t t-esc="inv.amount_total"/></td>
+                                <td><t t-esc="inv.payment_state"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" t-if="contract.history_ids">
+                <div class="col-12">
+                    <h4>Check In/Out History</h4>
+                    <table class="table">
+                        <thead><tr><th>Date</th><th>Type</th><th>Vehicle</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="contract.history_ids" t-as="h">
+                                <td><t t-esc="h.create_date"/></td>
+                                <td>Movement</td>
+                                <td><t t-esc="h.vehicle_id.license_plate"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_vehicles_page" name="My Vehicles">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/my">Home</a></li>
+                    <li class="breadcrumb-item active">Vehicles</li>
+                </ol>
+            </t>
+            <t t-set="title">My Vehicles</t>
+            <div class="o_portal_docs">
+                <t t-if="not vehicles">
+                    <div class="alert alert-info" role="alert">
+                        No vehicles found.
+                    </div>
+                </t>
+                <t t-else="">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>License Plate</th>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="vehicles" t-as="v">
+                                <td><t t-esc="v.license_plate"/></td>
+                                <td><t t-esc="v.brand"/></td>
+                                <td><t t-esc="v.model"/></td>
+                                <td><t t-esc="v.year"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_vehicle_detail" name="Vehicle Detail">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/my">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/my/vehicles">Vehicles</a></li>
+                    <li class="breadcrumb-item active"><t t-esc="vehicle.license_plate"/></li>
+                </ol>
+            </t>
+            <t t-set="title">Vehicle <t t-esc="vehicle.license_plate"/></t>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Vehicle Details</h4>
+                    <table class="table">
+                        <tr><td>License Plate</td><td><t t-esc="vehicle.license_plate"/></td></tr>
+                        <tr><td>Brand</td><td><t t-esc="vehicle.brand"/></td></tr>
+                        <tr><td>Model</td><td><t t-esc="vehicle.model"/></td></tr>
+                        <tr><td>Year</td><td><t t-esc="vehicle.year"/></td></tr>
+                        <tr><td>Color</td><td><t t-esc="vehicle.color"/></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row" t-if="vehicle.contract_ids">
+                <div class="col-12">
+                    <h4>Contracts</h4>
+                    <table class="table">
+                        <thead><tr><th>Contract</th><th>Spot</th><th>Start</th><th>End</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="vehicle.contract_ids" t-as="c">
+                                <td><a t-attf-href="/my/contract/{{ c.id }}"><t t-esc="c.name"/></a></td>
+                                <td><t t-esc="c.spot_id.full_name"/></td>
+                                <td><t t-esc="c.start_date"/></td>
+                                <td><t t-esc="c.end_date"/></td>
+                                <td><t t-esc="c.state"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_contract_tree" model="ir.ui.view">
+        <field name="name">parking.contract.tree</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="spot_id"/>
+                <field name="location_id"/>
+                <field name="subscription_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="invoice_status" widget="badge" optional="show"/>
+                <field name="state" widget="badge"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_contract_form" model="ir.ui.view">
+        <field name="name">parking.contract.form</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="action_activate" string="Activate" type="object" class="btn-primary"/>
+                    <button name="action_sign" string="Sign Contract" type="object" class="btn-success"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"/>
+                    <button name="%(action_report_parking_contract)d" string="Print PDF" type="action" class="btn-secondary"/>
+                    <button name="action_expire" string="Expire" type="object" class="btn-warning"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-danger"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,active,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_parking_contract_history)d" type="action" class="oe_stat_button" icon="fa-clock-o">
+                            <div class="o_stat_info">
+                                <field name="history_ids" widget="statinfo" string="Check In/Out"/>
+                            </div>
+                        </button>
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-euro">
+                            <div class="o_stat_info">
+                                <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="subscription_type"/>
+                        </group>
+                    </group>
+                    <group string="Spot &amp; Branch">
+                        <group>
+                            <field name="spot_id" options="{'no_create': True}"/>
+                            <field name="location_id"/>
+                        </group>
+                    </group>
+                    <group string="Vehicles">
+                        <field name="vehicle_ids" widget="many2many_tags"/>
+                        <field name="vehicle_count"/>
+                    </group>
+                    <group string="Pricing">
+                        <group>
+                            <field name="price_tmpl_id"/>
+                            <field name="price_per_month" widget="monetary"/>
+                            <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="deposit_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group string="Invoicing">
+                        <group>
+                            <field name="auto_invoice"/>
+                            <field name="invoice_period" invisible="not auto_invoice" required="auto_invoice"/>
+                            <field name="parking_product_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="recurring_next_date" invisible="not auto_invoice"/>
+                            <field name="last_invoiced_date"/>
+                            <field name="invoice_status" widget="badge"/>
+                        </group>
+                    </group>
+                    <group string="Wash">
+                        <group>
+                            <field name="free_wash_count"/>
+                            <field name="wash_interval_days"/>
+                        </group>
+                        <group>
+                            <field name="washes_used"/>
+                            <field name="remaining_washes"/>
+                        </group>
+                        <field name="wash_ids">
+                            <list editable="bottom">
+                                <field name="wash_date"/>
+                                <field name="washed_by"/>
+                                <field name="wash_number"/>
+                                <field name="state" widget="badge"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Additional Services">
+                        <field name="service_line_ids">
+                            <list editable="bottom">
+                                <field name="service_id" options="{'no_create': True}"/>
+                                <field name="product_id" optional="show"/>
+                                <field name="quantity"/>
+                                <field name="price_unit" widget="monetary"/>
+                                <field name="price_subtotal" widget="monetary"/>
+                            </list>
+                        </field>
+                        <field name="services_total" widget="monetary"/>
+                    </group>
+                    <group>
+                        <field name="amount_total" widget="monetary"/>
+                    </group>
+                    <notebook>
+                        <page name="terms" string="Terms">
+                            <group string="Terms &amp; Conditions">
+                                <field name="terms_id" options="{'no_create': True}"/>
+                                <field name="terms_conditions" widget="html"/>
+                            </group>
+                            <group string="Signatures">
+                                <group>
+                                    <field name="customer_signature" widget="signature"/>
+                                    <field name="signature_date"/>
+                                </group>
+                                <group>
+                                    <field name="authorized_signature" widget="signature"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="parking_contract_search" model="ir.ui.view">
+        <field name="name">parking.contract.search</field>
+        <field name="model">parking.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="spot_id"/>
+                <field name="location_id"/>
+                <field name="user_id"/>
+                <filter name="active_contracts" string="Active" domain="[('state','=','active')]"/>
+                <filter name="auto_invoice_filter" string="Auto Invoice" domain="[('auto_invoice','=',True)]"/>
+                <filter name="unpaid_filter" string="Unpaid" domain="[('invoice_status','in',('to_invoice','invoiced'))]"/>
+                <separator/>
+                <filter name="today" string="Today" date="start_date"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_location" string="Branch" context="{'group_by':'location_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="group_user" string="Employee" context="{'group_by':'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_report_parking_contract" model="ir.actions.report">
+        <field name="name">Print Contract</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_contract</field>
+        <field name="report_file">parking_management.report_parking_contract</field>
+        <field name="print_report_name">('Contract - ' + object.name)</field>
+    </record>
+</odoo>

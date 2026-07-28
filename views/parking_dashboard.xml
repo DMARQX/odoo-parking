@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="parking_dashboard_form" model="ir.ui.view">
+        <field name="name">parking.dashboard.form</field>
+        <field name="model">parking.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Parking Dashboard" create="false" edit="false">
+                <sheet>
+                    <div class="row mb-3">
+                        <div class="col-12 text-center py-3 bg-light rounded">
+                            <h2>Parking Management Dashboard</h2>
+                            <p class="text-muted mb-0">Overview of parking operations</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-md-6 col-12 mb-2">
+                            <div class="card text-white bg-primary text-center py-3">
+                                <div class="card-body py-2">
+                                    <i class="fa fa-th-large fa-2x mb-1"></i>
+                                    <h4 class="mb-0 fw-bold"><field name="total_spots" nolabel="1" readonly="1"/></h4>
+                                    <p class="mb-0 small">Total Spots</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-2">
+                            <div class="card text-white bg-success text-center py-3">
+                                <div class="card-body py-2">
+                                    <i class="fa fa-check-circle fa-2x mb-1"></i>
+                                    <h4 class="mb-0 fw-bold"><field name="available_spots" nolabel="1" readonly="1"/></h4>
+                                    <p class="mb-0 small">Available</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-2">
+                            <div class="card text-white bg-warning text-center py-3">
+                                <div class="card-body py-2">
+                                    <i class="fa fa-car fa-2x mb-1"></i>
+                                    <h4 class="mb-0 fw-bold"><field name="occupied_spots" nolabel="1" readonly="1"/></h4>
+                                    <p class="mb-0 small">Occupied</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-2">
+                            <div class="card text-white bg-info text-center py-3">
+                                <div class="card-body py-2">
+                                    <i class="fa fa-file-text fa-2x mb-1"></i>
+                                    <h4 class="mb-0 fw-bold"><field name="active_contracts" nolabel="1" readonly="1"/></h4>
+                                    <p class="mb-0 small">Active Contracts</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-12 mb-2">
+                            <div class="card h-100">
+                                <div class="card-header"><strong> Spots by Status</strong></div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tr>
+                                            <td class="text-center"><field name="available_spots" nolabel="1" readonly="1" class="text-success fw-bold fs-4"/><br/><span class="small text-success">Available</span></td>
+                                            <td class="text-center"><field name="occupied_spots" nolabel="1" readonly="1" class="text-warning fw-bold fs-4"/><br/><span class="small text-warning">Occupied</span></td>
+                                            <td class="text-center"><field name="client_out_spots" nolabel="1" readonly="1" class="text-secondary fw-bold fs-4"/><br/><span class="small text-secondary">Client Out</span></td>
+                                            <td class="text-center"><field name="reserved_spots" nolabel="1" readonly="1" class="text-info fw-bold fs-4"/><br/><span class="small text-info">Reserved</span></td>
+                                            <td class="text-center"><field name="maintenance_spots" nolabel="1" readonly="1" class="text-secondary fw-bold fs-4"/><br/><span class="small text-secondary">Maintenance</span></td>
+                                            <td class="text-center"><field name="total_spots" nolabel="1" readonly="1" class="text-primary fw-bold fs-4"/><br/><span class="small text-primary">Total</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 mb-2">
+                            <div class="card h-100">
+                                <div class="card-header"><strong> Contracts Overview</strong></div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tr>
+                                            <td class="text-center"><field name="active_contracts" nolabel="1" readonly="1" class="text-success fw-bold fs-4"/><br/><span class="small text-success">Active</span></td>
+                                            <td class="text-center"><field name="expired_contracts" nolabel="1" readonly="1" class="text-danger fw-bold fs-4"/><br/><span class="small text-danger">Expired</span></td>
+                                            <td class="text-center"><field name="draft_contracts" nolabel="1" readonly="1" class="text-secondary fw-bold fs-4"/><br/><span class="small text-secondary">Draft</span></td>
+                                            <td class="text-center"><field name="near_expiry_contracts" nolabel="1" readonly="1" class="text-warning fw-bold fs-4"/><br/><span class="small text-warning">Near Expiry</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-12 mb-2">
+                            <div class="card h-100">
+                                <div class="card-header"><strong> Vehicles</strong></div>
+                                <div class="card-body text-center">
+                                    <field name="total_vehicles" nolabel="1" readonly="1" class="text-primary fw-bold fs-1"/>
+                                    <p class="text-muted small">Registered Vehicles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 mb-2">
+                            <div class="card h-100">
+                                <div class="card-header"><strong> Customers</strong></div>
+                                <div class="card-body text-center">
+                                    <field name="total_customers" nolabel="1" readonly="1" class="text-success fw-bold fs-1"/>
+                                    <p class="text-muted small">Total Customers</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 mb-2">
+                            <div class="card h-100">
+                                <div class="card-header"><strong> Revenue</strong></div>
+                                <div class="card-body text-center">
+                                    <field name="monthly_revenue" nolabel="1" readonly="1" class="text-info fw-bold fs-4" widget="monetary"/>
+                                    <p class="text-muted small">This Month</p>
+                                    <hr class="my-1"/>
+                                    <span class="small text-muted">Total: </span>
+                                    <field name="total_revenue" nolabel="1" readonly="1" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_parking_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">parking.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_parking_dashboard" name="Dashboard" parent="menu_parking_root" action="action_parking_dashboard" sequence="5"/>
+
+</odoo>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_price_template_tree" model="ir.ui.view">
+        <field name="name">parking.price.template.tree</field>
+        <field name="model">parking.price.template</field>
+        <field name="arch" type="xml">
+            <list editable="top">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="spot_type"/>
+                <field name="price_per_month" widget="monetary"/>
+                <field name="price_per_year" widget="monetary"/>
+                <field name="deposit_amount" widget="monetary"/>
+                <field name="tax_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_price_template_form" model="ir.ui.view">
+        <field name="name">parking.price.template.form</field>
+        <field name="model">parking.price.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <field name="active" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="location_id"/>
+                            <field name="spot_type"/>
+                        </group>
+                        <group>
+                            <field name="price_per_hour" widget="monetary"/>
+                            <field name="price_per_day" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="price_per_month" widget="monetary"/>
+                            <field name="price_per_year" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="deposit_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="tax_id"/>
+                        </group>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_vehicle_checkpoint_tree" model="ir.ui.view">
+        <field name="name">parking.vehicle.checkpoint.tree</field>
+        <field name="model">parking.vehicle.checkpoint</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_vehicle_checkpoint_form" model="ir.ui.view">
+        <field name="name">parking.vehicle.checkpoint.form</field>
+        <field name="model">parking.vehicle.checkpoint</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="parking_vehicle_checkpoint_search" model="ir.ui.view">
+        <field name="name">parking.vehicle.checkpoint.search</field>
+        <field name="model">parking.vehicle.checkpoint</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="category"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_category" string="Category" context="{'group_by':'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_parking_vehicle_checkpoint" model="ir.actions.act_window">
+        <field name="name">Inspection Checkpoints</field>
+        <field name="res_model">parking.vehicle.checkpoint</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="parking_vehicle_checkpoint_search"/>
+        <field name="help">Define checkpoints for vehicle inspection checklists.</field>
+    </record>
+    <menuitem id="menu_parking_vehicle_checkpoint" name="Checkpoints" parent="menu_parking_config" action="action_parking_vehicle_checkpoint" sequence="35"/>
+</odoo>

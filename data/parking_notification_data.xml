@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Email Template: Contract Expiry Reminder -->
+    <record id="email_template_contract_expiry" model="mail.template">
+        <field name="name">Parking Contract - Expiry Reminder</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="subject">Contract {{ object.name }} expires soon</field>
+        <field name="email_from">{{ object.company_id.email or '' }}</field>
+        <field name="email_to">{{ object.partner_id.email or '' }}</field>
+        <field name="body_html"><![CDATA[
+<p>Dear {{ object.partner_id.name }},</p>
+<p>This is a reminder that your parking contract <b>{{ object.name }}</b> will expire on <b>{{ object.end_date }}</b>.</p>
+<p><b>Spot:</b> {{ object.spot_id.full_name }}</p>
+<p><b>Subscription:</b> {{ object.subscription_type }}</p>
+<p><b>Amount:</b> {{ object.amount_total }}</p>
+<br/>
+<p>Please contact us to renew your contract.</p>
+<p>Best regards,<br/>Parking Management</p>
+        ]]></field>
+    </record>
+
+    <!-- Email Template: Contract Expired -->
+    <record id="email_template_contract_expired" model="mail.template">
+        <field name="name">Parking Contract - Expired</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="subject">Contract {{ object.name }} has expired</field>
+        <field name="email_from">{{ object.company_id.email or '' }}</field>
+        <field name="email_to">{{ object.partner_id.email or '' }}</field>
+        <field name="body_html"><![CDATA[
+<p>Dear {{ object.partner_id.name }},</p>
+<p>Your parking contract <b>{{ object.name }}</b> has expired on <b>{{ object.end_date }}</b>.</p>
+<p>Please contact us immediately to renew or vacate the spot.</p>
+<p>Best regards,<br/>Parking Management</p>
+        ]]></field>
+    </record>
+
+    <!-- Email Template: Invoice Created -->
+    <record id="email_template_invoice_created" model="mail.template">
+        <field name="name">Parking - Invoice Created</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="subject">Invoice {{ object.name }} - Parking Contract</field>
+        <field name="email_from">{{ object.company_id.email or '' }}</field>
+        <field name="email_to">{{ object.partner_id.email or '' }}</field>
+        <field name="body_html"><![CDATA[
+<p>Dear {{ object.partner_id.name }},</p>
+<p>An invoice has been generated for your parking contract.</p>
+<p><b>Invoice:</b> {{ object.name }}</p>
+<p><b>Date:</b> {{ object.invoice_date }}</p>
+<p><b>Amount:</b> {{ object.amount_total }}</p>
+<br/>
+<p>Please make the payment at your earliest convenience.</p>
+<p>Best regards,<br/>Parking Management</p>
+        ]]></field>
+    </record>
+
+    <!-- Cron: Send Notification Reminders -->
+    <record id="cron_parking_send_notifications" model="ir.cron">
+        <field name="name">Parking: Send Contract Notifications</field>
+        <field name="cron_name">Parking: Send Contract Notifications</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_notifications()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(datetime.now() + timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

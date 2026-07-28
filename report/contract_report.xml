@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_parking_contract">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="is_ar" t-value="(env.user.lang or '').startswith('ar')"/>
+                <t t-set="lbl_contract" t-value="'عقد موقف' if is_ar else 'PARKING CONTRACT'"/>
+                <t t-set="lbl_customer_info" t-value="'معلومات العميل' if is_ar else 'Customer Information'"/>
+                <t t-set="lbl_contract_details" t-value="'تفاصيل العقد' if is_ar else 'Contract Details'"/>
+                <t t-set="lbl_name" t-value="'الاسم' if is_ar else 'Name'"/>
+                <t t-set="lbl_phone" t-value="'الهاتف' if is_ar else 'Phone'"/>
+                <t t-set="lbl_email" t-value="'البريد الإلكتروني' if is_ar else 'Email'"/>
+                <t t-set="lbl_address" t-value="'العنوان' if is_ar else 'Address'"/>
+                <t t-set="lbl_id_number" t-value="'رقم الهوية' if is_ar else 'National ID'"/>
+                <t t-set="lbl_reference" t-value="'المرجع' if is_ar else 'Reference'"/>
+                <t t-set="lbl_period" t-value="'المدة' if is_ar else 'Period'"/>
+                <t t-set="lbl_type" t-value="'النوع' if is_ar else 'Type'"/>
+                <t t-set="lbl_status" t-value="'الحالة' if is_ar else 'Status'"/>
+                <t t-set="lbl_employee" t-value="'الموظف' if is_ar else 'Employee'"/>
+                <t t-set="lbl_branch_spot" t-value="'الفرع والموقف' if is_ar else 'Branch &amp; Parking Spot'"/>
+                <t t-set="lbl_branch" t-value="'الفرع' if is_ar else 'Branch'"/>
+                <t t-set="lbl_spot" t-value="'الموقف' if is_ar else 'Spot'"/>
+                <t t-set="lbl_floor_zone" t-value="'الدور / المنطقة' if is_ar else 'Floor / Zone'"/>
+                <t t-set="lbl_vehicles" t-value="'المركبات المسجلة' if is_ar else 'Registered Vehicles'"/>
+                <t t-set="lbl_license" t-value="'اللوحة' if is_ar else 'License Plate'"/>
+                <t t-set="lbl_brand" t-value="'العلامة' if is_ar else 'Brand'"/>
+                <t t-set="lbl_model" t-value="'الطراز' if is_ar else 'Model'"/>
+                <t t-set="lbl_color" t-value="'اللون' if is_ar else 'Color'"/>
+                <t t-set="lbl_no_vehicles" t-value="'لا توجد مركبات مسجلة' if is_ar else 'No vehicles registered'"/>
+                <t t-set="lbl_subscription" t-value="'الاشتراك والرسوم' if is_ar else 'Subscription &amp; Fees'"/>
+                <t t-set="lbl_sub_type" t-value="'نوع الاشتراك' if is_ar else 'Subscription Type'"/>
+                <t t-set="lbl_base_price" t-value="'السعر الأساسي' if is_ar else 'Base Price'"/>
+                <t t-set="lbl_services" t-value="'الخدمات الإضافية' if is_ar else 'Additional Services'"/>
+                <t t-set="lbl_services_total" t-value="'إجمالي الخدمات' if is_ar else 'Services Total'"/>
+                <t t-set="lbl_deposit" t-value="'مبلغ التأمين' if is_ar else 'Deposit Amount'"/>
+                <t t-set="lbl_total" t-value="'الإجمالي' if is_ar else 'Total Amount'"/>
+                <t t-set="lbl_terms" t-value="'الشروط والأحكام' if is_ar else 'Terms &amp; Conditions'"/>
+                <t t-set="lbl_customer_sig" t-value="'توقيع العميل' if is_ar else 'Customer Signature'"/>
+                <t t-set="lbl_authorized_sig" t-value="'التوقيع المعتمد' if is_ar else 'Authorized Signature'"/>
+                <t t-set="lbl_contract_ref" t-value="'عقد' if is_ar else 'Contract'"/>
+                <t t-set="lbl_generated" t-value="'تم الإنشاء' if is_ar else 'Generated'"/>
+                <t t-set="lbl_pms" t-value="'نظام إدارة المواقف' if is_ar else 'Parking Management System'"/>
+                <t t-set="show_signature" t-value="bool(o.customer_signature) or bool(o.authorized_signature)"/>
+                <t t-set="lbl_electronic" t-value="'هذا المستند تم إنشاؤه إلكترونياً وهو صالح بدون توقيع يدوي' if is_ar else 'This document is electronically generated and is valid without a physical signature.'"/>
+                    <style>
+                        @page { size: A4; margin: 8mm; }
+                        html, body { margin: 0; padding: 0; }
+                        .page table { table-layout: fixed; width: 100%; }
+                        .page td, .page th { box-sizing: border-box; word-wrap: break-word; white-space: normal; }
+                        .page img { max-width: 100%; height: auto; }
+                        .page { overflow: visible; }
+                    </style>
+                    <div class="page" style="font-family: 'Noto Naskh Arabic', 'DejaVu Sans', sans-serif;" t-att-dir="'rtl' if is_ar else None">
+
+                        <!-- Top Gold Bar -->
+                        <div style="height: 4px; background: #C9A04E;"></div>
+                        <div style="height: 6px; background: #0f172a;"></div>
+
+                        <!-- Header with Logo and Title -->
+                        <table style="width: 100%; margin: 20px 0 24px 0; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 90px; vertical-align: middle;">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 70px; max-width: 90px;"/>
+                                </td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #0f172a; letter-spacing: 1px;" t-esc="lbl_contract"/>
+                                    <div style="font-size: 10px; color: #C9A04E; margin-top: 2px; letter-spacing: 3px; text-transform: uppercase;">
+                                        <span t-esc="o.company_id.name or lbl_pms" style="letter-spacing: normal;"/>
+                                    </div>
+                                </td>
+                                <td style="width: 90px; vertical-align: middle; text-align: end;">
+                                    <div style="font-size: 11px; color: #0f172a; font-weight: bold;" t-esc="o.name"/>
+                                    <div style="font-size: 9px; color: #888; margin-top: 2px;">
+                                        <span t-esc="o.create_date"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="border-bottom: 2px solid #C9A04E; margin-bottom: 20px;"></div>
+
+                        <!-- Customer + Contract Info Side by Side -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <td style="vertical-align: top; width: 50%; padding-inline-end: 10px;">
+                                    <div style="border: 1px solid #E0E0E0; border-radius: 4px; border-top: 3px solid #0f172a;">
+                                        <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                            <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_customer_info"/>
+                                        </div>
+                                        <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                                            <tr><td style="padding: 5px 12px; color: #666; width: 35%;"><t t-esc="lbl_name"/>:</td><td style="padding: 5px 12px; font-weight: bold;"><t t-esc="o.partner_id.name"/></td></tr>
+                                            <tr style="background: #F8F9FC;"><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_id_number"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.partner_id.l10n_sa_additional_identification_number or o.partner_id.vat or '—'"/></td></tr>
+                                            <tr><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_phone"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.partner_id.phone or '—'"/></td></tr>
+                                            <tr style="background: #F8F9FC;"><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_email"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.partner_id.email or '—'"/></td></tr>
+                                            <tr><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_address"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.partner_id.contact_address or '—'"/></td></tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top; width: 50%; padding-inline-start: 10px;">
+                                    <div style="border: 1px solid #E0E0E0; border-radius: 4px; border-top: 3px solid #0f172a;">
+                                        <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                            <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_contract_details"/>
+                                        </div>
+                                        <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                                            <tr><td style="padding: 5px 12px; color: #666; width: 35%;"><t t-esc="lbl_reference"/>:</td><td style="padding: 5px 12px; font-weight: bold;"><t t-esc="o.name"/></td></tr>
+                                            <tr style="background: #F8F9FC;"><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_period"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.start_date"/> — <span t-esc="o.end_date"/></td></tr>
+                                            <tr><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_type"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.subscription_type" style="text-transform: capitalize;"/></td></tr>
+                                            <tr style="background: #F8F9FC;"><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_status"/>:</td><td style="padding: 5px 12px;"><span t-esc="o.state" style="text-transform: capitalize;"/></td></tr>
+                                            <tr><td style="padding: 5px 12px; color: #666;"><t t-esc="lbl_employee"/>:</td><td style="padding: 5px 12px;"><t t-esc="o.user_id.name or '—'"/></td></tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Branch & Parking Spot -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 20px; border-top: 3px solid #C9A04E;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_branch_spot"/>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #0f172a; color: #ffffff;">
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_branch"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_spot"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_type"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_floor_zone"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #E0E0E0;">
+                                        <td style="padding: 6px 12px; font-size: 10px;" t-esc="o.location_id.display_name"/>
+                                        <td style="padding: 6px 12px; font-size: 10px;" t-esc="o.spot_id.name"/>
+                                        <td style="padding: 6px 12px; font-size: 10px;" t-esc="o.spot_id.spot_type"/>
+                                        <td style="padding: 6px 12px; font-size: 10px;" t-esc="o.spot_id.floor or '—'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Registered Vehicles -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 20px; border-top: 3px solid #C9A04E;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_vehicles"/>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #0f172a; color: #ffffff;">
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;">#</th>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_license"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_brand"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_model"/>
+                                        <th style="padding: 6px 12px; font-size: 9px; letter-spacing: 0.5px; text-align: start;" t-esc="lbl_color"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.vehicle_ids or []" t-as="v" style="border-bottom: 1px solid #E0E0E0;">
+                                        <td style="padding: 5px 12px; font-size: 10px; color: #888;" t-esc="v_index + 1"/>
+                                        <td style="padding: 5px 12px; font-size: 10px; font-weight: bold;"><span t-esc="v.license_plate or '—'"/></td>
+                                        <td style="padding: 5px 12px; font-size: 10px;"><span t-esc="v.brand or '—'"/></td>
+                                        <td style="padding: 5px 12px; font-size: 10px;"><span t-esc="v.model or '—'"/></td>
+                                        <td style="padding: 5px 12px; font-size: 10px;"><span t-esc="v.color or '—'"/></td>
+                                    </tr>
+                                    <tr t-if="not o.vehicle_ids">
+                                        <td colspan="5" style="padding: 10px 12px; font-size: 10px; color: #888; text-align: center; font-style: italic;" t-esc="lbl_no_vehicles"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Subscription & Fees -->
+                        <div style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 20px; border-top: 3px solid #C9A04E;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_subscription"/>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 6px 12px; font-size: 10px; background: #F8F9FC; width: 40%; color: #666;" t-esc="lbl_sub_type"/>
+                                    <td style="padding: 6px 12px; font-size: 10px; text-transform: capitalize;" t-esc="o.subscription_type"/>
+                                 </tr>
+                                <tr style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 6px 12px; font-size: 10px; background: #F8F9FC; color: #666;" t-esc="lbl_base_price"/>
+                                    <td style="padding: 6px 12px; font-size: 10px; font-weight: bold;">
+                                        <t t-set="base_price" t-value="o.price_per_month or (o.price_tmpl_id.price_per_month if o.price_tmpl_id else 0)"/>
+                                        <t t-esc="'%s SAR' % ('{:,.2f}'.format(base_price))"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.service_line_ids" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 6px 12px; font-size: 10px; background: #F8F9FC; color: #666;" t-esc="lbl_services"/>
+                                    <td style="padding: 6px 12px; font-size: 10px;">
+                                        <t t-foreach="o.service_line_ids" t-as="line">
+                                            <div style="padding: 1px 0;"><span t-esc="line.name"/> <t t-if="line.quantity != 1">× <span t-esc="line.quantity"/></t> — <span t-esc="'{:,.2f} SAR'.format(line.price_subtotal)"/></div>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 6px 12px; font-size: 10px; background: #F8F9FC; color: #666;" t-esc="lbl_services_total"/>
+                                    <td style="padding: 6px 12px; font-size: 10px;" t-esc="'{:,.2f} SAR'.format(o.services_total)"/>
+                                </tr>
+                                <tr t-if="o.deposit_amount" style="border-bottom: 1px solid #E0E0E0;">
+                                    <td style="padding: 6px 12px; font-size: 10px; background: #F8F9FC; color: #666;" t-esc="lbl_deposit"/>
+                                    <td style="padding: 6px 12px; font-size: 10px;" t-esc="'{:,.2f} SAR'.format(o.deposit_amount)"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 11px; background: #0f172a; color: #ffffff; font-weight: bold;" t-esc="lbl_total"/>
+                                    <td style="padding: 8px 12px; font-size: 13px; background: #0f172a; color: #C9A04E; font-weight: bold;" t-esc="'{:,.2f} SAR'.format(o.amount_total)"/>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Terms & Conditions -->
+                        <div t-if="o.terms_conditions" style="border: 1px solid #E0E0E0; border-radius: 4px; margin-bottom: 20px; border-top: 3px solid #C9A04E;">
+                            <div style="background: #F8F9FC; padding: 8px 12px; border-bottom: 1px solid #E0E0E0;">
+                                <strong style="font-size: 11px; color: #0f172a;" t-esc="lbl_terms"/>
+                            </div>
+                            <div style="font-size: 9px; line-height: 1.6; padding: 12px; background: #FAFBFC;">
+                                <span t-raw="o.terms_conditions"/>
+                            </div>
+                        </div>
+
+                        <!-- Signatures -->
+                        <t t-if="show_signature">
+                        <table style="width: 100%; margin-top: 30px; border-collapse: collapse; table-layout: fixed;">
+                            <tr>
+                                <td style="width: 50%; padding: 0 5px; vertical-align: top;">
+                                    <div style="border: 1px solid #E0E0E0; border-radius: 4px; padding: 16px; height: 140px; display: flex; flex-direction: column; box-sizing: border-box;">
+                                        <div style="border-bottom: 1px solid #C9A04E; margin-bottom: 8px; padding-bottom: 8px; flex: 1; display: flex; align-items: center; justify-content: center;">
+                                            <p t-if="o.customer_signature" style="margin: 0;"><img t-att-src="'data:image/png;base64,' + (o.customer_signature.decode('utf-8') if isinstance(o.customer_signature, bytes) else o.customer_signature)" style="max-height: 45px;"/></p>
+                                            <p t-else="" style="margin: 0; font-size: 14px; color: #ccc; letter-spacing: 2px;">_________________________</p>
+                                        </div>
+                                        <p style="margin: 0; font-size: 10px; font-weight: bold; color: #0f172a; text-align: center;" t-esc="lbl_customer_sig"/>
+                                        <p t-if="o.partner_id.name" style="margin: 2px 0 0; font-size: 9px; color: #666; text-align: center;" t-esc="o.partner_id.name"/>
+                                        <p t-if="o.signature_date" style="margin: 0; font-size: 9px; color: #999; text-align: center;"><span t-esc="o.signature_date"/></p>
+                                    </div>
+                                </td>
+                                <td style="width: 50%; padding: 0 5px; vertical-align: top;">
+                                    <div style="border: 1px solid #E0E0E0; border-radius: 4px; padding: 16px; height: 140px; display: flex; flex-direction: column; box-sizing: border-box;">
+                                        <div style="border-bottom: 1px solid #C9A04E; margin-bottom: 8px; padding-bottom: 8px; flex: 1; display: flex; align-items: center; justify-content: center;">
+                                            <p t-if="o.authorized_signature" style="margin: 0;"><img t-att-src="'data:image/png;base64,' + (o.authorized_signature.decode('utf-8') if isinstance(o.authorized_signature, bytes) else o.authorized_signature)" style="max-height: 45px;"/></p>
+                                            <p t-else="" style="margin: 0; font-size: 14px; color: #ccc; letter-spacing: 2px;">_________________________</p>
+                                        </div>
+                                        <p style="margin: 0; font-size: 10px; font-weight: bold; color: #0f172a; text-align: center;" t-esc="lbl_authorized_sig"/>
+                                        <p t-if="o.company_id.name" style="margin: 2px 0 0; font-size: 9px; color: #666; text-align: center;" t-esc="o.company_id.name"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        </t>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 30px; padding-top: 10px; border-top: 1px solid #E0E0E0; text-align: center;">
+                            <div style="font-size: 8px; color: #999;">
+                                <p style="margin: 2px 0;"><t t-esc="lbl_contract_ref"/> <span t-esc="o.name"/> — <t t-esc="lbl_generated"/> <span t-esc="time.strftime('%%Y-%%m-%%d %%H:%%M')"/> — <t t-esc="lbl_pms"/></p>
+                                <p style="margin: 2px 0;" t-esc="lbl_electronic"/>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Bars -->
+                        <div style="margin-top: 12px;">
+                            <div style="height: 4px; background: #C9A04E;"></div>
+                            <div style="height: 6px; background: #0f172a;"></div>
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </template>
+</odoo>

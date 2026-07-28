@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="parking_spot_search_checkin_checkout" model="ir.ui.view">
+        <field name="name">parking.spot.search.checkin.checkout</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Spot"/>
+                <field name="current_vehicle_plate" string="License Plate"/>
+                <field name="current_vehicle_brand" string="Brand"/>
+                <field name="current_owner_mobile" string="Owner Mobile"/>
+                <field name="location_id" string="Branch"/>
+                <field name="floor" string="Floor"/>
+                <filter name="filter_outside" string="Outside" domain="[('status', '=', 'client_out')]"/>
+                <filter name="filter_parked" string="Parked" domain="[('status', '=', 'occupied')]"/>
+                <filter name="filter_waiting_long" string="Waiting &gt; 4h"
+                        domain="[('status', '=', 'client_out'), ('waiting_hours', '&gt;', 4)]"/>
+                <filter name="filter_waiting_medium" string="Waiting 1-4h"
+                        domain="[('status', '=', 'client_out'), ('waiting_hours', '&gt;', 1), ('waiting_hours', '&lt;=', 4)]"/>
+                <filter name="filter_waiting_short" string="Waiting &lt; 1h"
+                        domain="[('status', '=', 'client_out'), ('waiting_hours', '&gt;=', 0), ('waiting_hours', '&lt;=', 1)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_branch" string="Branch" context="{'group_by': 'location_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Dashboard Kanban -->
+    <delete id="parking_spot_kanban_dashboard" model="ir.ui.view"/>
+    <record id="parking_spot_kanban_dashboard" model="ir.ui.view">
+        <field name="name">parking.spot.kanban.dashboard</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="location_id">
+                <field name="full_name"/>
+                <field name="status"/>
+                <field name="current_vehicle_plate"/>
+                <field name="current_vehicle_brand"/>
+                <field name="current_vehicle_model"/>
+                <field name="current_owner_id"/>
+                <field name="current_owner_mobile"/>
+                <field name="location_id"/>
+                <field name="floor"/>
+                <field name="spot_type"/>
+                <field name="color"/>
+                <field name="last_movement_out"/>
+                <field name="last_movement_in"/>
+                <field name="waiting_hours"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_global_click o_kanban_card_{{color}}">
+                            <div class="o_kanban_card_header">
+                                <div class="o_primary">
+                                    <i class="fa fa-car" title="Vehicle" aria-hidden="true"/>
+                                    <span t-esc="record.current_vehicle_plate.value" class="o_kanban_primary_value"/>
+                                </div>
+                                <div class="o_secondary">
+                                    <span t-esc="record.current_vehicle_brand.value or ''"/>
+                                    <t t-if="record.current_vehicle_brand.value and record.current_vehicle_model.value"> </t>
+                                    <span t-esc="record.current_vehicle_model.value or ''"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_subtitle">
+                                    <i class="fa fa-map-marker" title="Spot"/>
+                                    <span t-esc="record.full_name.value"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-building-o" title="Branch"/>
+                                    <span t-esc="record.location_id.value"/>
+                                </div>
+                                <div t-if="record.floor.value">
+                                    <i class="fa fa-layer-group" title="Floor"/>
+                                    <span t-esc="record.floor.value"/>
+                                </div>
+                                <div t-if="record.current_owner_id.value">
+                                    <i class="fa fa-user" title="Owner"/>
+                                    <span t-esc="record.current_owner_id.value"/>
+                                </div>
+                                <div t-if="record.current_owner_mobile.value">
+                                    <i class="fa fa-phone" title="Call"/>
+                                    <a t-attf-href="tel:{{record.current_owner_mobile.value}}">
+                                        <span t-esc="record.current_owner_mobile.value"/>
+                                    </a>
+                                </div>
+                                <div t-if="record.last_movement_out.value">
+                                    <i class="fa fa-clock-o" title="Check Out"/>
+                                    <span t-esc="record.last_movement_out.value"/>
+                                </div>
+                                <div t-if="record.status.value == 'client_out' and record.waiting_hours.value">
+                                    <i class="fa fa-hourglass-half" title="Waiting"/>
+                                    <span t-esc="str(round(record.waiting_hours.value, 1)) + 'h'"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <button t-if="record.status.value == 'client_out'"
+                                        name="action_vehicle_checkin"
+                                        type="object"
+                                        class="btn btn-success btn-sm o_kanban_action">
+                                    <i class="fa fa-sign-in" title="Check In"/> Check In
+                                </button>
+                                <button t-if="record.status.value == 'occupied'"
+                                        name="action_vehicle_checkout"
+                                        type="object"
+                                        class="btn btn-warning btn-sm o_kanban_action">
+                                    <i class="fa fa-sign-out" title="Check Out"/> Check Out
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Movement Log List -->
+    <record id="parking_vehicle_movement_list" model="ir.ui.view">
+        <field name="name">parking.vehicle.movement.list</field>
+        <field name="model">parking.vehicle.movement</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="vehicle_id" string="Vehicle"/>
+                <field name="spot_id" string="Spot"/>
+                <field name="check_out_time" string="Check Out"/>
+                <field name="check_in_time" string="Check In"/>
+                <field name="duration_hours" string="Duration (h)"/>
+                <field name="operator_out_id" string="Operator (Out)"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Movement Log Form -->
+    <record id="parking_vehicle_movement_form" model="ir.ui.view">
+        <field name="name">parking.vehicle.movement.form</field>
+        <field name="model">parking.vehicle.movement</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="vehicle_id"/>
+                        <field name="spot_id"/>
+                        <field name="contract_id"/>
+                    </group>
+                    <group>
+                        <field name="check_out_time"/>
+                        <field name="check_in_time"/>
+                        <field name="duration_hours"/>
+                        <field name="operator_out_id"/>
+                        <field name="operator_in_id"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_parking_vehicle_movement" model="ir.actions.act_window">
+        <field name="name">Vehicle Movements</field>
+        <field name="res_model">parking.vehicle.movement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <delete id="menu_parking_checkin_dashboard" model="ir.ui.menu"/>
+    <menuitem id="menu_parking_vehicle_movement"
+              name="سجل الحركات"
+              parent="parking_management.menu_parking_reports"
+              action="action_parking_vehicle_movement"
+              sequence="45"
+              groups="base.group_user"/>
+
+</odoo>

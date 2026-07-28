@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_spot_kanban" model="ir.ui.view">
+        <field name="name">parking.spot.kanban</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name" readonly="1"/>
+                <field name="full_name"/>
+                <field name="status"/>
+                <field name="spot_type_id"/>
+                <field name="location_id"/>
+                <field name="current_contract_id"/>
+                <field name="current_vehicle_plate"/>
+                <field name="current_vehicle_brand"/>
+                <field name="current_vehicle_model"/>
+                <field name="current_owner_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click" t-attf-class="oe_kanban_card {{color}}">
+                            <div class="o_kanban_card_header">
+                                <div class="o_primary">
+                                    <span class="o_kanban_card_title">
+                                        <field name="full_name"/>
+                                    </span>
+                                </div>
+                                <div class="o_secondary">
+                                    <field name="spot_type_id"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div class="row">
+                                    <div class="col-6"><strong>Status:</strong></div>
+                                    <div class="col-6"><field name="status"/></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6"><strong>Branch:</strong></div>
+                                    <div class="col-6"><field name="location_id"/></div>
+                                </div>
+                                <div class="row" t-if="record.current_vehicle_plate.raw_value">
+                                    <div class="col-6"><strong>Plate:</strong></div>
+                                    <div class="col-6"><field name="current_vehicle_plate"/></div>
+                                </div>
+                                <div class="row" t-if="record.current_vehicle_brand.raw_value">
+                                    <div class="col-6"><strong>Brand:</strong></div>
+                                    <div class="col-6"><field name="current_vehicle_brand"/></div>
+                                </div>
+                                <div class="row" t-if="record.current_owner_id.raw_value">
+                                    <div class="col-6"><strong>Owner:</strong></div>
+                                    <div class="col-6"><field name="current_owner_id"/></div>
+                                </div>
+                                <div class="row" t-if="record.current_contract_id.raw_value and !record.current_vehicle_plate.raw_value">
+                                    <div class="col-6"><strong>Contract:</strong></div>
+                                    <div class="col-6"><field name="current_contract_id"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="parking_spot_tree" model="ir.ui.view">
+        <field name="name">parking.spot.tree</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" optional="show"/>
+                <field name="name" readonly="1"/>
+                <field name="full_name"/>
+                <field name="location_id"/>
+                <field name="spot_type_id"/>
+                <field name="status" widget="badge"/>
+                <field name="floor"/>
+                <field name="current_contract_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_spot_form" model="ir.ui.view">
+        <field name="name">parking.spot.form</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <field name="active" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="location_id"/>
+                            <field name="spot_type_id"/>
+                            <field name="floor"/>
+                        </group>
+                        <group>
+                            <field name="status" widget="badge"/>
+                            <field name="price_tmpl_id"/>
+                            <field name="current_contract_id"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page name="contracts" string="Contracts">
+                            <field name="contract_ids">
+                                <list>
+                                    <field name="name" readonly="1"/>
+                                    <field name="partner_id"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="history" string="Status History">
+                            <field name="status_log_ids">
+                                <list>
+                                    <field name="change_date"/>
+                                    <field name="old_status"/>
+                                    <field name="new_status"/>
+                                    <field name="operator_id"/>
+                                    <field name="contract_id"/>
+                                    <field name="reason"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="parking_spot_search" model="ir.ui.view">
+        <field name="name">parking.spot.search</field>
+        <field name="model">parking.spot</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" readonly="1"/>
+                <field name="location_id"/>
+                <field name="floor"/>
+                <filter name="available" string="Available" domain="[('status','=','available')]"/>
+                <filter name="occupied" string="Occupied" domain="[('status','=','occupied')]"/>
+                <filter name="client_out" string="Client Out" domain="[('status','=','client_out')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_location" string="Branch" context="{'group_by':'location_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by':'status'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'spot_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

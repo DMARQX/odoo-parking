@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========= Car Wash Record Views ========= -->
+    <record id="parking_contract_wash_tree" model="ir.ui.view">
+        <field name="name">parking.contract.wash.tree</field>
+        <field name="model">parking.contract.wash</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="wash_date"/>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="location_id"/>
+                <field name="wash_number"/>
+                <field name="washed_by"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_contract_wash_form" model="ir.ui.view">
+        <field name="name">parking.contract.wash.form</field>
+        <field name="model">parking.contract.wash</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="contract_id"/>
+                            <field name="partner_id"/>
+                            <field name="location_id"/>
+                        </group>
+                        <group>
+                            <field name="wash_date"/>
+                            <field name="wash_number"/>
+                            <field name="washed_by"/>
+                            <field name="state" widget="badge"/>
+                        </group>
+                    </group>
+                    <group string="Consumed Supplies">
+                        <field name="line_ids">
+                            <list>
+                                <field name="product_id"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
+                                <field name="price_unit" optional="show"/>
+                            </list>
+                        </field>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="parking_contract_wash_search" model="ir.ui.view">
+        <field name="name">parking.contract.wash.search</field>
+        <field name="model">parking.contract.wash</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="location_id"/>
+                <filter name="today" string="Today" date="wash_date"/>
+                <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_location" string="Branch" context="{'group_by':'location_id'}"/>
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by':'wash_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_parking_contract_wash" model="ir.actions.act_window">
+        <field name="name">Car Washes</field>
+        <field name="res_model">parking.contract.wash</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========= Wash Kit Views ========= -->
+    <record id="parking_wash_kit_item_tree" model="ir.ui.view">
+        <field name="name">parking.wash.kit.item.tree</field>
+        <field name="model">parking.wash.kit.item</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="default_quantity"/>
+                <field name="uom_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_wash_kit_item_form" model="ir.ui.view">
+        <field name="name">parking.wash.kit.item.form</field>
+        <field name="model">parking.wash.kit.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="default_quantity"/>
+                            <field name="uom_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_parking_wash_kit_item" model="ir.actions.act_window">
+        <field name="name">Wash Kit Items</field>
+        <field name="res_model">parking.wash.kit.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========= Branch Stock Views ========= -->
+    <record id="parking_branch_stock_tree" model="ir.ui.view">
+        <field name="name">parking.branch.stock.tree</field>
+        <field name="model">parking.branch.stock</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="location_id"/>
+                <field name="product_id"/>
+                <field name="quantity" widget="float"/>
+                <field name="min_quantity"/>
+                <field name="uom_id"/>
+                <field name="is_low" widget="badge" decoration-danger="is_low"/>
+            </list>
+        </field>
+    </record>
+    <record id="parking_branch_stock_form" model="ir.ui.view">
+        <field name="name">parking.branch.stock.form</field>
+        <field name="model">parking.branch.stock</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="location_id"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                        </group>
+                        <group>
+                            <field name="min_quantity"/>
+                            <field name="uom_id"/>
+                            <field name="is_low"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="parking_branch_stock_search" model="ir.ui.view">
+        <field name="name">parking.branch.stock.search</field>
+        <field name="model">parking.branch.stock</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="location_id"/>
+                <field name="product_id"/>
+                <filter name="low" string="Low Stock" domain="[('is_low','=',True)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_parking_branch_stock" model="ir.actions.act_window">
+        <field name="name">Branch Stock</field>
+        <field name="res_model">parking.branch.stock</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========= Branch Stock Move Views ========= -->
+    <record id="parking_branch_stock_move_tree" model="ir.ui.view">
+        <field name="name">parking.branch.stock.move.tree</field>
+        <field name="model">parking.branch.stock.move</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="location_id"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="move_type" widget="badge"/>
+                <field name="wash_id"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_parking_branch_stock_move" model="ir.actions.act_window">
+        <field name="name">Stock Moves</field>
+        <field name="res_model">parking.branch.stock.move</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========= Menu Items ========= -->
+    <menuitem id="menu_parking_wash" name="Car Washes" parent="menu_parking_services" sequence="10"
+              action="action_parking_contract_wash"/>
+    <menuitem id="menu_parking_wash_kit" name="Wash Kit Items" parent="menu_parking_services" sequence="20"
+              action="action_parking_wash_kit_item"/>
+    <menuitem id="menu_parking_branch_stock" name="Branch Stock" parent="menu_parking_services" sequence="30"
+              action="action_parking_branch_stock"/>
+    <menuitem id="menu_parking_stock_move" name="Stock Movements" parent="menu_parking_services" sequence="40"
+              action="action_parking_branch_stock_move"/>
+</odoo>

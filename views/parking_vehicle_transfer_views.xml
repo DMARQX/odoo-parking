@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="parking_vehicle_transfer_search" model="ir.ui.view">
+        <field name="name">parking.vehicle.transfer.search</field>
+        <field name="model">parking.vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Reference"/>
+                <field name="vehicle_id" string="Vehicle"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="state" string="Status"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_date" string="Transfer Date" context="{'group_by': 'transfer_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="parking_vehicle_transfer_tree" model="ir.ui.view">
+        <field name="name">parking.vehicle.transfer.tree</field>
+        <field name="model">parking.vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="transfer_date"/>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'completed'" decoration-warning="state == 'in_transit'" decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'"/>
+                <field name="operator_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="parking_vehicle_transfer_form" model="ir.ui.view">
+        <field name="name">parking.vehicle.transfer.form</field>
+        <field name="model">parking.vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_in_transit" string="Start Transfer" type="object" class="btn-warning"
+                            invisible="state != 'draft'"/>
+                    <button name="action_complete" string="Complete" type="object" class="btn-success"
+                            invisible="state != 'in_transit'"/>
+                    <button name="action_cancel" string="Cancel Transfer" type="object" class="btn-danger"
+                            invisible="state not in ('draft', 'in_transit')"/>
+                    <button name="action_draft" string="Reset to Draft" type="object" class="btn-default"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_transit,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="vehicle_id" options="{'no_create': True}"/>
+                            <field name="transfer_date"/>
+                            <field name="operator_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_parking_vehicle_transfer" model="ir.actions.act_window">
+        <field name="name">Vehicle Transfers</field>
+        <field name="res_model">parking.vehicle.transfer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="parking_vehicle_transfer_search"/>
+    </record>
+
+    <menuitem id="menu_parking_vehicle_transfer"
+              name="نقل المركبات"
+              parent="parking_management.menu_parking_operations"
+              action="action_parking_vehicle_transfer"
+              sequence="36"
+              groups="base.group_user"/>
+
+</odoo>

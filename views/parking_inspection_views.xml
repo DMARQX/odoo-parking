@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_vehicle_inspection_tree" model="ir.ui.view">
+        <field name="name">parking.vehicle.inspection.tree</field>
+        <field name="model">parking.vehicle.inspection</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="date"/>
+                <field name="inspector_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'draft'" decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="parking_vehicle_inspection_form" model="ir.ui.view">
+        <field name="name">parking.vehicle.inspection.form</field>
+        <field name="model">parking.vehicle.inspection</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_done" type="object" string="Complete Inspection" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_reload_checkpoints" type="object" string="Refresh Checkpoints" class="btn-secondary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="inspector_id"/>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="exterior" string="Exterior">
+                            <field name="line_ids" domain="[('category', '=', 'exterior')]" context="{'default_category': 'exterior'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'exterior')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="interior" string="Interior">
+                            <field name="line_ids" domain="[('category', '=', 'interior')]" context="{'default_category': 'interior'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'interior')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="mechanical" string="Mechanical">
+                            <field name="line_ids" domain="[('category', '=', 'mechanical')]" context="{'default_category': 'mechanical'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'mechanical')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="electrical" string="Electrical">
+                            <field name="line_ids" domain="[('category', '=', 'electrical')]" context="{'default_category': 'electrical'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'electrical')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="documents" string="Documents">
+                            <field name="line_ids" domain="[('category', '=', 'documents')]" context="{'default_category': 'documents'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'documents')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="other" string="Other">
+                            <field name="line_ids" domain="[('category', '=', 'other')]" context="{'default_category': 'other'}">
+                                <list editable="bottom">
+                                    <field name="checkpoint_id" domain="[('category', '=', 'other')]"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="summary" string="Summary">
+                            <field name="line_ids">
+                                <list>
+                                    <field name="category"/>
+                                    <field name="checkpoint_id"/>
+                                    <field name="result" widget="badge" decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="result == 'na'"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="o_image_small"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                    <field name="notes" placeholder="Additional inspection notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="parking_vehicle_inspection_search" model="ir.ui.view">
+        <field name="name">parking.vehicle.inspection.search</field>
+        <field name="model">parking.vehicle.inspection</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="inspector_id"/>
+                <field name="state"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="done" string="Completed" domain="[('state','=','done')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_parking_vehicle_inspection" model="ir.actions.act_window">
+        <field name="name">Vehicle Inspections</field>
+        <field name="res_model">parking.vehicle.inspection</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="parking_vehicle_inspection_search"/>
+        <field name="help">Record vehicle inspections with customizable checkpoints. Checkpoints are auto-loaded and grouped by category.</field>
+    </record>
+
+    <menuitem id="menu_parking_vehicle_inspection" name="Inspections" parent="menu_parking_operations" action="action_parking_vehicle_inspection" sequence="35"/>
+</odoo>
