@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+*.bak
+*.pot
+i18n/i18n/
+i18n/parking_management_bad.pot
+i18n/parking_management_proper.pot
