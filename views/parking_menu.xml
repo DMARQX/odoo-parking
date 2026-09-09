@@ -40,7 +40,7 @@
         <field name="name">Parking</field>
         <field name="sequence">10</field>
         <field name="web_icon">parking_management,static/description/icon.png</field>
-        <field name="action" ref="action_parking_dashboard"/>
+        <field name="action" ref="action_parking_spot"/>
         <field name="groups_id" eval="[(4, ref('group_parking_user')), (4, ref('group_parking_manager'))]"/>
     </record>
     <record id="menu_parking_operations" model="ir.ui.menu">
@@ -66,12 +66,6 @@
         <field name="action" ref="action_parking_vehicle"/>
         <field name="sequence">30</field>
     </record>
-    <menuitem id="menu_parking_reception"
-              name="Vehicle Reception / Delivery"
-              parent="parking_management.menu_parking_operations"
-              action="action_parking_reception_wizard"
-              sequence="5"
-              groups="base.group_user"/>
     <record id="menu_parking_services" model="ir.ui.menu">
         <field name="name">Services</field>
         <field name="parent_id" ref="menu_parking_root"/>

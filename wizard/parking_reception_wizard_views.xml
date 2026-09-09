@@ -107,4 +107,11 @@
         <field name="context">{'default_operation': 'check_out'}</field>
     </record>
 
+    <menuitem id="menu_parking_reception"
+              name="Vehicle Reception / Delivery"
+              parent="parking_management.menu_parking_operations"
+              action="action_parking_reception_wizard"
+              sequence="5"
+              groups="base.group_user"/>
+
 </odoo>
