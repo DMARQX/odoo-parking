@@ -141,6 +141,21 @@
     </record>
 
     <!-- ================================================================ -->
+    <!-- BRANCH RESTRICTED USER (Sees only assigned branches) -->
+    <!-- ================================================================ -->
+    <record id="group_parking_branch_user" model="res.groups">
+        <field name="name">Branch Restricted User</field>
+        <field name="comment">Employee limited to the parking branches assigned in the user profile. Can see, create, and edit spots, contracts, and movements only for those branches.</field>
+        <field name="category_id" ref="module_category_parking"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_parking_user')),
+            (4, ref('group_parking_contract')),
+            (4, ref('group_parking_checkinout')),
+            (4, ref('group_parking_vehicle')),
+        ]"/>
+    </record>
+
+    <!-- ================================================================ -->
     <!-- MANAGER: FULL ACCESS (Implies all groups above) -->
     <!-- ================================================================ -->
     <record id="group_parking_manager" model="res.groups">
@@ -634,5 +649,42 @@
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- BRANCH RESTRICTION RULES (Branch Restricted User sees only his branches) -->
+    <!-- ================================================================ -->
+    <record id="rule_parking_spot_branch" model="ir.rule">
+        <field name="name">Parking Spot: Branch Restricted sees only assigned branches</field>
+        <field name="model_id" ref="model_parking_spot"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="rule_parking_contract_branch" model="ir.rule">
+        <field name="name">Parking Contract: Branch Restricted sees only assigned branches</field>
+        <field name="model_id" ref="model_parking_contract"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="rule_parking_vehicle_movement_branch" model="ir.rule">
+        <field name="name">Parking Movement: Branch Restricted sees only assigned branches</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
     </record>
 </odoo>

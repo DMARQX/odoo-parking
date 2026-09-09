@@ -3971,3 +3971,83 @@ msgstr "سعر الوحدة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_subtotal
 msgid "Subtotal"
 msgstr "المجموع الفرعي"
+
+#. module: parking_management
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Refundable Deposit / Insurance - %(ref)s"
+msgstr "وديعة / تأمين قابلة للاسترداد - %(ref)s"
+
+#. module: parking_management
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "There is no open invoice on this contract to pay. Create an invoice first."
+msgstr "لا توجد فاتورة مفتوحة على هذا العقد للدفع. يرجى إنشاء فاتورة أولاً."
+
+#. module: parking_management
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Register Payment"
+msgstr "تسجيل دفعة"
+
+#. module: parking_management
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "The spot %s is under maintenance and cannot be used."
+msgstr "الموقف %s تحت الصيانة ولا يمكن استخدامه."
+
+#. module: parking_management
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "The spot %(spot)s is currently %(status)s for customer %(customer)s. You can only use it after the existing contract is ended, cancelled, or the spot number is changed on that contract."
+msgstr "الموقف %(spot)s محجوز حالياً للعميل %(customer)s. لا يمكن استخدامه إلا بعد انتهاء العقد أو إلغائه أو تغيير رقم الموقف في ذلك العقد."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_service__included_washes
+msgid "Included Washes"
+msgstr "عدد الغسلات المتضمنة"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_service__included_washes
+msgid "Number of car washes granted to the contract when this wash package is selected."
+msgstr "عدد مرات غسيل السيارات الممنوحة للعقد عند اختيار باقة الغسيل هذه."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__deposit_invoiced
+msgid "Deposit Invoiced"
+msgstr "تم إصدار فاتورة الوديعة"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__deposit_invoiced
+msgid "Whether the deposit/insurance line has been added to a customer invoice."
+msgstr "هل تمت إضافة بند الوديعة/التأمين إلى فاتورة العميل."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__vehicle_details
+msgid "Vehicle Details"
+msgstr "تفاصيل المركبة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_location_ids
+msgid "Parking Branches"
+msgstr "الفروع"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_users__parking_location_ids
+msgid "Allowed Parking Branches"
+msgstr "الفروع المسموح بها"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_users__parking_location_ids
+msgid "Parking branches this user is allowed to see and operate. Leave empty to grant access to all branches."
+msgstr "فروع مواقف السيارات التي يُسمح لهذا المستخدم برؤيتها والعمل عليها. اتركه فارغاً لمنح الوصول إلى جميع الفروع."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_location__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: parking_management
+#: model:res.groups,name:parking_management.group_parking_branch_user
+msgid "Branch Restricted User"
+msgstr "مستخدم مقيّد بفرع"
+
+#. module: parking_management
+#: model:res.groups,comment:parking_management.group_parking_branch_user
+msgid "Employee limited to the parking branches assigned in the user profile. Can see, create, and edit spots, contracts, and movements only for those branches."
+msgstr "موظف محصور في فروع مواقف السيارات المحددة في ملف المستخدم. يمكنه رؤية وإنشاء وتعديل المواقف والعقود والحركات لتلك الفروع فقط."

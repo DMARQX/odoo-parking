@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_parking_branches" model="ir.ui.view">
+        <field name="name">res.company.parking.branches</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Parking" name="parking">
+                    <group string="Parking Branches">
+                        <field name="parking_location_ids"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_parking_branches" model="ir.ui.view">
+        <field name="name">res.users.parking.branches</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='groups_id']" position="before">
+                <group name="parking_branches" string="Parking">
+                    <field name="parking_location_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

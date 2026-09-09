@@ -8,6 +8,8 @@
                 <field name="name"/>
                 <field name="location_id"/>
                 <field name="spot_type"/>
+                <field name="price_per_hour" widget="monetary"/>
+                <field name="price_per_day" widget="monetary"/>
                 <field name="price_per_month" widget="monetary"/>
                 <field name="price_per_year" widget="monetary"/>
                 <field name="deposit_amount" widget="monetary"/>

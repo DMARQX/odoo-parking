@@ -16,6 +16,7 @@ class ParkingContract(models.Model):
     vehicle_count = fields.Integer(string="Vehicle Count", compute="_compute_vehicle_count")
     spot_id = fields.Many2one("parking.spot", string="Spot", required=True, tracking=True)
     location_id = fields.Many2one("parking.location", string="Branch", related="spot_id.location_id", store=True, tracking=True)
+    vehicle_details = fields.Char(string="Vehicle Details", compute="_compute_vehicle_details")
 
     start_date = fields.Date(string="Start Date", required=True, default=fields.Date.today, tracking=True)
     end_date = fields.Date(string="End Date", required=True, tracking=True)
@@ -33,6 +34,7 @@ class ParkingContract(models.Model):
 
     amount_total = fields.Monetary(string="Total Amount", compute="_compute_totals", currency_field="company_currency_id", store=True, tracking=True)
     deposit_amount = fields.Monetary(string="Deposit Amount", currency_field="company_currency_id", tracking=True)
+    deposit_invoiced = fields.Boolean(string="Deposit Invoiced", default=False, copy=False, help="Whether the deposit/insurance line has been added to a customer invoice.")
 
     user_id = fields.Many2one("res.users", string="Responsible Employee", default=lambda self: self.env.user, tracking=True)
 
@@ -87,6 +89,15 @@ class ParkingContract(models.Model):
         for r in self:
             r.vehicle_count = len(r.vehicle_ids)
 
+    @api.depends("vehicle_ids", "vehicle_ids.license_plate", "vehicle_ids.brand", "vehicle_ids.model", "vehicle_ids.color", "vehicle_ids.owner_id")
+    def _compute_vehicle_details(self):
+        for r in self:
+            if r.vehicle_ids:
+                v = r.vehicle_ids[0]
+                parts = [p for p in [v.brand, v.model, v.color, v.license_plate] if p]
+                owner = v.owner_id.name if v.owner_id else ""
+                r.vehicle_details = " / ".join(parts + ([owner] if owner else []))
+
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
         for r in self:
@@ -114,6 +125,11 @@ class ParkingContract(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        contract_seq = self.env["ir.sequence"]
+        for vals in vals_list:
+            if not vals.get("name") or vals.get("name") == _("New"):
+                vals["name"] = contract_seq.next_by_code("parking.contract") or _("New")
+            self._check_spot_availability(vals)
         records = super().create(vals_list)
         for record in records:
             if record.auto_invoice:
@@ -186,6 +202,15 @@ class ParkingContract(models.Model):
                 "tax_ids": tax_ids,
             }))
 
+        if self.deposit_amount and not self.deposit_invoiced:
+            lines.append((0, 0, {
+                "name": _("Refundable Deposit / Insurance - %(ref)s", ref=self.name),
+                "quantity": 1.0,
+                "price_unit": self.deposit_amount,
+                "product_id": product_id,
+                "tax_ids": [(5, 0, 0)],
+            }))
+
         return lines
 
     def _auto_create_invoice(self, invoice_date=None):
@@ -203,6 +228,8 @@ class ParkingContract(models.Model):
             "invoice_payment_term_id": self.partner_id.property_payment_term_id.id or False,
         }
         invoice = self.env["account.move"].create(invoice_vals)
+        if self.deposit_amount and not self.deposit_invoiced:
+            self.write({"deposit_invoiced": True})
         self.write({
             "last_invoiced_date": invoice_date,
             "recurring_next_date": self._compute_next_invoice_date(invoice_date),
@@ -267,20 +294,64 @@ class ParkingContract(models.Model):
 
     @api.onchange("price_tmpl_id")
     def _onchange_price_tmpl_id(self):
-        if self.price_tmpl_id and self.price_tmpl_id.tax_id:
-            self.tax_ids = [(6, 0, [self.price_tmpl_id.tax_id.id])]
+        if self.price_tmpl_id:
+            tmpl = self.price_tmpl_id
+            self.price_per_month = tmpl.price_per_month or self.price_per_month
+            self.deposit_amount = tmpl.deposit_amount if (tmpl.deposit_amount and not self.deposit_invoiced) else self.deposit_amount
+            if tmpl.tax_id:
+                self.tax_ids = [(6, 0, [tmpl.tax_id.id])]
         elif not self.price_tmpl_id:
             self.tax_ids = [(5, 0, 0)]
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id_autofill(self):
+        if self.partner_id:
+            Contract = self.env["parking.contract"]
+            last_contract = Contract.search([
+                ("partner_id", "=", self.partner_id.id),
+                ("state", "in", ["active", "confirmed"]),
+            ], limit=1)
+            if last_contract:
+                if not self.spot_id:
+                    self.spot_id = last_contract.spot_id
+                if not self.vehicle_ids:
+                    self.vehicle_ids = [(6, 0, last_contract.vehicle_ids.ids)]
+                if not self.price_per_month:
+                    self.price_per_month = last_contract.price_per_month
+            elif not self.vehicle_ids:
+                vehicles = self.env["parking.vehicle"].search([("owner_id", "=", self.partner_id.id)])
+                if vehicles:
+                    self.vehicle_ids = [(6, 0, vehicles.ids)]
+
+    @api.onchange("vehicle_ids")
+    def _onchange_vehicle_ids_autofill(self):
+        if self.vehicle_ids and not self.partner_id:
+            first = self.vehicle_ids[:1]
+            if first.owner_id:
+                self.partner_id = first.owner_id
 
     @api.onchange("terms_id")
     def _onchange_terms_id(self):
         if self.terms_id and self.terms_id.content:
             self.terms_conditions = self.terms_id.content
 
+    @api.onchange("service_line_ids", "service_line_ids.service_id")
+    def _onchange_service_line_ids_wash(self):
+        wash_packages = self.service_line_ids.filtered(
+            lambda l: l.service_id and l.service_id.category == "wash" and l.service_id.included_washes
+        )
+        if wash_packages:
+            self.free_wash_count = max(l.service_id.included_washes for l in wash_packages)
+
     def write(self, vals):
         for rec in self:
             rec._check_spot_availability(vals)
-        return super().write(vals)
+        res = super().write(vals)
+        if vals.get("spot_id"):
+            for rec in self:
+                if rec.spot_id:
+                    rec.spot_id._update_status_from_contracts()
+        return res
 
     def _check_spot_availability(self, vals):
         spot_id = vals.get("spot_id", self.spot_id.id) if vals.get("spot_id") else self.spot_id.id
@@ -288,16 +359,25 @@ class ParkingContract(models.Model):
         if not spot_id or not partner_id:
             return
         spot = self.env["parking.spot"].browse(spot_id)
-        if spot.status != "occupied":
-            return
-        active_contract = spot.current_contract_id
-        if not active_contract or active_contract.state != "active":
-            return
-        if active_contract.partner_id.id != partner_id:
+        if spot.status == "maintenance":
             raise UserError(_(
-                "The spot %s is currently occupied by another customer (%s). "
-                "You cannot book it for a different customer."
-            ) % (spot.full_name, active_contract.partner_id.display_name))
+                "The spot %s is under maintenance and cannot be used."
+            ) % spot.full_name)
+        if spot.status in ("reserved", "occupied", "client_out"):
+            holding_contract = spot.contract_ids.filtered(
+                lambda c: c.id != self.id and c.state in ("active", "confirmed"))[:1]
+            if not holding_contract:
+                return
+            if holding_contract.partner_id.id != partner_id:
+                raise UserError(_(
+                    "The spot %(spot)s is currently %(status)s for customer %(customer)s. "
+                    "You can only use it after the existing contract is ended, cancelled, "
+                    "or the spot number is changed on that contract."
+                ) % {
+                    "spot": spot.full_name,
+                    "status": spot.status,
+                    "customer": holding_contract.partner_id.display_name,
+                })
 
     @api.model
     def _default_terms(self):
@@ -412,6 +492,24 @@ class ParkingContract(models.Model):
             action["res_id"] = self.invoice_ids.id
             action["view_mode"] = "form"
         return action
+
+    def action_register_payment(self):
+        self.ensure_one()
+        invoices = self.invoice_ids.filtered(lambda inv: inv.payment_state in ("not_paid", "partial"))
+        if not invoices:
+            raise UserError(_("There is no open invoice on this contract to pay. Create an invoice first."))
+        return {
+            "name": _("Register Payment"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.payment.register",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "active_model": "account.move",
+                "active_ids": invoices.ids,
+                "active_id": invoices.ids[0],
+            },
+        }
 
     def action_generate_recurring(self):
         for r in self:

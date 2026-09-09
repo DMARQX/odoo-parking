@@ -25,6 +25,12 @@
         <field name="res_model">parking.location</field>
         <field name="view_mode">list,form</field>
     </record>
+    <record id="action_parking_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">parking.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">main</field>
+    </record>
     <record id="action_parking_price_template" model="ir.actions.act_window">
         <field name="name">Price Templates</field>
         <field name="res_model">parking.price.template</field>
@@ -40,7 +46,7 @@
         <field name="name">Parking</field>
         <field name="sequence">10</field>
         <field name="web_icon">parking_management,static/description/icon.png</field>
-        <field name="action" ref="action_parking_spot"/>
+        <field name="action" ref="action_parking_dashboard"/>
         <field name="groups_id" eval="[(4, ref('group_parking_user')), (4, ref('group_parking_manager'))]"/>
     </record>
     <record id="menu_parking_operations" model="ir.ui.menu">

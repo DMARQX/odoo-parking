@@ -10,6 +10,8 @@ class ParkingService(models.Model):
     price = fields.Monetary(string="Price", currency_field="company_currency_id")
     company_currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    included_washes = fields.Integer(string="Included Washes",
+        help="Number of car washes granted to the contract when this wash package is selected.")
     category = fields.Selection([
         ("wash", "Car Wash"),
         ("cover", "Car Cover"),

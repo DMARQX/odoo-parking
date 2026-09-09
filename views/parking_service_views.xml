@@ -7,6 +7,7 @@
             <list editable="top">
                 <field name="name"/>
                 <field name="category"/>
+                <field name="included_washes" optional="show"/>
                 <field name="product_id"/>
                 <field name="price" widget="monetary"/>
                 <field name="active"/>
@@ -24,6 +25,7 @@
                         <group>
                             <field name="name"/>
                             <field name="category"/>
+                            <field name="included_washes" attrs="{'invisible': [('category', '!=', 'wash')], 'required': [('category', '=', 'wash')]}"/>
                             <field name="product_id"/>
                         </group>
                         <group>

@@ -185,6 +185,11 @@ class ParkingReceptionWizard(models.TransientModel):
                 "quantity": line.quantity,
                 "price_unit": line.price_unit or line.service_id.price,
             })
+        wash_packages = self.service_line_ids.filtered(
+            lambda l: l.service_id and l.service_id.category == "wash" and l.service_id.included_washes
+        )
+        if wash_packages:
+            contract.free_wash_count = max(l.service_id.included_washes for l in wash_packages)
 
     def action_confirm(self):
         self.ensure_one()

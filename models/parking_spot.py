@@ -73,6 +73,12 @@ class ParkingSpot(models.Model):
             active_contract = r.contract_ids.filtered(lambda c: c.state == "active")
             r.current_contract_id = active_contract[:1] if active_contract else False
 
+    def _update_status_from_contracts(self):
+        for spot in self:
+            active = spot.contract_ids.filtered(lambda c: c.state == "active")
+            if not active and spot.status in ("occupied", "client_out", "reserved"):
+                spot.status = "available"
+
     @api.depends("current_contract_id", "current_contract_id.vehicle_ids", "current_contract_id.partner_id")
     def _compute_current_vehicle(self):
         for r in self:

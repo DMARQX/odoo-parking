@@ -122,13 +122,6 @@
         </field>
     </record>
 
-    <record id="action_parking_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
-        <field name="res_model">parking.dashboard</field>
-        <field name="view_mode">form</field>
-        <field name="target">main</field>
-    </record>
-
     <menuitem id="menu_parking_dashboard" name="Dashboard" parent="menu_parking_root" action="action_parking_dashboard" sequence="5"/>
 
 </odoo>
