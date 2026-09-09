@@ -6,6 +6,11 @@ def migrate(cr, version):
     #    Legacy history columns -> unified movement columns:
     #      check_out  -> check_out_time
     #      check_in   -> check_in_time
+    #    The unified model adds new columns (notes, operation) via the ORM
+    #    schema update AFTER this pre-migration runs, so create them here to
+    #    be able to fill them with the migrated data.
+    cr.execute("ALTER TABLE parking_vehicle_movement ADD COLUMN IF NOT EXISTS notes text")
+    cr.execute("ALTER TABLE parking_vehicle_movement ADD COLUMN IF NOT EXISTS operation varchar")
     cr.execute("SELECT count(*) FROM parking_contract_history")
     count = cr.fetchone()[0]
     if count:
@@ -19,6 +24,7 @@ def migrate(cr, version):
                 operator_out_id,
                 operator_in_id,
                 notes,
+                operation,
                 duration_hours,
                 create_uid,
                 create_date,
@@ -34,6 +40,7 @@ def migrate(cr, version):
                 h.operator_out_id,
                 h.operator_in_id,
                 h.notes,
+                'check_out',
                 h.duration_hours,
                 h.create_uid,
                 h.create_date,
