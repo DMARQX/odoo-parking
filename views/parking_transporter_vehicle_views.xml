@@ -70,6 +70,6 @@
         name="Transporter Vehicles"
         parent="menu_parking_config"
         action="action_parking_transporter_vehicle"
-        sequence="40"/>
+        sequence="45"/>
 
 </odoo>

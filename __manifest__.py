@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "1.9.1",
+    "version": "18.0.2.0.0",
     "depends": ["base", "mail", "account", "sale_management", "portal"],
     "data": [
         "security/ir.model.access.csv",
@@ -33,7 +33,7 @@
         "report/parking_report_views.xml",
         "report/parking_report_pdf.xml",
         "wizard/parking_report_wizard_views.xml",
-        "wizard/parking_checkin_wizard_views.xml",
+        "wizard/parking_reception_wizard_views.xml",
     ],
     "demo": [],
     'controllers': ['controllers/__init__.py'],

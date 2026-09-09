@@ -6,7 +6,6 @@ from . import parking_service
 from . import parking_price_template
 from . import parking_contract
 from . import parking_contract_service_line
-from . import parking_contract_history
 from . import parking_spot_status_log
 from . import parking_vehicle_checkpoint
 from . import parking_vehicle_inspection

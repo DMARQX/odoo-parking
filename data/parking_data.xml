@@ -79,6 +79,15 @@
         <field name="company_id" eval="False"/>
     </record>
 
+    <!-- Vehicle Movement Sequence -->
+    <record id="seq_parking_vehicle_movement" model="ir.sequence">
+        <field name="name">Vehicle Movement</field>
+        <field name="code">parking.vehicle.movement</field>
+        <field name="prefix">MV/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
     <!-- Default Checkpoints -->
     <record id="checkpoint_exterior_01" model="parking.vehicle.checkpoint">
         <field name="name">Body / Paint Condition</field>

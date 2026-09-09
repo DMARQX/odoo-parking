@@ -5,14 +5,14 @@ access_parking_vehicle_admin,Full Access Vehicle,model_parking_vehicle,base.grou
 access_parking_contract_admin,Full Access Contract,model_parking_contract,base.group_system,1,1,1,1
 access_parking_service_admin,Full Access Service,model_parking_service,base.group_system,1,1,1,1
 access_parking_price_template_admin,Full Access Price Template,model_parking_price_template,base.group_system,1,1,1,1
-access_parking_contract_history_admin,Full Access Contract History,model_parking_contract_history,base.group_system,1,1,1,1
 access_parking_spot_status_log_admin,Full Access Status Log,model_parking_spot_status_log,base.group_system,1,1,1,1
 access_parking_vehicle_checkpoint_admin,Full Access Checkpoint,model_parking_vehicle_checkpoint,base.group_system,1,1,1,1
 access_parking_vehicle_inspection_admin,Full Access Inspection,model_parking_vehicle_inspection,base.group_system,1,1,1,1
 access_parking_vehicle_inspection_line_admin,Full Access Inspection Line,model_parking_vehicle_inspection_line,base.group_system,1,1,1,1
 access_parking_report_wizard_user,Full Access Report Wizard,model_parking_report_wizard,base.group_user,1,1,1,1
 access_parking_vehicle_movement_user,Full Access Vehicle Movement,model_parking_vehicle_movement,base.group_user,1,1,1,1
-access_parking_checkin_wizard_user,Full Access Checkin Wizard,model_parking_checkin_checkout_wizard,base.group_user,1,1,1,1
+access_parking_checkin_wizard_user,Full Access Reception Wizard,model_parking_reception_wizard,base.group_user,1,1,1,1
+access_parking_reception_service_line_user,Full Access Reception Service Line,model_parking_reception_service_line,base.group_user,1,1,1,1
 access_parking_dashboard_user,Full Access Dashboard,model_parking_dashboard,base.group_user,1,1,1,1
 access_parking_vehicle_checkpoint_user,Read Checkpoint,model_parking_vehicle_checkpoint,base.group_user,1,0,0,0
 access_parking_vehicle_inspection_user,User Inspection,model_parking_vehicle_inspection,base.group_user,1,1,1,0

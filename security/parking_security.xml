@@ -337,37 +337,28 @@
         <field name="perm_unlink" eval="1"/>
     </record>
 
-    <!-- === parking.contract.history === -->
-    <record id="access_parking_contract_history_user_read" model="ir.model.access">
-        <field name="name">parking.contract.history.user.read</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
+    <!-- === parking.vehicle.movement === -->
+    <record id="access_parking_vehicle_movement_user_read" model="ir.model.access">
+        <field name="name">parking.vehicle.movement.user.read</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
         <field name="group_id" ref="group_parking_user"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record id="access_parking_contract_history_manage" model="ir.model.access">
-        <field name="name">parking.contract.history.manage</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
-        <field name="group_id" ref="group_parking_contract"/>
+    <record id="access_parking_vehicle_movement_manage" model="ir.model.access">
+        <field name="name">parking.vehicle.movement.manage</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
+        <field name="group_id" ref="group_parking_checkinout"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record id="access_parking_contract_history_delete" model="ir.model.access">
-        <field name="name">parking.contract.history.delete</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
-        <field name="group_id" ref="group_parking_contract_delete"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-    </record>
-    <record id="access_parking_contract_history_manager" model="ir.model.access">
-        <field name="name">parking.contract.history.manager</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
+    <record id="access_parking_vehicle_movement_delete" model="ir.model.access">
+        <field name="name">parking.vehicle.movement.delete</field>
+        <field name="model_id" ref="model_parking_vehicle_movement"/>
         <field name="group_id" ref="group_parking_manager"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
@@ -606,15 +597,7 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record id="access_parking_contract_history_portal" model="ir.model.access">
-        <field name="name">parking.contract.history.portal</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
-        <field name="group_id" ref="base.group_portal"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
+    
 
     <!-- ================================================================ -->
     <!-- PORTAL RECORD RULES (Restrict to own records) -->
@@ -636,17 +619,6 @@
         <field name="global" eval="False"/>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="domain_force">[('owner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    <record id="rule_parking_contract_history_portal" model="ir.rule">
-        <field name="name">Parking Contract History: Portal users see only their history</field>
-        <field name="model_id" ref="model_parking_contract_history"/>
-        <field name="global" eval="False"/>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        <field name="domain_force">[('contract_id.partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>

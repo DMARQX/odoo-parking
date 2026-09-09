@@ -3718,3 +3718,256 @@ msgstr ""
 #: model:ir.ui.menu,name:parking_management.menu_parking_vehicle_transfer
 msgid "نقل المركبات"
 msgstr ""
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__operation
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__operation__check_in
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__operation__check_out
+msgid "Operation"
+msgstr "العملية"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__operation__check_out
+msgid "Check Out / Exit"
+msgstr "خروج / تسليم"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__operation__check_in
+msgid "Check In / Return"
+msgstr "دخول / استلام"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__name
+msgid "Reference"
+msgstr "المرجع"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__partner_id
+msgid "Customer"
+msgstr "العميل"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__location_id
+msgid "Branch"
+msgstr "الفرع"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__state
+msgid "Status"
+msgstr "الحالة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__notes
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__inspection_id
+msgid "Inspection"
+msgstr "الفحص"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__state__open
+msgid "Open"
+msgstr "مفتوح"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__state__closed
+msgid "Closed"
+msgstr "مغلق"
+
+#. module: parking_management
+#: model:ir.model, name:parking_management.model_parking_vehicle_movement
+msgid "Unified Vehicle Movement Log"
+msgstr "سجل حركات المركبات الموحد"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
+msgid "Register Check In"
+msgstr "تسجيل الدخول"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_reception_wizard
+msgid "Vehicle Reception / Delivery Wizard"
+msgstr "معالج استلام / تسليم المركبات"
+
+#. module: parking_management
+#: model:ir.actions.act_window,name:parking_management.action_parking_reception_wizard
+#: model:ir.ui.menu,name:parking_management.menu_parking_reception
+msgid "Vehicle Reception / Delivery"
+msgstr "استلام / تسليم المركبات"
+
+#. module: parking_management
+#: model:ir.actions.act_window,name:parking_management.action_parking_checkin_wizard
+msgid "Check In"
+msgstr "دخول / استلام"
+
+#. module: parking_management
+#: model:ir.actions.act_window,name:parking_management.action_parking_checkout_wizard
+msgid "Check Out"
+msgstr "خروج / تسليم"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__operation__check_out
+msgid "Check Out (Delivery)"
+msgstr "خروج (تسليم)"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__operation__check_in
+msgid "Check In (Reception)"
+msgstr "دخول (استلام)"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__step
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__1
+msgid "Step: 1"
+msgstr "الخطوة: 1"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__2
+msgid "Customer & Vehicle"
+msgstr "العميل والمركبة"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__3
+msgid "Inspection"
+msgstr "الفحص"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__4
+msgid "Spot"
+msgstr "الموقف"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__5
+msgid "Services"
+msgstr "الخدمات"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__6
+msgid "Summary"
+msgstr "الملخص"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__do_inspection
+msgid "Register Inspection"
+msgstr "تسجيل فحص"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__inspection_notes
+msgid "Inspection Notes"
+msgstr "ملاحظات الفحص"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__service_line_ids
+msgid "Additional Services"
+msgstr "الخدمات الإضافية"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__services_total
+msgid "Services Total"
+msgstr "إجمالي الخدمات"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Vehicle Reception / Delivery"
+msgstr "استلام / تسليم المركبات"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 1: Operation"
+msgstr "الخطوة 1: العملية"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 2: Customer &amp; Vehicle"
+msgstr "الخطوة 2: العميل والمركبة"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 3: Inspection"
+msgstr "الخطوة 3: الفحص"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 4: Spot"
+msgstr "الخطوة 4: الموقف"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 5: Additional Services"
+msgstr "الخطوة 5: الخدمات الإضافية"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Step 6: Summary"
+msgstr "الخطوة 6: الملخص"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Back"
+msgstr "رجوع"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Next"
+msgstr "التالي"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: parking_management
+#: model:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_reception_wizard.py:0
+msgid "Please select a vehicle to continue."
+msgstr "الرجاء اختيار مركبة للمتابعة."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_reception_wizard.py:0
+msgid "No active contract found for this vehicle. Check-out requires an active subscription."
+msgstr "لا يوجد عقد نشط لهذه المركبة. الخروج يتطلب اشتراكًا نشطًا."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_reception_wizard.py:0
+msgid "Please choose the parking spot."
+msgstr "الرجاء اختيار الموقف."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_reception_wizard.py:0
+msgid "Movement Registered"
+msgstr "تم تسجيل الحركة"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_reception_service_line
+msgid "Reception Wizard Service Line"
+msgstr "بند خدمة معالج الاستلام"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__service_id
+msgid "Service"
+msgstr "الخدمة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__quantity
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_unit
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_subtotal
+msgid "Subtotal"
+msgstr "المجموع الفرعي"

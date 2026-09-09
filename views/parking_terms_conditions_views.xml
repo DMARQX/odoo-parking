@@ -75,7 +75,7 @@
         <field name="name">Terms &amp; Conditions</field>
         <field name="parent_id" ref="parking_management.menu_parking_config"/>
         <field name="action" ref="action_parking_terms_conditions"/>
-        <field name="sequence">40</field>
+        <field name="sequence">50</field>
         <field name="groups_id" eval="[(4, ref('parking_management.group_parking_terms_conditions'))]"/>
     </record>
 </odoo>

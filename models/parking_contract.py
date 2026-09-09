@@ -56,7 +56,7 @@ class ParkingContract(models.Model):
     authorized_signature = fields.Binary(string="Authorized Signature", attachment=True)
     signature_date = fields.Date(string="Signature Date")
 
-    history_ids = fields.One2many("parking.contract.history", "contract_id", string="Check In/Out History")
+    history_ids = fields.One2many("parking.vehicle.movement", "contract_id", string="Check In/Out History")
     invoice_ids = fields.One2many("account.move", "parking_contract_id", string="Invoices")
 
     auto_invoice = fields.Boolean(string="Auto Generate Invoices", default=True, tracking=True)
@@ -350,6 +350,22 @@ class ParkingContract(models.Model):
         self.write({"state": "cancelled"})
         if self.spot_id:
             self.spot_id.status = "available"
+
+    def action_check_out(self):
+        """Register vehicle check-out (exit) for the contract's spot."""
+        self.ensure_one()
+        if not self.vehicle_ids:
+            raise UserError(_("No vehicles registered on this contract."))
+        if not self.spot_id:
+            raise UserError(_("No spot assigned to this contract."))
+        return self.spot_id.action_vehicle_checkout()
+
+    def action_check_in(self):
+        """Register vehicle check-in (return) for the contract's spot."""
+        self.ensure_one()
+        if not self.spot_id:
+            raise UserError(_("No spot assigned to this contract."))
+        return self.spot_id.action_vehicle_checkin()
 
     def _get_invoice_tax_ids(self):
         self.ensure_one()

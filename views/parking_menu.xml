@@ -17,7 +17,7 @@
     </record>
     <record id="action_parking_contract_history" model="ir.actions.act_window">
         <field name="name">Check In/Out</field>
-        <field name="res_model">parking.contract.history</field>
+        <field name="res_model">parking.vehicle.movement</field>
         <field name="view_mode">list,form</field>
     </record>
     <record id="action_parking_location" model="ir.actions.act_window">
@@ -40,7 +40,7 @@
         <field name="name">Parking</field>
         <field name="sequence">10</field>
         <field name="web_icon">parking_management,static/description/icon.png</field>
-        <field name="action" ref="action_parking_spot"/>
+        <field name="action" ref="action_parking_dashboard"/>
         <field name="groups_id" eval="[(4, ref('group_parking_user')), (4, ref('group_parking_manager'))]"/>
     </record>
     <record id="menu_parking_operations" model="ir.ui.menu">
@@ -66,12 +66,12 @@
         <field name="action" ref="action_parking_vehicle"/>
         <field name="sequence">30</field>
     </record>
-    <record id="menu_parking_history" model="ir.ui.menu">
-        <field name="name">Check In/Out</field>
-        <field name="parent_id" ref="menu_parking_operations"/>
-        <field name="action" ref="action_parking_contract_history"/>
-        <field name="sequence">40</field>
-    </record>
+    <menuitem id="menu_parking_reception"
+              name="Vehicle Reception / Delivery"
+              parent="parking_management.menu_parking_operations"
+              action="action_parking_reception_wizard"
+              sequence="5"
+              groups="base.group_user"/>
     <record id="menu_parking_services" model="ir.ui.menu">
         <field name="name">Services</field>
         <field name="parent_id" ref="menu_parking_root"/>
@@ -99,6 +99,6 @@
         <field name="name">Additional Services</field>
         <field name="parent_id" ref="menu_parking_config"/>
         <field name="action" ref="action_parking_service"/>
-        <field name="sequence">30</field>
+        <field name="sequence">35</field>
     </record>
 </odoo>

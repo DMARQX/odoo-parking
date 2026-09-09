@@ -52,5 +52,5 @@
         <field name="search_view_id" ref="parking_vehicle_checkpoint_search"/>
         <field name="help">Define checkpoints for vehicle inspection checklists.</field>
     </record>
-    <menuitem id="menu_parking_vehicle_checkpoint" name="Checkpoints" parent="menu_parking_config" action="action_parking_vehicle_checkpoint" sequence="35"/>
+    <menuitem id="menu_parking_vehicle_checkpoint" name="Checkpoints" parent="menu_parking_config" action="action_parking_vehicle_checkpoint" sequence="40"/>
 </odoo>
