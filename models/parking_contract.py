@@ -97,6 +97,8 @@ class ParkingContract(models.Model):
                 parts = [p for p in [v.brand, v.model, v.color, v.license_plate] if p]
                 owner = v.owner_id.name if v.owner_id else ""
                 r.vehicle_details = " / ".join(parts + ([owner] if owner else []))
+            else:
+                r.vehicle_details = ""
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
