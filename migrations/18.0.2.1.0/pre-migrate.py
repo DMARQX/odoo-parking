@@ -12,3 +12,16 @@ def migrate(cr, version):
         ALTER TABLE parking_location
             ALTER COLUMN company_id SET NOT NULL
     """)
+
+    cr.execute("""
+        DELETE FROM ir_model_data
+        WHERE res_id IN (
+            SELECT id FROM ir_model
+            WHERE model IN ('parking.contract.history', 'parking.checkin.checkout.wizard')
+        )
+        AND model = 'ir.model'
+    """)
+    cr.execute("""
+        DELETE FROM ir_model
+        WHERE model IN ('parking.contract.history', 'parking.checkin.checkout.wizard')
+    """)

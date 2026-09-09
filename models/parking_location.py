@@ -13,7 +13,7 @@ class ParkingLocation(models.Model):
     address = fields.Text(string="Address")
     phone = fields.Char(string="Phone")
     manager_id = fields.Many2one("res.users", string="Branch Manager")
-    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company, tracking=True)
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
     spot_count = fields.Integer(string="Total Spots", compute="_compute_spot_count")
     available_count = fields.Integer(string="Available Spots", compute="_compute_spot_count")
