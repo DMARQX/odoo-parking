@@ -25,7 +25,7 @@
                         <group>
                             <field name="name"/>
                             <field name="category"/>
-                            <field name="included_washes" attrs="{'invisible': [('category', '!=', 'wash')], 'required': [('category', '=', 'wash')]}"/>
+                            <field name="included_washes" invisible="category != 'wash'" required="category == 'wash'"/>
                             <field name="product_id"/>
                         </group>
                         <group>
