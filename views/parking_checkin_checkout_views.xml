@@ -125,38 +125,50 @@
         <field name="name">parking.vehicle.movement.list</field>
         <field name="model">parking.vehicle.movement</field>
         <field name="arch" type="xml">
-            <list>
+            <list create="0" decoration-warning="state == 'out'" decoration-danger="needs_review">
+                <field name="needs_review" column_invisible="1"/>
                 <field name="name" string="Ref"/>
-                <field name="operation" string="Operation"/>
-                <field name="vehicle_id" string="Vehicle"/>
-                <field name="partner_id" string="Customer"/>
-                <field name="spot_id" string="Spot"/>
-                <field name="check_out_time" string="Check Out"/>
-                <field name="check_in_time" string="Check In"/>
-                <field name="duration_hours" string="Duration (h)"/>
-                <field name="state" string="Status" widget="badge"/>
-                <field name="operator_out_id" string="Operator (Out)"/>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="spot_id"/>
+                <field name="check_out_time"/>
+                <field name="check_in_time"/>
+                <field name="duration_hours" widget="float_time" optional="show"/>
+                <field name="distance_km" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'out'" decoration-success="state == 'returned'"
+                       decoration-info="state == 'arrival'"/>
+                <field name="operator_out_id" optional="hide" widget="many2one_avatar_user"/>
+                <field name="operator_in_id" optional="hide" widget="many2one_avatar_user"/>
             </list>
         </field>
     </record>
 
-    <!-- Movement Log Form -->
+    <!-- Movement Log Form: one trip, delivery on one side and return on the other -->
     <record id="parking_vehicle_movement_form" model="ir.ui.view">
         <field name="name">parking.vehicle.movement.form</field>
         <field name="model">parking.vehicle.movement</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="0">
                 <header>
-                    <button name="action_register_check_in" string="Register Check In"
-                            type="object" class="btn-primary"
-                            invisible="state == 'closed'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="open,closed"/>
+                    <button name="action_register_check_in" string="Receive Vehicle Back" type="object"
+                            class="btn-primary" icon="fa-sign-in" invisible="state != 'out'"
+                            groups="parking_management.group_parking_checkinout"/>
+                    <button name="action_print_handover" string="Print Handover Record" type="object"
+                            icon="fa-print"/>
+                    <field name="state" widget="statusbar" statusbar_visible="out,returned"/>
                 </header>
+                <div class="alert alert-danger mb-0 text-center" role="alert" invisible="not needs_review">
+                    The recorded times of this movement are inconsistent (recorded before times were validated). Please review it.
+                </div>
                 <sheet>
+                    <field name="needs_review" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <field name="movement_type" readonly="1" class="text-muted"/>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="operation"/>
                             <field name="vehicle_id"/>
                             <field name="contract_id"/>
                             <field name="partner_id"/>
@@ -164,20 +176,81 @@
                         <group>
                             <field name="spot_id"/>
                             <field name="location_id"/>
-                            <field name="check_out_time"/>
-                            <field name="check_in_time"/>
-                            <field name="operator_out_id"/>
-                            <field name="operator_in_id"/>
-                            <field name="duration_hours"/>
                             <field name="inspection_id"/>
                         </group>
                     </group>
-                    <group string="Notes">
-                        <field name="notes"/>
-                    </group>
+                    <notebook>
+                        <page name="out" string="Delivery to Customer" invisible="movement_type == 'arrival'">
+                            <group>
+                                <group>
+                                    <field name="check_out_time"/>
+                                    <field name="operator_out_id" widget="many2one_avatar_user"/>
+                                    <field name="out_handover_to"/>
+                                </group>
+                                <group>
+                                    <field name="out_odometer"/>
+                                    <field name="out_fuel"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="out_attachment_ids" widget="many2many_binary"/>
+                                <field name="out_signature" widget="signature"/>
+                            </group>
+                        </page>
+                        <page name="in" string="Return">
+                            <group>
+                                <group>
+                                    <field name="check_in_time"/>
+                                    <field name="operator_in_id" widget="many2one_avatar_user"/>
+                                    <field name="in_received_from"/>
+                                    <field name="key_slot"/>
+                                </group>
+                                <group>
+                                    <field name="in_odometer"/>
+                                    <field name="in_fuel"/>
+                                    <field name="duration_hours" widget="float_time"/>
+                                    <field name="distance_km"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="in_attachment_ids" widget="many2many_binary"/>
+                                <field name="in_signature" widget="signature"/>
+                            </group>
+                        </page>
+                        <page name="notes" string="Notes">
+                            <field name="notes" placeholder="Remarks about the vehicle condition..."/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="parking_vehicle_movement_search" model="ir.ui.view">
+        <field name="name">parking.vehicle.movement.search</field>
+        <field name="model">parking.vehicle.movement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id" string="Vehicle / Plate"/>
+                <field name="partner_id"/>
+                <field name="spot_id"/>
+                <field name="location_id"/>
+                <field name="name"/>
+                <filter name="filter_out" string="With the customer" domain="[('state', '=', 'out')]"/>
+                <filter name="filter_returned" string="Returned" domain="[('state', '=', 'returned')]"/>
+                <filter name="filter_arrival" string="First arrivals" domain="[('state', '=', 'arrival')]"/>
+                <separator/>
+                <filter name="filter_review" string="Needs review" domain="[('needs_review', '=', True)]"/>
+                <separator/>
+                <filter name="filter_out_date" string="Delivered" date="check_out_time"/>
+                <filter name="filter_in_date" string="Returned" date="check_in_time"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_branch" string="Branch" context="{'group_by': 'location_id'}"/>
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by': 'vehicle_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -185,6 +258,11 @@
         <field name="name">Vehicle Movements</field>
         <field name="res_model">parking.vehicle.movement</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="parking_vehicle_movement_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No vehicle movements yet</p>
+            <p>Movements are recorded from "Receive Vehicle" / "Deliver Vehicle": each one is a trip from delivery to return.</p>
+        </field>
     </record>
 
     <!-- Menu Items -->

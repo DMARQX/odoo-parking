@@ -149,45 +149,33 @@ class ParkingSpot(models.Model):
         # Kept for callers outside this file; prefer _set_status.
         self._set_status(new_status)
 
+    def _handover_context(self):
+        self.ensure_one()
+        contract = self.current_contract_id
+        if not contract:
+            raise UserError(_("No active contract found for this spot."))
+        vehicle = contract.vehicle_ids[:1]
+        if not vehicle:
+            raise UserError(_("No vehicles found in the active contract."))
+        return contract, vehicle
+
     def action_vehicle_checkout(self):
+        """Deliver the parked vehicle to the customer through the handover wizard."""
         self.ensure_one()
         if self.status != "occupied":
             raise UserError(_("Only occupied spots can be checked out."))
-        contract = self.current_contract_id
-        if not contract:
-            raise UserError(_("No active contract found for this spot."))
-        vehicle = contract.vehicle_ids[:1] if contract.vehicle_ids else False
-        if not vehicle:
-            raise UserError(_("No vehicles found in the active contract."))
-        self.env["parking.vehicle.movement"].create({
-            "spot_id": self.id,
-            "contract_id": contract.id,
-            "vehicle_id": vehicle.id,
-            "check_out_time": fields.Datetime.now(),
-            "operator_out_id": self.env.user.id,
-        })
-        self._set_status("client_out")
+        contract, vehicle = self._handover_context()
+        return self.env["parking.reception.wizard"]._open_for(
+            "check_out", spot=self, vehicle=vehicle, contract=contract)
 
     def action_vehicle_checkin(self):
+        """Receive the vehicle back through the handover wizard."""
         self.ensure_one()
         if self.status != "client_out":
             raise UserError(_("Only spots with Client Out status can be checked in."))
-        contract = self.current_contract_id
-        if not contract:
-            contract = self.contract_ids.filtered(lambda c: c.state == "active")[:1]
-        if not contract:
-            raise UserError(_("No active contract found for this spot."))
-        movement = self.env["parking.vehicle.movement"].search([
-            ("spot_id", "=", self.id),
-            ("contract_id", "=", contract.id),
-            ("check_in_time", "=", False),
-        ], order="check_out_time desc", limit=1)
-        if movement:
-            movement.write({
-                "check_in_time": fields.Datetime.now(),
-                "operator_in_id": self.env.user.id,
-            })
-        self._set_status("occupied")
+        contract, vehicle = self._handover_context()
+        return self.env["parking.reception.wizard"]._open_for(
+            "check_in", spot=self, vehicle=vehicle, contract=contract)
 
     @api.depends("movement_ids", "movement_ids.check_out_time", "movement_ids.check_in_time")
     def _compute_last_movement(self):

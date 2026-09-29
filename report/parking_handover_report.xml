@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_vehicle_handover" model="ir.actions.report">
+        <field name="name">Vehicle Handover Record</field>
+        <field name="model">parking.vehicle.movement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_vehicle_handover</field>
+        <field name="report_file">parking_management.report_vehicle_handover</field>
+        <field name="print_report_name">'Handover - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_parking_vehicle_movement"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_vehicle_handover">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3 class="text-center mb-3">Vehicle Handover Record</h3>
+                        <table class="table table-sm table-bordered mb-3">
+                            <tr>
+                                <th style="width: 20%;">Reference</th><td t-esc="o.name"/>
+                                <th style="width: 20%;">Status</th><td><span t-field="o.state"/></td>
+                            </tr>
+                            <tr>
+                                <th>Customer</th><td t-esc="o.partner_id.display_name or ''"/>
+                                <th>Contract</th><td t-esc="o.contract_id.name or ''"/>
+                            </tr>
+                            <tr>
+                                <th>Vehicle</th><td t-esc="o.vehicle_id.display_name"/>
+                                <th>Spot</th><td t-esc="o.spot_id.display_name or ''"/>
+                            </tr>
+                            <tr>
+                                <th>Key Tag No.</th><td t-esc="o.vehicle_id.key_tag or ''"/>
+                                <th>Branch</th><td t-esc="o.location_id.name or ''"/>
+                            </tr>
+                        </table>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr><th style="width: 24%;"/><th>Delivery to Customer</th><th>Return</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Date</th>
+                                    <td><span t-if="o.check_out_time" t-field="o.check_out_time"/></td>
+                                    <td><span t-if="o.check_in_time" t-field="o.check_in_time"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Staff</th>
+                                    <td t-esc="o.operator_out_id.name or ''"/>
+                                    <td t-esc="o.operator_in_id.name or ''"/>
+                                </tr>
+                                <tr>
+                                    <th>Handed To / Received From</th>
+                                    <td t-esc="o.out_handover_to or ''"/>
+                                    <td t-esc="o.in_received_from or ''"/>
+                                </tr>
+                                <tr>
+                                    <th>Odometer (km)</th>
+                                    <td t-esc="o.out_odometer or ''"/>
+                                    <td t-esc="o.in_odometer or ''"/>
+                                </tr>
+                                <tr>
+                                    <th>Fuel Level</th>
+                                    <td><span t-if="o.out_fuel" t-field="o.out_fuel"/></td>
+                                    <td><span t-if="o.in_fuel" t-field="o.in_fuel"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Customer Signature</th>
+                                    <td><img t-if="o.out_signature" t-att-src="image_data_uri(o.out_signature)" style="max-height: 70px;"/></td>
+                                    <td><img t-if="o.in_signature" t-att-src="image_data_uri(o.in_signature)" style="max-height: 70px;"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p t-if="o.distance_km or o.duration_hours" class="small">
+                            <span t-if="o.distance_km">Distance: <t t-esc="o.distance_km"/> km. </span>
+                            <span t-if="o.duration_hours">Time out: <t t-esc="round(o.duration_hours, 1)"/> h.</span>
+                        </p>
+                        <div t-if="o.notes" class="mb-3">
+                            <strong>Notes:</strong>
+                            <div t-esc="o.notes"/>
+                        </div>
+
+                        <t t-set="photos" t-value="(o.out_attachment_ids | o.in_attachment_ids).filtered(lambda a: (a.mimetype or '').startswith('image/'))"/>
+                        <div t-if="photos">
+                            <h5>Photos</h5>
+                            <div class="row">
+                                <div t-foreach="photos" t-as="photo" class="col-4 mb-2">
+                                    <img t-att-src="image_data_uri(photo.datas)" style="width: 100%; max-height: 160px; object-fit: cover;"/>
+                                    <div class="small text-muted" t-esc="photo.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -19,11 +19,6 @@
             <p>Pick the customer, the spot and the vehicles; the end date and price are proposed automatically.</p>
         </field>
     </record>
-    <record id="action_parking_contract_history" model="ir.actions.act_window">
-        <field name="name">Check In/Out</field>
-        <field name="res_model">parking.vehicle.movement</field>
-        <field name="view_mode">list,form</field>
-    </record>
     <record id="action_parking_location" model="ir.actions.act_window">
         <field name="name">Branches</field>
         <field name="res_model">parking.location</field>

@@ -27,14 +27,31 @@
                     </group>
                 </group>
 
-                <!-- Step 3: Inspection -->
-                <group invisible="step != '3'">
-                    <h3>Step 3: Inspection</h3>
+                <!-- Step 3: Inspection & handover record -->
+                <div invisible="step != '3'">
+                    <h3>Step 3: Inspection &amp; Handover</h3>
+                    <div class="text-muted mb-2">
+                        <field name="vehicle_id" readonly="1" class="fw-bold"/>
+                        <span class="mx-1">·</span>
+                        <field name="spot_id" readonly="1"/>
+                    </div>
                     <group>
-                        <field name="do_inspection"/>
-                        <field name="inspection_notes" placeholder="Add inspection notes..."/>
+                        <group>
+                            <field name="odometer"/>
+                            <field name="fuel" widget="radio" options="{'horizontal': true}"/>
+                            <field name="counterpart"/>
+                            <field name="key_slot" invisible="operation != 'check_in'"/>
+                        </group>
+                        <group>
+                            <field name="do_inspection"/>
+                            <field name="inspection_notes" placeholder="Scratches, damage, items left in the car..."/>
+                        </group>
                     </group>
-                </group>
+                    <group>
+                        <field name="photo_ids" widget="many2many_binary" string="Photos"/>
+                        <field name="signature" widget="signature"/>
+                    </group>
+                </div>
 
                 <!-- Step 4: Spot -->
                 <group invisible="step != '4'">
@@ -66,6 +83,9 @@
                         <field name="vehicle_id" readonly="1"/>
                         <field name="contract_id" readonly="1"/>
                         <field name="spot_id" readonly="1"/>
+                        <field name="odometer" readonly="1"/>
+                        <field name="fuel" readonly="1"/>
+                        <field name="counterpart" readonly="1"/>
                         <field name="do_inspection" readonly="1"/>
                         <field name="services_total" readonly="1"/>
                     </group>

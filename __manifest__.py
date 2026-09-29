@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.3.2.0",
+    "version": "18.0.3.3.0",
     "depends": ["base", "mail", "account", "sale_management", "portal", "sms", "stock"],
     "data": [
         "security/parking_security.xml",
@@ -22,6 +22,7 @@
         "views/parking_contract_views.xml",
         "views/parking_inspection_views.xml",
         "report/parking_inspection_report.xml",
+        "report/parking_handover_report.xml",
         "views/parking_portal_templates.xml",
         "views/parking_checkpoint_views.xml",
         "views/parking_terms_conditions_views.xml",

@@ -61,6 +61,17 @@
                             <field name="owner_id"/>
                         </group>
                     </group>
+                    <group string="Key">
+                        <group>
+                            <field name="key_tag"/>
+                            <field name="key_slot"/>
+                        </group>
+                        <group>
+                            <field name="key_status" widget="badge"
+                                   decoration-success="key_status == 'in_box'"
+                                   decoration-warning="key_status in ('with_customer', 'with_driver')"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page name="images" string="Images">
                             <group>

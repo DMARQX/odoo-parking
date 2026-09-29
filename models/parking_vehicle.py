@@ -33,6 +33,16 @@ class ParkingVehicle(models.Model):
     movement_ids = fields.One2many("parking.vehicle.movement", "vehicle_id", string="Movements")
     movement_count = fields.Integer(string="Movements", compute="_compute_movement_count")
 
+    # Key management
+    key_tag = fields.Char(string="Key Tag No.", tracking=True, help="Number on the tag attached to the key.")
+    key_slot = fields.Char(string="Key Box Slot", tracking=True, help="Where the key is kept while the vehicle is parked.")
+    key_status = fields.Selection([
+        ("none", "Not held"),
+        ("in_box", "In key box"),
+        ("with_customer", "With customer"),
+        ("with_driver", "With driver"),
+    ], string="Key Status", default="none", tracking=True)
+
     transfer_ids = fields.One2many("parking.vehicle.transfer", "vehicle_id", string="Transfers")
     transfer_count = fields.Integer(string="Transfers", compute="_compute_transfer_count")
     wash_ids = fields.One2many("parking.contract.wash", "vehicle_id", string="Car Washes")

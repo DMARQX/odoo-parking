@@ -33,7 +33,7 @@ class ParkingReceptionWizard(models.TransientModel):
     step = fields.Selection([
         ("1", "Operation"),
         ("2", "Customer & Vehicle"),
-        ("3", "Inspection"),
+        ("3", "Inspection & Handover"),
         ("4", "Spot"),
         ("5", "Services"),
         ("6", "Summary"),
@@ -53,9 +53,19 @@ class ParkingReceptionWizard(models.TransientModel):
         help="Active subscription contract for the selected vehicle.")
     contract_found = fields.Boolean(string="Contract Found", compute="_compute_contract")
 
-    # Step 3 - Inspection
+    # Step 3 - Inspection & handover record
     do_inspection = fields.Boolean(string="Register Inspection", default=True)
     inspection_notes = fields.Text(string="Inspection Notes")
+    odometer = fields.Integer(string="Odometer (km)")
+    fuel = fields.Selection([
+        ("empty", "Empty"), ("quarter", "1/4"), ("half", "1/2"), ("three_quarters", "3/4"), ("full", "Full"),
+    ], string="Fuel Level")
+    counterpart = fields.Char(string="Handed To / Received From",
+        help="Name of the person taking the vehicle (delivery) or bringing it back (reception).")
+    photo_ids = fields.Many2many("ir.attachment", "parking_reception_wizard_attachment_rel",
+                                 "wizard_id", "attachment_id", string="Photos")
+    signature = fields.Binary(string="Customer Signature")
+    key_slot = fields.Char(string="Key Box Slot", help="Where the key is stored after reception.")
 
     # Step 4 - Spot
     spot_id = fields.Many2one("parking.spot", string="Spot",
@@ -73,12 +83,33 @@ class ParkingReceptionWizard(models.TransientModel):
     company_currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
 
     @api.model
+    def _open_for(self, operation, spot=None, vehicle=None, contract=None):
+        """Open the wizard at the handover step for a known vehicle (spot or movement buttons)."""
+        ctx = {
+            "default_operation": operation,
+            "default_spot_id": spot.id if spot else False,
+            "default_vehicle_id": vehicle.id if vehicle else False,
+            "default_contract_id": contract.id if contract else False,
+            "default_partner_id": contract.partner_id.id if contract else False,
+            "default_step": "3",
+            "default_key_slot": vehicle.key_slot if vehicle else False,
+        }
+        return {
+            "name": _("Deliver Vehicle") if operation == "check_out" else _("Receive Vehicle"),
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "form",
+            "target": "new",
+            "context": ctx,
+        }
+
+    @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         ctx = self.env.context
         # Opened from "Receive" / "Deliver" (dashboard, spot, menu shortcut):
         # the operation is already known, so start at the vehicle step.
-        if ctx.get("default_operation") and "step" in fields_list:
+        if ctx.get("default_operation") and "step" in fields_list and not ctx.get("default_step"):
             res["step"] = "2"
         spot = self.env["parking.spot"].browse(ctx.get("default_spot_id") or [])
         if spot and "vehicle_id" in fields_list and not res.get("vehicle_id"):
@@ -166,30 +197,23 @@ class ParkingReceptionWizard(models.TransientModel):
         for r in self:
             r.services_total = sum(r.service_line_ids.mapped("price_subtotal"))
 
-    def _ensure_check_in_movement(self):
-        """Find open movement for this vehicle or create a new one."""
-        movement = self.env["parking.vehicle.movement"].search([
-            ("vehicle_id", "=", self.vehicle_id.id),
-            ("check_in_time", "=", False),
-        ], order="check_out_time desc", limit=1)
-        if not movement:
-            movement = self.env["parking.vehicle.movement"].create({
-                "operation": "check_in",
-                "vehicle_id": self.vehicle_id.id,
-                "contract_id": self.contract_id.id or False,
-                "spot_id": self.spot_id.id or False,
-                "check_out_time": False,
-                "check_in_time": fields.Datetime.now(),
-                "operator_in_id": self.env.user.id,
-                "notes": self.inspection_notes or False,
-            })
-        else:
-            movement.write({
-                "check_in_time": fields.Datetime.now(),
-                "operator_in_id": self.env.user.id,
-                "notes": self.inspection_notes or False,
-            })
-        return movement
+    def _handover_values(self, inspection):
+        """Movement fields for this side of the handover (out = delivery, in = reception)."""
+        side = "out" if self.operation == "check_out" else "in"
+        values = {
+            "%s_odometer" % side: self.odometer or 0,
+            "%s_fuel" % side: self.fuel or False,
+            "%s_signature" % side: self.signature or False,
+            "%s_attachment_ids" % side: [(6, 0, self.photo_ids.ids)],
+            ("out_handover_to" if side == "out" else "in_received_from"): self.counterpart or False,
+        }
+        if self.inspection_notes:
+            values["notes"] = self.inspection_notes
+        if inspection:
+            values["inspection_id"] = inspection.id
+        if side == "in":
+            values["key_slot"] = self.key_slot or False
+        return values
 
     def _register_inspection(self):
         if not self.do_inspection:
@@ -228,30 +252,14 @@ class ParkingReceptionWizard(models.TransientModel):
 
         contract = self.contract_id
         inspection = self._register_inspection()
-        inspection_id = inspection.id if inspection else False
-
+        values = self._handover_values(inspection)
+        Movement = self.env["parking.vehicle.movement"]
         if self.operation == "check_out":
-            movement = self.env["parking.vehicle.movement"].create({
-                "operation": "check_out",
-                "vehicle_id": self.vehicle_id.id,
-                "contract_id": contract.id or False,
-                "spot_id": self.spot_id.id,
-                "check_out_time": fields.Datetime.now(),
-                "operator_out_id": self.env.user.id,
-                "inspection_id": inspection_id,
-                "notes": self.inspection_notes or False,
-            })
-            if self.spot_id.status == "occupied":
-                self.spot_id._set_status("client_out")
-            if inspection:
-                inspection.write({"state": "done"})
+            movement = Movement._parking_deliver(self.spot_id, contract, self.vehicle_id, values)
         else:
-            movement = self._ensure_check_in_movement()
-            if inspection and not movement.inspection_id:
-                movement.inspection_id = inspection.id
-            self.spot_id._set_status("occupied")
-            if inspection:
-                inspection.write({"state": "done"})
+            movement = Movement._parking_receive(self.spot_id, contract, self.vehicle_id, values)
+        if inspection:
+            inspection.write({"state": "done"})
 
         self.movement_id = movement.id
         self._add_service_lines(contract)
