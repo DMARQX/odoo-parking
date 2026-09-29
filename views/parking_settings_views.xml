@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_parking" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.parking</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="60"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Parking" string="Parking" name="parking_management"
+                     groups="parking_management.group_parking_manager">
+                    <block title="Accounting" name="parking_accounting">
+                        <setting string="Customer deposits" help="Refundable deposits are invoiced on this liability account instead of revenue.">
+                            <field name="parking_deposit_account_id" options="{'no_create': True}"/>
+                        </setting>
+                        <setting help="Post contract invoices as soon as they are generated; otherwise they stay as drafts for review.">
+                            <field name="parking_auto_post_invoices"/>
+                        </setting>
+                        <setting string="Branch profitability" help="Each branch gets an analytic account in this plan and its invoice lines are distributed to it.">
+                            <field name="parking_analytic_plan_id" options="{'no_create': True}"/>
+                            <div class="mt-2" invisible="not parking_analytic_plan_id">
+                                <button name="action_parking_create_branch_analytics" type="object"
+                                        string="Create missing branch analytic accounts" icon="fa-arrow-right" class="btn-link"/>
+                            </div>
+                        </setting>
+                        <setting help="Invoices covering several months (quarterly, yearly) carry their service period so revenue is recognised month by month. Requires deferred revenue to be set up in Accounting settings.">
+                            <field name="parking_use_deferred_revenue"/>
+                        </setting>
+                    </block>
+                    <block title="Customer Notifications" name="parking_notifications">
+                        <setting string="SMS provider" help="Gateway used for SMS notifications.">
+                            <field name="parking_sms_gateway_id" context="{'default_channel': 'sms'}"/>
+                        </setting>
+                        <setting string="WhatsApp provider" help="Gateway used for WhatsApp notifications.">
+                            <field name="parking_whatsapp_gateway_id" context="{'default_channel': 'whatsapp'}"/>
+                        </setting>
+                        <setting string="Phone numbers" help="Country code added to local mobile numbers (e.g. 05XXXXXXXX becomes 9665XXXXXXXX).">
+                            <field name="parking_phone_country_code"/>
+                        </setting>
+                        <setting string="Messages" help="Choose which events send a message and edit their text.">
+                            <div class="d-flex flex-column">
+                                <button name="%(parking_management.action_parking_messaging_gateway)d" type="action"
+                                        string="Gateways" icon="fa-arrow-right" class="btn-link text-start"/>
+                                <button name="%(parking_management.action_parking_notification_rule)d" type="action"
+                                        string="Notification rules" icon="fa-arrow-right" class="btn-link text-start"/>
+                                <button name="%(parking_management.action_parking_message_log)d" type="action"
+                                        string="Message log" icon="fa-arrow-right" class="btn-link text-start"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_parking_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'parking_management', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="menu_parking_settings" name="Settings" parent="menu_parking_config"
+              action="action_parking_config_settings" sequence="1"
+              groups="parking_management.group_parking_manager"/>
+</odoo>

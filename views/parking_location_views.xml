@@ -36,6 +36,7 @@
                         <group>
                             <field name="company_id"/>
                             <field name="manager_id"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                             <field name="spot_count"/>
                             <field name="available_count"/>
                         </group>

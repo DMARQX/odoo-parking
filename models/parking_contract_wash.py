@@ -68,11 +68,18 @@ class ParkingContractWash(models.Model):
             # Auto-number wash
             last = self.search([("vehicle_id", "=", vehicle.id)], order="wash_number desc", limit=1)
             vals["wash_number"] = (last.wash_number or 0) + 1
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        for rec in records.filtered(lambda w: w.state == "done"):
+            rec._notify_customer()
+        return records
 
     def action_done(self):
-        for r in self:
+        for r in self.filtered(lambda w: w.state != "done"):
             r.state = "done"
+            r._notify_customer()
+
+    def _notify_customer(self):
+        self.env["parking.notification.rule"]._notify("wash_done", self, self.partner_id)
 
     def action_cancel(self):
         for r in self:

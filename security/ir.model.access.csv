@@ -49,3 +49,9 @@ access_parking_branch_stock_move_admin,Full Access Stock Move,model_parking_bran
 access_parking_branch_stock_move_user,Read Stock Move,model_parking_branch_stock_move,group_parking_user,1,0,0,0
 access_parking_branch_stock_move_ops,Record Stock Move,model_parking_branch_stock_move,group_parking_checkinout,1,0,1,0
 access_parking_branch_stock_move_manager,Manage Stock Move,model_parking_branch_stock_move,group_parking_manager,1,1,1,1
+access_parking_messaging_gateway_admin,Admin Messaging Gateway,model_parking_messaging_gateway,base.group_system,1,1,1,1
+access_parking_messaging_gateway_manager,Manage Messaging Gateway,model_parking_messaging_gateway,group_parking_manager,1,1,1,1
+access_parking_notification_rule_admin,Admin Notification Rule,model_parking_notification_rule,base.group_system,1,1,1,1
+access_parking_notification_rule_manager,Manage Notification Rule,model_parking_notification_rule,group_parking_manager,1,1,1,1
+access_parking_message_log_admin,Admin Message Log,model_parking_message_log,base.group_system,1,1,1,1
+access_parking_message_log_manager,Manage Message Log,model_parking_message_log,group_parking_manager,1,1,1,1

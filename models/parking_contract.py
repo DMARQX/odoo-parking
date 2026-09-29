@@ -29,7 +29,9 @@ class ParkingContract(models.Model):
     ], string="Subscription Type", required=True, default="monthly", tracking=True)
 
     price_tmpl_id = fields.Many2one("parking.price.template", string="Price Template", tracking=True)
-    tax_ids = fields.Many2many("account.tax", string="Taxes", domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]", tracking=True)
+    tax_ids = fields.Many2many("account.tax", string="Taxes", domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]", tracking=True,
+        default=lambda self: self.env.company.account_sale_tax_id,
+        help="Leave empty to use each product's sales tax (the company default VAT when the product has none).")
     price_per_month = fields.Monetary(string="Price/Month", currency_field="company_currency_id", tracking=True)
     service_line_ids = fields.One2many("parking.contract.service.line", "contract_id", string="Additional Services", tracking=True)
     wash_ids = fields.One2many("parking.contract.wash", "contract_id", string="Car Washes")
@@ -147,15 +149,15 @@ class ParkingContract(models.Model):
         for r in self:
             r.invoice_count = len(r.invoice_ids)
 
-    @api.depends("invoice_ids", "invoice_ids.payment_state", "state")
+    @api.depends("invoice_ids", "invoice_ids.state", "invoice_ids.payment_state", "state")
     def _compute_invoice_status(self):
         for r in self:
-            if not r.invoice_ids:
+            # Drafts are not billed yet and cancelled invoices never will be.
+            posted = r.invoice_ids.filtered(lambda m: m.state == "posted" and m.move_type == "out_invoice")
+            if not posted:
                 r.invoice_status = "no" if r.state == "draft" else "to_invoice"
-            elif all(inv.payment_state == "paid" for inv in r.invoice_ids):
+            elif all(inv.payment_state in ("paid", "in_payment", "reversed") for inv in posted):
                 r.invoice_status = "paid"
-            elif any(inv.payment_state == "in_payment" for inv in r.invoice_ids):
-                r.invoice_status = "to_invoice"
             else:
                 r.invoice_status = "invoiced"
 
@@ -220,14 +222,26 @@ class ParkingContract(models.Model):
             return float(delta.years * 12 + delta.months + (1 if delta.days else 0))
         return 1.0
 
-    def _get_invoice_lines_vals(self, period_label):
+    def _get_line_accounting_vals(self, period_start=None, period_end=None, deferrable=False):
+        """Branch analytic distribution and, for multi-month lines, the deferral period."""
         self.ensure_one()
-        tax_ids = self._get_invoice_tax_ids()
-        lines = []
+        vals = {}
+        analytic = self.location_id.analytic_account_id
+        if analytic:
+            vals["analytic_distribution"] = {str(analytic.id): 100}
+        line_fields = self.env["account.move.line"]._fields
+        if (deferrable and period_start and period_end and self.company_id.parking_use_deferred_revenue
+                and "deferred_start_date" in line_fields and self._get_period_months() > 1):
+            vals.update({"deferred_start_date": period_start, "deferred_end_date": period_end})
+        return vals
 
+    def _get_invoice_lines_vals(self, period_label, period_start=None, period_end=None):
+        self.ensure_one()
         product = self.parking_product_id or self.env.ref(
             "parking_management.product_parking_service", False)
         product_id = product.id if product else False
+        lines = []
+        acc_vals = self._get_line_accounting_vals(period_start, period_end, deferrable=True)
 
         qty = self._get_period_months()
         price = self.amount_total - self.services_total
@@ -243,31 +257,38 @@ class ParkingContract(models.Model):
                      ref=self.name,
                      period=period_label)
 
-        lines.append((0, 0, {
+        lines.append((0, 0, dict(acc_vals, **{
             "name": name,
             "quantity": qty,
             "price_unit": price if price > 0 else self.price_per_month or 0,
             "product_id": product_id,
-            "tax_ids": tax_ids,
-        }))
+            "tax_ids": self._get_invoice_tax_ids(product),
+        })))
 
+        service_acc_vals = self._get_line_accounting_vals()
         for line in self.service_line_ids:
-            lines.append((0, 0, {
+            lines.append((0, 0, dict(service_acc_vals, **{
                 "name": line.name,
                 "quantity": line.quantity,
                 "price_unit": line.price_unit,
                 "product_id": line.product_id.id or False,
-                "tax_ids": tax_ids,
-            }))
+                "tax_ids": self._get_invoice_tax_ids(line.product_id),
+            })))
 
         if self.deposit_amount and not self.deposit_invoiced:
-            lines.append((0, 0, {
+            deposit_account = self.company_id.parking_deposit_account_id
+            deposit_line = {
                 "name": _("Refundable Deposit / Insurance - %(ref)s", ref=self.name),
                 "quantity": 1.0,
                 "price_unit": self.deposit_amount,
-                "product_id": product_id,
                 "tax_ids": [(5, 0, 0)],
-            }))
+            }
+            if deposit_account:
+                # A refundable deposit is owed back to the customer: a liability, not revenue.
+                deposit_line["account_id"] = deposit_account.id
+            else:
+                deposit_line["product_id"] = product_id
+            lines.append((0, 0, deposit_line))
 
         return lines
 
@@ -285,12 +306,15 @@ class ParkingContract(models.Model):
             "invoice_date": invoice_date,
             "parking_contract_id": self.id,
             "invoice_origin": origin,
-            "invoice_line_ids": self._get_invoice_lines_vals(label),
+            "invoice_line_ids": self._get_invoice_lines_vals(label, period_start, period_end),
             "invoice_payment_term_id": self.partner_id.property_payment_term_id.id or False,
         }
         # Issued by the system: contract staff activate contracts without
         # holding accounting rights, and the recurring cron has none either.
         invoice = self.env["account.move"].sudo().with_company(self.company_id).create(invoice_vals)
+        if self.company_id.parking_auto_post_invoices and invoice.amount_total > 0:
+            invoice.action_post()
+        self.env["parking.notification.rule"]._notify("invoice_created", invoice, self.partner_id)
         if self.deposit_amount and not self.deposit_invoiced:
             self.write({"deposit_invoiced": True})
         self.write({
@@ -511,6 +535,7 @@ class ParkingContract(models.Model):
                 rec._update_recurring_next_date()
                 if not rec.invoice_ids:
                     rec._auto_create_invoice()
+            self.env["parking.notification.rule"]._notify("contract_activated", rec, rec.partner_id)
 
     def action_expire(self):
         self._check_state(("active", "confirmed"), _("expire"))
@@ -538,11 +563,19 @@ class ParkingContract(models.Model):
             raise UserError(_("No spot assigned to this contract."))
         return self.spot_id.action_vehicle_checkin()
 
-    def _get_invoice_tax_ids(self):
+    def _get_invoice_tax_ids(self, product=None):
+        """Taxes for an invoice line: the contract's, else the product's, else the company VAT.
+
+        An empty tax field on the contract used to clear the taxes, so invoices
+        were posted without VAT.
+        """
         self.ensure_one()
-        if self.tax_ids:
-            return [(6, 0, self.tax_ids.ids)]
-        return [(5, 0, 0)]
+        taxes = self.tax_ids
+        if not taxes and product:
+            taxes = product.taxes_id.filtered(lambda t: t.company_id == self.company_id)
+        if not taxes:
+            taxes = self.company_id.account_sale_tax_id
+        return [(6, 0, taxes.ids)]
 
     def _is_arabic_context(self):
         return (self.env.context.get("lang") or self.env.user.lang or "").startswith("ar")
@@ -678,6 +711,8 @@ class ParkingContract(models.Model):
 
     def _send_expiry_reminder(self, days_left):
         self.ensure_one()
+        self.env["parking.notification.rule"]._notify(
+            "contract_expiring", self, self.partner_id, extra={"days": days_left})
         subject = _("Contract %(name)s expires in %(days)d day(s)", name=self.name, days=days_left)
         body = _("Your contract for spot %(spot)s expires on %(date)s.",
                  spot=self.spot_id.full_name, date=self.end_date)
@@ -698,6 +733,7 @@ class ParkingContract(models.Model):
 
     def _send_expiry_notification(self):
         self.ensure_one()
+        self.env["parking.notification.rule"]._notify("contract_expired", self, self.partner_id)
         subject = _("Contract %s has expired!") % self.name
         body = _("Contract %(name)s for spot %(spot)s has expired on %(date)s.",
                  name=self.name, spot=self.spot_id.full_name, date=self.end_date)

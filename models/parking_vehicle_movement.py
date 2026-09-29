@@ -42,7 +42,24 @@ class ParkingVehicleMovement(models.Model):
             # The form sends the translated placeholder ("New" / "جديد").
             if not vals.get("name") or vals.get("name") in ("New", "جديد", "/", _("New")):
                 vals["name"] = self.env["ir.sequence"].next_by_code("parking.vehicle.movement") or "MV-0001"
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        for rec in records:
+            if rec.check_in_time:
+                rec._notify_customer("vehicle_received")
+            elif rec.check_out_time:
+                rec._notify_customer("vehicle_delivered")
+        return records
+
+    def write(self, vals):
+        newly_back = self.filtered(lambda m: not m.check_in_time) if vals.get("check_in_time") else self.browse()
+        res = super().write(vals)
+        for rec in newly_back:
+            rec._notify_customer("vehicle_received")
+        return res
+
+    def _notify_customer(self, event):
+        partner = self.partner_id or self.vehicle_id.owner_id
+        self.env["parking.notification.rule"]._notify(event, self, partner)
 
     @api.depends("check_out_time", "check_in_time")
     def _compute_duration(self):
