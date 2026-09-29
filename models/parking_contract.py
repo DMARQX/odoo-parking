@@ -24,9 +24,13 @@ class ParkingContract(models.Model):
     start_date = fields.Date(string="Start Date", required=True, default=fields.Date.today, tracking=True)
     end_date = fields.Date(string="End Date", required=True, tracking=True)
     subscription_type = fields.Selection([
+        ("daily", "Daily"),
         ("monthly", "Monthly"),
         ("yearly", "Yearly"),
     ], string="Subscription Type", required=True, default="monthly", tracking=True)
+    price_per_day = fields.Monetary(string="Price/Day", currency_field="company_currency_id", tracking=True)
+    booking_days = fields.Integer(string="Days", compute="_compute_booking_days",
+        help="Number of days from the start date to the end date, both included.")
 
     price_tmpl_id = fields.Many2one("parking.price.template", string="Price Template", tracking=True)
     tax_ids = fields.Many2many("account.tax", string="Taxes", domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]", tracking=True,
@@ -161,10 +165,25 @@ class ParkingContract(models.Model):
             else:
                 r.invoice_status = "invoiced"
 
-    @api.depends("service_line_ids", "service_line_ids.price_subtotal", "price_tmpl_id", "price_per_month")
+    @api.depends("start_date", "end_date")
+    def _compute_booking_days(self):
+        for r in self:
+            r.booking_days = (r.end_date - r.start_date).days + 1 if r.start_date and r.end_date else 0
+
+    def _get_day_price(self):
+        self.ensure_one()
+        monthly = self.price_per_month or self.price_tmpl_id.price_per_month
+        return self.price_per_day or self.price_tmpl_id.price_per_day or round((monthly or 0) / 30.0, 2)
+
+    @api.depends("service_line_ids", "service_line_ids.price_subtotal", "price_tmpl_id", "price_per_month",
+                 "price_per_day", "subscription_type", "start_date", "end_date")
     def _compute_totals(self):
         for r in self:
-            base = r.price_per_month or (r.price_tmpl_id.price_per_month if r.price_tmpl_id else 0)
+            if r.subscription_type == "daily":
+                # A daily booking is billed once for all its days.
+                base = r._get_day_price() * r.booking_days
+            else:
+                base = r.price_per_month or (r.price_tmpl_id.price_per_month if r.price_tmpl_id else 0)
             svc_total = sum(line.price_subtotal for line in r.service_line_ids)
             r.services_total = svc_total
             r.amount_total = base + svc_total
@@ -231,6 +250,7 @@ class ParkingContract(models.Model):
             vals["analytic_distribution"] = {str(analytic.id): 100}
         line_fields = self.env["account.move.line"]._fields
         if (deferrable and period_start and period_end and self.company_id.parking_use_deferred_revenue
+                and self.subscription_type != "daily"
                 and "deferred_start_date" in line_fields and self._get_period_months() > 1):
             vals.update({"deferred_start_date": period_start, "deferred_end_date": period_end})
         return vals
@@ -245,7 +265,14 @@ class ParkingContract(models.Model):
 
         qty = self._get_period_months()
         price = self.amount_total - self.services_total
-        if self.invoice_period == "monthly":
+        if self.subscription_type == "daily":
+            # One line for the whole booking: days x daily price.
+            qty = float(self.booking_days or 1)
+            price = self._get_day_price()
+            name = _("Parking - %(spot)s - %(ref)s - %(days)s day(s) from %(start)s to %(end)s",
+                     spot=self.spot_id.full_name, ref=self.name, days=self.booking_days,
+                     start=self.start_date, end=self.end_date)
+        elif self.invoice_period == "monthly":
             name = _("Parking - %(spot)s (%(type)s) - %(ref)s - %(period)s",
                      spot=self.spot_id.full_name,
                      type=dict(self._fields["subscription_type"].selection).get(self.subscription_type),
@@ -380,6 +407,8 @@ class ParkingContract(models.Model):
     def _onchange_subscription_type(self):
         if self.subscription_type == "yearly":
             self.invoice_period = "yearly"
+        elif self.subscription_type == "daily":
+            self.invoice_period = "one_time"
         else:
             self.invoice_period = "monthly"
 
@@ -387,8 +416,23 @@ class ParkingContract(models.Model):
     def _onchange_period_end_date(self):
         # Propose the natural end of the first term; the user can still change it.
         if self.start_date:
+            if self.subscription_type == "daily":
+                if not self.end_date or self.end_date < self.start_date:
+                    self.end_date = self.start_date
+                return
             term = relativedelta(years=1) if self.subscription_type == "yearly" else relativedelta(months=1)
             self.end_date = self.start_date + term - timedelta(days=1)
+
+    @api.onchange("start_date", "end_date", "subscription_type")
+    def _onchange_short_monthly_booking(self):
+        if (self.subscription_type == "monthly" and self.start_date and self.end_date
+                and (self.end_date - self.start_date).days + 1 < 28):
+            return {"warning": {
+                "title": _("Short booking"),
+                "message": _("This booking lasts %(days)s day(s) but is set as monthly, so a full month "
+                             "will be billed. Choose the Daily subscription to bill by the day.",
+                             days=(self.end_date - self.start_date).days + 1),
+            }}
 
     @api.onchange("spot_id")
     def _onchange_spot_id_pricing(self):
@@ -401,6 +445,7 @@ class ParkingContract(models.Model):
         if self.price_tmpl_id:
             tmpl = self.price_tmpl_id
             self.price_per_month = tmpl.price_per_month or self.price_per_month
+            self.price_per_day = tmpl.price_per_day or self.price_per_day
             self.deposit_amount = tmpl.deposit_amount if (tmpl.deposit_amount and not self.deposit_invoiced) else self.deposit_amount
             if tmpl.tax_id:
                 self.tax_ids = [(6, 0, [tmpl.tax_id.id])]
@@ -598,7 +643,11 @@ class ParkingContract(models.Model):
         self.ensure_one()
         self._check_state(("active", "expired"), _("renew"))
         start = (self.end_date or fields.Date.context_today(self)) + timedelta(days=1)
-        term = relativedelta(years=1) if self.subscription_type == "yearly" else relativedelta(months=1)
+        if self.subscription_type == "daily":
+            # A daily booking is renewed for the same number of days.
+            term = relativedelta(days=self.booking_days or 1)
+        else:
+            term = relativedelta(years=1) if self.subscription_type == "yearly" else relativedelta(months=1)
         new = self.copy({
             "start_date": start,
             "end_date": start + term - timedelta(days=1),

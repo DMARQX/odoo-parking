@@ -172,6 +172,7 @@
                                 <i class="fa fa-long-arrow-right mx-2" title="to"/>
                                 <field name="end_date" readonly="state in ('expired', 'cancelled')"/>
                             </div>
+                            <field name="booking_days"/>
                             <field name="days_remaining" invisible="state not in ('active', 'confirmed')"/>
                             <field name="renewed_from_id" invisible="not renewed_from_id"/>
                         </group>
@@ -181,7 +182,8 @@
                             <group>
                                 <group string="Pricing">
                                     <field name="price_tmpl_id" options="{'no_create': True}"/>
-                                    <field name="price_per_month" widget="monetary"/>
+                                    <field name="price_per_day" widget="monetary" invisible="subscription_type != 'daily'"/>
+                                    <field name="price_per_month" widget="monetary" invisible="subscription_type == 'daily'"/>
                                     <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field name="deposit_amount" widget="monetary"/>
                                 </group>

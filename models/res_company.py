@@ -18,6 +18,10 @@ class ResCompany(models.Model):
         "account.analytic.plan", string="Branch Analytic Plan",
         help="Each branch gets an analytic account in this plan; parking invoice lines are "
              "distributed to the branch so its profitability can be measured.")
+    parking_invoice_stock_moves = fields.Boolean(
+        string="Move Stock on Invoicing",
+        help="When a parking invoice is posted, storable products on it are delivered from the "
+             "branch warehouse (a credit note brings them back), so stock and cost of goods stay right.")
     parking_use_deferred_revenue = fields.Boolean(
         string="Defer Multi-Month Revenue",
         help="Invoice lines covering several months carry their service period so revenue "

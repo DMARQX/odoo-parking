@@ -12,6 +12,8 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.parking_analytic_plan_id", readonly=False)
     parking_use_deferred_revenue = fields.Boolean(
         related="company_id.parking_use_deferred_revenue", readonly=False)
+    parking_invoice_stock_moves = fields.Boolean(
+        related="company_id.parking_invoice_stock_moves", readonly=False)
     parking_phone_country_code = fields.Char(
         related="company_id.parking_phone_country_code", readonly=False)
     parking_sms_gateway_id = fields.Many2one(

@@ -26,6 +26,9 @@
                         <setting help="Invoices covering several months (quarterly, yearly) carry their service period so revenue is recognised month by month. Requires deferred revenue to be set up in Accounting settings.">
                             <field name="parking_use_deferred_revenue"/>
                         </setting>
+                        <setting help="When a parking invoice is posted, storable products on it are delivered from the branch warehouse and a credit note brings them back. Set each branch's warehouse on the branch form.">
+                            <field name="parking_invoice_stock_moves"/>
+                        </setting>
                     </block>
                     <block title="Customer Notifications" name="parking_notifications">
                         <setting string="SMS provider" help="Gateway used for SMS notifications.">

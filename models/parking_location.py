@@ -19,6 +19,9 @@ class ParkingLocation(models.Model):
     spot_count = fields.Integer(string="Total Spots", compute="_compute_spot_count")
     available_count = fields.Integer(string="Available Spots", compute="_compute_spot_count")
     display_name = fields.Char(string="Display", compute="_compute_display_name", store=True)
+    warehouse_id = fields.Many2one(
+        "stock.warehouse", string="Warehouse", domain="[('company_id', '=', company_id)]",
+        help="Storable products invoiced to this branch's customers leave from this warehouse.")
     analytic_account_id = fields.Many2one(
         "account.analytic.account", string="Analytic Account", copy=False,
         help="Revenue of this branch is distributed to this analytic account on invoices.")

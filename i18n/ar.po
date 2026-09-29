@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 16:08+0000\n"
-"PO-Revision-Date: 2026-09-29 16:08+0000\n"
+"POT-Creation-Date: 2026-09-29 16:53+0000\n"
+"PO-Revision-Date: 2026-09-29 16:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -143,12 +143,12 @@ msgstr "'سجل-المركبات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "05XXXXXXXX"
-msgstr "05XXXXXXXX"
+msgstr ""
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_header
 msgid ":<br/>"
-msgstr ":<br/>"
+msgstr ""
 
 #. module: parking_management
 #: model_terms:parking.terms.conditions,content:parking_management.parking_terms_default
@@ -325,6 +325,11 @@ msgid "<span class=\"o_stat_text\">Movements</span>"
 msgstr "<span class=\"o_stat_text\">الحركات</span>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.view_move_form_parking
+msgid "<span class=\"o_stat_text\">Stock Transfer</span>"
+msgstr "<span class=\"o_stat_text\">حركة المخزون</span>"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
 msgid "<span class=\"o_stat_text\">Transfers</span>"
 msgstr "<span class=\"o_stat_text\">عمليات النقل</span>"
@@ -343,7 +348,7 @@ msgstr ""
 msgid ""
 "<span style=\"font-size: 14px; color: #ccc; letter-spacing: "
 "2px;\">_________________________</span>"
-msgstr "<span style=\"font-size: 14px; color: #ccc; letter-spacing: 2px;\">_________________________</span>"
+msgstr ""
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
@@ -380,7 +385,9 @@ msgstr "<strong>الحالة:</strong>"
 msgid ""
 "A JSON object. <code>{to}</code>, <code>{message}</code> and "
 "<code>{sender}</code> are replaced when a message is sent."
-msgstr "كائن JSON. تُستبدل <code>{to}</code> و<code>{message}</code> و<code>{sender}</code> عند الإرسال."
+msgstr ""
+"كائن JSON. تُستبدل <code>{to}</code> و<code>{message}</code> "
+"و<code>{sender}</code> عند الإرسال."
 
 #. module: parking_management
 #. odoo-python
@@ -638,7 +645,9 @@ msgstr "الحساب التحليلي"
 msgid ""
 "Approved Meta template to use for WhatsApp (required by Meta for business-"
 "initiated messages). Leave empty to send the text."
-msgstr "قالب واتساب المعتمد من Meta (مطلوب للرسائل التي تبدأها الشركة). اتركه فارغاً لإرسال النص."
+msgstr ""
+"قالب واتساب المعتمد من Meta (مطلوب للرسائل التي تبدأها الشركة). اتركه فارغاً"
+" لإرسال النص."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_driver_search
@@ -1576,7 +1585,9 @@ msgstr "العدد"
 msgid ""
 "Country code added to local mobile numbers (e.g. 05XXXXXXXX becomes "
 "9665XXXXXXXX)."
-msgstr "رمز الدولة المضاف لأرقام الجوال المحلية (مثلاً 05XXXXXXXX تصبح 9665XXXXXXXX)."
+msgstr ""
+"رمز الدولة المضاف لأرقام الجوال المحلية (مثلاً 05XXXXXXXX تصبح "
+"9665XXXXXXXX)."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -1762,6 +1773,11 @@ msgid "Customer has no mobile number."
 msgstr "لا يوجد رقم جوال للعميل."
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__subscription_type__daily
+msgid "Daily"
+msgstr "يومي"
+
+#. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_movement_analysis
 msgid ""
 "Daily check-outs and returns per branch, and how long vehicles stay out."
@@ -1796,6 +1812,11 @@ msgid "Day"
 msgstr "اليوم"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__booking_days
+msgid "Days"
+msgstr "الأيام"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__days_remaining
 msgid "Days Remaining"
 msgstr "الأيام المتبقية"
@@ -1810,7 +1831,8 @@ msgstr "الأيام المتبقية حتى تاريخ نهاية العقد (�
 msgid ""
 "Dear {customer}, invoice {invoice} of {amount} has been issued for contract "
 "{contract}."
-msgstr "عزيزنا {customer}، صدرت الفاتورة {invoice} بمبلغ {amount} للعقد {contract}."
+msgstr ""
+"عزيزنا {customer}، صدرت الفاتورة {invoice} بمبلغ {amount} للعقد {contract}."
 
 #. module: parking_management
 #: model:parking.notification.rule,body:parking_management.notification_rule_wash_done
@@ -1822,35 +1844,45 @@ msgstr "عزيزنا {customer}، تم الانتهاء من غسيل مركبت
 msgid ""
 "Dear {customer}, we received your vehicle {plate} at {branch}, spot {spot}. "
 "Thank you."
-msgstr "عزيزنا {customer}، استلمنا مركبتك {plate} في فرع {branch}، الموقف {spot}. شكراً لك."
+msgstr ""
+"عزيزنا {customer}، استلمنا مركبتك {plate} في فرع {branch}، الموقف {spot}. "
+"شكراً لك."
 
 #. module: parking_management
 #: model:parking.notification.rule,body:parking_management.notification_rule_contract_expired
 msgid ""
 "Dear {customer}, your parking contract {contract} ended on {end_date}. "
 "Contact us to renew."
-msgstr "عزيزنا {customer}، انتهى عقد المواقف {contract} بتاريخ {end_date}. تواصل معنا للتجديد."
+msgstr ""
+"عزيزنا {customer}، انتهى عقد المواقف {contract} بتاريخ {end_date}. تواصل "
+"معنا للتجديد."
 
 #. module: parking_management
 #: model:parking.notification.rule,body:parking_management.notification_rule_contract_expiring
 msgid ""
 "Dear {customer}, your parking contract {contract} ends in {days} day(s) on "
 "{end_date}. Contact us to renew."
-msgstr "عزيزنا {customer}، ينتهي عقد المواقف {contract} خلال {days} يوم بتاريخ {end_date}. تواصل معنا للتجديد."
+msgstr ""
+"عزيزنا {customer}، ينتهي عقد المواقف {contract} خلال {days} يوم بتاريخ "
+"{end_date}. تواصل معنا للتجديد."
 
 #. module: parking_management
 #: model:parking.notification.rule,body:parking_management.notification_rule_contract_activated
 msgid ""
 "Dear {customer}, your parking contract {contract} is active until "
 "{end_date}. Spot: {spot}."
-msgstr "عزيزنا {customer}، تم تفعيل عقد المواقف {contract} حتى {end_date}. الموقف: {spot}."
+msgstr ""
+"عزيزنا {customer}، تم تفعيل عقد المواقف {contract} حتى {end_date}. الموقف: "
+"{spot}."
 
 #. module: parking_management
 #: model:parking.notification.rule,body:parking_management.notification_rule_vehicle_delivered
 msgid ""
 "Dear {customer}, your vehicle {plate} has been delivered from {branch}. "
 "Drive safely."
-msgstr "عزيزنا {customer}، تم تسليم مركبتك {plate} من فرع {branch}. نتمنى لك قيادة آمنة."
+msgstr ""
+"عزيزنا {customer}، تم تسليم مركبتك {plate} من فرع {branch}. نتمنى لك قيادة "
+"آمنة."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_res_company__parking_phone_country_code
@@ -1920,6 +1952,14 @@ msgstr "تم التسليم (خروج)"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Delivered today"
 msgstr "سُلّمت اليوم"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_account_bank_statement_line__parking_picking_id
+#: model:ir.model.fields,help:parking_management.field_account_move__parking_picking_id
+msgid ""
+"Delivery (or return, for a credit note) of the storable products on this "
+"invoice."
+msgstr "تسليم المنتجات المخزنية في هذه الفاتورة (أو إرجاعها في حالة إشعار الدائن)."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__destination_partner_id
@@ -2075,7 +2115,9 @@ msgstr "يحصل كل فرع على حساب تحليلي في هذه الخطة
 msgid ""
 "Each branch gets an analytic account in this plan; parking invoice lines are"
 " distributed to the branch so its profitability can be measured."
-msgstr "يحصل كل فرع على حساب تحليلي في هذه الخطة؛ وتُوزَّع بنود فواتير المواقف على الفرع لقياس ربحيته."
+msgstr ""
+"يحصل كل فرع على حساب تحليلي في هذه الخطة؛ وتُوزَّع بنود فواتير المواقف على "
+"الفرع لقياس ربحيته."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_checkpoint__category__electrical
@@ -2354,7 +2396,7 @@ msgstr "تمت الفوترة"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__http_method__get
 msgid "GET"
-msgstr "GET"
+msgstr ""
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__gateway_id
@@ -2693,7 +2735,9 @@ msgid ""
 "Invoice lines covering several months carry their service period so revenue "
 "is recognised month by month (requires deferred revenue in Accounting "
 "settings)."
-msgstr "تحمل بنود الفواتير متعددة الأشهر فترة الخدمة ليُعترف بالإيراد شهرياً (يتطلب تفعيل الإيراد المؤجل في إعدادات المحاسبة)."
+msgstr ""
+"تحمل بنود الفواتير متعددة الأشهر فترة الخدمة ليُعترف بالإيراد شهرياً (يتطلب "
+"تفعيل الإيراد المؤجل في إعدادات المحاسبة)."
 
 #. module: parking_management
 #: model:mail.template,subject:parking_management.email_template_invoice_created
@@ -2730,7 +2774,9 @@ msgid ""
 "Invoices covering several months (quarterly, yearly) carry their service "
 "period so revenue is recognised month by month. Requires deferred revenue to"
 " be set up in Accounting settings."
-msgstr "تحمل الفواتير متعددة الأشهر (ربعية، سنوية) فترة الخدمة ليُعترف بالإيراد شهرياً. يتطلب إعداد الإيراد المؤجل في إعدادات المحاسبة."
+msgstr ""
+"تحمل الفواتير متعددة الأشهر (ربعية، سنوية) فترة الخدمة ليُعترف بالإيراد "
+"شهرياً. يتطلب إعداد الإيراد المؤجل في إعدادات المحاسبة."
 
 #. module: parking_management
 #: model:res.groups,name:parking_management.group_parking_invoicing
@@ -2894,7 +2940,9 @@ msgstr "أحدث الحركات"
 msgid ""
 "Leave empty to use each product's sales tax (the company default VAT when "
 "the product has none)."
-msgstr "اتركه فارغاً لاستخدام ضريبة المبيعات لكل منتج (أو ضريبة الشركة الافتراضية إن لم يكن للمنتج ضريبة)."
+msgstr ""
+"اتركه فارغاً لاستخدام ضريبة المبيعات لكل منتج (أو ضريبة الشركة الافتراضية إن"
+" لم يكن للمنتج ضريبة)."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__image_left
@@ -2956,6 +3004,12 @@ msgstr "المنتج المرتبط"
 #: model:ir.model.fields,field_description:parking_management.field_parking_notification_rule__log_count
 msgid "Log Count"
 msgstr "عدد الرسائل"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Lot/serial tracked products are not moved automatically: %s"
+msgstr "المنتجات المتتبعة بالدفعة/الرقم التسلسلي لا تُحرَّك تلقائياً: %s"
 
 #. module: parking_management
 #. odoo-javascript
@@ -3072,7 +3126,9 @@ msgstr "الرسائل"
 msgid ""
 "Messages that start a conversation with a customer must use a template approved by Meta.\n"
 "                        Set the template name on each notification rule."
-msgstr "الرسائل التي تبدأ محادثة مع العميل يجب أن تستخدم قالباً معتمداً من Meta.\n                        حدّد اسم القالب في كل قاعدة إشعار."
+msgstr ""
+"الرسائل التي تبدأ محادثة مع العميل يجب أن تستخدم قالباً معتمداً من Meta.\n"
+"                        حدّد اسم القالب في كل قاعدة إشعار."
 
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_messaging_gateway
@@ -3124,6 +3180,12 @@ msgstr "شهري"
 #: model:parking.spot.type,name:parking_management.parking_spot_type_motorcycle
 msgid "Motorcycle"
 msgstr "دراجة نارية"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_invoice_stock_moves
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_invoice_stock_moves
+msgid "Move Stock on Invoicing"
+msgstr "تحريك المخزون عند الفوترة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__movement_id
@@ -3433,6 +3495,12 @@ msgid "No vehicles registered on this contract."
 msgstr "لا توجد مركبات مسجلة في هذا العقد."
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "No warehouse found for branch %s; stock was not moved."
+msgstr "لا يوجد مستودع للفرع %s؛ لم يتم تحريك المخزون."
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__auth_type__none
 msgid "None"
 msgstr "بدون"
@@ -3515,6 +3583,11 @@ msgid ""
 msgstr "عدد مرات غسيل السيارات الممنوحة للعقد عند اختيار باقة الغسيل هذه."
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__booking_days
+msgid "Number of days from the start date to the end date, both included."
+msgstr "عدد الأيام من تاريخ البداية حتى تاريخ النهاية شاملاً اليومين."
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__message_has_error_counter
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__message_has_error_counter
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__message_has_error_counter
@@ -3587,7 +3660,9 @@ msgstr "رسائل Odoo SMS (رصيد IAP)"
 msgid ""
 "Odoo SMS, Twilio, Unifonic, Meta WhatsApp Cloud API or any HTTP API your "
 "provider offers."
-msgstr "Odoo SMS أو Twilio أو Unifonic أو واجهة واتساب من Meta أو أي واجهة HTTP يوفرها مزودك."
+msgstr ""
+"Odoo SMS أو Twilio أو Unifonic أو واجهة واتساب من Meta أو أي واجهة HTTP "
+"يوفرها مزودك."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_notification_rule_form
@@ -3744,7 +3819,7 @@ msgstr "جوال المالك"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__http_method__post
 msgid "POST"
-msgstr "POST"
+msgstr ""
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__invoice_status__paid
@@ -3770,6 +3845,13 @@ msgstr "المواقف"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Parking - %(spot)s (%(type)s) - %(ref)s - %(period)s"
 msgstr "مواقف - %(spot)s (%(type)s) - %(ref)s - %(period)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Parking - %(spot)s - %(ref)s - %(days)s day(s) from %(start)s to %(end)s"
+msgstr "مواقف - %(spot)s - %(ref)s - %(days)s يوم من %(start)s إلى %(end)s"
 
 #. module: parking_management
 #. odoo-python
@@ -3876,6 +3958,12 @@ msgid "Parking Spots"
 msgstr "المواقف"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_picking_id
+#: model:ir.model.fields,field_description:parking_management.field_account_move__parking_picking_id
+msgid "Parking Stock Transfer"
+msgstr "حركة مخزون المواقف"
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_users__parking_location_ids
 msgid ""
 "Parking branches this user is allowed to see and operate. Leave empty to "
@@ -3961,7 +4049,9 @@ msgstr ""
 msgid ""
 "Placeholders: {customer} {plate} {vehicle} {spot} {branch} {contract} "
 "{end_date} {days} {amount} {invoice} {company} {date}"
-msgstr "المتغيرات: {customer} {plate} {vehicle} {spot} {branch} {contract} {end_date} {days} {amount} {invoice} {company} {date}"
+msgstr ""
+"المتغيرات: {customer} {plate} {vehicle} {spot} {branch} {contract} "
+"{end_date} {days} {amount} {invoice} {company} {date}"
 
 #. module: parking_management
 #. odoo-javascript
@@ -4068,6 +4158,11 @@ msgstr "السعر للشهر"
 #: model:ir.model.fields,field_description:parking_management.field_parking_price_template__price_per_year
 msgid "Price per Year"
 msgstr "السعر للسنة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__price_per_day
+msgid "Price/Day"
+msgstr "السعر/اليوم"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__price_per_month
@@ -4468,7 +4563,7 @@ msgstr "القاعدة"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__channel__sms
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_notification_rule__channel__sms
 msgid "SMS"
-msgstr "SMS"
+msgstr ""
 
 #. module: parking_management
 #: model:ir.model,name:parking_management.model_parking_messaging_gateway
@@ -4642,6 +4737,12 @@ msgstr "حدّد رابط الخدمة للبوابة %s."
 #: model:ir.ui.menu,name:parking_management.menu_parking_settings
 msgid "Settings"
 msgstr "الإعدادات"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Short booking"
+msgstr "حجز قصير"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -4937,6 +5038,25 @@ msgid "Stock Moves"
 msgstr "حركات المخزون"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Stock transfer %s done."
+msgstr "تمت حركة المخزون %s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Stock transfer could not be created: %s"
+msgstr "تعذّر إنشاء حركة المخزون: %s"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_location__warehouse_id
+msgid ""
+"Storable products invoiced to this branch's customers leave from this "
+"warehouse."
+msgstr "تُصرف المنتجات المخزنية المفوترة لعملاء هذا الفرع من هذا المستودع."
+
+#. module: parking_management
 #: model_terms:parking.terms.conditions,content:parking_management.parking_terms_default
 msgid ""
 "Subletting: The parking spot cannot be sublet or transferred to another "
@@ -5122,6 +5242,14 @@ msgid "This Year"
 msgstr "هذه السنة"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"This booking lasts %(days)s day(s) but is set as monthly, so a full month "
+"will be billed. Choose the Daily subscription to bill by the day."
+msgstr "مدة هذا الحجز %(days)s يوم لكنه مسجل كاشتراك شهري، فسيُفوتر شهر كامل. اختر الاشتراك اليومي للفوترة باليوم."
+
+#. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_exterior_04
 msgid "Tires Condition & Pressure"
 msgstr "حالة الإطارات والضغط"
@@ -5271,7 +5399,7 @@ msgstr "مركبات النقل"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__provider__twilio
 msgid "Twilio"
-msgstr "Twilio"
+msgstr ""
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_messaging_gateway__account_sid
@@ -5322,7 +5450,7 @@ msgstr "سجل حركات المركبات الموحد"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__provider__unifonic
 msgid "Unifonic"
-msgstr "Unifonic"
+msgstr ""
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__uom_id
@@ -5381,14 +5509,15 @@ msgstr "اسم المستخدم"
 msgid ""
 "Uses Odoo's own SMS service and its prepaid IAP credits. No other settings "
 "are needed."
-msgstr "يستخدم خدمة الرسائل من Odoo ورصيدها المسبق (IAP). لا يحتاج إعدادات أخرى."
+msgstr ""
+"يستخدم خدمة الرسائل من Odoo ورصيدها المسبق (IAP). لا يحتاج إعدادات أخرى."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_price_template__spot_type__vip
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot__spot_type__vip
 #: model:parking.spot.type,name:parking_management.parking_spot_type_vip
 msgid "VIP"
-msgstr "VIP"
+msgstr ""
 
 #. module: parking_management
 #. odoo-javascript
@@ -5645,6 +5774,11 @@ msgid "Waiting activation"
 msgstr "بانتظار التفعيل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_location__warehouse_id
+msgid "Warehouse"
+msgstr "المستودع"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__wash_id
 msgid "Wash"
@@ -5769,6 +5903,23 @@ msgid "Wheels / Rims"
 msgstr "العجلات / الجنوط"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_invoice_stock_moves
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_invoice_stock_moves
+msgid ""
+"When a parking invoice is posted, storable products on it are delivered from"
+" the branch warehouse (a credit note brings them back), so stock and cost of"
+" goods stay right."
+msgstr "عند ترحيل فاتورة مواقف تُسلَّم المنتجات المخزنية فيها من مستودع الفرع (وإشعار الدائن يعيدها)، لتبقى الكميات وتكلفة البضاعة صحيحة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"When a parking invoice is posted, storable products on it are delivered from"
+" the branch warehouse and a credit note brings them back. Set each branch's "
+"warehouse on the branch form."
+msgstr "عند ترحيل فاتورة مواقف تُسلَّم المنتجات المخزنية فيها من مستودع الفرع ويعيدها إشعار الدائن. حدّد مستودع كل فرع في نموذج الفرع."
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_terms_conditions__auto_sync
 msgid ""
 "When enabled, editing this template will automatically update all linked "
@@ -5879,7 +6030,7 @@ msgstr "إنهاء"
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "https://api.provider.com/send"
-msgstr "https://api.provider.com/send"
+msgstr ""
 
 #. module: parking_management
 #. odoo-python
