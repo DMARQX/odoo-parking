@@ -5,6 +5,7 @@ from datetime import timedelta
 class ParkingContractWash(models.Model):
     _name = "parking.contract.wash"
     _description = "Car Wash Record"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "wash_date desc, id desc"
     _rec_name = "display_name"
 
@@ -13,13 +14,13 @@ class ParkingContractWash(models.Model):
     partner_id = fields.Many2one("res.partner", string="Customer", related="contract_id.partner_id", store=True)
     location_id = fields.Many2one("parking.location", string="Branch", related="contract_id.location_id", store=True)
     wash_date = fields.Datetime(string="Wash Date", required=True, default=fields.Datetime.now)
-    washed_by = fields.Many2one("res.users", string="Washed By", default=lambda self: self.env.user)
+    washed_by = fields.Many2one("res.users", string="Washed By", default=lambda self: self.env.user, tracking=True)
     wash_number = fields.Integer(string="Wash #", readonly=True, copy=False)
     state = fields.Selection([
         ("draft", "Draft"),
         ("done", "Done"),
         ("cancelled", "Cancelled"),
-    ], string="Status", default="draft")
+    ], string="Status", default="draft", tracking=True)
     line_ids = fields.One2many("parking.contract.wash.line", "wash_id", string="Consumed Supplies")
     notes = fields.Text(string="Notes")
     display_name = fields.Char(string="Wash", compute="_compute_display_name", store=True)

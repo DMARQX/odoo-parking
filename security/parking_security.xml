@@ -40,9 +40,9 @@
     <!-- ================================================================ -->
     <record id="group_parking_invoicing" model="res.groups">
         <field name="name">Invoicing</field>
-        <field name="comment">Can create invoices from parking contracts.</field>
+        <field name="comment">Can create invoices from parking contracts and register payments. Also grants Odoo's Billing rights (customer invoices and payments).</field>
         <field name="category_id" ref="module_category_parking"/>
-        <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_parking_user')), (4, ref('account.group_account_invoice'))]"/>
     </record>
 
     <!-- ================================================================ -->
@@ -50,7 +50,7 @@
     <!-- ================================================================ -->
     <record id="group_parking_checkinout" model="res.groups">
         <field name="name">Check In / Check Out</field>
-        <field name="comment">Can register check-in and check-out operations for vehicles.</field>
+        <field name="comment">Front-desk operations: vehicle reception and delivery (check in / check out), inspections at reception, car washes and vehicle transfers.</field>
         <field name="category_id" ref="module_category_parking"/>
         <field name="implied_ids" eval="[(4, ref('group_parking_user'))]"/>
     </record>
@@ -668,6 +668,17 @@
     <record id="rule_parking_contract_branch" model="ir.rule">
         <field name="name">Parking Contract: Branch Restricted sees only assigned branches</field>
         <field name="model_id" ref="model_parking_contract"/>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.ids)] if user.parking_location_ids else []</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="rule_parking_contract_wash_branch" model="ir.rule">
+        <field name="name">Parking Wash: Branch Restricted sees only assigned branches</field>
+        <field name="model_id" ref="model_parking_contract_wash"/>
         <field name="global" eval="False"/>
         <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
         <field name="domain_force">[('location_id', 'in', user.parking_location_ids.ids)] if user.parking_location_ids else []</field>

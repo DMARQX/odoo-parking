@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.2.2.0",
+    "version": "18.0.3.0.0",
     "depends": ["base", "mail", "account", "sale_management", "portal"],
     "data": [
         "security/parking_security.xml",
@@ -32,11 +32,19 @@
         "views/parking_dashboard.xml",
         "report/contract_report.xml",
         "report/parking_report_views.xml",
+        "report/parking_analysis_views.xml",
         "report/parking_report_pdf.xml",
         "wizard/parking_report_wizard_views.xml",
         "wizard/parking_reception_wizard_views.xml",
     ],
     "demo": [],
+    "assets": {
+        "web.assets_backend": [
+            "parking_management/static/src/dashboard/parking_dashboard.scss",
+            "parking_management/static/src/dashboard/parking_dashboard.js",
+            "parking_management/static/src/dashboard/parking_dashboard.xml",
+        ],
+    },
     'controllers': ['controllers/__init__.py'],
     "installable": True,
     "application": True,

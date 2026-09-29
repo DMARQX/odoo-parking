@@ -81,8 +81,25 @@
         <field name="model">parking.spot</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_vehicle_checkout" string="Deliver Vehicle (Check Out)" type="object"
+                            class="btn-primary" icon="fa-sign-out" invisible="status != 'occupied'"
+                            groups="parking_management.group_parking_checkinout"/>
+                    <button name="action_vehicle_checkin" string="Receive Vehicle (Check In)" type="object"
+                            class="btn-primary" icon="fa-sign-in" invisible="status != 'client_out'"
+                            groups="parking_management.group_parking_checkinout"/>
+                    <button name="action_maintenance" string="Put Under Maintenance" type="object"
+                            icon="fa-wrench" invisible="status in ('maintenance', 'occupied', 'client_out')"
+                            groups="parking_management.group_parking_spot"
+                            confirm="Put this spot under maintenance?"/>
+                    <button name="action_set_available" string="Back in Service" type="object"
+                            class="btn-success" icon="fa-check" invisible="status != 'maintenance'"
+                            groups="parking_management.group_parking_spot"/>
+                    <field name="status" widget="statusbar" statusbar_visible="available,reserved,occupied,client_out"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Maintenance" bg_color="text-bg-warning" invisible="status != 'maintenance'"/>
                     <field name="active" invisible="1"/>
                     <group>
                         <group>
@@ -93,7 +110,6 @@
                             <field name="floor"/>
                         </group>
                         <group>
-                            <field name="status" widget="badge"/>
                             <field name="price_tmpl_id"/>
                             <field name="current_contract_id"/>
                         </group>
@@ -125,6 +141,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

@@ -39,7 +39,8 @@ class ParkingVehicleMovement(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if not vals.get("name"):
+            # The form sends the translated placeholder ("New" / "جديد").
+            if not vals.get("name") or vals.get("name") in ("New", "جديد", "/", _("New")):
                 vals["name"] = self.env["ir.sequence"].next_by_code("parking.vehicle.movement") or "MV-0001"
         return super().create(vals_list)
 

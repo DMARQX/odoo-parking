@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 class ParkingVehicleTransfer(models.Model):
     _name = "parking.vehicle.transfer"
     _description = "Vehicle Transfer"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "display_name"
     _order = "transfer_date desc, id desc"
 
@@ -19,7 +20,7 @@ class ParkingVehicleTransfer(models.Model):
         ("in_transit", "In Transit"),
         ("completed", "Completed"),
         ("cancelled", "Cancelled"),
-    ], string="Status", default="draft", required=True)
+    ], string="Status", default="draft", required=True, tracking=True)
 
     source_location_id = fields.Many2one("parking.location", string="Source Branch")
     source_spot_id = fields.Many2one("parking.spot", string="Source Spot",
@@ -27,7 +28,7 @@ class ParkingVehicleTransfer(models.Model):
 
     destination_location_id = fields.Many2one("parking.location", string="Destination Branch")
     destination_spot_id = fields.Many2one("parking.spot", string="Destination Spot",
-        domain="[('location_id', '=', destination_location_id)]")
+        domain="[('location_id', '=', destination_location_id)]", tracking=True)
 
     service_center_name = fields.Char(string="Service Center Name")
     service_center_phone = fields.Char(string="Service Center Phone")
@@ -35,7 +36,7 @@ class ParkingVehicleTransfer(models.Model):
 
     destination_partner_id = fields.Many2one("res.partner", string="Delivery Customer")
 
-    driver_id = fields.Many2one("parking.driver", string="Driver", required=True)
+    driver_id = fields.Many2one("parking.driver", string="Driver", required=True, tracking=True)
     transporter_vehicle_id = fields.Many2one("parking.transporter.vehicle", string="Transporter Vehicle", required=True)
     transporter_notes = fields.Text(string="Transporter Notes")
 

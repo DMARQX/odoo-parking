@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="parking_management.ParkingChart">
+        <div class="o_parking_chart" t-attf-style="height: #{props.height || 260}px;">
+            <canvas t-ref="canvas"/>
+        </div>
+    </t>
+
+    <t t-name="parking_management.Dashboard">
+        <div class="o_action o_parking_dashboard">
+            <!-- Toolbar -->
+            <div class="o_pd_toolbar d-flex flex-wrap align-items-center gap-2 px-3 py-2">
+                <div class="me-auto">
+                    <h2 class="mb-0 fw-bold"><i class="fa fa-car text-primary me-2"/>Parking Dashboard</h2>
+                    <small class="text-muted" t-if="state.lastUpdate">
+                        <span>Updated at <t t-esc="state.lastUpdate"/></span>
+                        <span class="ms-2"><i class="fa fa-refresh me-1" title="Auto refresh"/>Refreshes every minute</span>
+                    </small>
+                </div>
+                <select class="form-select w-auto" t-on-change="onLocationChange" t-if="data">
+                    <option value="">All branches</option>
+                    <t t-foreach="data.locations" t-as="loc" t-key="loc.id">
+                        <option t-att-value="loc.id" t-att-selected="state.locationId === loc.id" t-esc="loc.name"/>
+                    </t>
+                </select>
+                <div class="btn-group" role="group">
+                    <t t-foreach="periods" t-as="p" t-key="p[0]">
+                        <button type="button" t-attf-class="btn btn-sm #{state.period === p[0] ? 'btn-primary' : 'btn-outline-secondary'}"
+                                t-on-click="() => this.setPeriod(p[0])" t-esc="p[1]"/>
+                    </t>
+                </div>
+                <button type="button" class="btn btn-sm btn-light" t-on-click="() => this.load()" title="Refresh">
+                    <i t-attf-class="fa fa-refresh #{state.loading ? 'fa-spin' : ''}"/>
+                </button>
+            </div>
+
+            <div class="o_pd_scroll">
+            <div class="o_pd_body px-3 pb-4" t-if="data">
+                <!-- Quick actions -->
+                <div class="o_pd_quick d-flex flex-wrap gap-2 my-3">
+                    <button t-if="data.rights.checkinout" class="btn btn-primary" t-on-click="() => this.reception('check_in')">
+                        <i class="fa fa-sign-in me-1"/>Receive Vehicle
+                    </button>
+                    <button t-if="data.rights.checkinout" class="btn btn-primary" t-on-click="() => this.reception('check_out')">
+                        <i class="fa fa-sign-out me-1"/>Deliver Vehicle
+                    </button>
+                    <button t-if="data.rights.contract" class="btn btn-success" t-on-click="newContract">
+                        <i class="fa fa-plus me-1"/>New Contract
+                    </button>
+                    <button class="btn btn-light border" t-on-click="() => this.openSpots()">
+                        <i class="fa fa-th me-1"/>Spots Board
+                    </button>
+                    <button class="btn btn-light border" t-on-click="() => this.openContracts('expiring')">
+                        <i class="fa fa-clock-o me-1"/>Renewals Due
+                        <span class="badge text-bg-warning ms-1" t-if="data.kpis.expiring_7" t-esc="data.kpis.expiring_7"/>
+                    </button>
+                </div>
+
+                <!-- Occupancy strip -->
+                <div class="o_pd_card card mb-3">
+                    <div class="card-body py-3">
+                        <div class="d-flex flex-wrap align-items-center gap-3">
+                            <div class="o_pd_gauge text-center">
+                                <div class="fs-1 fw-bold lh-1"><t t-esc="data.kpis.occupancy"/>%</div>
+                                <small class="text-muted">Occupancy</small>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="progress o_pd_stack" style="height: 14px;">
+                                    <t t-foreach="data.charts.spot_status" t-as="s" t-key="s.key">
+                                        <div class="progress-bar" role="progressbar"
+                                             t-if="data.kpis.total_spots and s.value"
+                                             t-attf-style="width: #{100 * s.value / data.kpis.total_spots}%; background-color: #{STATUS_COLORS[s.key]};"
+                                             t-att-title="s.label + ': ' + s.value"/>
+                                    </t>
+                                </div>
+                                <div class="d-flex flex-wrap gap-3 mt-2 small">
+                                    <t t-foreach="data.charts.spot_status" t-as="s" t-key="s.key">
+                                        <a href="#" class="text-reset text-decoration-none" t-on-click.prevent="() => this.openSpots(s.key)">
+                                            <span class="o_pd_dot" t-attf-style="background-color: #{STATUS_COLORS[s.key]};"/>
+                                            <t t-esc="s.label"/>: <strong t-esc="s.value"/>
+                                        </a>
+                                    </t>
+                                    <span class="text-muted">Total: <strong t-esc="data.kpis.total_spots"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI cards -->
+                <div class="row g-3 mb-3">
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-check-circle'"/>
+                        <t t-set="color" t-value="'success'"/>
+                        <t t-set="value" t-value="data.kpis.available"/>
+                        <t t-set="label">Available spots</t>
+                        <t t-set="onClick" t-value="() => this.openSpots('available')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-road'"/>
+                        <t t-set="color" t-value="'purple'"/>
+                        <t t-set="value" t-value="data.kpis.client_out"/>
+                        <t t-set="label">Vehicles out now</t>
+                        <t t-set="onClick" t-value="() => this.openSpots('client_out')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-sign-out'"/>
+                        <t t-set="color" t-value="'info'"/>
+                        <t t-set="value" t-value="data.kpis.out_today"/>
+                        <t t-set="label">Delivered today</t>
+                        <t t-set="onClick" t-value="() => this.openMovements('out_today')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-sign-in'"/>
+                        <t t-set="color" t-value="'primary'"/>
+                        <t t-set="value" t-value="data.kpis.in_today"/>
+                        <t t-set="label">Received today</t>
+                        <t t-set="onClick" t-value="() => this.openMovements('in_today')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-file-text'"/>
+                        <t t-set="color" t-value="'success'"/>
+                        <t t-set="value" t-value="data.kpis.active_contracts"/>
+                        <t t-set="label">Active contracts</t>
+                        <t t-set="onClick" t-value="() => this.openContracts('active')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-hourglass-half'"/>
+                        <t t-set="color" t-value="'warning'"/>
+                        <t t-set="value" t-value="data.kpis.expiring_7"/>
+                        <t t-set="label">Ending in 7 days</t>
+                        <t t-set="onClick" t-value="() => this.openContracts('expiring')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-play-circle'"/>
+                        <t t-set="color" t-value="'info'"/>
+                        <t t-set="value" t-value="data.kpis.confirmed_contracts"/>
+                        <t t-set="label">Waiting activation</t>
+                        <t t-set="onClick" t-value="() => this.openContracts('confirmed')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-plus-square'"/>
+                        <t t-set="color" t-value="'primary'"/>
+                        <t t-set="value" t-value="data.kpis.new_contracts"/>
+                        <t t-set="label">New contracts</t>
+                        <t t-set="hint" t-value="periodLabel"/>
+                        <t t-set="onClick" t-value="() => this.openContracts('new')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-tint'"/>
+                        <t t-set="color" t-value="'info'"/>
+                        <t t-set="value" t-value="data.kpis.washes"/>
+                        <t t-set="label">Car washes</t>
+                        <t t-set="hint" t-value="periodLabel"/>
+                        <t t-set="onClick" t-value="() => this.openWashes()"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi">
+                        <t t-set="icon" t-value="'fa-clock-o'"/>
+                        <t t-set="color" t-value="'secondary'"/>
+                        <t t-set="value" t-value="formatHours(data.kpis.avg_hours_out)"/>
+                        <t t-set="label">Average time out</t>
+                        <t t-set="onClick" t-value="() => this.openMovements('period')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi" t-if="data.kpis.past_end">
+                        <t t-set="icon" t-value="'fa-exclamation-triangle'"/>
+                        <t t-set="color" t-value="'danger'"/>
+                        <t t-set="value" t-value="data.kpis.past_end"/>
+                        <t t-set="label">Past end date</t>
+                        <t t-set="onClick" t-value="() => this.openContracts('past_end')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardKpi" t-if="data.kpis.low_stock">
+                        <t t-set="icon" t-value="'fa-cubes'"/>
+                        <t t-set="color" t-value="'danger'"/>
+                        <t t-set="value" t-value="data.kpis.low_stock"/>
+                        <t t-set="label">Supplies low on stock</t>
+                        <t t-set="onClick" t-value="() => this.openLowStock()"/>
+                    </t>
+                </div>
+
+                <!-- Finance -->
+                <div class="row g-3 mb-3" t-if="data.rights.invoice">
+                    <t t-call="parking_management.DashboardMoney">
+                        <t t-set="icon" t-value="'fa-file-text-o'"/>
+                        <t t-set="color" t-value="'primary'"/>
+                        <t t-set="value" t-value="money(data.finance.invoiced)"/>
+                        <t t-set="label">Invoiced, untaxed</t>
+                        <t t-set="hint" t-value="periodLabel"/>
+                        <t t-set="onClick" t-value="() => this.openInvoices('period')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardMoney">
+                        <t t-set="icon" t-value="'fa-money'"/>
+                        <t t-set="color" t-value="'success'"/>
+                        <t t-set="value" t-value="money(data.finance.collected)"/>
+                        <t t-set="label">Collected</t>
+                        <t t-set="hint" t-value="periodLabel"/>
+                        <t t-set="onClick" t-value="() => this.openInvoices('period')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardMoney">
+                        <t t-set="icon" t-value="'fa-balance-scale'"/>
+                        <t t-set="color" t-value="'warning'"/>
+                        <t t-set="value" t-value="money(data.finance.outstanding)"/>
+                        <t t-set="label">Outstanding balance</t>
+                        <t t-set="onClick" t-value="() => this.openInvoices('open')"/>
+                    </t>
+                    <t t-call="parking_management.DashboardMoney">
+                        <t t-set="icon" t-value="'fa-exclamation-circle'"/>
+                        <t t-set="color" t-value="'danger'"/>
+                        <t t-set="value" t-value="money(data.finance.overdue)"/>
+                        <t t-set="label">Overdue</t>
+                        <t t-set="hint" t-value="invoiceCountLabel(data.finance.overdue_count)"/>
+                        <t t-set="onClick" t-value="() => this.openInvoices('overdue')"/>
+                    </t>
+                </div>
+
+                <!-- Charts -->
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-4">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent fw-bold">Spots by status</div>
+                            <div class="card-body"><ParkingChart config="statusChart"/></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent fw-bold">Occupancy by branch</div>
+                            <div class="card-body"><ParkingChart config="branchChart"/></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent fw-bold">Vehicle movements, last 14 days</div>
+                            <div class="card-body"><ParkingChart config="movementChart"/></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent fw-bold">
+                                <t t-if="data.rights.invoice">Invoicing, last 12 months</t>
+                                <t t-else="">New contracts, last 12 months</t>
+                            </div>
+                            <div class="card-body"><ParkingChart config="trendChart"/></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work lists -->
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent d-flex justify-content-between">
+                                <span class="fw-bold"><i class="fa fa-calendar-times-o me-1 text-warning"/>Contracts ending in 30 days</span>
+                                <a href="#" t-on-click.prevent="() => this.openContracts('expiring')">View all</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-hover table-sm mb-0 o_pd_table" t-if="data.lists.expiring.length">
+                                    <thead><tr><th>Contract</th><th>Customer</th><th>Spot</th><th class="text-end">Ends</th></tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="data.lists.expiring" t-as="c" t-key="c.id" class="cursor-pointer"
+                                            t-on-click="() => this.openRecord('parking.contract', c.id)">
+                                            <td t-esc="c.name"/>
+                                            <td t-esc="c.partner"/>
+                                            <td t-esc="c.spot"/>
+                                            <td class="text-end">
+                                                <span t-attf-class="badge #{c.days &lt; 0 ? 'text-bg-danger' : (c.days &lt;= 7 ? 'text-bg-warning' : 'text-bg-light')}">
+                                                    <t t-esc="c.end_date"/> · <t t-esc="daysLabel(c.days)"/>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="text-muted text-center p-4">No contract ends in the next 30 days.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent d-flex justify-content-between">
+                                <span class="fw-bold"><i class="fa fa-road me-1 text-purple"/>Vehicles out the longest</span>
+                                <a href="#" t-on-click.prevent="() => this.openSpots('client_out')">View all</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-hover table-sm mb-0 o_pd_table" t-if="data.lists.waiting.length">
+                                    <thead><tr><th>Spot</th><th>Plate</th><th>Owner</th><th class="text-end">Out for</th></tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="data.lists.waiting" t-as="w" t-key="w.id" class="cursor-pointer"
+                                            t-on-click="() => this.openRecord('parking.spot', w.id)">
+                                            <td t-esc="w.spot"/>
+                                            <td t-esc="w.plate"/>
+                                            <td t-esc="w.owner"/>
+                                            <td class="text-end"><span t-attf-class="badge #{waitingClass(w.hours)}" t-esc="formatHours(w.hours)"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="text-muted text-center p-4">All vehicles are in their spots.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-attf-class="#{data.rights.invoice ? 'col-lg-6' : 'col-12'}">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent d-flex justify-content-between">
+                                <span class="fw-bold"><i class="fa fa-exchange me-1 text-info"/>Latest movements</span>
+                                <a href="#" t-on-click.prevent="() => this.openMovements()">View all</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-hover table-sm mb-0 o_pd_table" t-if="data.lists.recent_moves.length">
+                                    <thead><tr><th>Reference</th><th>Vehicle</th><th>Spot</th><th>Out</th><th>Back</th></tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="data.lists.recent_moves" t-as="m" t-key="m.id" class="cursor-pointer"
+                                            t-on-click="() => this.openRecord('parking.vehicle.movement', m.id)">
+                                            <td t-esc="m.name"/>
+                                            <td t-esc="m.vehicle"/>
+                                            <td t-esc="m.spot"/>
+                                            <td class="small" t-esc="m.out"/>
+                                            <td class="small">
+                                                <t t-if="m.open"><span class="badge text-bg-warning">Still out</span></t>
+                                                <t t-else="" t-esc="m.in"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="text-muted text-center p-4">No movements yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" t-if="data.rights.invoice">
+                        <div class="o_pd_card card h-100">
+                            <div class="card-header bg-transparent d-flex justify-content-between">
+                                <span class="fw-bold"><i class="fa fa-users me-1 text-danger"/>Top outstanding balances</span>
+                                <a href="#" t-on-click.prevent="() => this.openInvoices('open')">View all</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-hover table-sm mb-0 o_pd_table" t-if="data.lists.debtors.length">
+                                    <thead><tr><th>Customer</th><th class="text-end">Balance due</th></tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="data.lists.debtors" t-as="d" t-key="d.id" class="cursor-pointer"
+                                            t-on-click="() => this.openPartnerInvoices(d.id)">
+                                            <td t-esc="d.name"/>
+                                            <td class="text-end fw-bold" t-esc="money(d.amount)"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="text-muted text-center p-4">No outstanding balances.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-elif="state.loading" class="text-center text-muted p-5">
+                <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+            </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="parking_management.DashboardKpi">
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="o_pd_card o_pd_kpi card h-100" t-on-click="onClick" role="button">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <span t-attf-class="o_pd_icon o_pd_icon_#{color}"><i t-attf-class="fa #{icon}"/></span>
+                    <div class="min-w-0">
+                        <div class="fs-3 fw-bold lh-1" t-esc="value"/>
+                        <div class="small text-muted lh-sm"><t t-out="label"/></div>
+                        <div class="small text-muted opacity-75 lh-sm" t-if="hint" t-esc="hint"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="parking_management.DashboardMoney">
+        <div class="col-6 col-xl-3">
+            <div class="o_pd_card o_pd_kpi card h-100" t-on-click="onClick" role="button">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <span t-attf-class="o_pd_icon o_pd_icon_#{color}"><i t-attf-class="fa #{icon}"/></span>
+                    <div class="min-w-0">
+                        <div class="fs-4 fw-bold lh-1 text-nowrap" t-esc="value"/>
+                        <div class="small text-muted lh-sm"><t t-out="label"/></div>
+                        <div class="small text-muted opacity-75 lh-sm" t-if="hint" t-esc="hint"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -21,6 +21,13 @@
         <field name="model">parking.contract.wash</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_done" string="Mark as Done" type="object" class="btn-primary"
+                            invisible="state != 'draft'" groups="parking_management.group_parking_checkinout"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state != 'draft'" groups="parking_management.group_parking_checkinout"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -33,7 +40,6 @@
                             <field name="wash_date"/>
                             <field name="wash_number"/>
                             <field name="washed_by"/>
-                            <field name="state" widget="badge"/>
                         </group>
                     </group>
                     <group string="Consumed Supplies">
@@ -48,6 +54,7 @@
                     </group>
                     <field name="notes"/>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -198,9 +205,12 @@
     <menuitem id="menu_parking_wash" name="Car Washes" parent="menu_parking_services" sequence="10"
               action="action_parking_contract_wash"/>
     <menuitem id="menu_parking_wash_kit" name="Wash Kit Items" parent="menu_parking_services" sequence="20"
-              action="action_parking_wash_kit_item"/>
+              action="action_parking_wash_kit_item"
+              groups="parking_management.group_parking_config_pricing"/>
     <menuitem id="menu_parking_branch_stock" name="Branch Stock" parent="menu_parking_services" sequence="30"
-              action="action_parking_branch_stock"/>
+              action="action_parking_branch_stock"
+              groups="parking_management.group_parking_checkinout,parking_management.group_parking_config_pricing"/>
     <menuitem id="menu_parking_stock_move" name="Stock Movements" parent="menu_parking_services" sequence="40"
-              action="action_parking_branch_stock_move"/>
+              action="action_parking_branch_stock_move"
+              groups="parking_management.group_parking_checkinout,parking_management.group_parking_config_pricing"/>
 </odoo>

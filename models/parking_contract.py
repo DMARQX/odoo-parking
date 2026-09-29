@@ -80,6 +80,17 @@ class ParkingContract(models.Model):
     parking_product_id = fields.Many2one("product.product", string="Parking Product",
         domain="[('type', '=', 'service')]", tracking=True)
     invoice_count = fields.Integer(string="Invoice Count", compute="_compute_invoice_count")
+    movement_count = fields.Integer(string="Movements", compute="_compute_related_counts")
+    wash_count = fields.Integer(string="Washes", compute="_compute_related_counts")
+    days_remaining = fields.Integer(string="Days Remaining", compute="_compute_days_remaining",
+        help="Days left until the contract end date (negative once it has passed).")
+    is_expiring_soon = fields.Boolean(string="Expiring Soon", compute="_compute_days_remaining",
+        search="_search_is_expiring_soon",
+        help="Active or confirmed contract that ends within the next 7 days.")
+    amount_due = fields.Monetary(string="Amount Due", compute="_compute_amount_due",
+        currency_field="company_currency_id",
+        help="Open balance of this contract's posted customer invoices.")
+    renewed_from_id = fields.Many2one("parking.contract", string="Renewed From", readonly=True, copy=False)
     invoice_status = fields.Selection([
         ("no", "Nothing to Invoice"),
         ("to_invoice", "To Invoice"),
@@ -102,6 +113,34 @@ class ParkingContract(models.Model):
                 r.vehicle_details = " / ".join(parts + ([owner] if owner else []))
             else:
                 r.vehicle_details = ""
+
+    def _compute_related_counts(self):
+        Movement = self.env["parking.vehicle.movement"]
+        for r in self:
+            r.movement_count = Movement.search_count([("contract_id", "=", r.id)]) if r.id else 0
+            r.wash_count = len(r.wash_ids)
+
+    @api.depends("end_date", "state")
+    def _compute_days_remaining(self):
+        today = fields.Date.context_today(self)
+        for r in self:
+            r.days_remaining = (r.end_date - today).days if r.end_date else 0
+            r.is_expiring_soon = bool(
+                r.end_date and r.state in ("active", "confirmed") and 0 <= r.days_remaining <= 7)
+
+    def _search_is_expiring_soon(self, operator, value):
+        today = fields.Date.context_today(self)
+        domain = [("state", "in", ("active", "confirmed")),
+                  ("end_date", ">=", today), ("end_date", "<=", today + timedelta(days=7))]
+        if (operator == "=") != bool(value):
+            return ["!"] + ["&"] * 2 + domain
+        return domain
+
+    @api.depends("invoice_ids.amount_residual", "invoice_ids.state")
+    def _compute_amount_due(self):
+        for r in self:
+            invoices = r.sudo().invoice_ids.filtered(lambda m: m.state == "posted" and m.move_type == "out_invoice")
+            r.amount_due = sum(invoices.mapped("amount_residual"))
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
@@ -132,7 +171,9 @@ class ParkingContract(models.Model):
     def create(self, vals_list):
         contract_seq = self.env["ir.sequence"]
         for vals in vals_list:
-            if not vals.get("name") or vals.get("name") == _("New"):
+            # The default name is translated when the form opens ("جديد" in Arabic),
+            # so compare against every placeholder, not just the current language.
+            if not vals.get("name") or vals.get("name") in ("New", "جديد", "/", _("New")):
                 vals["name"] = contract_seq.next_by_code("parking.contract") or _("New")
             self._check_spot_availability(vals)
         records = super().create(vals_list)
@@ -247,7 +288,9 @@ class ParkingContract(models.Model):
             "invoice_line_ids": self._get_invoice_lines_vals(label),
             "invoice_payment_term_id": self.partner_id.property_payment_term_id.id or False,
         }
-        invoice = self.env["account.move"].create(invoice_vals)
+        # Issued by the system: contract staff activate contracts without
+        # holding accounting rights, and the recurring cron has none either.
+        invoice = self.env["account.move"].sudo().with_company(self.company_id).create(invoice_vals)
         if self.deposit_amount and not self.deposit_invoiced:
             self.write({"deposit_invoiced": True})
         self.write({
@@ -315,6 +358,19 @@ class ParkingContract(models.Model):
             self.invoice_period = "yearly"
         else:
             self.invoice_period = "monthly"
+
+    @api.onchange("start_date", "subscription_type")
+    def _onchange_period_end_date(self):
+        # Propose the natural end of the first term; the user can still change it.
+        if self.start_date:
+            term = relativedelta(years=1) if self.subscription_type == "yearly" else relativedelta(months=1)
+            self.end_date = self.start_date + term - timedelta(days=1)
+
+    @api.onchange("spot_id")
+    def _onchange_spot_id_pricing(self):
+        if self.spot_id.price_tmpl_id and not self.price_tmpl_id:
+            self.price_tmpl_id = self.spot_id.price_tmpl_id
+            self._onchange_price_tmpl_id()
 
     @api.onchange("price_tmpl_id")
     def _onchange_price_tmpl_id(self):
@@ -504,6 +560,62 @@ class ParkingContract(models.Model):
             "target": "current",
         }
 
+    def action_renew(self):
+        """Create the next-term contract as a draft, keeping customer, spot and pricing."""
+        self.ensure_one()
+        self._check_state(("active", "expired"), _("renew"))
+        start = (self.end_date or fields.Date.context_today(self)) + timedelta(days=1)
+        term = relativedelta(years=1) if self.subscription_type == "yearly" else relativedelta(months=1)
+        new = self.copy({
+            "start_date": start,
+            "end_date": start + term - timedelta(days=1),
+            "renewed_from_id": self.id,
+            "state": "draft",
+            # The deposit is held across terms; do not bill it again on renewal.
+            "deposit_invoiced": self.deposit_invoiced,
+            "service_line_ids": [(0, 0, {
+                "service_id": line.service_id.id,
+                "quantity": line.quantity,
+                "price_unit": line.price_unit,
+            }) for line in self.service_line_ids],
+            "customer_signature": False,
+            "authorized_signature": False,
+            "signature_date": False,
+        })
+        # Logged note: works for staff without an email address, unlike message_post.
+        self._message_log(body=_("Renewed by contract %s.", new._get_html_link()))
+        new._message_log(body=_("Renewal of contract %s.", self._get_html_link()))
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "parking.contract",
+            "res_id": new.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_view_movements(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Vehicle Movements"),
+            "res_model": "parking.vehicle.movement",
+            "view_mode": "list,form",
+            "domain": [("contract_id", "=", self.id)],
+            "context": {"default_contract_id": self.id, "default_spot_id": self.spot_id.id},
+        }
+
+    def action_view_washes(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Car Washes"),
+            "res_model": "parking.contract.wash",
+            "view_mode": "list,form",
+            "domain": [("contract_id", "=", self.id)],
+            "context": {"default_contract_id": self.id,
+                        "default_vehicle_id": self.vehicle_ids[:1].id},
+        }
+
     def action_view_invoices(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
@@ -602,7 +714,7 @@ class ParkingContract(models.Model):
         try:
             template = self.env.ref("parking_management.email_template_invoice_created", False)
             if template:
-                template.send_mail(invoice.id, force_send=False)
+                template.sudo().send_mail(invoice.id, force_send=False)
         except Exception:
             pass
 

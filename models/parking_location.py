@@ -4,15 +4,16 @@ from odoo.exceptions import UserError
 class ParkingLocation(models.Model):
     _name = "parking.location"
     _description = "Parking Branch / Location"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "display_name"
     _order = "code, name"
 
-    name = fields.Char(string="Branch Name", required=True)
+    name = fields.Char(string="Branch Name", required=True, tracking=True)
     code = fields.Char(string="Branch Code", required=True, copy=False)
     city = fields.Char(string="City", required=True)
     address = fields.Text(string="Address")
     phone = fields.Char(string="Phone")
-    manager_id = fields.Many2one("res.users", string="Branch Manager")
+    manager_id = fields.Many2one("res.users", string="Branch Manager", tracking=True)
     company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
     spot_count = fields.Integer(string="Total Spots", compute="_compute_spot_count")

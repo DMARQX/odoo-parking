@@ -3,18 +3,19 @@ from odoo import models, fields, api
 class ParkingVehicleInspection(models.Model):
     _name = "parking.vehicle.inspection"
     _description = "Vehicle Inspection"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date desc, id desc"
     _rec_name = "display_name"
 
     name = fields.Char(string="Reference", readonly=True, copy=False)
     vehicle_id = fields.Many2one("parking.vehicle", string="Vehicle", required=True)
     date = fields.Datetime(string="Inspection Date", default=fields.Datetime.now, required=True)
-    inspector_id = fields.Many2one("res.users", string="Inspector", default=lambda self: self.env.user, required=True)
+    inspector_id = fields.Many2one("res.users", string="Inspector", default=lambda self: self.env.user, required=True, tracking=True)
     state = fields.Selection([
         ("draft", "Draft"),
         ("done", "Completed"),
         ("cancelled", "Cancelled"),
-    ], string="Status", default="draft", required=True)
+    ], string="Status", default="draft", required=True, tracking=True)
     line_ids = fields.One2many("parking.vehicle.inspection.line", "inspection_id", string="Checklist")
     notes = fields.Text(string="Notes")
     company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)

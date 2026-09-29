@@ -8,6 +8,8 @@ class ParkingVehicleInspectionLine(models.Model):
     inspection_id = fields.Many2one("parking.vehicle.inspection", string="Inspection", required=True, ondelete="cascade")
     checkpoint_id = fields.Many2one("parking.vehicle.checkpoint", string="Checkpoint", required=True)
     category = fields.Selection(related="checkpoint_id.category", string="Category", store=True)
+    inspection_date = fields.Datetime(related="inspection_id.date", string="Inspection Date", store=True)
+    vehicle_id = fields.Many2one(related="inspection_id.vehicle_id", string="Vehicle", store=True)
     result = fields.Selection([
         ("pass", "Pass"),
         ("fail", "Fail"),

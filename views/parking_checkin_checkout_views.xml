@@ -92,21 +92,23 @@
                                     <i class="fa fa-clock-o" title="Check Out"/>
                                     <span t-esc="record.last_movement_out.value"/>
                                 </div>
-                                <div t-if="record.status.value == 'client_out' and record.waiting_hours.value">
+                                <div t-if="record.status.raw_value == 'client_out' and record.waiting_hours.raw_value">
                                     <i class="fa fa-hourglass-half" title="Waiting"/>
-                                    <span t-esc="str(round(record.waiting_hours.value, 1)) + 'h'"/>
+                                    <span t-esc="(Math.round(record.waiting_hours.raw_value * 10) / 10) + 'h'"/>
                                 </div>
                             </div>
                             <div class="o_kanban_record_bottom">
-                                <button t-if="record.status.value == 'client_out'"
+                                <button t-if="record.status.raw_value == 'client_out'"
                                         name="action_vehicle_checkin"
                                         type="object"
+                                        groups="parking_management.group_parking_checkinout"
                                         class="btn btn-success btn-sm o_kanban_action">
                                     <i class="fa fa-sign-in" title="Check In"/> Check In
                                 </button>
-                                <button t-if="record.status.value == 'occupied'"
+                                <button t-if="record.status.raw_value == 'occupied'"
                                         name="action_vehicle_checkout"
                                         type="object"
+                                        groups="parking_management.group_parking_checkinout"
                                         class="btn btn-warning btn-sm o_kanban_action">
                                     <i class="fa fa-sign-out" title="Check Out"/> Check Out
                                 </button>
@@ -174,6 +176,7 @@
                         <field name="notes"/>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -186,10 +189,10 @@
 
     <!-- Menu Items -->
     <menuitem id="menu_parking_vehicle_movement"
-              name="سجل الحركات"
+              name="Vehicle Movements"
               parent="parking_management.menu_parking_operations"
               action="action_parking_vehicle_movement"
               sequence="45"
-              groups="base.group_user"/>
+              groups="parking_management.group_parking_user"/>
 
 </odoo>

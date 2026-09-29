@@ -13,7 +13,11 @@
     <record id="action_parking_contract" model="ir.actions.act_window">
         <field name="name">Contracts</field>
         <field name="res_model">parking.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first parking contract</p>
+            <p>Pick the customer, the spot and the vehicles; the end date and price are proposed automatically.</p>
+        </field>
     </record>
     <record id="action_parking_contract_history" model="ir.actions.act_window">
         <field name="name">Check In/Out</field>
@@ -42,11 +46,16 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <record id="action_parking_dashboard_client" model="ir.actions.client">
+        <field name="name">Parking Dashboard</field>
+        <field name="tag">parking_management.dashboard</field>
+    </record>
+
     <record id="menu_parking_root" model="ir.ui.menu">
         <field name="name">Parking</field>
         <field name="sequence">10</field>
         <field name="web_icon">parking_management,static/description/icon.png</field>
-        <field name="action" ref="action_parking_dashboard"/>
+        <field name="action" ref="action_parking_dashboard_client"/>
         <field name="groups_id" eval="[(4, ref('group_parking_user')), (4, ref('group_parking_manager'))]"/>
     </record>
     <record id="menu_parking_operations" model="ir.ui.menu">
@@ -82,6 +91,7 @@
         <field name="name">Configuration</field>
         <field name="parent_id" ref="menu_parking_root"/>
         <field name="sequence">50</field>
+        <field name="groups_id" eval="[(6, 0, [ref('group_parking_config_location'), ref('group_parking_config_pricing'), ref('group_parking_config_checkpoint'), ref('group_parking_terms_conditions'), ref('group_parking_manager')])]"/>
     </record>
     <record id="menu_parking_location" model="ir.ui.menu">
         <field name="name">Branches</field>

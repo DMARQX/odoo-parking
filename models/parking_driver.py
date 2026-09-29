@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 class ParkingDriver(models.Model):
     _name = "parking.driver"
     _description = "Driver"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "display_name"
     _order = "name"
 

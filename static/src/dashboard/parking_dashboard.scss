@@ -1,0 +1,106 @@
+// .o_action is a flex column with overflow hidden: keep the toolbar fixed
+// and scroll the content in .o_pd_scroll.
+.o_parking_dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--o-view-background-color, #f5f6f8);
+
+    .o_pd_scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .o_pd_toolbar {
+        flex: 0 0 auto;
+        background-color: var(--body-bg, #fff);
+        border-bottom: 1px solid var(--border-color, #e3e6ea);
+    }
+
+    .o_pd_card {
+        border: 1px solid var(--border-color, #e3e6ea);
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    }
+
+    .o_pd_kpi {
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 24, 40, 0.12);
+        }
+    }
+
+    .o_pd_icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 50%;
+        font-size: 1.2rem;
+    }
+
+    $pd-colors: (
+        "primary": #2f80c2,
+        "success": #2e9d5b,
+        "info": #1b9aaa,
+        "warning": #e8872b,
+        "danger": #d64545,
+        "secondary": #6c757d,
+        "purple": #7b56c2,
+    );
+    @each $name, $color in $pd-colors {
+        .o_pd_icon_#{$name} {
+            color: $color;
+            background-color: rgba($color, 0.14);
+        }
+    }
+
+    .text-purple {
+        color: #7b56c2;
+    }
+
+    .o_pd_gauge {
+        min-width: 7rem;
+    }
+
+    .o_pd_stack {
+        border-radius: 1rem;
+    }
+
+    .o_pd_dot {
+        display: inline-block;
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 50%;
+        margin-inline-end: 0.3rem;
+        vertical-align: middle;
+    }
+
+    .o_pd_table {
+        th {
+            font-weight: 600;
+            color: var(--text-muted, #6c757d);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+        tr.cursor-pointer {
+            cursor: pointer;
+        }
+    }
+
+    .o_parking_chart {
+        position: relative;
+        width: 100%;
+    }
+}

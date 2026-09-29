@@ -66,6 +66,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -78,10 +79,10 @@
     </record>
 
     <menuitem id="menu_parking_vehicle_transfer"
-              name="نقل المركبات"
+              name="Vehicle Transfers"
               parent="parking_management.menu_parking_operations"
               action="action_parking_vehicle_transfer"
               sequence="36"
-              groups="base.group_user"/>
+              groups="parking_management.group_parking_user"/>
 
 </odoo>

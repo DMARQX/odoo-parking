@@ -3,15 +3,16 @@ from odoo import models, fields, api, _
 class ParkingVehicle(models.Model):
     _name = "parking.vehicle"
     _description = "Vehicle"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "display_name"
     _order = "license_plate"
 
-    license_plate = fields.Char(string="License Plate", required=True)
+    license_plate = fields.Char(string="License Plate", required=True, tracking=True)
     brand = fields.Char(string="Brand")
     model = fields.Char(string="Model")
     color = fields.Char(string="Color")
     year = fields.Integer(string="Year")
-    owner_id = fields.Many2one("res.partner", string="Owner")
+    owner_id = fields.Many2one("res.partner", string="Owner", tracking=True)
     active = fields.Boolean(default=True)
     notes = fields.Text(string="Notes")
     display_name = fields.Char(string="Vehicle", compute="_compute_display_name", store=True)
@@ -156,23 +157,23 @@ class ParkingVehicle(models.Model):
         if location_id and kit_items:
             for item in kit_items:
                 try:
-                    self.env["parking.branch.stock"].deduct_stock(
-                        item.product_id.id, item.default_quantity, location_id
-                    )
-                    self.env["parking.branch.stock.move"].create({
-                        "location_id": location_id,
-                        "product_id": item.product_id.id,
-                        "quantity": -item.default_quantity,
-                        "move_type": "out",
-                        "wash_id": wash.id,
-                        "notes": _("Auto-deducted by car wash #%s") % wash.wash_number,
-                    })
+                    with self.env.cr.savepoint():
+                        self.env["parking.branch.stock"].deduct_stock(
+                            item.product_id.id, item.default_quantity, location_id
+                        )
+                        self.env["parking.branch.stock.move"].create({
+                            "location_id": location_id,
+                            "product_id": item.product_id.id,
+                            "quantity": -item.default_quantity,
+                            "move_type": "out",
+                            "wash_id": wash.id,
+                            "notes": _("Auto-deducted by car wash #%s") % wash.wash_number,
+                        })
                 except Exception as e:
-                    wash.message_post(
+                    wash._message_log(
                         body=_("Could not deduct '%(item)s': %(error)s") % {
                             "item": item.name, "error": str(e)
                         },
-                        subtype_xmlid="mail.mt_note",
                     )
 
         return {

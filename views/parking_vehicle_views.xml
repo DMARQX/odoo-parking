@@ -19,11 +19,12 @@
         <field name="model">parking.vehicle</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_register_wash" string="Car Wash" type="object" class="btn-primary"
+                            icon="fa-tint" invisible="wash_count == 0"
+                            groups="parking_management.group_parking_checkinout"/>
+                </header>
                 <sheet>
-                    <header>
-                        <button name="action_register_wash" string="Car Wash" type="object" class="btn-primary"
-                                invisible="wash_count == 0"/>
-                    </header>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_inspections" type="object" class="oe_stat_button"
                             icon="fa-check-circle" help="Inspections">
@@ -149,6 +150,7 @@
 
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

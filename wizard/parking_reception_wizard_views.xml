@@ -6,9 +6,9 @@
         <field name="model">parking.reception.wizard</field>
         <field name="arch" type="xml">
             <form string="Vehicle Reception / Delivery">
-                <group>
-                    <field name="step" readonly="1"/>
-                </group>
+                <header>
+                    <field name="step" widget="statusbar" readonly="1"/>
+                </header>
 
                 <!-- Step 1: Operation -->
                 <group invisible="step != '1'">
@@ -76,6 +76,9 @@
                             invisible="step == '1'"/>
                     <button name="action_next" string="Next" type="object" class="btn-primary"
                             invisible="step == '6'"/>
+                    <button name="action_confirm" string="Confirm Now" type="object" class="btn-success"
+                            icon="fa-bolt" invisible="step in ('1', '6') or not vehicle_id or not spot_id"
+                            help="Skip the remaining optional steps and register the movement."/>
                     <button name="action_confirm" string="Confirm" type="object" class="btn-success"
                             invisible="step != '6'"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
@@ -112,6 +115,6 @@
               parent="parking_management.menu_parking_operations"
               action="action_parking_reception_wizard"
               sequence="5"
-              groups="base.group_user"/>
+              groups="parking_management.group_parking_checkinout"/>
 
 </odoo>

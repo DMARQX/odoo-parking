@@ -6,6 +6,7 @@ class ParkingSpotStatusLog(models.Model):
     _order = "change_date desc"
 
     spot_id = fields.Many2one("parking.spot", string="Spot", required=True)
+    location_id = fields.Many2one(related="spot_id.location_id", string="Branch", store=True)
     old_status = fields.Selection([
         ("available", "Available"),
         ("reserved", "Reserved"),

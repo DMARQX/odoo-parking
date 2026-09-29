@@ -4,12 +4,13 @@ from odoo.exceptions import UserError
 class ParkingSpot(models.Model):
     _name = "parking.spot"
     _description = "Parking Spot"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "full_name"
     _order = "location_id, sequence, id"
 
     name = fields.Char(string="Spot Number", readonly=True, copy=False)
     sequence = fields.Integer(string="Sequence", default=0, copy=False)
-    location_id = fields.Many2one("parking.location", string="Branch", required=True)
+    location_id = fields.Many2one("parking.location", string="Branch", required=True, tracking=True)
     full_name = fields.Char(string="Full Name", compute="_compute_full_name", store=True)
     spot_type = fields.Selection([
         ("standard", "Standard"),
@@ -17,16 +18,16 @@ class ParkingSpot(models.Model):
         ("motorcycle", "Motorcycle"),
         ("vip", "VIP"),
     ], string="Spot Type", required=True, default="standard")
-    spot_type_id = fields.Many2one("parking.spot.type", string="Spot Type", ondelete="restrict")
+    spot_type_id = fields.Many2one("parking.spot.type", string="Spot Type", ondelete="restrict", tracking=True)
     status = fields.Selection([
         ("available", "Available"),
         ("reserved", "Reserved"),
         ("occupied", "Occupied"),
         ("client_out", "Client Out"),
         ("maintenance", "Maintenance"),
-    ], string="Status", default="available", required=True)
+    ], string="Status", default="available", required=True, tracking=True)
     floor = fields.Char(string="Floor / Zone")
-    price_tmpl_id = fields.Many2one("parking.price.template", string="Price Template")
+    price_tmpl_id = fields.Many2one("parking.price.template", string="Price Template", tracking=True)
     active = fields.Boolean(default=True)
     color = fields.Integer(string="Color Index", compute="_compute_color")
     contract_ids = fields.One2many("parking.contract", "spot_id", string="Contracts")
@@ -117,6 +118,13 @@ class ParkingSpot(models.Model):
             raise UserError(_("A spot with an active contract cannot be put under maintenance."))
         self._set_status("maintenance")
 
+    def action_set_available(self):
+        if self.filtered(lambda s: s.status != "maintenance"):
+            raise UserError(_("Only spots under maintenance can be put back in service."))
+        for spot in self:
+            spot._set_status("available")
+            spot._update_status_from_contracts()
+
     def _set_status(self, new_status):
         """Change the status and log the transition with the real previous status.
 
@@ -151,7 +159,6 @@ class ParkingSpot(models.Model):
         vehicle = contract.vehicle_ids[:1] if contract.vehicle_ids else False
         if not vehicle:
             raise UserError(_("No vehicles found in the active contract."))
-        old_status = self.status
         self.env["parking.vehicle.movement"].create({
             "spot_id": self.id,
             "contract_id": contract.id,
@@ -159,13 +166,7 @@ class ParkingSpot(models.Model):
             "check_out_time": fields.Datetime.now(),
             "operator_out_id": self.env.user.id,
         })
-        self.status = "client_out"
-        self.env["parking.spot.status.log"].create({
-            "spot_id": self.id,
-            "old_status": old_status,
-            "new_status": "client_out",
-            "operator_id": self.env.user.id,
-        })
+        self._set_status("client_out")
 
     def action_vehicle_checkin(self):
         self.ensure_one()
@@ -186,14 +187,7 @@ class ParkingSpot(models.Model):
                 "check_in_time": fields.Datetime.now(),
                 "operator_in_id": self.env.user.id,
             })
-        old_status = self.status
-        self.status = "occupied"
-        self.env["parking.spot.status.log"].create({
-            "spot_id": self.id,
-            "old_status": old_status,
-            "new_status": "occupied",
-            "operator_id": self.env.user.id,
-        })
+        self._set_status("occupied")
 
     @api.depends("movement_ids", "movement_ids.check_out_time", "movement_ids.check_in_time")
     def _compute_last_movement(self):

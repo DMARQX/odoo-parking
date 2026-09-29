@@ -112,6 +112,7 @@
                     </notebook>
                     <field name="notes" placeholder="Additional inspection notes..."/>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

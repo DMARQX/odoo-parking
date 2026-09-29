@@ -72,9 +72,34 @@ class ParkingReceptionWizard(models.TransientModel):
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     company_currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        ctx = self.env.context
+        # Opened from "Receive" / "Deliver" (dashboard, spot, menu shortcut):
+        # the operation is already known, so start at the vehicle step.
+        if ctx.get("default_operation") and "step" in fields_list:
+            res["step"] = "2"
+        spot = self.env["parking.spot"].browse(ctx.get("default_spot_id") or [])
+        if spot and "vehicle_id" in fields_list and not res.get("vehicle_id"):
+            contract = spot.current_contract_id
+            if contract:
+                res.update({
+                    "contract_id": contract.id,
+                    "partner_id": contract.partner_id.id,
+                    "vehicle_id": contract.vehicle_ids[:1].id,
+                })
+        return res
+
     @api.onchange("operation")
     def _onchange_operation(self):
-        self.step = "1"
+        if not self.env.context.get("default_operation"):
+            self.step = "1"
+
+    @api.onchange("contract_id")
+    def _onchange_contract_id_spot(self):
+        if self.contract_id.spot_id and not self.spot_id:
+            self.spot_id = self.contract_id.spot_id
 
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
@@ -93,6 +118,7 @@ class ParkingReceptionWizard(models.TransientModel):
             self.contract_id = contract.id or False
             if contract:
                 self.partner_id = contract.partner_id.id
+                self.spot_id = contract.spot_id.id
             elif not self.partner_id:
                 vehicle = self.vehicle_id
                 if vehicle.owner_id:
@@ -197,6 +223,8 @@ class ParkingReceptionWizard(models.TransientModel):
             raise UserError(_("Please select a vehicle."))
         if not self.spot_id:
             raise UserError(_("Please choose the parking spot."))
+        if self.operation == "check_out" and not self.contract_id:
+            raise UserError(_("No active contract found for this vehicle. Check-out requires an active subscription."))
 
         contract = self.contract_id
         inspection = self._register_inspection()
@@ -213,29 +241,15 @@ class ParkingReceptionWizard(models.TransientModel):
                 "inspection_id": inspection_id,
                 "notes": self.inspection_notes or False,
             })
-            old_status = self.spot_id.status
             if self.spot_id.status == "occupied":
-                self.spot_id.status = "client_out"
-                self.env["parking.spot.status.log"].create({
-                    "spot_id": self.spot_id.id,
-                    "old_status": old_status,
-                    "new_status": "client_out",
-                    "operator_id": self.env.user.id,
-                })
+                self.spot_id._set_status("client_out")
             if inspection:
                 inspection.write({"state": "done"})
         else:
             movement = self._ensure_check_in_movement()
             if inspection and not movement.inspection_id:
                 movement.inspection_id = inspection.id
-            old_status = self.spot_id.status
-            self.spot_id.status = "occupied"
-            self.env["parking.spot.status.log"].create({
-                "spot_id": self.spot_id.id,
-                "old_status": old_status,
-                "new_status": "occupied",
-                "operator_id": self.env.user.id,
-            })
+            self.spot_id._set_status("occupied")
             if inspection:
                 inspection.write({"state": "done"})
 
