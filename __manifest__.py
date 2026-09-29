@@ -1,11 +1,11 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.2.1.0",
+    "version": "18.0.2.2.0",
     "depends": ["base", "mail", "account", "sale_management", "portal"],
     "data": [
-        "security/ir.model.access.csv",
         "security/parking_security.xml",
+        "security/ir.model.access.csv",
         "data/parking_data.xml",
         "data/parking_notification_data.xml",
         "views/parking_menu.xml",

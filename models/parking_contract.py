@@ -2,6 +2,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ParkingContract(models.Model):
     _name = "parking.contract"
@@ -164,6 +167,18 @@ class ParkingContract(models.Model):
             label = _("Parking Contract - %s") % self.name
         return period_start, period_end, label
 
+    def _get_period_months(self):
+        """Number of monthly fees covered by one invoice of this contract."""
+        self.ensure_one()
+        if self.invoice_period == "quarterly":
+            return 3.0
+        if self.invoice_period == "yearly":
+            return 12.0
+        if self.invoice_period == "one_time" and self.start_date and self.end_date:
+            delta = relativedelta(self.end_date + timedelta(days=1), self.start_date)
+            return float(delta.years * 12 + delta.months + (1 if delta.days else 0))
+        return 1.0
+
     def _get_invoice_lines_vals(self, period_label):
         self.ensure_one()
         tax_ids = self._get_invoice_tax_ids()
@@ -173,7 +188,7 @@ class ParkingContract(models.Model):
             "parking_management.product_parking_service", False)
         product_id = product.id if product else False
 
-        qty = 1.0
+        qty = self._get_period_months()
         price = self.amount_total - self.services_total
         if self.invoice_period == "monthly":
             name = _("Parking - %(spot)s (%(type)s) - %(ref)s - %(period)s",
@@ -220,12 +235,15 @@ class ParkingContract(models.Model):
         if not invoice_date:
             invoice_date = fields.Date.today()
         period_start, period_end, label = self._get_invoice_period_dates(invoice_date)
+        origin = "%s - %s" % (self.name, label)
+        if self.invoice_ids.filtered(lambda m: m.state != "cancel" and m.invoice_origin == origin):
+            raise UserError(_("An invoice for %s already exists. Cancel it first to issue a new one.", origin))
         invoice_vals = {
             "move_type": "out_invoice",
             "partner_id": self.partner_id.id,
             "invoice_date": invoice_date,
             "parking_contract_id": self.id,
-            "invoice_origin": "%s - %s" % (self.name, label),
+            "invoice_origin": origin,
             "invoice_line_ids": self._get_invoice_lines_vals(label),
             "invoice_payment_term_id": self.partner_id.property_payment_term_id.id or False,
         }
@@ -271,12 +289,16 @@ class ParkingContract(models.Model):
         today = fields.Date.today()
         contracts = self.search([
             ("auto_invoice", "=", True),
-            ("state", "in", ["active", "confirmed"]),
+            ("state", "=", "active"),
             ("recurring_next_date", "<=", today),
         ])
         for contract in contracts:
+            if contract.end_date and contract.recurring_next_date > contract.end_date:
+                contract.recurring_next_date = False
+                continue
             try:
-                contract._auto_create_invoice(today)
+                with self.env.cr.savepoint():
+                    contract._auto_create_invoice(today)
             except Exception as e:
                 contract.env["ir.logging"].sudo().create({
                     "name": "Parking Invoice Cron",
@@ -346,13 +368,13 @@ class ParkingContract(models.Model):
             self.free_wash_count = max(l.service_id.included_washes for l in wash_packages)
 
     def write(self, vals):
-        for rec in self:
-            rec._check_spot_availability(vals)
+        if {"spot_id", "partner_id"} & set(vals):
+            for rec in self.filtered(lambda c: c.state in ("draft", "confirmed", "active")):
+                rec._check_spot_availability(vals)
+        old_spots = self.spot_id
         res = super().write(vals)
         if vals.get("spot_id"):
-            for rec in self:
-                if rec.spot_id:
-                    rec.spot_id._update_status_from_contracts()
+            (old_spots | self.spot_id)._update_status_from_contracts()
         return res
 
     def _check_spot_availability(self, vals):
@@ -409,29 +431,40 @@ class ParkingContract(models.Model):
             "state": "confirmed" if self.state == "draft" else self.state,
         })
 
+    def _check_state(self, allowed, action):
+        bad = self.filtered(lambda c: c.state not in allowed)
+        if bad:
+            raise UserError(_("You cannot %(action)s contract(s) in this status: %(names)s",
+                              action=action, names=", ".join(bad.mapped("name"))))
+
     def action_confirm(self):
+        self._check_state(("draft",), _("confirm"))
         self.write({"state": "confirmed"})
         if self.auto_invoice and not self.recurring_next_date:
             self._update_recurring_next_date()
 
     def action_activate(self):
-        self.write({"state": "active"})
-        if self.spot_id:
-            self.spot_id.status = "occupied"
-        if self.auto_invoice:
-            self._update_recurring_next_date()
-            if not self.invoice_ids:
-                self._auto_create_invoice()
+        self._check_state(("confirmed",), _("activate"))
+        for rec in self:
+            if rec.spot_id.status == "maintenance":
+                raise UserError(_("The spot %s is under maintenance and cannot be activated.", rec.spot_id.full_name))
+            rec.write({"state": "active"})
+            if rec.spot_id:
+                rec.spot_id._set_status("occupied")
+            if rec.auto_invoice:
+                rec._update_recurring_next_date()
+                if not rec.invoice_ids:
+                    rec._auto_create_invoice()
 
     def action_expire(self):
+        self._check_state(("active", "confirmed"), _("expire"))
         self.write({"state": "expired"})
-        if self.spot_id:
-            self.spot_id.status = "available"
+        self.spot_id._update_status_from_contracts()
 
     def action_cancel(self):
+        self._check_state(("draft", "confirmed", "active"), _("cancel"))
         self.write({"state": "cancelled"})
-        if self.spot_id:
-            self.spot_id.status = "available"
+        self.spot_id._update_status_from_contracts()
 
     def action_check_out(self):
         """Register vehicle check-out (exit) for the contract's spot."""
@@ -456,17 +489,7 @@ class ParkingContract(models.Model):
         return [(5, 0, 0)]
 
     def _is_arabic_context(self):
-        import logging, traceback
-        _logger = logging.getLogger(__name__)
-        try:
-            ctx_lang = self.env.context.get('lang', 'NONE')
-            user_lang = self.env.user.lang
-            result = (ctx_lang or user_lang or '').startswith('ar')
-            _logger.info(f"_is_arabic_context: ctx.lang={ctx_lang!r} user.lang={user_lang!r} result={result}")
-            return result
-        except Exception as e:
-            _logger.error(f"_is_arabic_context ERROR: {e}\n{traceback.format_exc()}")
-            return False
+        return (self.env.context.get("lang") or self.env.user.lang or "").startswith("ar")
 
     def action_create_invoice(self):
         self.ensure_one()
@@ -534,11 +557,12 @@ class ParkingContract(models.Model):
                     contract._send_expiry_reminder(3)
                 elif days_left == 1:
                     contract._send_expiry_reminder(1)
-                elif days_left == 0:
-                    contract._send_expiry_notification()
-                    contract.action_expire()
+                elif days_left <= 0:
+                    with self.env.cr.savepoint():
+                        contract._send_expiry_notification()
+                        contract.action_expire()
             except Exception:
-                pass
+                _logger.exception("Parking notification cron failed for contract %s", contract.name)
 
     def _send_expiry_reminder(self, days_left):
         self.ensure_one()

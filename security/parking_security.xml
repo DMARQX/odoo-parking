@@ -659,7 +659,7 @@
         <field name="model_id" ref="model_parking_spot"/>
         <field name="global" eval="False"/>
         <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
-        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.ids)] if user.parking_location_ids else []</field>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
@@ -670,7 +670,7 @@
         <field name="model_id" ref="model_parking_contract"/>
         <field name="global" eval="False"/>
         <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
-        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.ids)] if user.parking_location_ids else []</field>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
@@ -681,7 +681,7 @@
         <field name="model_id" ref="model_parking_vehicle_movement"/>
         <field name="global" eval="False"/>
         <field name="groups" eval="[(4, ref('group_parking_branch_user'))]"/>
-        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.id)]</field>
+        <field name="domain_force">[('location_id', 'in', user.parking_location_ids.ids)] if user.parking_location_ids else []</field>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>

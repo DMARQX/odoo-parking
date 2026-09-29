@@ -48,15 +48,22 @@ class ParkingSpot(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Track the last number per branch so spots created together get
+        # consecutive numbers instead of all reading the same "last" spot.
+        next_seq = {}
         for vals in vals_list:
             loc_id = vals.get("location_id")
-            if not vals.get("sequence") or loc_id:
-                last = self.search([("location_id", "=", loc_id)], order="sequence desc", limit=1)
-                vals["sequence"] = (last.sequence or 0) + 1
+            if loc_id and not vals.get("sequence"):
+                if loc_id not in next_seq:
+                    last = self.with_context(active_test=False).search(
+                        [("location_id", "=", loc_id)], order="sequence desc", limit=1)
+                    next_seq[loc_id] = last.sequence or 0
+                next_seq[loc_id] += 1
+                vals["sequence"] = next_seq[loc_id]
             if not vals.get("name") and loc_id:
                 location = self.env["parking.location"].browse(loc_id)
                 code = location.code or "SP"
-                vals["name"] = f"{code}-{vals['sequence']:04d}"
+                vals["name"] = f"{code}-{vals.get('sequence') or 0:04d}"
             elif not vals.get("name"):
                 vals["name"] = self.env["ir.sequence"].next_by_code("parking.spot") or "SP-0001"
         return super().create(vals_list)
@@ -74,10 +81,14 @@ class ParkingSpot(models.Model):
             r.current_contract_id = active_contract[:1] if active_contract else False
 
     def _update_status_from_contracts(self):
-        for spot in self:
-            active = spot.contract_ids.filtered(lambda c: c.state == "active")
-            if not active and spot.status in ("occupied", "client_out", "reserved"):
-                spot.status = "available"
+        for spot in self.sudo():
+            if spot.contract_ids.filtered(lambda c: c.state == "active"):
+                continue
+            if spot.contract_ids.filtered(lambda c: c.state == "confirmed"):
+                if spot.status in ("occupied", "client_out"):
+                    spot._set_status("reserved")
+            elif spot.status in ("occupied", "client_out", "reserved"):
+                spot._set_status("available")
 
     @api.depends("current_contract_id", "current_contract_id.vehicle_ids", "current_contract_id.partner_id")
     def _compute_current_vehicle(self):
@@ -96,24 +107,39 @@ class ParkingSpot(models.Model):
             r.current_owner_mobile = contract.partner_id.mobile if contract and contract.partner_id else ""
 
     def action_check_in(self):
-        self.status = "occupied"
-        self._create_status_log("occupied")
+        self._set_status("occupied")
 
     def action_check_out(self):
-        self.status = "available"
-        self._create_status_log("available")
+        self._set_status("available")
 
     def action_maintenance(self):
-        self.status = "maintenance"
-        self._create_status_log("maintenance")
+        if self.filtered("current_contract_id"):
+            raise UserError(_("A spot with an active contract cannot be put under maintenance."))
+        self._set_status("maintenance")
+
+    def _set_status(self, new_status):
+        """Change the status and log the transition with the real previous status.
+
+        Runs as superuser: contract and check-in staff move spots through their
+        own actions without holding write access on spots or the status log.
+        """
+        logs = []
+        for spot in self.sudo():
+            if spot.status == new_status:
+                continue
+            logs.append({
+                "spot_id": spot.id,
+                "old_status": spot.status,
+                "new_status": new_status,
+                "operator_id": self.env.user.id,
+            })
+            spot.status = new_status
+        if logs:
+            self.env["parking.spot.status.log"].sudo().create(logs)
 
     def _create_status_log(self, new_status):
-        self.env["parking.spot.status.log"].create({
-            "spot_id": self.id,
-            "old_status": self._original_status if hasattr(self, "_original_status") else self.status,
-            "new_status": new_status,
-            "operator_id": self.env.user.id,
-        })
+        # Kept for callers outside this file; prefer _set_status.
+        self._set_status(new_status)
 
     def action_vehicle_checkout(self):
         self.ensure_one()
