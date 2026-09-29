@@ -3777,7 +3777,7 @@ msgid "Closed"
 msgstr "مغلق"
 
 #. module: parking_management
-#: model:ir.model, name:parking_management.model_parking_vehicle_movement
+#: model:ir.model,name:parking_management.model_parking_vehicle_movement
 msgid "Unified Vehicle Movement Log"
 msgstr "سجل حركات المركبات الموحد"
 
@@ -4051,3 +4051,62 @@ msgstr "مستخدم مقيّد بفرع"
 #: model:res.groups,comment:parking_management.group_parking_branch_user
 msgid "Employee limited to the parking branches assigned in the user profile. Can see, create, and edit spots, contracts, and movements only for those branches."
 msgstr "موظف محصور في فروع مواقف السيارات المحددة في ملف المستخدم. يمكنه رؤية وإنشاء وتعديل المواقف والعقود والحركات لتلك الفروع فقط."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "An invoice for %s already exists. Cancel it first to issue a new one."
+msgstr "توجد فاتورة مسجلة مسبقاً لـ %s. قم بإلغائها أولاً لإصدار فاتورة جديدة."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "You cannot %(action)s contract(s) in this status: %(names)s"
+msgstr "لا يمكن %(action)s العقود التالية في حالتها الحالية: %(names)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "confirm"
+msgstr "تأكيد"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "activate"
+msgstr "تفعيل"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "expire"
+msgstr "إنهاء"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "cancel"
+msgstr "إلغاء"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "The spot %s is under maintenance and cannot be activated."
+msgstr "الموقف %s تحت الصيانة ولا يمكن تفعيل العقد عليه."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_spot.py:0
+msgid "A spot with an active contract cannot be put under maintenance."
+msgstr "لا يمكن تحويل موقف عليه عقد نشط إلى الصيانة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Expire this contract and release the spot?"
+msgstr "هل تريد إنهاء هذا العقد وتحرير الموقف؟"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Cancel this contract?"
+msgstr "هل تريد إلغاء هذا العقد؟"
+
