@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        "Parking" document layout: a company-wide layout (header, footer, colours) chosen in
+        Settings > Companies > Configure Document Layout. Every document that calls
+        web.external_layout uses it: invoices, quotations, statements and the parking documents.
+        Colours come from the company's primary (accent) and secondary (dark) colours.
+    -->
+    <template id="external_layout_parking" name="Parking Layout">
+        <div t-attf-class="header o_company_#{company.id}_layout o_report_layout_parking">
+            <div class="o_pm_bar_primary"/>
+            <div class="o_pm_bar_secondary"/>
+            <table class="o_pm_header_table o_ignore_layout_styling">
+                <tr>
+                    <td class="o_pm_logo_cell">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                    <td class="o_pm_name_cell text-center">
+                        <div class="o_pm_company_name" t-field="company.name"/>
+                        <div t-if="not is_html_empty(company.report_header)" class="o_pm_tagline" t-field="company.report_header"/>
+                    </td>
+                    <td class="o_pm_details_cell text-end">
+                        <div t-if="not company.is_company_details_empty" t-field="company.company_details"/>
+                        <div t-else="" t-field="company.partner_id"
+                             t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                        <div t-if="forced_vat or company.vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="forced_vat or company.vat"/>
+                        </div>
+                        <div t-if="company.company_registry">
+                            <span>C.R.</span>: <span t-esc="company.company_registry"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="o_pm_rule"/>
+        </div>
+
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''"/>
+        <div t-attf-class="article o_report_layout_parking o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_company_#{company.id}_layout o_report_layout_parking {{report_type != 'pdf' and 'mt-auto'}}">
+            <table class="o_pm_footer_table o_ignore_layout_styling">
+                <tr>
+                    <td class="text-start"><div t-field="company.report_footer"/></td>
+                    <td class="o_pm_page_cell text-end">
+                        <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name"/>
+                        <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                    </td>
+                </tr>
+            </table>
+            <div class="o_pm_bar_secondary"/>
+            <div class="o_pm_bar_primary"/>
+        </div>
+    </template>
+
+    <record id="report_layout_parking" model="report.layout">
+        <field name="name">Parking</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="external_layout_parking"/>
+        <field name="image">/parking_management/static/img/layout_parking.png</field>
+    </record>
+
+    <!-- Colours of the layout and of the parking documents, per company (compiled into the report styles). -->
+    <template id="styles_company_report_parking" inherit_id="web.styles_company_report">
+        <xpath expr="//t[@t-elif=&quot;layout == 'web.external_layout_bubble'&quot;]" position="after">
+            <t t-elif="layout == 'parking_management.external_layout_parking'" t-translation="off">
+                &amp;.o_report_layout_parking {
+                    .o_pm_bar_primary { background-color: <t t-esc='primary'/>; }
+                    .o_pm_bar_secondary { background-color: <t t-esc='secondary'/>; }
+                    .o_pm_rule { border-bottom-color: <t t-esc='primary'/>; }
+                    .o_pm_company_name { color: <t t-esc='secondary'/>; }
+                    .o_pm_tagline { color: <t t-esc='primary'/>; }
+                    h2 { color: <t t-esc='secondary'/>; }
+                    table.o_main_table thead th, table.o_main_table thead td {
+                        background-color: <t t-esc='secondary'/>;
+                        color: preview-color-contrast(<t t-esc='secondary'/>);
+                        border-color: <t t-esc='secondary'/>;
+                        strong, span { color: preview-color-contrast(<t t-esc='secondary'/>); }
+                    }
+                    #total .o_total td { border-top: 2px solid <t t-esc='primary'/>; }
+                    .o_total strong { color: <t t-esc='secondary'/>; }
+                }
+            </t>
+            <t t-translation="off">
+                .o_pm_doc {
+                    .o_pm_title { color: <t t-esc='secondary'/>; }
+                    .o_pm_title_ref { color: <t t-esc='primary'/>; }
+                    .o_pm_section { border-top-color: <t t-esc='primary'/>; }
+                    .o_pm_section_title { color: <t t-esc='secondary'/>; }
+                    table.o_pm_table thead th {
+                        background-color: <t t-esc='secondary'/>;
+                        color: preview-color-contrast(<t t-esc='secondary'/>);
+                    }
+                    tr.o_pm_grand_total td {
+                        background-color: <t t-esc='secondary'/>;
+                        color: preview-color-contrast(<t t-esc='secondary'/>);
+                    }
+                    tr.o_pm_grand_total td.o_pm_amount { color: <t t-esc='primary'/>; }
+                    .o_pm_kpi { border-top-color: <t t-esc='primary'/>; }
+                    .o_pm_kpi_value { color: <t t-esc='secondary'/>; }
+                    .o_pm_sign_line { border-bottom-color: <t t-esc='primary'/>; }
+                }
+            </t>
+        </xpath>
+    </template>
+
+    <!-- A4 with room for the layout's header and footer; used by the companies on this layout. -->
+    <record id="paperformat_parking_a4" model="report.paperformat">
+        <field name="name">A4 - Parking Layout</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">36</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">32</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Landscape for wide tables (movements, summaries, comprehensive report). -->
+    <record id="paperformat_parking_a4_landscape" model="report.paperformat">
+        <field name="name">A4 Landscape - Parking Layout</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">36</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">32</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Shared pieces for the parking documents                      -->
+    <!-- ============================================================ -->
+
+    <!-- Title block: set "title" (body) and optionally "ref" / "subtitle". -->
+    <template id="pm_title">
+        <table class="o_pm_title_table o_ignore_layout_styling">
+            <tr>
+                <td>
+                    <div class="o_pm_title"><t t-out="title"/> <span t-if="ref" class="o_pm_title_ref" t-out="ref"/></div>
+                    <div t-if="subtitle" class="o_pm_subtitle" t-out="subtitle"/>
+                </td>
+                <td class="o_pm_title_date text-end">
+                    <span>Printed on</span>:
+                    <span t-out="datetime.datetime.now()" t-options='{"widget": "datetime"}'/>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- One KPI cell: set "label" (body) and "value". -->
+    <template id="pm_kpi">
+        <td class="o_pm_kpi">
+            <div class="o_pm_kpi_label" t-out="label"/>
+            <div class="o_pm_kpi_value" t-out="value"/>
+        </td>
+    </template>
+
+    <template id="pm_spots_table">
+        <table class="o_pm_table o_ignore_layout_styling">
+            <thead>
+                <tr>
+                    <th>Spot</th><th>Branch</th><th>Type</th><th>Floor / Zone</th><th>Status</th><th>Vehicle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="spots" t-as="s">
+                    <td class="fw-bold" t-esc="s.name"/>
+                    <td t-esc="s.location_id.display_name or '—'"/>
+                    <td t-esc="s.spot_type_id.name or '—'"/>
+                    <td t-esc="s.floor or '—'"/>
+                    <td><span t-field="s.status"/></td>
+                    <td t-esc="s.current_vehicle_plate or '—'"/>
+                </tr>
+                <tr t-if="not spots"><td colspan="6" class="o_pm_empty">No records.</td></tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="pm_contracts_table">
+        <table class="o_pm_table o_ignore_layout_styling">
+            <thead>
+                <tr>
+                    <th>Contract</th><th>Customer</th><th>Branch / Spot</th><th>Type</th><th>Status</th>
+                    <th>Start</th><th>End</th><th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="contracts" t-as="c">
+                    <td class="fw-bold text-nowrap" t-esc="c.name"/>
+                    <td t-esc="c.partner_id.display_name"/>
+                    <td><t t-esc="c.location_id.name or ''"/> / <t t-esc="c.spot_id.name or '—'"/></td>
+                    <td><span t-field="c.subscription_type"/></td>
+                    <td><span t-field="c.state"/></td>
+                    <td class="text-nowrap"><span t-field="c.start_date"/></td>
+                    <td class="text-nowrap"><span t-field="c.end_date"/></td>
+                    <td class="text-end text-nowrap"><span t-field="c.amount_total"/></td>
+                </tr>
+                <tr t-if="not contracts"><td colspan="8" class="o_pm_empty">No records.</td></tr>
+                <tr t-if="contracts" class="o_pm_grand_total">
+                    <td colspan="7">Total</td>
+                    <td class="o_pm_amount text-end text-nowrap" t-esc="sum(contracts.mapped('amount_total'))"
+                        t-options='{"widget": "monetary", "display_currency": contracts[:1].company_currency_id}'/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="pm_vehicles_table">
+        <table class="o_pm_table o_ignore_layout_styling">
+            <thead>
+                <tr><th>#</th><th>License Plate</th><th>Brand</th><th>Model</th><th>Color</th><th>Owner</th><th>Contracts</th></tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="vehicles" t-as="v">
+                    <td class="text-muted" t-esc="v_index + 1"/>
+                    <td class="fw-bold" t-esc="v.license_plate or '—'"/>
+                    <td t-esc="v.brand or '—'"/>
+                    <td t-esc="v.model or '—'"/>
+                    <td t-esc="v.color or '—'"/>
+                    <td t-esc="v.owner_id.display_name or '—'"/>
+                    <td t-esc="', '.join(v.contract_ids.mapped('name')) or '—'"/>
+                </tr>
+                <tr t-if="not vehicles"><td colspan="7" class="o_pm_empty">No records.</td></tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="pm_services_table">
+        <table class="o_pm_table o_ignore_layout_styling">
+            <thead>
+                <tr><th>Contract</th><th>Customer</th><th>Spot</th><th>Service</th><th>Billing</th>
+                    <th class="text-end">Qty</th><th class="text-end">Amount</th></tr>
+            </thead>
+            <tbody>
+                <t t-foreach="contracts" t-as="c">
+                    <tr t-foreach="c.service_line_ids" t-as="line">
+                        <td class="fw-bold text-nowrap" t-esc="c.name"/>
+                        <td t-esc="c.partner_id.display_name"/>
+                        <td t-esc="c.spot_id.name or '—'"/>
+                        <td t-esc="line.name"/>
+                        <td><span t-field="line.billing_type"/></td>
+                        <td class="text-end" t-esc="'%g' % line.quantity"/>
+                        <td class="text-end text-nowrap"><span t-field="line.price_subtotal"/></td>
+                    </tr>
+                </t>
+                <tr t-if="not contracts.service_line_ids"><td colspan="7" class="o_pm_empty">No records.</td></tr>
+            </tbody>
+        </table>
+    </template>
+</odoo>

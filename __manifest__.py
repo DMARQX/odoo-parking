@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.3.4.1",
+    "version": "18.0.4.0.0",
     "depends": ["base", "mail", "account", "sale_management", "portal", "sms", "stock"],
     "data": [
         "security/parking_security.xml",
@@ -9,6 +9,8 @@
         "data/parking_data.xml",
         "data/parking_notification_data.xml",
         "data/parking_messaging_data.xml",
+        "report/parking_layout.xml",
+        "report/contract_report.xml",
         "views/parking_menu.xml",
         "views/parking_location_views.xml",
         "views/parking_res_company_views.xml",
@@ -37,7 +39,6 @@
         "views/parking_settings_views.xml",
         "views/account_move_views.xml",
         "views/res_partner_views.xml",
-        "report/contract_report.xml",
         "report/parking_report_views.xml",
         "report/parking_analysis_views.xml",
         "report/parking_report_pdf.xml",
@@ -47,6 +48,9 @@
     ],
     "demo": [],
     "assets": {
+        "web.report_assets_common": [
+            "parking_management/static/src/report/parking_report.scss",
+        ],
         "web.assets_backend": [
             "parking_management/static/src/dashboard/parking_dashboard.scss",
             "parking_management/static/src/dashboard/parking_dashboard.js",

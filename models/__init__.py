@@ -21,7 +21,6 @@ from . import parking_contract_wash
 from . import parking_wash_kit
 from . import parking_branch_stock
 from . import parking_dashboard
-from . import ir_actions_report
 from . import parking_messaging
 from . import parking_wash_credit
 from . import res_partner

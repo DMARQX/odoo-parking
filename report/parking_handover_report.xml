@@ -15,83 +15,95 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page">
-                        <h3 class="text-center mb-3">Vehicle Handover Record</h3>
-                        <table class="table table-sm table-bordered mb-3">
-                            <tr>
-                                <th style="width: 20%;">Reference</th><td t-esc="o.name"/>
-                                <th style="width: 20%;">Status</th><td><span t-field="o.state"/></td>
-                            </tr>
-                            <tr>
-                                <th>Customer</th><td t-esc="o.partner_id.display_name or ''"/>
-                                <th>Contract</th><td t-esc="o.contract_id.name or ''"/>
-                            </tr>
-                            <tr>
-                                <th>Vehicle</th><td t-esc="o.vehicle_id.display_name"/>
-                                <th>Spot</th><td t-esc="o.spot_id.display_name or ''"/>
-                            </tr>
-                            <tr>
-                                <th>Key Tag No.</th><td t-esc="o.vehicle_id.key_tag or ''"/>
-                                <th>Branch</th><td t-esc="o.location_id.name or ''"/>
-                            </tr>
-                        </table>
+                    <div class="page o_pm_doc">
+                        <t t-call="parking_management.pm_title">
+                            <t t-set="title">Vehicle Handover Record</t>
+                            <t t-set="ref" t-value="o.name"/>
+                        </t>
 
-                        <table class="table table-sm table-bordered">
+                        <div class="o_pm_section">
+                            <div class="o_pm_section_title">Details</div>
+                            <table class="o_pm_kv o_pm_kv4 o_ignore_layout_styling">
+                                <tr>
+                                    <td class="o_pm_k">Customer</td><td class="fw-bold" t-esc="o.partner_id.display_name or '—'"/>
+                                    <td class="o_pm_k">Status</td><td><span t-field="o.state"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="o_pm_k">Vehicle</td><td t-esc="o.vehicle_id.display_name"/>
+                                    <td class="o_pm_k">Contract</td><td t-esc="o.contract_id.name or '—'"/>
+                                </tr>
+                                <tr>
+                                    <td class="o_pm_k">Branch</td><td t-esc="o.location_id.name or '—'"/>
+                                    <td class="o_pm_k">Spot</td><td t-esc="o.spot_id.name or '—'"/>
+                                </tr>
+                                <tr>
+                                    <td class="o_pm_k">Key Tag No.</td><td t-esc="o.vehicle_id.key_tag or '—'"/>
+                                    <td class="o_pm_k">Key Box Slot</td><td t-esc="o.key_slot or o.vehicle_id.key_slot or '—'"/>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <table class="o_pm_table o_ignore_layout_styling">
                             <thead>
-                                <tr><th style="width: 24%;"/><th>Delivery to Customer</th><th>Return</th></tr>
+                                <tr><th style="width: 26%;"/><th>Delivery to Customer</th><th>Return</th></tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th>Date</th>
-                                    <td><span t-if="o.check_out_time" t-field="o.check_out_time"/></td>
-                                    <td><span t-if="o.check_in_time" t-field="o.check_in_time"/></td>
+                                    <td class="fw-bold">Date</td>
+                                    <td><span t-if="o.check_out_time" t-field="o.check_out_time"/><t t-else="">—</t></td>
+                                    <td><span t-if="o.check_in_time" t-field="o.check_in_time"/><t t-else="">—</t></td>
                                 </tr>
                                 <tr>
-                                    <th>Staff</th>
-                                    <td t-esc="o.operator_out_id.name or ''"/>
-                                    <td t-esc="o.operator_in_id.name or ''"/>
+                                    <td class="fw-bold">Staff</td>
+                                    <td t-esc="o.operator_out_id.name or '—'"/>
+                                    <td t-esc="o.operator_in_id.name or '—'"/>
                                 </tr>
                                 <tr>
-                                    <th>Handed To / Received From</th>
-                                    <td t-esc="o.out_handover_to or ''"/>
-                                    <td t-esc="o.in_received_from or ''"/>
+                                    <td class="fw-bold">Handed To / Received From</td>
+                                    <td t-esc="o.out_handover_to or '—'"/>
+                                    <td t-esc="o.in_received_from or '—'"/>
                                 </tr>
                                 <tr>
-                                    <th>Odometer (km)</th>
-                                    <td t-esc="o.out_odometer or ''"/>
-                                    <td t-esc="o.in_odometer or ''"/>
+                                    <td class="fw-bold">Odometer (km)</td>
+                                    <td t-esc="o.out_odometer or '—'"/>
+                                    <td t-esc="o.in_odometer or '—'"/>
                                 </tr>
                                 <tr>
-                                    <th>Fuel Level</th>
-                                    <td><span t-if="o.out_fuel" t-field="o.out_fuel"/></td>
-                                    <td><span t-if="o.in_fuel" t-field="o.in_fuel"/></td>
+                                    <td class="fw-bold">Fuel Level</td>
+                                    <td><span t-if="o.out_fuel" t-field="o.out_fuel"/><t t-else="">—</t></td>
+                                    <td><span t-if="o.in_fuel" t-field="o.in_fuel"/><t t-else="">—</t></td>
                                 </tr>
                                 <tr>
-                                    <th>Customer Signature</th>
-                                    <td><img t-if="o.out_signature" t-att-src="image_data_uri(o.out_signature)" style="max-height: 70px;"/></td>
-                                    <td><img t-if="o.in_signature" t-att-src="image_data_uri(o.in_signature)" style="max-height: 70px;"/></td>
+                                    <td class="fw-bold">Customer Signature</td>
+                                    <td><div class="o_pm_sign_line"><img t-if="o.out_signature" t-att-src="image_data_uri(o.out_signature)"/></div></td>
+                                    <td><div class="o_pm_sign_line"><img t-if="o.in_signature" t-att-src="image_data_uri(o.in_signature)"/></div></td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <p t-if="o.distance_km or o.duration_hours" class="small">
-                            <span t-if="o.distance_km">Distance: <t t-esc="o.distance_km"/> km. </span>
-                            <span t-if="o.duration_hours">Time out: <t t-esc="round(o.duration_hours, 1)"/> h.</span>
+                        <p t-if="o.distance_km or round(o.duration_hours, 1)" class="o_pm_note">
+                            <span t-if="o.distance_km">Distance: <t t-esc="o.distance_km"/> km.</span>
+                            <span t-if="round(o.duration_hours, 1)">Time out: <t t-esc="round(o.duration_hours, 1)"/> h.</span>
                         </p>
-                        <div t-if="o.notes" class="mb-3">
-                            <strong>Notes:</strong>
-                            <div t-esc="o.notes"/>
+
+                        <div t-if="o.notes" class="o_pm_section">
+                            <div class="o_pm_section_title">Notes</div>
+                            <div class="o_pm_section_body" t-field="o.notes"/>
                         </div>
 
                         <t t-set="photos" t-value="(o.out_attachment_ids | o.in_attachment_ids).filtered(lambda a: (a.mimetype or '').startswith('image/'))"/>
-                        <div t-if="photos">
-                            <h5>Photos</h5>
-                            <div class="row">
-                                <div t-foreach="photos" t-as="photo" class="col-4 mb-2">
-                                    <img t-att-src="image_data_uri(photo.datas)" style="width: 100%; max-height: 160px; object-fit: cover;"/>
-                                    <div class="small text-muted" t-esc="photo.name"/>
-                                </div>
-                            </div>
+                        <div t-if="photos" class="o_pm_section">
+                            <div class="o_pm_section_title">Photos</div>
+                            <table class="o_pm_photos o_ignore_layout_styling">
+                                <t t-foreach="range(0, len(photos), 3)" t-as="start">
+                                    <tr>
+                                        <td t-foreach="photos[start:start + 3]" t-as="photo">
+                                            <img t-att-src="image_data_uri(photo.datas)"/>
+                                            <div class="o_pm_sign_name" t-esc="photo.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
                         </div>
                     </div>
                 </t>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 12:23+0000\n"
-"PO-Revision-Date: 2026-09-30 12:23+0000\n"
+"POT-Creation-Date: 2026-09-30 20:02+0000\n"
+"PO-Revision-Date: 2026-09-30 20:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -112,12 +112,12 @@ msgstr "%s - مبيعات"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_comprehensive
-msgid "'Comprehensive-Report-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Comprehensive-Report'"
 msgstr "'تقرير-شامل-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_contracts_summary
-msgid "'Contracts-Summary-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Contracts-Summary'"
 msgstr "'ملخص-العقود-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
@@ -142,12 +142,12 @@ msgstr "'عقد-مواقف-%s' % (object.name)"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_services
-msgid "'Services-Report-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Services-Report'"
 msgstr "'تقرير-الخدمات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_spots_summary
-msgid "'Spots-Summary-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Spots-Summary'"
 msgstr "'ملخص-المواقف-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
@@ -157,18 +157,30 @@ msgstr "'كشف حساب - %s' % (object.name)"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicle_movement_from_vehicle
-msgid "'Vehicle-Movement-%s' % (object.name or object.id)"
+msgid "'Vehicle-Movement-%s' % (object.license_plate or object.id)"
 msgstr "'حركة-مركبة-%s' % (object.name or object.id)"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicle_movement
-msgid "'Vehicle-Movement-Report-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Vehicle-Movements'"
 msgstr "'تقرير-حركة-المركبات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicles_registry
-msgid "'Vehicles-Registry-%s' % (time.strftime('%%Y-%%m-%%d'))"
+msgid "'Vehicles-Registry'"
 msgstr "'سجل-المركبات-%s' % (time.strftime('%%Y-%%m-%%d'))"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "(invoiced:"
+msgstr "(فُوتر في:"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid ""
+",\n"
+"                        which is added on each invoice."
+msgstr "، وتُضاف في كل فاتورة."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
@@ -176,9 +188,24 @@ msgid "05XXXXXXXX"
 msgstr "05XXXXXXXX"
 
 #. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_header
-msgid ":<br/>"
-msgstr ":<br/>"
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "1. Parking Spots"
+msgstr "1. المواقف"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "2. Contracts"
+msgstr "2. العقود"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "3. Vehicles ("
+msgstr "3. المركبات ("
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "4. Additional Services"
+msgstr "4. الخدمات الإضافية"
 
 #. module: parking_management
 #: model_terms:parking.terms.conditions,content:parking_management.parking_terms_default
@@ -375,20 +402,24 @@ msgid "<span class=\"o_stat_text\">Transfers</span>"
 msgstr "<span class=\"o_stat_text\">عمليات النقل</span>"
 
 #. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
-msgid ""
-"<span style=\"font-size: 11px; font-weight: bold; color: #0f172a;\">Total "
-"Vehicles: </span>"
-msgstr ""
-"<span style=\"font-size: 11px; font-weight: bold; color: #0f172a;\">إجمالي "
-"المركبات: </span>"
+#: model_terms:ir.ui.view,arch_db:parking_management.external_layout_parking
+msgid "<span>C.R.</span>:"
+msgstr "<span>س.ت</span>:"
 
 #. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
-msgid ""
-"<span style=\"font-size: 14px; color: #ccc; letter-spacing: "
-"2px;\">_________________________</span>"
-msgstr "<span style=\"font-size: 14px; color: #ccc; letter-spacing: 2px;\">_________________________</span>"
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
+msgid "<span>Contracts</span>:"
+msgstr "<span>العقود</span>:"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_title
+msgid "<span>Printed on</span>:"
+msgstr "<span>تاريخ الطباعة</span>:"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "<span>To</span>"
+msgstr "<span>إلى</span>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
@@ -404,11 +435,6 @@ msgstr "<strong>الماركة:</strong>"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 msgid "<strong>Contract:</strong>"
 msgstr "<strong>العقد:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
-msgid "<strong>Notes:</strong>"
-msgstr "<strong>ملاحظات:</strong>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
@@ -520,6 +546,8 @@ msgstr "تفعيل"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_type_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_terms_conditions_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_transporter_vehicle_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "Active"
 msgstr "نشط"
 
@@ -644,6 +672,7 @@ msgstr "خدمة إضافية"
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__include_services
 #: model:ir.ui.menu,name:parking_management.menu_parking_report_services
 #: model:ir.ui.menu,name:parking_management.menu_parking_service
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
 msgid "Additional Services"
 msgstr "الخدمات الإضافية"
 
@@ -661,6 +690,7 @@ msgstr "ملاحظات فحص إضافية..."
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__address
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__address
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Address"
 msgstr "العنوان"
 
@@ -680,10 +710,20 @@ msgid "All"
 msgstr "الكل"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "All Branches"
+msgstr "كل الفروع"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "All branches"
 msgstr "كل الفروع"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "All items passed"
+msgstr "جميع البنود سليمة"
 
 #. module: parking_management
 #. odoo-javascript
@@ -697,9 +737,11 @@ msgid "Allowed Parking Branches"
 msgstr "الفروع المسموح بها"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Amount"
 msgstr "المبلغ"
 
@@ -707,6 +749,16 @@ msgstr "المبلغ"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__amount_due
 msgid "Amount Due"
 msgstr "المبلغ المستحق"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
+msgid "Amounts are per invoice period and exclude VAT."
+msgstr "المبالغ لكل فترة فوترة ولا تشمل ضريبة القيمة المضافة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Amounts exclude VAT"
+msgstr "المبالغ لا تشمل ضريبة القيمة المضافة"
 
 #. module: parking_management
 #. odoo-python
@@ -782,6 +834,7 @@ msgstr "نوع المصادقة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__authorized_signature
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Authorized Signature"
 msgstr "التوقيع المصرح به"
 
@@ -818,6 +871,8 @@ msgstr "خُصم تلقائياً بسبب غسيل السيارة رقم %s"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot_status_log__old_status__available
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_report_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Available"
 msgstr "متاح"
 
@@ -908,6 +963,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__mode
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__billing_type
 #: model:ir.model.fields,field_description:parking_management.field_parking_service__billing_type
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Billing"
 msgstr "الفوترة"
 
@@ -915,6 +972,11 @@ msgstr "الفوترة"
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_exterior_01
 msgid "Body / Paint Condition"
 msgstr "حالة الهيكل / الدهان"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Booking total"
+msgstr "إجمالي الحجز"
 
 #. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_mechanical_02
@@ -937,13 +999,17 @@ msgstr "الفرامل"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_status_log_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Branch"
 msgstr "الفرع"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+msgid "Branch / Spot"
+msgstr "الفرع / الموقف"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_res_company__parking_analytic_plan_id
@@ -1014,12 +1080,17 @@ msgstr "الفروع"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__brand
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__brand
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicles_page
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
 msgid "Brand"
 msgstr "الماركة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
+msgid "Brand / Model"
+msgstr "العلامة / الطراز"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
@@ -1224,6 +1295,7 @@ msgstr "ترحيل الغسلات غير المستخدمة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__category
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__category
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_checkpoint_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Category"
 msgstr "الفئة"
 
@@ -1284,12 +1356,14 @@ msgstr "خروج (تسليم)"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__line_ids
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Checklist"
 msgstr "قائمة الفحص"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__checkpoint_id
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Checkpoint"
 msgstr "نقطة الفحص"
 
@@ -1342,6 +1416,7 @@ msgstr "المحصّل"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__color
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__color
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
 msgid "Color"
 msgstr "اللون"
@@ -1422,6 +1497,7 @@ msgstr "الالتزام: يجب على العميل الالتزام بجميع
 
 #. module: parking_management
 #: model:ir.actions.report,name:parking_management.action_report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
 msgid "Comprehensive Parking Report"
 msgstr "تقرير شامل للمواقف"
 
@@ -1516,12 +1592,12 @@ msgstr "المحتوى"
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__contract_id
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 #: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Contract"
@@ -1646,6 +1722,7 @@ msgstr "انتهى العقد {{ object.name }}"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__contract_ids
 #: model:ir.ui.menu,name:parking_management.menu_parking_contract
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_form
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
@@ -1678,6 +1755,7 @@ msgstr "عقود تجاوزت تاريخ النهاية"
 #: model:ir.actions.act_window,name:parking_management.action_parking_report_contracts
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__include_contracts
 #: model:ir.ui.menu,name:parking_management.menu_parking_report_contracts
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "Contracts Summary"
 msgstr "ملخص العقود"
 
@@ -1714,11 +1792,6 @@ msgstr "عقود بانتظار التفعيل"
 #: model:ir.ui.menu,name:parking_management.menu_parking_report_unpaid
 msgid "Contracts to Collect"
 msgstr "عقود للتحصيل"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
-msgid "Contracts:"
-msgstr "العقود:"
 
 #. module: parking_management
 #: model:res.groups,name:parking_management.group_parking_contract
@@ -1897,8 +1970,10 @@ msgstr "ترويسة مخصصة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__partner_id
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Customer"
 msgstr "العميل"
@@ -1937,6 +2012,8 @@ msgstr "إشعارات العملاء"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__customer_signature
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__signature
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Customer Signature"
 msgstr "توقيع العميل"
@@ -1994,16 +2071,11 @@ msgstr "لوحة القيادة / أدوات التحكم"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_status_log_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_search
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 #: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Date"
 msgstr "التاريخ"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_statement
-msgid "Date:"
-msgstr "التاريخ:"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_status_log_search
@@ -2155,11 +2227,13 @@ msgstr "تم التسليم (خروج)"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__check_out_time
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 msgid "Delivered At"
 msgstr "خروج / تسليم"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__operator_out_id
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 msgid "Delivered By"
 msgstr "المشغل (خروج)"
 
@@ -2220,6 +2294,7 @@ msgstr "تم إصدار فاتورة الوديعة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__description
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__description
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_transfer_type_form
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Description"
 msgstr "الوصف"
@@ -2238,6 +2313,11 @@ msgstr "الموقف المستقبِل"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_report_wizard_form
 msgid "Detailed Report"
 msgstr "تقرير مفصل"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
+msgid "Details"
+msgstr "التفاصيل"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__discount
@@ -2286,6 +2366,7 @@ msgstr "الاسم المعروض"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__distance_km
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 msgid "Distance (km)"
 msgstr "المسافة (كم)"
 
@@ -2352,6 +2433,11 @@ msgid "Due Date"
 msgstr "تاريخ الاستحقاق"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+msgid "Duration"
+msgstr "المدة"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__duration_hours
 msgid "Duration (Hours)"
 msgstr "المدة (ساعات)"
@@ -2380,7 +2466,13 @@ msgid "Electrical"
 msgstr "الكهرباء"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Employee"
 msgstr "الموظف"
 
@@ -2402,8 +2494,8 @@ msgid "Empty"
 msgstr "فارغ"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "End"
 msgstr "النهاية"
 
@@ -2502,6 +2594,8 @@ msgstr "هل تريد إنهاء هذا العقد وتحرير الموقف؟"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_report_wizard__contract_status__expired
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "Expired"
 msgstr "منتهي"
 
@@ -2523,6 +2617,8 @@ msgstr "ينتهي قريباً"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "Expiring within 30 days"
 msgstr "تنتهي خلال 30 يوماً"
 
@@ -2549,11 +2645,18 @@ msgid "Failed"
 msgstr "فشل"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Fees"
+msgstr "الرسوم"
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_contract__parking_product_id
 msgid ""
 "Filled from the spot type when the spot is chosen. Leave empty to use the "
 "default parking service."
-msgstr "يُعبأ تلقائياً من نوع الموقف عند اختيار الموقف. اتركه فارغاً لاستخدام خدمة المواقف الافتراضية."
+msgstr ""
+"يُعبأ تلقائياً من نوع الموقف عند اختيار الموقف. اتركه فارغاً لاستخدام خدمة "
+"المواقف الافتراضية."
 
 #. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_report_spots
@@ -2595,12 +2698,13 @@ msgstr "الوصول الأول"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Floor"
 msgstr "الطابق"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__floor
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Floor / Zone"
 msgstr "الطابق / المنطقة"
 
@@ -2652,6 +2756,7 @@ msgstr "حقول نموذج"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__start_date
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "From"
 msgstr "من"
 
@@ -2748,6 +2853,11 @@ msgstr "البوابة المستخدمة لإشعارات واتساب."
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid "Gateways"
 msgstr "البوابات"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "General Notes"
+msgstr "ملاحظات عامة"
 
 #. module: parking_management
 #: model:parking.terms.conditions,name:parking_management.parking_terms_default
@@ -2864,6 +2974,11 @@ msgstr "طريقة HTTP"
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__id
 msgid "ID"
 msgstr "المعرف"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "ID / VAT Number"
+msgstr "رقم الهوية / الرقم الضريبي"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__activity_exception_icon
@@ -2992,6 +3107,11 @@ msgid "Inspection Date"
 msgstr "تاريخ الفحص"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "Inspection Details"
+msgstr "تفاصيل الفحص"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__inspection_notes
 msgid "Inspection Notes"
 msgstr "ملاحظات الفحص"
@@ -3029,8 +3149,14 @@ msgstr "الفحوصات: إدارة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__inspector_id
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Inspector"
 msgstr "المنفذ"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "Inspector Signature"
+msgstr "توقيع الفاحص"
 
 #. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_documents_03
@@ -3169,6 +3295,7 @@ msgstr ""
 #. module: parking_management
 #: model:res.groups,name:parking_management.group_parking_invoicing
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Invoicing"
 msgstr "الفواتير"
 
@@ -3221,6 +3348,7 @@ msgstr "المفتاح"
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__key_slot
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__key_slot
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__key_slot
+#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Key Box Slot"
 msgstr "خانة صندوق المفاتيح"
 
@@ -3231,6 +3359,7 @@ msgstr "حالة المفتاح"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__key_tag
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Key Tag No."
 msgstr "رقم بطاقة المفتاح"
@@ -3393,9 +3522,10 @@ msgstr "رقم الرخصة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__license_plate
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__license_plate
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicles_page
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 msgid "License Plate"
 msgstr "رقم اللوحة"
 
@@ -3421,6 +3551,11 @@ msgstr "المنتج المرتبط"
 #: model:ir.model.fields,field_description:parking_management.field_parking_notification_rule__log_count
 msgid "Log Count"
 msgstr "عدد الرسائل"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.external_layout_parking
+msgid "Logo"
+msgstr "الشعار"
 
 #. module: parking_management
 #. odoo-python
@@ -3577,10 +3712,10 @@ msgstr "المرايا"
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_vehicle_model
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__model
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__model
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicles_page
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
 msgid "Model"
 msgstr "الموديل"
 
@@ -3600,6 +3735,11 @@ msgstr "شهري"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__allowance
 msgid "Monthly allowance"
 msgstr "الرصيد الشهري"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Monthly total"
+msgstr "الإجمالي الشهري"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__months
@@ -3697,6 +3837,7 @@ msgstr "غير متوفر"
 #: model:ir.model.fields,field_description:parking_management.field_parking_notification_rule__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__name
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Name"
 msgstr "الاسم"
 
@@ -3902,6 +4043,11 @@ msgid "No messages yet"
 msgstr "لا توجد رسائل بعد"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+msgid "No movements recorded."
+msgstr "لا توجد حركات مسجلة."
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "No movements yet."
@@ -3922,6 +4068,15 @@ msgstr "لا توجد فواتير أو دفعات مرحّلة بعد."
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_revenue_analysis
 msgid "No posted parking invoices yet"
 msgstr "لا توجد فواتير مواقف مرحّلة بعد"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "No records."
+msgstr "لا توجد سجلات."
 
 #. module: parking_management
 #. odoo-python
@@ -4006,6 +4161,8 @@ msgstr "ملاحظة"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_form
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Notes"
 msgstr "ملاحظات"
 
@@ -4132,6 +4289,8 @@ msgstr "الإشغال حسب الفرع"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot_status_log__old_status__occupied
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_report_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Occupied"
 msgstr "مشغول"
 
@@ -4196,6 +4355,7 @@ msgstr ""
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_service_line__billing_type__one_time
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_service__billing_type__one_time
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Once"
 msgstr "مرة واحدة"
 
@@ -4212,6 +4372,11 @@ msgid ""
 msgstr ""
 "فاتورة واحدة تغطي كل الأشهر المتبقية حتى تاريخ الانتهاء، وتتوقف الفواتير الدورية.\n"
 "                    اختر شروط دفع بالأقساط لتقسيمها على عدة تواريخ استحقاق، ويمكن للعميل أيضاً دفع أي مبلغ في أي وقت."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "One-time charges"
+msgstr "رسوم لمرة واحدة"
 
 #. module: parking_management
 #. odoo-python
@@ -4332,7 +4497,9 @@ msgstr "متأخرة السداد"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_owner_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__owner_id
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 msgid "Owner"
 msgstr "المالك"
 
@@ -4357,6 +4524,11 @@ msgstr "جوال المالك"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__http_method__post
 msgid "POST"
 msgstr "POST"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.external_layout_parking
+msgid "Page <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr "الصفحة <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__amount_paid
@@ -4442,6 +4614,7 @@ msgstr "الفروع"
 #: model:ir.model,name:parking_management.model_parking_contract
 #: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_contract_id
 #: model:ir.model.fields,field_description:parking_management.field_account_move__parking_contract_id
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Parking Contract"
 msgstr "عقد موقف"
 
@@ -4517,10 +4690,20 @@ msgid "Parking Spot Type"
 msgstr "نوع الموقف"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Parking Spot and Vehicles"
+msgstr "الموقف والمركبات"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Parking Spots"
 msgstr "المواقف"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+msgid "Parking Spots Summary"
+msgstr "ملخص المواقف"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_picking_id
@@ -4536,6 +4719,16 @@ msgid ""
 msgstr ""
 "فروع مواقف السيارات التي يُسمح لهذا المستخدم برؤيتها والعمل عليها. اتركه "
 "فارغاً لمنح الوصول إلى جميع الفروع."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Parking rent"
+msgstr "إيجار الموقف"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Parking rent ("
+msgstr "إيجار الموقف ("
 
 #. module: parking_management
 #: model:ir.actions.server,name:parking_management.cron_generate_parking_invoices_ir_actions_server
@@ -4598,6 +4791,11 @@ msgid "Payments"
 msgstr "الدفعات"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Per month"
+msgstr "شهرياً"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid "Period"
 msgstr "الفترة"
@@ -4620,6 +4818,7 @@ msgstr "البيانات الشخصية"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__phone
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__phone
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Phone"
 msgstr "الهاتف"
 
@@ -4636,6 +4835,7 @@ msgstr "صورة"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__photo_ids
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Photos"
 msgstr "الصور"
@@ -4880,6 +5080,12 @@ msgid "Q%(q)s %(y)s"
 msgstr "الربع %(q)s %(y)s"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Qty"
+msgstr "الكمية"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__quantity
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__quantity
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__quantity
@@ -4973,6 +5179,7 @@ msgstr "تم الاستلام (دخول)"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__operator_in_id
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 msgid "Received By"
 msgstr "المشغل (عودة)"
 
@@ -5013,7 +5220,7 @@ msgstr "المرجع"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__name
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
-#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 #: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Reference"
 msgstr "المرجع"
@@ -5046,6 +5253,11 @@ msgstr "مبلغ مسترد عن %s"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Refundable Deposit / Insurance - %(ref)s"
 msgstr "تأمين مسترد - %(ref)s"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Refundable deposit"
+msgstr "تأمين مسترد"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_deposit_account_id
@@ -5100,6 +5312,11 @@ msgid "Remaining term %(start)s - %(end)s"
 msgstr "المدة المتبقية %(start)s - %(end)s"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Remaining term paid in advance until"
+msgstr "المدة المتبقية مدفوعة مقدماً حتى"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
 msgid "Remarks about the vehicle condition..."
 msgstr "ملاحظات عن حالة المركبة..."
@@ -5133,11 +5350,6 @@ msgid "Renewed by contract %s."
 msgstr "تم تجديده بالعقد %s."
 
 #. module: parking_management
-#: model:ir.model,name:parking_management.model_ir_actions_report
-msgid "Report Action"
-msgstr "إجراء التقرير"
-
-#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_report_wizard_form
 msgid "Report Sections"
 msgstr "أقسام التقرير"
@@ -5157,6 +5369,8 @@ msgstr "جسم الطلب"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot_status_log__new_status__reserved
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot_status_log__old_status__reserved
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_report_search
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Reserved"
 msgstr "محجوز"
 
@@ -5195,6 +5409,7 @@ msgstr "المستخدم المسؤول"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__result
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Result"
 msgstr "النتيجة"
 
@@ -5222,6 +5437,7 @@ msgstr "عادت"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__check_in_time
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
 msgid "Returned At"
 msgstr "دخول / استلام"
 
@@ -5402,6 +5618,7 @@ msgstr "الترتيب"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__service_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__service_id
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
 msgid "Service"
 msgstr "الخدمة"
 
@@ -5435,13 +5652,14 @@ msgstr "اسم الخدمة"
 msgid ""
 "Service product used on the invoices of contracts for spots of this type "
 "(revenue account and taxes). Leave empty to use the default parking service."
-msgstr "منتج الخدمة المستخدم في فواتير عقود مواقف هذا النوع (حساب الإيراد والضرائب). اتركه فارغاً لاستخدام خدمة المواقف الافتراضية."
+msgstr ""
+"منتج الخدمة المستخدم في فواتير عقود مواقف هذا النوع (حساب الإيراد والضرائب)."
+" اتركه فارغاً لاستخدام خدمة المواقف الافتراضية."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__5
 #: model:ir.ui.menu,name:parking_management.menu_parking_services
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
 msgid "Services"
 msgstr "الخدمات"
 
@@ -5515,11 +5733,13 @@ msgstr "الموقف المصدر"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__spot_id
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__4
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Spot"
 msgstr "الموقف"
@@ -5550,6 +5770,7 @@ msgstr "سجل حالات المواقف"
 #: model:ir.model.fields,field_description:parking_management.field_parking_price_template__spot_type
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__spot_type
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__spot_type_id
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Spot Type"
 msgstr "نوع الموقف"
 
@@ -5634,8 +5855,8 @@ msgid "Standard"
 msgstr "عادي"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 msgid "Start"
 msgstr "البداية"
 
@@ -5671,11 +5892,14 @@ msgstr "الحالة"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Status"
 msgstr "الحالة"
@@ -5799,6 +6023,7 @@ msgstr ""
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Subscription"
 msgstr "الاشتراك"
 
@@ -5907,6 +6132,11 @@ msgstr "الشروط والأحكام: إدارة"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid "Terms & Signatures"
 msgstr "الشروط والتواقيع"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "Terms and Conditions"
+msgstr "الشروط والأحكام"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
@@ -6042,6 +6272,7 @@ msgstr "حالة الإطارات والضغط"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__end_date
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "To"
 msgstr "إلى"
 
@@ -6071,7 +6302,10 @@ msgstr "أعلى الأرصدة المستحقة"
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_tree
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Total"
 msgstr "المجموع"
 
@@ -6086,11 +6320,6 @@ msgstr "الإجمالي (بدون ضريبة)"
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 msgid "Total Amount"
 msgstr "المبلغ الإجمالي"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
-msgid "Total Amount:"
-msgstr "المبلغ الإجمالي:"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__spot_count
@@ -6217,8 +6446,10 @@ msgstr "رمز Twilio أو رمز وصول Meta أو مفتاح الواجهة �
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__movement_type
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__kind
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_contracts_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
 msgid "Type"
 msgstr "النوع"
 
@@ -6266,6 +6497,7 @@ msgstr "تكلفة الوحدة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__price_unit
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__price_unit
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_unit
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Unit Price"
 msgstr "سعر الوحدة"
 
@@ -6346,9 +6578,12 @@ msgstr "VIP"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_movements_table
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_spots_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
-#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Vehicle"
 msgstr "مركبة"
@@ -6421,6 +6656,11 @@ msgid "Vehicle Inspection Line"
 msgstr "بند فحص المركبة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "Vehicle Inspection Report"
+msgstr "تقرير فحص المركبة"
+
+#. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_vehicle_inspection
 msgid "Vehicle Inspections"
 msgstr "فحوصات المركبات"
@@ -6444,6 +6684,8 @@ msgstr "تقرير حركة المركبات"
 #: model:ir.actions.act_window,name:parking_management.action_parking_vehicle_movement
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__movement_ids
 #: model:ir.ui.menu,name:parking_management.menu_parking_vehicle_movement
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_report
 msgid "Vehicle Movements"
 msgstr "حركات المركبة"
 
@@ -6522,6 +6764,7 @@ msgstr "المركبات"
 #: model:ir.actions.act_window,name:parking_management.action_parking_report_vehicles
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__include_vehicles
 #: model:ir.ui.menu,name:parking_management.menu_parking_report_vehicles
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
 msgid "Vehicles Registry"
 msgstr "سجل المركبات"
 
@@ -6925,6 +7168,11 @@ msgstr ""
 "                    استخدم <strong>تجديد</strong> لتجهيز الفترة التالية."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
+msgid "days)"
+msgstr "يوم)"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "e.g. Unifonic SMS"
 msgstr "مثال: Unifonic SMS"
@@ -6946,12 +7194,37 @@ msgid "https://api.provider.com/send"
 msgstr "https://api.provider.com/send"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "item(s) failed"
+msgstr "بند غير سليم"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "km."
 msgstr "كم."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_report
+msgid "movement(s)"
+msgstr "حركة"
 
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "renew"
 msgstr "تجديد"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
+msgid "vehicle(s)"
+msgstr "مركبة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
+msgid "· <span>From</span>"
+msgstr "· <span>من</span>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "item(s) not checked"
+msgstr "بند لم يُفحص"

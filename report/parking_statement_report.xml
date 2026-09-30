@@ -22,7 +22,7 @@
                     <strong class="text-danger" t-esc="overdue" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                 </div>
             </div>
-            <table class="table table-sm table-striped mb-0" t-if="rows">
+            <table class="table table-sm table-striped mb-0 o_pm_table" t-if="rows">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -73,13 +73,12 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page">
-                        <h3>Account Statement</h3>
-                        <p>
-                            <strong t-esc="o.partner_id.display_name"/> ·
-                            <span t-esc="o.name"/> · <span t-esc="o.spot_id.display_name"/>
-                            <br/><span class="text-muted">Date: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></span>
-                        </p>
+                    <div class="page o_pm_doc">
+                        <t t-call="parking_management.pm_title">
+                            <t t-set="title">Account Statement</t>
+                            <t t-set="ref" t-value="o.name"/>
+                            <t t-set="subtitle"><t t-esc="o.partner_id.display_name"/> · <t t-esc="o.spot_id.display_name or ''"/></t>
+                        </t>
                         <t t-call="parking_management.statement_table">
                             <t t-set="data" t-value="o._get_statement_data()"/>
                             <t t-set="rows" t-value="data['rows']"/>
@@ -110,14 +109,13 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page">
+                    <div class="page o_pm_doc">
                         <t t-set="data" t-value="o._get_parking_statement_data()"/>
-                        <h3>Parking Account Statement</h3>
-                        <p>
-                            <strong t-esc="o.commercial_partner_id.display_name"/>
-                            <br/><span class="text-muted">Contracts: <t t-esc="', '.join(data['contracts'].mapped('name'))"/></span>
-                            <br/><span class="text-muted">Date: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></span>
-                        </p>
+                        <t t-call="parking_management.pm_title">
+                            <t t-set="title">Parking Account Statement</t>
+                            <t t-set="ref" t-value="o.commercial_partner_id.display_name"/>
+                            <t t-set="subtitle"><span>Contracts</span>: <t t-esc="', '.join(data['contracts'].mapped('name'))"/></t>
+                        </t>
                         <t t-call="parking_management.statement_table">
                             <t t-set="rows" t-value="data['rows']"/>
                             <t t-set="invoiced" t-value="data['invoiced']"/>
