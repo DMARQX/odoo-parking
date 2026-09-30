@@ -97,7 +97,8 @@ class ParkingContract(models.Model):
     last_invoiced_date = fields.Date(string="Last Invoiced Date", readonly=True, copy=False)
     recurring_next_date = fields.Date(string="Next Invoice Date", readonly=True, copy=False)
     parking_product_id = fields.Many2one("product.product", string="Parking Product",
-        domain="[('type', '=', 'service')]", tracking=True)
+        domain="[('type', '=', 'service')]", tracking=True,
+        help="Filled from the spot type when the spot is chosen. Leave empty to use the default parking service.")
     invoice_count = fields.Integer(string="Invoice Count", compute="_compute_invoice_count")
     movement_count = fields.Integer(string="Movements", compute="_compute_related_counts")
     wash_count = fields.Integer(string="Washes", compute="_compute_related_counts")
@@ -215,6 +216,10 @@ class ParkingContract(models.Model):
             if not vals.get("name") or vals.get("name") in ("New", "جديد", "/", _("New")):
                 vals["name"] = contract_seq.next_by_code("parking.contract") or _("New")
             self._check_spot_availability(vals)
+            if not vals.get("parking_product_id") and vals.get("spot_id"):
+                product = self.env["parking.spot"].browse(vals["spot_id"]).spot_type_id.product_id
+                if product:
+                    vals["parking_product_id"] = product.id
         records = super().create(vals_list)
         for record in records:
             if record.auto_invoice:
@@ -275,8 +280,7 @@ class ParkingContract(models.Model):
 
     def _get_invoice_lines_vals(self, period_label, period_start=None, period_end=None, months=None):
         self.ensure_one()
-        product = self.parking_product_id or self.env.ref(
-            "parking_management.product_parking_service", False)
+        product = self._get_parking_product()
         product_id = product.id if product else False
         lines = []
         acc_vals = self._get_line_accounting_vals(period_start, period_end, deferrable=True)
@@ -458,8 +462,17 @@ class ParkingContract(models.Model):
                              days=(self.end_date - self.start_date).days + 1),
             }}
 
+    def _get_parking_product(self):
+        """Product for the rent line: the contract's, else the spot type's, else the default service."""
+        self.ensure_one()
+        return (self.parking_product_id or self.spot_id.spot_type_id.product_id
+                or self.env.ref("parking_management.product_parking_service", False)
+                or self.env["product.product"])
+
     @api.onchange("spot_id")
     def _onchange_spot_id_pricing(self):
+        if self.spot_id.spot_type_id.product_id:
+            self.parking_product_id = self.spot_id.spot_type_id.product_id
         if self.spot_id.price_tmpl_id and not self.price_tmpl_id:
             self.price_tmpl_id = self.spot_id.price_tmpl_id
             self._onchange_price_tmpl_id()

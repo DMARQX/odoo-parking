@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 00:59+0000\n"
-"PO-Revision-Date: 2026-09-30 00:59+0000\n"
+"POT-Creation-Date: 2026-09-30 12:23+0000\n"
+"PO-Revision-Date: 2026-09-30 12:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,9 @@ msgstr ""
 msgid ""
 "\"Every invoice\" lines are billed with each subscription invoice; \"Once\" lines on the next invoice only.\n"
 "                                To sell a product on its own invoice use <strong>Sell / Add Charge</strong>."
-msgstr "بنود \"كل فاتورة\" تُفوتر مع كل فاتورة اشتراك، وبنود \"مرة واحدة\" في الفاتورة القادمة فقط.\n                                لبيع منتج بفاتورة مستقلة استخدم <strong>بيع / إضافة رسوم</strong>."
+msgstr ""
+"بنود \"كل فاتورة\" تُفوتر مع كل فاتورة اشتراك، وبنود \"مرة واحدة\" في الفاتورة القادمة فقط.\n"
+"                                لبيع منتج بفاتورة مستقلة استخدم <strong>بيع / إضافة رسوم</strong>."
 
 #. module: parking_management
 #. odoo-python
@@ -437,7 +439,9 @@ msgstr ""
 msgid ""
 "A separate invoice is issued now and linked to the contract; stock products "
 "leave the branch warehouse when it is posted."
-msgstr "تصدر فاتورة مستقلة الآن وترتبط بالعقد، وتُصرف المنتجات المخزنية من مستودع الفرع عند ترحيلها."
+msgstr ""
+"تصدر فاتورة مستقلة الآن وترتبط بالعقد، وتُصرف المنتجات المخزنية من مستودع "
+"الفرع عند ترحيلها."
 
 #. module: parking_management
 #. odoo-python
@@ -897,7 +901,8 @@ msgstr "تُفوتر في الفاتورة القادمة"
 msgid ""
 "Billed once on the contract's next invoice. Washes are added to the balance "
 "right away."
-msgstr "تُفوتر مرة واحدة في فاتورة العقد القادمة، وتُضاف الغسلات إلى الرصيد فوراً."
+msgstr ""
+"تُفوتر مرة واحدة في فاتورة العقد القادمة، وتُضاف الغسلات إلى الرصيد فوراً."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__mode
@@ -2469,14 +2474,18 @@ msgid ""
 "Every invoice: a subscription add-on billed with each periodic invoice (e.g."
 " a monthly wash package). Once: a sale billed a single time (e.g. a "
 "product)."
-msgstr "كل فاتورة: إضافة على الاشتراك تُفوتر مع كل فاتورة دورية (مثل باقة غسيل شهرية). مرة واحدة: بيع يُفوتر مرة واحدة فقط (مثل منتج)."
+msgstr ""
+"كل فاتورة: إضافة على الاشتراك تُفوتر مع كل فاتورة دورية (مثل باقة غسيل "
+"شهرية). مرة واحدة: بيع يُفوتر مرة واحدة فقط (مثل منتج)."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_contract_service_line__billing_type
 msgid ""
 "Every invoice: billed with each periodic invoice. Once: billed on the next "
 "invoice only."
-msgstr "كل فاتورة: تُفوتر مع كل فاتورة دورية. مرة واحدة: تُفوتر في الفاتورة القادمة فقط."
+msgstr ""
+"كل فاتورة: تُفوتر مع كل فاتورة دورية. مرة واحدة: تُفوتر في الفاتورة القادمة "
+"فقط."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -2538,6 +2547,13 @@ msgstr "راسب"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_message_log_search
 msgid "Failed"
 msgstr "فشل"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__parking_product_id
+msgid ""
+"Filled from the spot type when the spot is chosen. Leave empty to use the "
+"default parking service."
+msgstr "يُعبأ تلقائياً من نوع الموقف عند اختيار الموقف. اتركه فارغاً لاستخدام خدمة المواقف الافتراضية."
 
 #. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_report_spots
@@ -4161,7 +4177,10 @@ msgid ""
 "On: washes left from a month stay in the balance. Off: unused monthly washes"
 " expire when the next month's washes are added (purchased washes never "
 "expire)."
-msgstr "مفعّل: تبقى غسلات الشهر غير المستخدمة في الرصيد. معطّل: تنتهي الغسلات الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي (الغسلات المشتراة لا تنتهي)."
+msgstr ""
+"مفعّل: تبقى غسلات الشهر غير المستخدمة في الرصيد. معطّل: تنتهي الغسلات "
+"الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي (الغسلات المشتراة لا "
+"تنتهي)."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
@@ -4169,7 +4188,10 @@ msgid ""
 "On: washes left from a month stay in the contract's balance. Off: unused "
 "monthly washes expire when the next month's washes are added. Purchased "
 "washes never expire."
-msgstr "مفعّل: تبقى غسلات الشهر غير المستخدمة في رصيد العقد. معطّل: تنتهي الغسلات الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي. الغسلات المشتراة لا تنتهي."
+msgstr ""
+"مفعّل: تبقى غسلات الشهر غير المستخدمة في رصيد العقد. معطّل: تنتهي الغسلات "
+"الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي. الغسلات المشتراة لا "
+"تنتهي."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_service_line__billing_type__one_time
@@ -4187,7 +4209,9 @@ msgstr "مرة واحدة"
 msgid ""
 "One invoice covers every month left until the end date, and the periodic invoices stop.\n"
 "                    Choose instalment payment terms to split it into several due dates; the customer may also pay any amount at any time."
-msgstr "فاتورة واحدة تغطي كل الأشهر المتبقية حتى تاريخ الانتهاء، وتتوقف الفواتير الدورية.\n                    اختر شروط دفع بالأقساط لتقسيمها على عدة تواريخ استحقاق، ويمكن للعميل أيضاً دفع أي مبلغ في أي وقت."
+msgstr ""
+"فاتورة واحدة تغطي كل الأشهر المتبقية حتى تاريخ الانتهاء، وتتوقف الفواتير الدورية.\n"
+"                    اختر شروط دفع بالأقساط لتقسيمها على عدة تواريخ استحقاق، ويمكن للعميل أيضاً دفع أي مبلغ في أي وقت."
 
 #. module: parking_management
 #. odoo-python
@@ -4201,7 +4225,8 @@ msgstr "يمكن فقط خروج المركبات من المواقف المشغ
 msgid ""
 "Only parking services can be added to the contract; invoice other products "
 "now instead."
-msgstr "يمكن إضافة خدمات المواقف فقط إلى العقد، أما المنتجات الأخرى ففوترها الآن."
+msgstr ""
+"يمكن إضافة خدمات المواقف فقط إلى العقد، أما المنتجات الأخرى ففوترها الآن."
 
 #. module: parking_management
 #. odoo-python
@@ -4374,7 +4399,9 @@ msgstr "مواقف - %(spot)s - %(ref)s - %(days)s يوم من %(start)s إلى 
 msgid ""
 "Parking - %(spot)s - %(ref)s - %(months)s month(s) prepaid (%(start)s - "
 "%(end)s)"
-msgstr "مواقف - %(spot)s - %(ref)s - %(months)s شهر مدفوعة مقدماً (%(start)s - %(end)s)"
+msgstr ""
+"مواقف - %(spot)s - %(ref)s - %(months)s شهر مدفوعة مقدماً (%(start)s - "
+"%(end)s)"
 
 #. module: parking_management
 #. odoo-python
@@ -4469,6 +4496,7 @@ msgstr "نظام إدارة المواقف - التحكم في صلاحيات ك
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__parking_product_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__product_id
 msgid "Parking Product"
 msgstr "منتج المواقف"
 
@@ -5403,6 +5431,13 @@ msgid "Service Name"
 msgstr "اسم الخدمة"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_spot_type__product_id
+msgid ""
+"Service product used on the invoices of contracts for spots of this type "
+"(revenue account and taxes). Leave empty to use the default parking service."
+msgstr "منتج الخدمة المستخدم في فواتير عقود مواقف هذا النوع (حساب الإيراد والضرائب). اتركه فارغاً لاستخدام خدمة المواقف الافتراضية."
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_reception_wizard__step__5
 #: model:ir.ui.menu,name:parking_management.menu_parking_services
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -5915,7 +5950,9 @@ msgstr ""
 msgid ""
 "The remaining term was billed in one invoice up to this date; no more "
 "periodic invoices."
-msgstr "فُوترت المدة المتبقية بفاتورة واحدة حتى هذا التاريخ، ولن تصدر فواتير دورية بعدها."
+msgstr ""
+"فُوترت المدة المتبقية بفاتورة واحدة حتى هذا التاريخ، ولن تصدر فواتير دورية "
+"بعدها."
 
 #. module: parking_management
 #. odoo-python
@@ -6652,7 +6689,9 @@ msgstr "المستخدم"
 msgid ""
 "Washes included in the subscription each month. They are added to the wash "
 "balance whenever a subscription invoice is issued."
-msgstr "الغسلات المشمولة في الاشتراك كل شهر، وتُضاف إلى رصيد الغسلات عند إصدار كل فاتورة اشتراك."
+msgstr ""
+"الغسلات المشمولة في الاشتراك كل شهر، وتُضاف إلى رصيد الغسلات عند إصدار كل "
+"فاتورة اشتراك."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__free_wash_count

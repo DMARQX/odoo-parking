@@ -8,6 +8,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
+                <field name="product_id" optional="show"/>
                 <field name="active"/>
             </list>
         </field>
@@ -23,6 +24,7 @@
                             <field name="name"/>
                             <field name="code"/>
                             <field name="sequence"/>
+                            <field name="product_id" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="active"/>
