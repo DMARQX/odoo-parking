@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 20:02+0000\n"
-"PO-Revision-Date: 2026-09-30 20:02+0000\n"
+"POT-Creation-Date: 2026-09-30 20:47+0000\n"
+"PO-Revision-Date: 2026-09-30 20:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1700,6 +1700,12 @@ msgid "Contract expiring soon"
 msgstr "العقد ينتهي قريباً"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Contract term"
+msgstr "مدة العقد"
+
+#. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_contract_analysis
 msgid "Contract values by branch, status and month."
 msgstr "قيم العقود حسب الفرع والحالة والشهر."
@@ -2038,6 +2044,11 @@ msgstr "تأمينات العملاء"
 #: code:addons/parking_management/models/parking_messaging.py:0
 msgid "Customer has no mobile number."
 msgstr "لا يوجد رقم جوال للعميل."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Customer's language"
+msgstr "لغة العميل"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__subscription_type__daily
@@ -3211,6 +3222,12 @@ msgid "Invoice Status"
 msgstr "حالة الفاتورة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_invoice_lang
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_invoice_lang
+msgid "Invoice Texts Language"
+msgstr "لغة نصوص الفواتير"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_message_log__event__invoice_created
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_notification_rule__event__invoice_created
 msgid "Invoice created"
@@ -3236,6 +3253,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_charge_wizard__mode__invoice_now
 msgid "Invoice now (separate invoice)"
 msgstr "فوترة الآن (فاتورة مستقلة)"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Invoice texts language"
+msgstr "لغة نصوص الفواتير"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_contract_service_line__invoice_id
@@ -3363,6 +3385,21 @@ msgstr "حالة المفتاح"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Key Tag No."
 msgstr "رقم بطاقة المفتاح"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_invoice_lang
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_invoice_lang
+msgid ""
+"Language of the descriptions the parking module writes on invoices (period, "
+"spot, dates). Leave empty to use each customer's language."
+msgstr "لغة الأوصاف التي يكتبها موديول المواقف في الفواتير (الفترة، الموقف، التواريخ). اتركها فارغة لاستخدام لغة كل عميل."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"Language of the period, spot and dates written on parking invoice lines. "
+"Leave empty to use each customer's language."
+msgstr "لغة الفترة والموقف والتواريخ في بنود فواتير المواقف. اتركها فارغة لاستخدام لغة كل عميل."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_price_template__spot_type__large
@@ -4553,35 +4590,6 @@ msgid "Parking"
 msgstr "المواقف"
 
 #. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_contract.py:0
-msgid "Parking - %(spot)s (%(type)s) - %(ref)s - %(period)s"
-msgstr "مواقف - %(spot)s (%(type)s) - %(ref)s - %(period)s"
-
-#. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_contract.py:0
-msgid ""
-"Parking - %(spot)s - %(ref)s - %(days)s day(s) from %(start)s to %(end)s"
-msgstr "مواقف - %(spot)s - %(ref)s - %(days)s يوم من %(start)s إلى %(end)s"
-
-#. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_contract.py:0
-msgid ""
-"Parking - %(spot)s - %(ref)s - %(months)s month(s) prepaid (%(start)s - "
-"%(end)s)"
-msgstr ""
-"مواقف - %(spot)s - %(ref)s - %(months)s شهر مدفوعة مقدماً (%(start)s - "
-"%(end)s)"
-
-#. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_contract.py:0
-msgid "Parking - %(spot)s - %(ref)s - %(period)s"
-msgstr "مواقف - %(spot)s - %(ref)s - %(period)s"
-
-#. module: parking_management
 #: model:mail.template,name:parking_management.email_template_invoice_created
 msgid "Parking - Invoice Created"
 msgstr "المواقف - تم إنشاء فاتورة"
@@ -4724,6 +4732,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Parking rent"
 msgstr "إيجار الموقف"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Parking rent %(spot)s - %(days)s day(s) (%(start)s - %(end)s)"
+msgstr "إيجار موقف %(spot)s لمدة %(days)s يوم، من %(start)s إلى %(end)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Parking rent %(spot)s - %(months)s month(s) paid in advance (%(start)s - "
+"%(end)s)"
+msgstr "إيجار موقف %(spot)s لمدة %(months)s شهر مدفوعة مقدماً، من %(start)s إلى %(end)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Parking rent %(spot)s - %(period)s (%(start)s - %(end)s)"
+msgstr "إيجار موقف %(spot)s عن %(period)s، من %(start)s إلى %(end)s"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
@@ -5249,15 +5277,15 @@ msgid "Refund paid for %s"
 msgstr "مبلغ مسترد عن %s"
 
 #. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_contract.py:0
-msgid "Refundable Deposit / Insurance - %(ref)s"
-msgstr "تأمين مسترد - %(ref)s"
-
-#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Refundable deposit"
 msgstr "تأمين مسترد"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Refundable deposit - %(ref)s"
+msgstr "تأمين مسترد للعقد %(ref)s"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_deposit_account_id
@@ -5309,7 +5337,7 @@ msgstr "المتبقي"
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Remaining term %(start)s - %(end)s"
-msgstr "المدة المتبقية %(start)s - %(end)s"
+msgstr "المدة المتبقية من %(start)s إلى %(end)s"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
@@ -7199,6 +7227,11 @@ msgid "item(s) failed"
 msgstr "بند غير سليم"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
+msgid "item(s) not checked"
+msgstr "بند لم يُفحص"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "km."
 msgstr "كم."
@@ -7223,8 +7256,3 @@ msgstr "مركبة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
 msgid "· <span>From</span>"
 msgstr "· <span>من</span>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
-msgid "item(s) not checked"
-msgstr "بند لم يُفحص"

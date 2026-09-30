@@ -1,4 +1,5 @@
 from odoo import models, fields
+from odoo.addons.base.models.res_partner import _lang_get
 
 
 class ResCompany(models.Model):
@@ -26,6 +27,11 @@ class ResCompany(models.Model):
         string="Defer Multi-Month Revenue",
         help="Invoice lines covering several months carry their service period so revenue "
              "is recognised month by month (requires deferred revenue in Accounting settings).")
+
+    parking_invoice_lang = fields.Selection(
+        _lang_get, string="Invoice Texts Language",
+        help="Language of the descriptions the parking module writes on invoices (period, spot, dates). "
+             "Leave empty to use each customer's language.")
 
     # Car washes
     parking_wash_carry_over = fields.Boolean(

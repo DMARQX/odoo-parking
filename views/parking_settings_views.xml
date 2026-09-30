@@ -29,6 +29,9 @@
                         <setting help="When a parking invoice is posted, storable products on it are delivered from the branch warehouse and a credit note brings them back. Set each branch's warehouse on the branch form.">
                             <field name="parking_invoice_stock_moves"/>
                         </setting>
+                        <setting string="Invoice texts language" help="Language of the period, spot and dates written on parking invoice lines. Leave empty to use each customer's language.">
+                            <field name="parking_invoice_lang" placeholder="Customer's language"/>
+                        </setting>
                     </block>
                     <block title="Car Washes" name="parking_washes">
                         <setting help="On: washes left from a month stay in the contract's balance. Off: unused monthly washes expire when the next month's washes are added. Purchased washes never expire.">

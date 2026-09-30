@@ -1,5 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.misc import babel_locale_parse, get_lang
+from babel.dates import get_month_names
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 import logging
@@ -227,13 +229,17 @@ class ParkingContract(models.Model):
         return records
 
     def _get_invoice_period_dates(self, from_date=None):
+        """(start, end, label) of the invoice period containing from_date.
+
+        The label is in the language of the environment: call it on _invoice_ctx().
+        """
         self.ensure_one()
         if not from_date:
             from_date = fields.Date.today()
         if self.invoice_period == "monthly":
             period_start = from_date.replace(day=1)
             period_end = period_start + relativedelta(months=1) - timedelta(days=1)
-            label = _("Month of %s") % period_start.strftime("%B %Y")
+            label = self._month_label(period_start)
         elif self.invoice_period == "quarterly":
             quarter_month = ((from_date.month - 1) // 3) * 3 + 1
             period_start = from_date.replace(month=quarter_month, day=1)
@@ -249,8 +255,43 @@ class ParkingContract(models.Model):
         else:
             period_start = self.start_date or from_date
             period_end = self.end_date or from_date
-            label = _("Parking Contract - %s") % self.name
+            label = _("Contract term")
         return period_start, period_end, label
+
+    def _invoice_ctx(self):
+        """The contract in the language of its invoice texts (company setting, else the customer's)."""
+        self.ensure_one()
+        lang = self.company_id.parking_invoice_lang or self.partner_id.lang or self.env.lang or "en_US"
+        return self.with_context(lang=lang)
+
+    def _month_label(self, value):
+        """Month name in the environment language, year and digits kept Western ("سبتمبر 2026")."""
+        try:
+            names = get_month_names("wide", locale=babel_locale_parse(get_lang(self.env).code))
+            return "%s %s" % (names[value.month], value.year)
+        except Exception:
+            return value.strftime("%B %Y")
+
+    def _format_invoice_date(self, value):
+        return value.strftime("%d/%m/%Y") if value else ""
+
+    def _period_origins(self, from_date):
+        """Every source text an invoice of this period may carry: each installed language,
+        plus the wording used before 18.0.4.1.0 ("Month of September 2026")."""
+        self.ensure_one()
+        origins = set()
+        for code, _name in self.env["res.lang"].get_installed():
+            contract = self.with_context(lang=code)
+            origins.add("%s - %s" % (self.name, contract._get_invoice_period_dates(from_date)[2]))
+            origins.add("%s - %s" % (self.name, contract._legacy_period_label(from_date)))
+        return origins
+
+    def _legacy_period_label(self, from_date):
+        if self.invoice_period == "monthly":
+            return _("Month of %s") % from_date.replace(day=1).strftime("%B %Y")
+        if self.invoice_period == "one_time":
+            return _("Parking Contract - %s") % self.name
+        return self._get_invoice_period_dates(from_date)[2]
 
     def _get_period_months(self):
         """Number of monthly fees covered by one invoice of this contract."""
@@ -287,24 +328,18 @@ class ParkingContract(models.Model):
 
         qty = self._get_period_months()
         price = self.amount_total - self.services_total
+        fmt = self._format_invoice_date
         if self.subscription_type == "daily":
             # One line for the whole booking: days x daily price.
             qty = float(self.booking_days or 1)
             price = self._get_day_price()
-            name = _("Parking - %(spot)s - %(ref)s - %(days)s day(s) from %(start)s to %(end)s",
-                     spot=self.spot_id.full_name, ref=self.name, days=self.booking_days,
-                     start=self.start_date, end=self.end_date)
-        elif self.invoice_period == "monthly":
-            name = _("Parking - %(spot)s (%(type)s) - %(ref)s - %(period)s",
-                     spot=self.spot_id.full_name,
-                     type=dict(self._fields["subscription_type"].selection).get(self.subscription_type),
-                     ref=self.name,
-                     period=period_label)
+            name = _("Parking rent %(spot)s - %(days)s day(s) (%(start)s - %(end)s)",
+                     spot=self.spot_id.name, days=self.booking_days,
+                     start=fmt(self.start_date), end=fmt(self.end_date))
         else:
-            name = _("Parking - %(spot)s - %(ref)s - %(period)s",
-                     spot=self.spot_id.full_name,
-                     ref=self.name,
-                     period=period_label)
+            name = _("Parking rent %(spot)s - %(period)s (%(start)s - %(end)s)",
+                     spot=self.spot_id.name, period=period_label,
+                     start=fmt(period_start), end=fmt(period_end))
 
         lines.append((0, 0, dict(acc_vals, **{
             "name": name,
@@ -330,7 +365,7 @@ class ParkingContract(models.Model):
         if self.deposit_amount and not self.deposit_invoiced:
             deposit_account = self.company_id.parking_deposit_account_id
             deposit_line = {
-                "name": _("Refundable Deposit / Insurance - %(ref)s", ref=self.name),
+                "name": _("Refundable deposit - %(ref)s", ref=self.name),
                 "quantity": 1.0,
                 "price_unit": self.deposit_amount,
                 "tax_ids": [(5, 0, 0)],
@@ -348,9 +383,11 @@ class ParkingContract(models.Model):
         self.ensure_one()
         if not invoice_date:
             invoice_date = fields.Date.today()
-        period_start, period_end, label = self._get_invoice_period_dates(invoice_date)
+        contract = self._invoice_ctx()
+        period_start, period_end, label = contract._get_invoice_period_dates(invoice_date)
         origin = "%s - %s" % (self.name, label)
-        if self.invoice_ids.filtered(lambda m: m.state != "cancel" and m.invoice_origin == origin):
+        period_origins = self._period_origins(invoice_date)
+        if self.invoice_ids.filtered(lambda m: m.state != "cancel" and m.invoice_origin in period_origins):
             raise UserError(_("An invoice for %s already exists. Cancel it first to issue a new one.", origin))
         invoice_vals = {
             "move_type": "out_invoice",
@@ -358,7 +395,7 @@ class ParkingContract(models.Model):
             "invoice_date": invoice_date,
             "parking_contract_id": self.id,
             "invoice_origin": origin,
-            "invoice_line_ids": self._get_invoice_lines_vals(label, period_start, period_end),
+            "invoice_line_ids": contract._get_invoice_lines_vals(label, period_start, period_end),
             "invoice_payment_term_id": self._get_payment_term().id,
         }
         one_time = self.service_line_ids._is_billable().filtered(lambda l: l.billing_type == "one_time")
@@ -773,7 +810,7 @@ class ParkingContract(models.Model):
             "partner_id": self.partner_id.id,
             "invoice_date": fields.Date.context_today(self),
             "parking_contract_id": self.id,
-            "invoice_origin": _("%s - Sale", self.name),
+            "invoice_origin": self._invoice_ctx()._sale_origin(),
             "invoice_line_ids": lines,
             "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
         })
@@ -785,6 +822,9 @@ class ParkingContract(models.Model):
         self.env["parking.notification.rule"]._notify("invoice_created", invoice, self.partner_id)
         self._message_log(body=_("Sale invoiced separately: %s", invoice._get_html_link()))
         return invoice
+
+    def _sale_origin(self):
+        return _("%s - Sale", self.name)
 
     def _get_remaining_term(self):
         """(start, end, months) not billed yet, or (False, False, 0)."""
@@ -798,6 +838,13 @@ class ParkingContract(models.Model):
         months = delta.years * 12 + delta.months + (1 if delta.days else 0)
         return start, self.end_date, months
 
+    def _remaining_term_texts(self, start, end, months):
+        fmt = self._format_invoice_date
+        label = _("Remaining term %(start)s - %(end)s", start=fmt(start), end=fmt(end))
+        name = _("Parking rent %(spot)s - %(months)s month(s) paid in advance (%(start)s - %(end)s)",
+                 spot=self.spot_id.name, months=months, start=fmt(start), end=fmt(end))
+        return label, name
+
     def _bill_remaining_term(self, discount=0.0, payment_term=None):
         """One invoice for every month left until the end date; periodic billing stops."""
         self.ensure_one()
@@ -805,15 +852,15 @@ class ParkingContract(models.Model):
         start, end, months = self._get_remaining_term()
         if not months:
             raise UserError(_("Nothing is left to bill on contract %s.", self.name))
-        label = _("Remaining term %(start)s - %(end)s", start=start, end=end)
-        lines = self._get_invoice_lines_vals(label, start, end, months=months)
+        contract = self._invoice_ctx()
+        label, name = contract._remaining_term_texts(start, end, months)
+        lines = contract._get_invoice_lines_vals(label, start, end, months=months)
         main = lines[0][2]
         main.update({
             "quantity": float(months),
             "price_unit": self.price_per_month or self.price_tmpl_id.price_per_month or 0.0,
             "discount": discount or 0.0,
-            "name": _("Parking - %(spot)s - %(ref)s - %(months)s month(s) prepaid (%(start)s - %(end)s)",
-                      spot=self.spot_id.full_name, ref=self.name, months=months, start=start, end=end),
+            "name": name,
         })
         if (self.company_id.parking_use_deferred_revenue and months > 1
                 and "deferred_start_date" in self.env["account.move.line"]._fields):
