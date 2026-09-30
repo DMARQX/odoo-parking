@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shared table: rendered in the contract's "Account Statement" tab and in both PDFs. -->
+    <template id="statement_table">
+        <div class="o_parking_statement">
+            <div class="d-flex flex-wrap gap-3 mb-2">
+                <div class="border rounded px-3 py-2">
+                    <div class="small text-muted">Invoiced</div>
+                    <strong t-esc="invoiced" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+                <div class="border rounded px-3 py-2">
+                    <div class="small text-muted">Paid</div>
+                    <strong class="text-success" t-esc="paid" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+                <div class="border rounded px-3 py-2">
+                    <div class="small text-muted">Balance due</div>
+                    <strong t-attf-class="#{'text-danger' if balance &gt; 0.005 else 'text-success'}"
+                            t-esc="balance" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+                <div class="border rounded px-3 py-2" t-if="overdue &gt; 0.005">
+                    <div class="small text-muted">Overdue</div>
+                    <strong class="text-danger" t-esc="overdue" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+            </div>
+            <table class="table table-sm table-striped mb-0" t-if="rows">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th t-if="contracts[1:]">Contract</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th class="text-end">Charges</th>
+                        <th class="text-end">Payments</th>
+                        <th class="text-end">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="rows" t-as="row">
+                        <td t-esc="row['date']" class="text-nowrap"/>
+                        <td t-esc="row['ref']" class="text-nowrap"/>
+                        <td t-if="contracts[1:]" t-esc="row['contract']"/>
+                        <td t-esc="row['label']"/>
+                        <td t-esc="row['due_date'] or ''" class="text-nowrap"/>
+                        <td class="text-end text-nowrap">
+                            <t t-if="row['debit']" t-esc="row['debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        </td>
+                        <td class="text-end text-nowrap text-success">
+                            <t t-if="row['credit']" t-esc="row['credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        </td>
+                        <td class="text-end text-nowrap fw-bold" t-esc="row['balance']"
+                            t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </tr>
+                </tbody>
+            </table>
+            <p t-else="" class="text-muted mb-0">No posted invoices or payments yet.</p>
+        </div>
+    </template>
+
+    <record id="action_report_parking_statement" model="ir.actions.report">
+        <field name="name">Account Statement</field>
+        <field name="model">parking.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_statement</field>
+        <field name="report_file">parking_management.report_parking_statement</field>
+        <field name="print_report_name">'Statement - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_parking_contract"/>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('parking_management.group_parking_invoicing'))]"/>
+    </record>
+
+    <template id="report_parking_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3>Account Statement</h3>
+                        <p>
+                            <strong t-esc="o.partner_id.display_name"/> ·
+                            <span t-esc="o.name"/> · <span t-esc="o.spot_id.display_name"/>
+                            <br/><span class="text-muted">Date: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></span>
+                        </p>
+                        <t t-call="parking_management.statement_table">
+                            <t t-set="data" t-value="o._get_statement_data()"/>
+                            <t t-set="rows" t-value="data['rows']"/>
+                            <t t-set="invoiced" t-value="data['invoiced']"/>
+                            <t t-set="paid" t-value="data['paid']"/>
+                            <t t-set="balance" t-value="data['balance']"/>
+                            <t t-set="overdue" t-value="data['overdue']"/>
+                            <t t-set="currency" t-value="data['currency']"/>
+                            <t t-set="contracts" t-value="o"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_parking_partner_statement" model="ir.actions.report">
+        <field name="name">Parking Account Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_parking_partner_statement</field>
+        <field name="report_file">parking_management.report_parking_partner_statement</field>
+        <field name="print_report_name">'Parking Statement - %s' % (object.name)</field>
+        <field name="groups_id" eval="[(4, ref('parking_management.group_parking_invoicing'))]"/>
+    </record>
+
+    <template id="report_parking_partner_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <t t-set="data" t-value="o._get_parking_statement_data()"/>
+                        <h3>Parking Account Statement</h3>
+                        <p>
+                            <strong t-esc="o.commercial_partner_id.display_name"/>
+                            <br/><span class="text-muted">Contracts: <t t-esc="', '.join(data['contracts'].mapped('name'))"/></span>
+                            <br/><span class="text-muted">Date: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></span>
+                        </p>
+                        <t t-call="parking_management.statement_table">
+                            <t t-set="rows" t-value="data['rows']"/>
+                            <t t-set="invoiced" t-value="data['invoiced']"/>
+                            <t t-set="paid" t-value="data['paid']"/>
+                            <t t-set="balance" t-value="data['balance']"/>
+                            <t t-set="overdue" t-value="data['overdue']"/>
+                            <t t-set="currency" t-value="data['currency']"/>
+                            <t t-set="contracts" t-value="data['contracts']"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

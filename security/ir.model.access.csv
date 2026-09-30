@@ -55,3 +55,9 @@ access_parking_notification_rule_admin,Admin Notification Rule,model_parking_not
 access_parking_notification_rule_manager,Manage Notification Rule,model_parking_notification_rule,group_parking_manager,1,1,1,1
 access_parking_message_log_admin,Admin Message Log,model_parking_message_log,base.group_system,1,1,1,1
 access_parking_message_log_manager,Manage Message Log,model_parking_message_log,group_parking_manager,1,1,1,1
+access_parking_wash_credit_user,Read Wash Credit,model_parking_wash_credit,group_parking_user,1,0,0,0
+access_parking_wash_credit_manager,Manage Wash Credit,model_parking_wash_credit,group_parking_manager,1,1,1,1
+access_parking_wash_credit_admin,Admin Wash Credit,model_parking_wash_credit,base.group_system,1,1,1,1
+access_parking_charge_wizard_contract,Charge Wizard Contract,model_parking_contract_charge_wizard,group_parking_contract,1,1,1,1
+access_parking_charge_wizard_ops,Charge Wizard Front Desk,model_parking_contract_charge_wizard,group_parking_checkinout,1,1,1,1
+access_parking_prepay_wizard_invoicing,Prepay Wizard,model_parking_contract_prepay_wizard,group_parking_invoicing,1,1,1,1

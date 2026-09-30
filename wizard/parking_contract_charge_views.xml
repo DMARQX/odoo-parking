@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parking_contract_charge_wizard_form" model="ir.ui.view">
+        <field name="name">parking.contract.charge.wizard.form</field>
+        <field name="model">parking.contract.charge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sell / Add Charge">
+                <group>
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="partner_id"/>
+                        <field name="service_id" options="{'no_create': True}"/>
+                        <field name="product_id" options="{'no_create': True}" invisible="service_id"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="quantity"/>
+                        <field name="price_unit"/>
+                        <field name="amount"/>
+                        <field name="wash_credits" invisible="not wash_credits"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="mode" widget="radio"/>
+                </group>
+                <div class="text-muted small" invisible="mode != 'invoice_now'">
+                    A separate invoice is issued now and linked to the contract; stock products leave the branch warehouse when it is posted.
+                </div>
+                <div class="text-muted small" invisible="mode != 'next_invoice'">
+                    Billed once on the contract's next invoice. Washes are added to the balance right away.
+                </div>
+                <div class="text-muted small" invisible="mode != 'recurring'">
+                    Added to the subscription: billed with every periodic invoice until removed.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="parking_contract_prepay_wizard_form" model="ir.ui.view">
+        <field name="name">parking.contract.prepay.wizard.form</field>
+        <field name="model">parking.contract.prepay.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bill Remaining Term">
+                <group>
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="months"/>
+                    </group>
+                    <group>
+                        <field name="monthly_price"/>
+                        <field name="discount"/>
+                        <field name="amount"/>
+                        <field name="payment_term_id" options="{'no_create': True}"/>
+                        <field name="company_currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <div class="alert alert-info mb-0" role="alert">
+                    One invoice covers every month left until the end date, and the periodic invoices stop.
+                    Choose instalment payment terms to split it into several due dates; the customer may also pay any amount at any time.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Create Invoice" class="btn-primary"
+                            invisible="not months"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

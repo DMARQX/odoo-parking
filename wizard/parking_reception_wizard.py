@@ -224,22 +224,27 @@ class ParkingReceptionWizard(models.TransientModel):
         })
 
     def _add_service_lines(self, contract):
-        if not self.service_line_ids or not contract:
+        """Services sold at the counter are invoiced on their own; subscription add-ons join the contract."""
+        lines = self.service_line_ids.filtered("service_id")
+        if not lines or not contract:
             return
-        for line in self.service_line_ids:
-            if not line.service_id:
-                continue
-            self.env["parking.contract.service.line"].create({
+        recurring = lines.filtered(lambda l: l.service_id.billing_type == "recurring")
+        for line in recurring:
+            self.env["parking.contract.service.line"].sudo().create({
                 "contract_id": contract.id,
                 "service_id": line.service_id.id,
                 "quantity": line.quantity,
                 "price_unit": line.price_unit or line.service_id.price,
+                "billing_type": "recurring",
             })
-        wash_packages = self.service_line_ids.filtered(
-            lambda l: l.service_id and l.service_id.category == "wash" and l.service_id.included_washes
-        )
-        if wash_packages:
-            contract.free_wash_count = max(l.service_id.included_washes for l in wash_packages)
+        if recurring:
+            contract._onchange_service_line_ids_wash()
+        sales = lines - recurring
+        if sales:
+            contract._create_charge_invoice([{
+                "service": l.service_id, "product": l.service_id.product_id, "name": l.service_id.name,
+                "quantity": l.quantity, "price_unit": l.price_unit or l.service_id.price,
+            } for l in sales])
 
     def action_confirm(self):
         self.ensure_one()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 17:48+0000\n"
-"PO-Revision-Date: 2026-09-29 17:48+0000\n"
+"POT-Creation-Date: 2026-09-30 00:59+0000\n"
+"PO-Revision-Date: 2026-09-30 00:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,13 @@ msgstr ""
 "        "
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid ""
+"\"Every invoice\" lines are billed with each subscription invoice; \"Once\" lines on the next invoice only.\n"
+"                                To sell a product on its own invoice use <strong>Sell / Add Charge</strong>."
+msgstr "بنود \"كل فاتورة\" تُفوتر مع كل فاتورة اشتراك، وبنود \"مرة واحدة\" في الفاتورة القادمة فقط.\n                                لبيع منتج بفاتورة مستقلة استخدم <strong>بيع / إضافة رسوم</strong>."
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_terms_conditions.py:0
 msgid "%(count)d contracts have been updated."
@@ -96,6 +103,12 @@ msgid "%(hours)sh"
 msgstr "%(hours)s ساعة"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "%s - Sale"
+msgstr "%s - مبيعات"
+
+#. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_comprehensive
 msgid "'Comprehensive-Report-%s' % (time.strftime('%%Y-%%m-%%d'))"
 msgstr "'تقرير-شامل-%s' % (time.strftime('%%Y-%%m-%%d'))"
@@ -116,6 +129,11 @@ msgid "'Inspection_%s' % (object.name or '')"
 msgstr "'فحص_%s' % (object.name or '')"
 
 #. module: parking_management
+#: model:ir.actions.report,print_report_name:parking_management.action_report_parking_partner_statement
+msgid "'Parking Statement - %s' % (object.name)"
+msgstr "'كشف حساب المواقف - %s' % (object.name)"
+
+#. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_contract
 msgid "'Parking-Contract-%s' % (object.name)"
 msgstr "'عقد-مواقف-%s' % (object.name)"
@@ -129,6 +147,11 @@ msgstr "'تقرير-الخدمات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_spots_summary
 msgid "'Spots-Summary-%s' % (time.strftime('%%Y-%%m-%%d'))"
 msgstr "'ملخص-المواقف-%s' % (time.strftime('%%Y-%%m-%%d'))"
+
+#. module: parking_management
+#: model:ir.actions.report,print_report_name:parking_management.action_report_parking_statement
+msgid "'Statement - %s' % (object.name)"
+msgstr "'كشف حساب - %s' % (object.name)"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicle_movement_from_vehicle
@@ -148,12 +171,12 @@ msgstr "'سجل-المركبات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "05XXXXXXXX"
-msgstr ""
+msgstr "05XXXXXXXX"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_header
 msgid ":<br/>"
-msgstr ""
+msgstr ":<br/>"
 
 #. module: parking_management
 #: model_terms:parking.terms.conditions,content:parking_management.parking_terms_default
@@ -335,6 +358,11 @@ msgid "<span class=\"o_stat_text\">Movements</span>"
 msgstr "<span class=\"o_stat_text\">الحركات</span>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.view_partner_form_parking
+msgid "<span class=\"o_stat_text\">Parking Statement</span>"
+msgstr "<span class=\"o_stat_text\">كشف حساب المواقف</span>"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.view_move_form_parking
 msgid "<span class=\"o_stat_text\">Stock Transfer</span>"
 msgstr "<span class=\"o_stat_text\">حركة المخزون</span>"
@@ -405,6 +433,13 @@ msgstr ""
 "و<code>{sender}</code> عند الإرسال."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
+msgid ""
+"A separate invoice is issued now and linked to the contract; stock products "
+"leave the branch warehouse when it is posted."
+msgstr "تصدر فاتورة مستقلة الآن وترتبط بالعقد، وتُصرف المنتجات المخزنية من مستودع الفرع عند ترحيلها."
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_spot.py:0
 msgid "A spot with an active contract cannot be put under maintenance."
@@ -424,6 +459,14 @@ msgstr "إصدار API"
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__account_sid
 msgid "Account SID / App ID"
 msgstr "معرّف الحساب / التطبيق"
+
+#. module: parking_management
+#: model:ir.actions.report,name:parking_management.action_report_parking_statement
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__statement_html
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_statement
+msgid "Account Statement"
+msgstr "كشف الحساب"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
@@ -558,6 +601,29 @@ msgid "Activity Type Icon"
 msgstr "أيقونة نوع النشاط"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Add Washes"
+msgstr "إضافة غسلات"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_charge_wizard__mode__recurring
+msgid "Add to every invoice (subscription add-on)"
+msgstr "إضافة إلى كل فاتورة (إضافة على الاشتراك)"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_charge_wizard__mode__next_invoice
+msgid "Add to the next invoice (once)"
+msgstr "إضافة إلى الفاتورة القادمة (مرة واحدة)"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
+msgid ""
+"Added to the subscription: billed with every periodic invoice until removed."
+msgstr "تُضاف إلى الاشتراك: تُفوتر مع كل فاتورة دورية حتى تُحذف."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_driver_form
 msgid "Additional"
 msgstr "إضافي"
@@ -649,6 +715,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__analytic_account_id
 msgid "Analytic Account"
 msgstr "الحساب التحليلي"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_charge_wizard__product_id
+msgid "Any product not set up as a parking service."
+msgstr "أي منتج غير معرّف كخدمة مواقف."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_notification_rule__wa_template
@@ -776,8 +847,14 @@ msgid "Back in Service"
 msgstr "إعادة للخدمة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Balance"
+msgstr "الرصيد"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Balance due"
 msgstr "الرصيد المستحق"
 
@@ -795,6 +872,39 @@ msgstr "أساسية (مستخدم + مفتاح)"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__auth_type__bearer
 msgid "Bearer token"
 msgstr "رمز Bearer"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_contract_prepay_wizard
+msgid "Bill Remaining Contract Term"
+msgstr "فوترة المدة المتبقية من العقد"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_prepay_wizard_form
+msgid "Bill Remaining Term"
+msgstr "فوترة المدة المتبقية"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_contract_charge_wizard.py:0
+msgid "Billed on the next invoice"
+msgstr "تُفوتر في الفاتورة القادمة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
+msgid ""
+"Billed once on the contract's next invoice. Washes are added to the balance "
+"right away."
+msgstr "تُفوتر مرة واحدة في فاتورة العقد القادمة، وتُضاف الغسلات إلى الرصيد فوراً."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__mode
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__billing_type
+#: model:ir.model.fields,field_description:parking_management.field_parking_service__billing_type
+msgid "Billing"
+msgstr "الفوترة"
 
 #. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_exterior_01
@@ -1010,7 +1120,9 @@ msgid "Can manage vehicle checkpoints."
 msgstr "يمكن إدارة نقاط فحص المركبات."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_prepay_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_report_wizard_form
@@ -1074,6 +1186,7 @@ msgstr "سجل غسيل السيارات"
 #: model:ir.ui.menu,name:parking_management.menu_parking_wash
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid "Car Washes"
 msgstr "عمليات الغسيل"
 
@@ -1096,6 +1209,12 @@ msgid "Carpet / Floor Mats"
 msgstr "السجاد / حصيرات الأرضية"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_wash_carry_over
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_wash_carry_over
+msgid "Carry Over Unused Washes"
+msgstr "ترحيل الغسلات غير المستخدمة"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_service__category
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__category
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__category
@@ -1115,6 +1234,17 @@ msgstr "تاريخ التغيير"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_message_log_search
 msgid "Channel"
 msgstr "القناة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Charges"
+msgstr "الرسوم"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_contract_charge_wizard.py:0
+msgid "Charges can only be added to confirmed or active contracts."
+msgstr "لا يمكن إضافة رسوم إلا على العقود المؤكدة أو النشطة."
 
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_checkin_wizard
@@ -1162,6 +1292,17 @@ msgstr "نقطة الفحص"
 #: model:ir.ui.menu,name:parking_management.menu_parking_vehicle_checkpoint
 msgid "Checkpoints"
 msgstr "نقاط الفحص"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_contract_charge_wizard.py:0
+msgid "Choose a service or a product."
+msgstr "اختر خدمة أو منتجاً."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_prepay_wizard__payment_term_id
+msgid "Choose instalments here to split the invoice into several due dates."
+msgstr "اختر شروط دفع بالأقساط هنا لتقسيم الفاتورة على عدة تواريخ استحقاق."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
@@ -1217,6 +1358,7 @@ msgstr "الشركات"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__company_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__company_id
@@ -1234,6 +1376,7 @@ msgstr "الشركات"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__company_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__company_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__company_id
 msgid "Company"
 msgstr "الشركة"
@@ -1309,6 +1452,7 @@ msgid "Configuration: Pricing & Services"
 msgstr "الإعدادات: الأسعار والخدمات"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
 msgid "Confirm"
@@ -1348,6 +1492,11 @@ msgid "Consumed Supplies"
 msgstr "المواد المستهلكة"
 
 #. module: parking_management
+#: model:ir.model,name:parking_management.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__content
 msgid "Content"
 msgstr "المحتوى"
@@ -1355,10 +1504,13 @@ msgstr "المحتوى"
 #. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__contract_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__contract_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__contract_id
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contracts_page
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
@@ -1366,6 +1518,7 @@ msgstr "المحتوى"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicles_registry
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Contract"
 msgstr "العقد"
 
@@ -1434,6 +1587,11 @@ msgstr "بند خدمة العقد"
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__contract_status
 msgid "Contract Status"
 msgstr "حالة العقد"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_wash_credit
+msgid "Contract Wash Credit"
+msgstr "رصيد غسلات العقد"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_message_log__event__contract_activated
@@ -1553,6 +1711,11 @@ msgid "Contracts to Collect"
 msgstr "عقود للتحصيل"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
+msgid "Contracts:"
+msgstr "العقود:"
+
+#. module: parking_management
 #: model:res.groups,name:parking_management.group_parking_contract
 msgid "Contracts: Create / Edit"
 msgstr "العقود: إنشاء / تعديل"
@@ -1585,6 +1748,7 @@ msgstr ""
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_prepay_wizard_form
 msgid "Create Invoice"
 msgstr "إنشاء فاتورة"
 
@@ -1612,6 +1776,8 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__create_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__create_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__create_uid
@@ -1638,6 +1804,7 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__create_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__create_uid
 msgid "Created by"
 msgstr "تم بواسطة"
@@ -1646,6 +1813,8 @@ msgstr "تم بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__create_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__create_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__create_date
@@ -1672,12 +1841,21 @@ msgstr "تم بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__create_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__create_date
 msgid "Created on"
 msgstr "تاريخ الإنشاء"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Credit note"
+msgstr "إشعار دائن"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__company_currency_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__company_currency_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_price_template__company_currency_id
@@ -1706,6 +1884,7 @@ msgstr "ترويسة مخصصة"
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__partner_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__partner_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__partner_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__partner_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__partner_id
@@ -1802,6 +1981,7 @@ msgstr "لوحة القيادة / أدوات التحكم"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__date
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__date
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_message_log_list
@@ -1810,8 +1990,15 @@ msgstr "لوحة القيادة / أدوات التحكم"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_search
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Date"
 msgstr "التاريخ"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_statement
+msgid "Date:"
+msgstr "التاريخ:"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_status_log_search
@@ -2021,12 +2208,14 @@ msgstr "تم إصدار فاتورة الوديعة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__name
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__name
 #: model:ir.model.fields,field_description:parking_management.field_parking_service__description
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__description
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__description
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_transfer_type_form
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Description"
 msgstr "الوصف"
 
@@ -2046,6 +2235,16 @@ msgid "Detailed Report"
 msgstr "تقرير مفصل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__discount
+msgid "Discount (%)"
+msgstr "الخصم (%)"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_prepay_wizard__discount
+msgid "Discount for paying the remaining term at once."
+msgstr "خصم مقابل دفع المدة المتبقية دفعة واحدة."
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__display_name
 msgid "Display"
 msgstr "العرض"
@@ -2054,6 +2253,8 @@ msgstr "العرض"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__display_name
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__display_name
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__display_name
@@ -2073,6 +2274,7 @@ msgstr "العرض"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__display_name
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
@@ -2138,6 +2340,11 @@ msgstr "السائقون"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_tree
 msgid "Due"
 msgstr "المستحق"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__duration_hours
@@ -2251,6 +2458,27 @@ msgid ""
 msgstr "تظهر هنا كل رسالة SMS أو واتساب أُرسلت للعملاء مع رد المزود."
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_service_line__billing_type__recurring
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_service__billing_type__recurring
+msgid "Every invoice"
+msgstr "كل فاتورة"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_service__billing_type
+msgid ""
+"Every invoice: a subscription add-on billed with each periodic invoice (e.g."
+" a monthly wash package). Once: a sale billed a single time (e.g. a "
+"product)."
+msgstr "كل فاتورة: إضافة على الاشتراك تُفوتر مع كل فاتورة دورية (مثل باقة غسيل شهرية). مرة واحدة: بيع يُفوتر مرة واحدة فقط (مثل منتج)."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_service_line__billing_type
+msgid ""
+"Every invoice: billed with each periodic invoice. Once: billed on the next "
+"invoice only."
+msgstr "كل فاتورة: تُفوتر مع كل فاتورة دورية. مرة واحدة: تُفوتر في الفاتورة القادمة فقط."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid "Expire"
 msgstr "إنهاء"
@@ -2267,6 +2495,11 @@ msgstr "هل تريد إنهاء هذا العقد وتحرير الموقف؟"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
 msgid "Expired"
 msgstr "منتهي"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__expiry
+msgid "Expired (no carry-over)"
+msgstr "منتهية (بدون ترحيل)"
 
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_contract_expiring
@@ -2402,9 +2635,9 @@ msgid "Form fields"
 msgstr "حقول نموذج"
 
 #. module: parking_management
-#: model:ir.model.fields,field_description:parking_management.field_parking_contract__free_wash_count
-msgid "Free Washes Included"
-msgstr "رصيد الغسيل المجاني"
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__start_date
+msgid "From"
+msgstr "من"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__date_from
@@ -2478,7 +2711,7 @@ msgstr "تمت الفوترة"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__http_method__get
 msgid "GET"
-msgstr ""
+msgstr "GET"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__gateway_id
@@ -2583,6 +2816,8 @@ msgstr "طريقة HTTP"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__id
@@ -2609,6 +2844,7 @@ msgstr "طريقة HTTP"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__id
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__id
 msgid "ID"
 msgstr "المعرف"
@@ -2713,7 +2949,9 @@ msgstr "عدد الغسلات المتضمنة"
 msgid ""
 "Inconsistent times recorded before this was enforced (return before exit, "
 "return without exit, or no time at all). Check and correct them."
-msgstr "أوقات غير متسقة سُجّلت قبل تطبيق التحقق (عودة قبل الخروج، أو عودة بلا خروج، أو بلا أوقات). راجعها وصححها."
+msgstr ""
+"أوقات غير متسقة سُجّلت قبل تطبيق التحقق (عودة قبل الخروج، أو عودة بلا خروج، "
+"أو بلا أوقات). راجعها وصححها."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__inspection_id
@@ -2808,6 +3046,9 @@ msgid "Invalid payload template: %s"
 msgstr "قالب البيانات غير صالح: %s"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__invoice_id
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 msgid "Invoice"
 msgstr "الفاتورة"
@@ -2850,15 +3091,36 @@ msgstr ""
 "تفعيل الإيراد المؤجل في إعدادات المحاسبة)."
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_charge_wizard__mode__invoice_now
+msgid "Invoice now (separate invoice)"
+msgstr "فوترة الآن (فاتورة مستقلة)"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_service_line__invoice_id
+msgid "Invoice that billed this one-time line."
+msgstr "الفاتورة التي فُوتر فيها هذا البند."
+
+#. module: parking_management
 #: model:mail.template,subject:parking_management.email_template_invoice_created
 msgid "Invoice {{ object.name }} - Parking Contract"
 msgstr "الفاتورة {{ object.name }} - عقد مواقف"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__amount_invoiced
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Invoiced"
+msgstr "المفوتر"
 
 #. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Invoiced (untaxed)"
 msgstr "المفوتر (بدون ضريبة)"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__invoice_id
+msgid "Invoiced On"
+msgstr "فُوتر في"
 
 #. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_revenue_analysis
@@ -2993,6 +3255,8 @@ msgstr "نتيجة آخر اختبار"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__write_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__write_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__write_uid
@@ -3019,6 +3283,7 @@ msgstr "نتيجة آخر اختبار"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__write_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
@@ -3027,6 +3292,8 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__write_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__write_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__write_date
@@ -3053,6 +3320,7 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__write_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
@@ -3193,6 +3461,11 @@ msgid "Manager"
 msgstr "مدير"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__manual
+msgid "Manual adjustment"
+msgstr "تعديل يدوي"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_form
 msgid "Mark as Done"
 msgstr "تحديد كمنجز"
@@ -3308,6 +3581,16 @@ msgid "Monthly"
 msgstr "شهري"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__allowance
+msgid "Monthly allowance"
+msgstr "الرصيد الشهري"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__months
+msgid "Months"
+msgstr "الأشهر"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_price_template__spot_type__motorcycle
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot__spot_type__motorcycle
 #: model:parking.spot.type,name:parking_management.parking_spot_type_motorcycle
@@ -3355,7 +3638,9 @@ msgstr "الحركات"
 msgid ""
 "Movements are recorded from \"Receive Vehicle\" / \"Deliver Vehicle\": each "
 "one is a trip from delivery to return."
-msgstr "تُسجَّل الحركات من «استلام مركبة» / «تسليم مركبة»: كل حركة رحلة من التسليم حتى العودة."
+msgstr ""
+"تُسجَّل الحركات من «استلام مركبة» / «تسليم مركبة»: كل حركة رحلة من التسليم "
+"حتى العودة."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__my_activity_date_deadline
@@ -3613,6 +3898,11 @@ msgid "No outstanding balances."
 msgstr "لا توجد أرصدة مستحقة."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "No posted invoices or payments yet."
+msgstr "لا توجد فواتير أو دفعات مرحّلة بعد."
+
+#. module: parking_management
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_revenue_analysis
 msgid "No posted parking invoices yet"
 msgstr "لا توجد فواتير مواقف مرحّلة بعد"
@@ -3679,6 +3969,11 @@ msgid "Not held"
 msgstr "غير محفوظ"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__note
+msgid "Note"
+msgstr "ملاحظة"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__notes
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__notes
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__notes
@@ -3697,6 +3992,12 @@ msgstr "غير محفوظ"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_form
 msgid "Notes"
 msgstr "ملاحظات"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Nothing is left to bill on contract %s."
+msgstr "لم يتبقَّ شيء للفوترة في العقد %s."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__invoice_status__no
@@ -3854,15 +4155,53 @@ msgid "Off"
 msgstr "متوقف"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_wash_carry_over
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_wash_carry_over
+msgid ""
+"On: washes left from a month stay in the balance. Off: unused monthly washes"
+" expire when the next month's washes are added (purchased washes never "
+"expire)."
+msgstr "مفعّل: تبقى غسلات الشهر غير المستخدمة في الرصيد. معطّل: تنتهي الغسلات الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي (الغسلات المشتراة لا تنتهي)."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"On: washes left from a month stay in the contract's balance. Off: unused "
+"monthly washes expire when the next month's washes are added. Purchased "
+"washes never expire."
+msgstr "مفعّل: تبقى غسلات الشهر غير المستخدمة في رصيد العقد. معطّل: تنتهي الغسلات الشهرية غير المستخدمة عند إضافة غسلات الشهر التالي. الغسلات المشتراة لا تنتهي."
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_service_line__billing_type__one_time
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_service__billing_type__one_time
+msgid "Once"
+msgstr "مرة واحدة"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__invoice_period__one_time
 msgid "One Time"
 msgstr "مرة واحدة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_prepay_wizard_form
+msgid ""
+"One invoice covers every month left until the end date, and the periodic invoices stop.\n"
+"                    Choose instalment payment terms to split it into several due dates; the customer may also pay any amount at any time."
+msgstr "فاتورة واحدة تغطي كل الأشهر المتبقية حتى تاريخ الانتهاء، وتتوقف الفواتير الدورية.\n                    اختر شروط دفع بالأقساط لتقسيمها على عدة تواريخ استحقاق، ويمكن للعميل أيضاً دفع أي مبلغ في أي وقت."
 
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_spot.py:0
 msgid "Only occupied spots can be checked out."
 msgstr "يمكن فقط خروج المركبات من المواقف المشغولة."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_contract_charge_wizard.py:0
+msgid ""
+"Only parking services can be added to the contract; invoice other products "
+"now instead."
+msgstr "يمكن إضافة خدمات المواقف فقط إلى العقد، أما المنتجات الأخرى ففوترها الآن."
 
 #. module: parking_management
 #. odoo-python
@@ -3891,6 +4230,11 @@ msgstr "فتح السجل المرتبط"
 #: model:ir.model.fields,help:parking_management.field_parking_contract__amount_due
 msgid "Open balance of this contract's posted customer invoices."
 msgstr "الرصيد المفتوح لفواتير العميل المرحّلة لهذا العقد."
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__opening
+msgid "Opening balance"
+msgstr "رصيد افتتاحي"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__operation
@@ -3923,6 +4267,11 @@ msgid "Other"
 msgstr "أخرى"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__product_id
+msgid "Other Product"
+msgstr "منتج آخر"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_branch_stock_move__move_type__out
@@ -3949,6 +4298,7 @@ msgstr "الرصيد المستحق"
 #. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Overdue"
 msgstr "متأخرة السداد"
 
@@ -3981,10 +4331,12 @@ msgstr "جوال المالك"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__http_method__post
 msgid "POST"
-msgstr ""
+msgstr "POST"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__amount_paid
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__invoice_status__paid
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Paid"
 msgstr "مدفوع"
 
@@ -3998,6 +4350,7 @@ msgstr "متوقف"
 #: model:ir.ui.menu,name:parking_management.menu_parking_root
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 #: model_terms:ir.ui.view,arch_db:parking_management.view_company_parking_branches
+#: model_terms:ir.ui.view,arch_db:parking_management.view_partner_form_parking
 #: model_terms:ir.ui.view,arch_db:parking_management.view_users_parking_branches
 msgid "Parking"
 msgstr "المواقف"
@@ -4018,6 +4371,14 @@ msgstr "مواقف - %(spot)s - %(ref)s - %(days)s يوم من %(start)s إلى 
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Parking - %(spot)s - %(ref)s - %(months)s month(s) prepaid (%(start)s - "
+"%(end)s)"
+msgstr "مواقف - %(spot)s - %(ref)s - %(months)s شهر مدفوعة مقدماً (%(start)s - %(end)s)"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
 msgid "Parking - %(spot)s - %(ref)s - %(period)s"
 msgstr "مواقف - %(spot)s - %(ref)s - %(period)s"
 
@@ -4025,6 +4386,12 @@ msgstr "مواقف - %(spot)s - %(ref)s - %(period)s"
 #: model:mail.template,name:parking_management.email_template_invoice_created
 msgid "Parking - Invoice Created"
 msgstr "المواقف - تم إنشاء فاتورة"
+
+#. module: parking_management
+#: model:ir.actions.report,name:parking_management.action_report_parking_partner_statement
+#: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
+msgid "Parking Account Statement"
+msgstr "كشف حساب المواقف"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_location_id
@@ -4066,6 +4433,14 @@ msgstr "عقد مواقف - منتهي"
 #: model:mail.template,name:parking_management.email_template_contract_expiry
 msgid "Parking Contract - Expiry Reminder"
 msgstr "عقد مواقف - تذكير بالانتهاء"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/res_partner.py:0
+#: model:ir.model.fields,field_description:parking_management.field_res_partner__parking_contract_count
+#: model:ir.model.fields,field_description:parking_management.field_res_users__parking_contract_count
+msgid "Parking Contracts"
+msgstr "عقود المواقف"
 
 #. module: parking_management
 #. odoo-javascript
@@ -4170,6 +4545,29 @@ msgstr "قالب البيانات"
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__payload_type
 msgid "Payload Type"
 msgstr "نوع البيانات"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__payment_term_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__payment_term_id
+msgid "Payment Terms"
+msgstr "شروط الدفع"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Payment for %s"
+msgstr "دفعة عن %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/res_partner.py:0
+msgid "Payment not yet allocated to an invoice"
+msgstr "دفعة لم تُخصص لفاتورة بعد"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Payments"
+msgstr "الدفعات"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -4285,6 +4683,11 @@ msgid "Polishing"
 msgstr "تلميع"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_wash_credit__quantity
+msgid "Positive: washes added. Negative: washes expired or removed."
+msgstr "موجب: غسلات مضافة. سالب: غسلات منتهية أو محذوفة."
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_res_company__parking_auto_post_invoices
 #: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_auto_post_invoices
 msgid "Post Automatic Invoices"
@@ -4304,6 +4707,11 @@ msgid ""
 "Post contract invoices as soon as they are generated; otherwise they stay as"
 " drafts for review."
 msgstr "ترحيل فواتير العقود فور إنشائها؛ وإلا تبقى مسودات للمراجعة."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__prepaid_until
+msgid "Prepaid Until"
+msgstr "مدفوع مقدماً حتى"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_status_log__old_status
@@ -4355,6 +4763,7 @@ msgstr "السعر/اليوم"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__price_per_month
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__monthly_price
 msgid "Price/Month"
 msgstr "السعر/شهري"
 
@@ -4383,6 +4792,11 @@ msgstr "طباعة"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
 msgid "Print Handover Record"
 msgstr "طباعة محضر التسليم"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Print Statement"
+msgstr "طباعة كشف الحساب"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__product_id
@@ -4417,6 +4831,11 @@ msgid "Provider Response"
 msgstr "رد المزود"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__purchase
+msgid "Purchased"
+msgstr "مشتراة"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_form
 msgid "Put Under Maintenance"
 msgstr "تحويل للصيانة"
@@ -4434,6 +4853,7 @@ msgstr "الربع %(q)s %(y)s"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__quantity
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__quantity
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__quantity
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__quantity
 msgid "Quantity"
@@ -4566,6 +4986,7 @@ msgstr "المرجع"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__name
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Reference"
 msgstr "المرجع"
 
@@ -4585,6 +5006,12 @@ msgstr "تحديث نقاط الفحص"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Refreshes every minute"
 msgstr "يتحدث كل دقيقة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Refund paid for %s"
+msgstr "مبلغ مسترد عن %s"
 
 #. module: parking_management
 #. odoo-python
@@ -4637,6 +5064,12 @@ msgstr "الغسلة المرتبطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__remaining_washes
 msgid "Remaining Washes"
 msgstr "المتبقي"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Remaining term %(start)s - %(end)s"
+msgstr "المدة المتبقية %(start)s - %(end)s"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
@@ -4792,7 +5225,7 @@ msgstr "القاعدة"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__channel__sms
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_notification_rule__channel__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: parking_management
 #: model:ir.model,name:parking_management.model_parking_messaging_gateway
@@ -4833,6 +5266,12 @@ msgstr "مزود SMS"
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_service__category__safety
 msgid "Safety Equipment"
 msgstr "معدات السلامة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Sale invoiced separately: %s"
+msgstr "مبيعات فُوترت بفاتورة مستقلة: %s"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
@@ -4883,6 +5322,19 @@ msgid "Select the vehicle by license plate."
 msgstr "اختر المركبة برقم اللوحة."
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Sell / Add Charge"
+msgstr "بيع / إضافة رسوم"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_contract_charge_wizard
+msgid "Sell / Add Charge to a Contract"
+msgstr "بيع / إضافة رسوم على عقد"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "Send Test Message"
 msgstr "إرسال رسالة تجريبية"
@@ -4924,6 +5376,11 @@ msgstr "الترتيب"
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__service_id
 msgid "Service"
 msgstr "الخدمة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__service_id
+msgid "Service / Product"
+msgstr "الخدمة / المنتج"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__service_center_address
@@ -5311,6 +5768,11 @@ msgid "Subscription"
 msgstr "الاشتراك"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__amount
+msgid "Subscription Amount (untaxed)"
+msgstr "مبلغ الاشتراك (بدون ضريبة)"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__subscription_type
 msgid "Subscription Type"
 msgstr "نوع الاشتراك"
@@ -5434,11 +5896,26 @@ msgid "The odometer on return (%(in)s) is lower than on delivery (%(out)s)."
 msgstr "قراءة العداد عند العودة (%(in)s) أقل من قراءته عند التسليم (%(out)s)."
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_contract_charge_wizard.py:0
+msgid "The quantity must be positive."
+msgstr "يجب أن تكون الكمية موجبة."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_form
 msgid ""
 "The recorded times of this movement are inconsistent (recorded before times "
 "were validated). Please review it."
-msgstr "أوقات هذه الحركة غير متسقة (سُجّلت قبل تطبيق التحقق من الأوقات). يرجى مراجعتها."
+msgstr ""
+"أوقات هذه الحركة غير متسقة (سُجّلت قبل تطبيق التحقق من الأوقات). يرجى "
+"مراجعتها."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__prepaid_until
+msgid ""
+"The remaining term was billed in one invoice up to this date; no more "
+"periodic invoices."
+msgstr "فُوترت المدة المتبقية بفاتورة واحدة حتى هذا التاريخ، ولن تصدر فواتير دورية بعدها."
 
 #. module: parking_management
 #. odoo-python
@@ -5527,6 +6004,11 @@ msgid "Tires Condition & Pressure"
 msgstr "حالة الإطارات والضغط"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__end_date
+msgid "To"
+msgstr "إلى"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_report_wizard__date_to
 msgid "To Date"
 msgstr "إلى تاريخ"
@@ -5555,6 +6037,11 @@ msgstr "أعلى الأرصدة المستحقة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_services
 msgid "Total"
 msgstr "المجموع"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__amount
+msgid "Total (untaxed)"
+msgstr "الإجمالي (بدون ضريبة)"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__amount_total
@@ -5676,7 +6163,7 @@ msgstr "رحلة (خروج وعودة)"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__provider__twilio
 msgid "Twilio"
-msgstr ""
+msgstr "Twilio"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_messaging_gateway__account_sid
@@ -5691,6 +6178,7 @@ msgstr "رمز Twilio أو رمز وصول Meta أو مفتاح الواجهة �
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__move_type
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__movement_type
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__kind
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
@@ -5723,7 +6211,7 @@ msgstr "متغيرات الرابط"
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__provider__unifonic
 msgid "Unifonic"
-msgstr ""
+msgstr "Unifonic"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__uom_id
@@ -5738,6 +6226,7 @@ msgid "Unit Cost"
 msgstr "تكلفة الوحدة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__price_unit
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__price_unit
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_unit
 msgid "Unit Price"
@@ -5749,6 +6238,12 @@ msgid "Unpaid"
 msgstr "غير مدفوع"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Unused monthly washes expired"
+msgstr "انتهاء الغسلات الشهرية غير المستخدمة"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Updated at"
@@ -5758,6 +6253,13 @@ msgstr "آخر تحديث"
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__is_default
 msgid "Use as Default"
 msgstr "استخدام كافتراضي"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__payment_term_id
+msgid ""
+"Used on this contract's invoices, e.g. instalments. Defaults to the "
+"customer's terms."
+msgstr "تُستخدم في فواتير هذا العقد، مثل الأقساط. الافتراضي شروط دفع العميل."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_phone_country_code
@@ -5790,7 +6292,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot__spot_type__vip
 #: model:parking.spot.type,name:parking_management.parking_spot_type_vip
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #. module: parking_management
 #. odoo-javascript
@@ -6082,6 +6584,12 @@ msgid "Wash #"
 msgstr "رقم الغسلة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__wash_credit_ids
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Wash Balance History"
+msgstr "سجل رصيد الغسلات"
+
+#. module: parking_management
 #: model:ir.model,name:parking_management.model_parking_contract_wash_line
 msgid "Wash Consumed Supply Line"
 msgstr "المواد المستهلكة في الغسيل"
@@ -6114,14 +6622,42 @@ msgstr "تم الغسيل بواسطة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__wash_count
+#: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__quantity
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid "Washes"
 msgstr "الغسلات"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__wash_credits
+msgid "Washes Added"
+msgstr "الغسلات المضافة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__washes_credited
+msgid "Washes Credited"
+msgstr "الغسلات المضافة للرصيد"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Washes Done"
+msgstr "الغسلات المنفذة"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__washes_used
 msgid "Washes Used"
 msgstr "المستخدم"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__free_wash_count
+msgid ""
+"Washes included in the subscription each month. They are added to the wash "
+"balance whenever a subscription invoice is issued."
+msgstr "الغسلات المشمولة في الاشتراك كل شهر، وتُضاف إلى رصيد الغسلات عند إصدار كل فاتورة اشتراك."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__free_wash_count
+msgid "Washes per Month"
+msgstr "رصيد الغسيل المجاني"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__website_message_ids
@@ -6315,6 +6851,12 @@ msgstr "تفعيل"
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
+msgid "bill the remaining term of"
+msgstr "فوترة المدة المتبقية من"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
 msgid "cancel"
 msgstr "إلغاء"
 
@@ -6362,7 +6904,7 @@ msgstr "ساعة."
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "https://api.provider.com/send"
-msgstr ""
+msgstr "https://api.provider.com/send"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover

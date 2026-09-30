@@ -22,3 +22,9 @@ class ParkingService(models.Model):
     active = fields.Boolean(default=True)
     product_id = fields.Many2one("product.product", string="Linked Product",
         help="Select the product that represents this service in invoices.")
+    billing_type = fields.Selection([
+        ("recurring", "Every invoice"),
+        ("one_time", "Once"),
+    ], string="Billing", default="one_time", required=True,
+        help="Every invoice: a subscription add-on billed with each periodic invoice (e.g. a monthly wash "
+             "package). Once: a sale billed a single time (e.g. a product).")

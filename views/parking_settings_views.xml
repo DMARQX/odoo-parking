@@ -30,6 +30,11 @@
                             <field name="parking_invoice_stock_moves"/>
                         </setting>
                     </block>
+                    <block title="Car Washes" name="parking_washes">
+                        <setting help="On: washes left from a month stay in the contract's balance. Off: unused monthly washes expire when the next month's washes are added. Purchased washes never expire.">
+                            <field name="parking_wash_carry_over"/>
+                        </setting>
+                    </block>
                     <block title="Customer Notifications" name="parking_notifications">
                         <setting string="SMS provider" help="Gateway used for SMS notifications.">
                             <field name="parking_sms_gateway_id" context="{'default_channel': 'sms'}"/>

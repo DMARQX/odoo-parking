@@ -27,6 +27,12 @@ class ResCompany(models.Model):
         help="Invoice lines covering several months carry their service period so revenue "
              "is recognised month by month (requires deferred revenue in Accounting settings).")
 
+    # Car washes
+    parking_wash_carry_over = fields.Boolean(
+        string="Carry Over Unused Washes", default=True,
+        help="On: washes left from a month stay in the balance. Off: unused monthly washes expire "
+             "when the next month's washes are added (purchased washes never expire).")
+
     # Messaging
     parking_phone_country_code = fields.Char(
         string="Default Country Code", default="966",

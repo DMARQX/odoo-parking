@@ -103,6 +103,16 @@
                     <button name="action_register_payment" string="Register Payment" type="object" class="btn-primary"
                             invisible="invoice_status != 'invoiced'"
                             groups="parking_management.group_parking_invoicing"/>
+                    <button name="action_add_charge" string="Sell / Add Charge" type="object" icon="fa-shopping-cart"
+                            class="btn-secondary" invisible="state not in ('confirmed', 'active')"
+                            groups="parking_management.group_parking_contract,parking_management.group_parking_checkinout"/>
+                    <button name="action_add_washes" string="Add Washes" type="object" icon="fa-tint"
+                            class="btn-secondary" invisible="state not in ('confirmed', 'active')"
+                            groups="parking_management.group_parking_contract,parking_management.group_parking_checkinout"/>
+                    <button name="action_bill_remaining_term" string="Bill Remaining Term" type="object" icon="fa-calendar-check-o"
+                            class="btn-secondary"
+                            invisible="state not in ('confirmed', 'active') or subscription_type == 'daily' or prepaid_until"
+                            groups="parking_management.group_parking_invoicing"/>
                     <button name="action_renew" string="Renew" type="object" icon="fa-refresh"
                             class="btn-secondary" invisible="state not in ('active', 'expired')"
                             groups="parking_management.group_parking_contract"/>
@@ -191,7 +201,9 @@
                                     <field name="auto_invoice"/>
                                     <field name="invoice_period" invisible="not auto_invoice" required="auto_invoice"/>
                                     <field name="parking_product_id" options="{'no_create': True}"/>
-                                    <field name="recurring_next_date" invisible="not auto_invoice"/>
+                                    <field name="payment_term_id" options="{'no_create': True}"/>
+                                    <field name="recurring_next_date" invisible="not auto_invoice or prepaid_until"/>
+                                    <field name="prepaid_until" invisible="not prepaid_until"/>
                                     <field name="last_invoiced_date"/>
                                     <field name="amount_due" widget="monetary"
                                            groups="parking_management.group_parking_invoicing"/>
@@ -200,15 +212,22 @@
                         </page>
                         <page name="services" string="Services">
                             <field name="service_line_ids" readonly="state in ('expired', 'cancelled')">
-                                <list editable="bottom">
+                                <list editable="bottom" decoration-muted="invoice_id">
                                     <field name="service_id" options="{'no_create': True}"/>
                                     <field name="product_id" optional="hide"/>
+                                    <field name="billing_type"/>
                                     <field name="quantity"/>
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="price_subtotal" widget="monetary" sum="Total"/>
+                                    <field name="invoice_id" readonly="1" optional="show"
+                                           groups="parking_management.group_parking_invoicing"/>
                                     <field name="company_currency_id" column_invisible="1"/>
                                 </list>
                             </field>
+                            <div class="text-muted small mt-2">
+                                "Every invoice" lines are billed with each subscription invoice; "Once" lines on the next invoice only.
+                                To sell a product on its own invoice use <strong>Sell / Add Charge</strong>.
+                            </div>
                         </page>
                         <page name="washes" string="Car Washes">
                             <group>
@@ -217,10 +236,23 @@
                                     <field name="wash_interval_days"/>
                                 </group>
                                 <group>
+                                    <field name="washes_credited"/>
                                     <field name="washes_used"/>
-                                    <field name="remaining_washes"/>
+                                    <field name="remaining_washes" class="fw-bold"/>
                                 </group>
                             </group>
+                            <separator string="Wash Balance History"/>
+                            <field name="wash_credit_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="kind" widget="badge"
+                                           decoration-success="quantity &gt; 0" decoration-danger="quantity &lt; 0"/>
+                                    <field name="quantity" sum="Total"/>
+                                    <field name="invoice_id" groups="parking_management.group_parking_invoicing"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                            <separator string="Washes Done"/>
                             <field name="wash_ids" readonly="1">
                                 <list>
                                     <field name="wash_date"/>
@@ -232,6 +264,16 @@
                                            decoration-muted="state == 'cancelled'"/>
                                 </list>
                             </field>
+                        </page>
+                        <page name="statement" string="Account Statement"
+                              groups="parking_management.group_parking_invoicing">
+                            <div class="mb-2">
+                                <button name="action_print_statement" type="object" string="Print Statement"
+                                        icon="fa-print" class="btn-secondary"/>
+                                <button name="action_register_payment" type="object" string="Register Payment"
+                                        icon="fa-money" class="btn-link" invisible="amount_due &lt;= 0"/>
+                            </div>
+                            <field name="statement_html" nolabel="1" readonly="1"/>
                         </page>
                         <page name="terms" string="Terms &amp; Signatures">
                             <group>

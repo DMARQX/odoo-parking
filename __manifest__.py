@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.3.3.0",
+    "version": "18.0.3.4.0",
     "depends": ["base", "mail", "account", "sale_management", "portal", "sms", "stock"],
     "data": [
         "security/parking_security.xml",
@@ -23,6 +23,7 @@
         "views/parking_inspection_views.xml",
         "report/parking_inspection_report.xml",
         "report/parking_handover_report.xml",
+        "report/parking_statement_report.xml",
         "views/parking_portal_templates.xml",
         "views/parking_checkpoint_views.xml",
         "views/parking_terms_conditions_views.xml",
@@ -35,12 +36,14 @@
         "views/parking_messaging_views.xml",
         "views/parking_settings_views.xml",
         "views/account_move_views.xml",
+        "views/res_partner_views.xml",
         "report/contract_report.xml",
         "report/parking_report_views.xml",
         "report/parking_analysis_views.xml",
         "report/parking_report_pdf.xml",
         "wizard/parking_report_wizard_views.xml",
         "wizard/parking_reception_wizard_views.xml",
+        "wizard/parking_contract_charge_views.xml",
     ],
     "demo": [],
     "assets": {

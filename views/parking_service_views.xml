@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="category"/>
                 <field name="included_washes" optional="show"/>
+                <field name="billing_type"/>
                 <field name="product_id"/>
                 <field name="price" widget="monetary"/>
                 <field name="active"/>
@@ -30,6 +31,7 @@
                         </group>
                         <group>
                             <field name="price" widget="monetary"/>
+                            <field name="billing_type" widget="radio"/>
                         </group>
                     </group>
                     <field name="description"/>

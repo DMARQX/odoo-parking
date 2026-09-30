@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_parking" model="ir.ui.view">
+        <field name="name">res.partner.form.parking</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_parking_contracts" type="object" class="oe_stat_button" icon="fa-car"
+                        invisible="not parking_contract_count" groups="parking_management.group_parking_user">
+                    <field name="parking_contract_count" widget="statinfo" string="Parking"/>
+                </button>
+                <button name="action_print_parking_statement" type="object" class="oe_stat_button" icon="fa-list-alt"
+                        invisible="not parking_contract_count" groups="parking_management.group_parking_invoicing">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Parking Statement</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
