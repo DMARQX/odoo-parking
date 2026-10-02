@@ -189,7 +189,7 @@ export class ParkingDashboard extends Component {
     }
 
     openLowStock() {
-        this.openList("parking.branch.stock", _t("Low Stock"), [...this.locDomain, ["is_low", "=", true]]);
+        this.openList("stock.warehouse.orderpoint", _t("Low Stock"), [["id", "in", this.data.kpis.low_stock_ids]]);
     }
 
     openInvoices(kind) {

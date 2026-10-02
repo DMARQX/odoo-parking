@@ -36,6 +36,16 @@ class ParkingDashboard(models.TransientModel):
         return Location.search([])
 
     @api.model
+    def _low_stock_orderpoints(self, locations):
+        """Reordering rules of the branch warehouses whose forecast is under the minimum."""
+        if not self.env.user.has_group("stock.group_stock_user"):
+            return []
+        warehouses = locations.mapped("warehouse_id")
+        if not warehouses:
+            return []
+        points = self.env["stock.warehouse.orderpoint"].search([("warehouse_id", "in", warehouses.ids)])
+        return points.filtered(lambda p: p.qty_forecast < p.product_min_qty).ids
+
     def get_dashboard_data(self, location_id=False, period="month"):
         period = period if period in PERIODS else "month"
         today = fields.Date.context_today(self)
@@ -76,7 +86,8 @@ class ParkingDashboard(models.TransientModel):
         closed = moves_period.filtered("check_in_time")
         avg_hours = round(sum(closed.mapped("duration_hours")) / len(closed), 1) if closed else 0.0
         washes_period = Wash.search_count(loc_dom + [("state", "=", "done"), ("wash_date", ">=", dt_from)])
-        low_stock = self.env["parking.branch.stock"].search_count(loc_dom + [("is_low", "=", True)])
+        low_stock_ids = self._low_stock_orderpoints(locations)
+        low_stock = len(low_stock_ids)
 
         kpis = {
             "total_spots": total_spots,
@@ -97,6 +108,7 @@ class ParkingDashboard(models.TransientModel):
             "avg_hours_out": avg_hours,
             "washes": washes_period,
             "low_stock": low_stock,
+            "low_stock_ids": low_stock_ids,
         }
 
         charts = {

@@ -33,11 +33,34 @@ class ResCompany(models.Model):
         help="Language of the descriptions the parking module writes on invoices (period, spot, dates). "
              "Leave empty to use each customer's language.")
 
+    parking_use_deposit = fields.Boolean(
+        string="Customer Deposits",
+        help="Contracts can carry a refundable deposit, invoiced on the deposits account and "
+             "refunded when the contract ends. Off: deposits are hidden and never invoiced.")
+    parking_prorate = fields.Boolean(
+        string="Prorate Partial Periods",
+        help="A contract starting or ending inside an invoice period pays only its days in that period.")
+    parking_stock_shortage = fields.Selection([
+        ("allow", "Deliver anyway (stock may go negative)"),
+        ("block", "Do not deliver; warn the warehouse"),
+    ], string="When Stock Is Short", default="allow", required=True,
+        help="What happens when a posted parking invoice sells more than the branch warehouse holds.")
+
     # Car washes
     parking_wash_carry_over = fields.Boolean(
         string="Carry Over Unused Washes", default=True,
         help="On: washes left from a month stay in the balance. Off: unused monthly washes expire "
              "when the next month's washes are added (purchased washes never expire).")
+
+    parking_wash_consume_stock = fields.Boolean(
+        string="Consume Wash Supplies From Stock",
+        help="A completed wash takes its supplies (wash kit, or the lines entered on the wash) out of "
+             "the branch warehouse, booking their cost; cancelling the wash puts them back.")
+    parking_wash_location_id = fields.Many2one(
+        "stock.location", string="Wash Consumption Location",
+        domain="[('usage', '=', 'inventory'), ('company_id', 'in', (id, False))]",
+        help="Virtual location wash supplies are moved to. Its valuation accounts decide the expense "
+             "account. Created automatically when left empty.")
 
     # Messaging
     parking_phone_country_code = fields.Char(

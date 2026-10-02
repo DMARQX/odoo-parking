@@ -207,10 +207,16 @@
     <menuitem id="menu_parking_wash_kit" name="Wash Kit Items" parent="menu_parking_services" sequence="20"
               action="action_parking_wash_kit_item"
               groups="parking_management.group_parking_config_pricing"/>
+    <!-- Branch stock lives in Odoo Inventory (one warehouse per branch). -->
+    <record id="action_parking_branch_quants" model="ir.actions.act_window">
+        <field name="name">Branch Stock</field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('location_id.usage', '=', 'internal')]</field>
+        <field name="context">{'search_default_internal_loc': 1}</field>
+    </record>
     <menuitem id="menu_parking_branch_stock" name="Branch Stock" parent="menu_parking_services" sequence="30"
-              action="action_parking_branch_stock"
-              groups="parking_management.group_parking_checkinout,parking_management.group_parking_config_pricing"/>
+              action="action_parking_branch_quants" groups="stock.group_stock_user"/>
     <menuitem id="menu_parking_stock_move" name="Stock Movements" parent="menu_parking_services" sequence="40"
-              action="action_parking_branch_stock_move"
-              groups="parking_management.group_parking_checkinout,parking_management.group_parking_config_pricing"/>
+              action="stock.stock_move_line_action" groups="stock.group_stock_user"/>
 </odoo>

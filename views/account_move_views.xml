@@ -16,6 +16,7 @@
             <xpath expr="//field[@name='invoice_origin']" position="after">
                 <field name="parking_contract_id" readonly="1" invisible="not parking_contract_id"/>
                 <field name="parking_picking_id" invisible="1"/>
+                <field name="parking_invoice_kind" invisible="1"/>
             </xpath>
         </field>
     </record>

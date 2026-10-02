@@ -161,31 +161,6 @@ class ParkingVehicle(models.Model):
             "state": "done",
         })
 
-        # Deduct wash kit supplies from branch stock
-        kit_items = self.env["parking.wash.kit.item"].search([])
-        location_id = active_contract.location_id.id if active_contract.location_id else False
-        if location_id and kit_items:
-            for item in kit_items:
-                try:
-                    with self.env.cr.savepoint():
-                        self.env["parking.branch.stock"].deduct_stock(
-                            item.product_id.id, item.default_quantity, location_id
-                        )
-                        self.env["parking.branch.stock.move"].create({
-                            "location_id": location_id,
-                            "product_id": item.product_id.id,
-                            "quantity": -item.default_quantity,
-                            "move_type": "out",
-                            "wash_id": wash.id,
-                            "notes": _("Auto-deducted by car wash #%s") % wash.wash_number,
-                        })
-                except Exception as e:
-                    wash._message_log(
-                        body=_("Could not deduct '%(item)s': %(error)s") % {
-                            "item": item.name, "error": str(e)
-                        },
-                    )
-
         return {
             "type": "ir.actions.act_window",
             "name": _("Car Wash Record"),

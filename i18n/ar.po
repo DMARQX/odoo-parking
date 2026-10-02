@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 20:47+0000\n"
-"PO-Revision-Date: 2026-09-30 20:47+0000\n"
+"POT-Creation-Date: 2026-10-02 10:08+0000\n"
+"PO-Revision-Date: 2026-10-02 10:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,12 @@ msgstr "%(hours)s ساعة"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "%s - Sale"
 msgstr "%s - مبيعات"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "%s wash(es) removed"
+msgstr "%s غسلة أُزيلت"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_comprehensive
@@ -461,6 +467,45 @@ msgstr ""
 "و<code>{sender}</code> عند الإرسال."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"A completed wash takes its supplies (the wash kit, or the lines entered on "
+"the wash) out of the branch warehouse and books their cost; cancelling the "
+"wash puts them back."
+msgstr "الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_wash_consume_stock
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_wash_consume_stock
+msgid ""
+"A completed wash takes its supplies (wash kit, or the lines entered on the "
+"wash) out of the branch warehouse, booking their cost; cancelling the wash "
+"puts them back."
+msgstr "الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_prorate
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_prorate
+msgid ""
+"A contract starting or ending inside an invoice period pays only its days in"
+" that period."
+msgstr "العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"A contract that starts or ends inside an invoice period pays only for its "
+"days in that period."
+msgstr "العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_deposit_refund_wizard_form
+msgid ""
+"A credit note on the deposits account is issued for the refunded amount; register the\n"
+"                    outgoing payment on it. A deduction is moved from the deposits account to income."
+msgstr "يصدر إشعار دائن على حساب التأمينات بالمبلغ المسترد، سجّل عليه الدفعة الصادرة للعميل. أما الخصم فيُنقل من حساب التأمينات إلى الإيراد."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
 msgid ""
 "A separate invoice is issued now and linked to the contract; stock products "
@@ -484,6 +529,11 @@ msgstr "مفتاح API / الرمز"
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__api_version
 msgid "API Version"
 msgstr "إصدار API"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "عكس حركة الحساب "
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__account_sid
@@ -861,9 +911,9 @@ msgstr "تحديث تلقائي"
 
 #. module: parking_management
 #. odoo-python
-#: code:addons/parking_management/models/parking_vehicle.py:0
-msgid "Auto-deducted by car wash #%s"
-msgstr "خُصم تلقائياً بسبب غسيل السيارة رقم %s"
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Automatic invoice failed"
+msgstr "فشل إصدار الفاتورة التلقائية"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_spot__status__available
@@ -1049,6 +1099,7 @@ msgid "Branch Restricted User"
 msgstr "مستخدم مقيّد بفرع"
 
 #. module: parking_management
+#: model:ir.actions.act_window,name:parking_management.action_parking_branch_quants
 #: model:ir.actions.act_window,name:parking_management.action_parking_branch_stock
 #: model:ir.ui.menu,name:parking_management.menu_parking_branch_stock
 msgid "Branch Stock"
@@ -1091,6 +1142,13 @@ msgstr "الماركة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 msgid "Brand / Model"
 msgstr "العلامة / الطراز"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_account_move_reversal__parking_return_goods
+msgid ""
+"Bring the storable products of the parking invoice back into the branch "
+"warehouse. Untick for a price correction where nothing is returned."
+msgstr "إرجاع المنتجات المخزنية في فاتورة المواقف إلى مستودع الفرع. ألغِ التحديد عند تصحيح السعر دون إرجاع بضاعة."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
@@ -1200,6 +1258,7 @@ msgstr "يمكن إدارة نقاط فحص المركبات."
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_prepay_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_deposit_refund_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_report_wizard_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_form
@@ -1265,6 +1324,12 @@ msgstr "سجل غسيل السيارات"
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid "Car Washes"
 msgstr "عمليات الغسيل"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Car wash %s"
+msgstr "غسيل سيارة %s"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_message_log__event__wash_done
@@ -1355,6 +1420,12 @@ msgid "Check Out (Delivery)"
 msgstr "خروج (تسليم)"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Check the prepaid refund"
+msgstr "راجع استرداد الدفع المقدم"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__line_ids
 #: model_terms:ir.ui.view,arch_db:parking_management.report_inspection_pdf
 msgid "Checklist"
@@ -1382,6 +1453,12 @@ msgstr "اختر خدمة أو منتجاً."
 #: model:ir.model.fields,help:parking_management.field_parking_contract_prepay_wizard__payment_term_id
 msgid "Choose instalments here to split the invoice into several due dates."
 msgstr "اختر شروط دفع بالأقساط هنا لتقسيم الفاتورة على عدة تواريخ استحقاق."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Choose the income account for the deduction."
+msgstr "اختر حساب الإيراد للخصم."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
@@ -1567,10 +1644,21 @@ msgid "Connection error: %s"
 msgstr "خطأ في الاتصال: %s"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_wash_consume_stock
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_wash_consume_stock
+msgid "Consume Wash Supplies From Stock"
+msgstr "صرف مواد الغسيل من المخزون"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__line_ids
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_form
 msgid "Consumed Supplies"
 msgstr "المواد المستهلكة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Consumption location"
+msgstr "موقع الاستهلاك"
 
 #. module: parking_management
 #: model:ir.model,name:parking_management.model_res_partner
@@ -1589,6 +1677,7 @@ msgstr "المحتوى"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__contract_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_credit__contract_id
@@ -1618,8 +1707,28 @@ msgstr "انتهى العقد %(name)s للموقف %(spot)s بتاريخ %(date
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Contract %(name)s must belong to %(company)s, the company of branch "
+"%(branch)s."
+msgstr "يجب أن يتبع العقد %(name)s شركة %(company)s، وهي شركة الفرع %(branch)s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Contract %s has ended: refund its deposit."
+msgstr "انتهى العقد %s: استرد له التأمين."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
 msgid "Contract %s has expired!"
 msgstr "انتهى العقد %s!"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Contract %s has no invoiced deposit left to refund."
+msgstr "لا يوجد تأمين مفوتر متبقٍ للاسترداد في العقد %s."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
@@ -1777,6 +1886,23 @@ msgid "Contracts Updated"
 msgstr "تم تحديث العقود"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__deposit_enabled
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_use_deposit
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_use_deposit
+msgid ""
+"Contracts can carry a refundable deposit, invoiced on the deposits account "
+"and refunded when the contract ends. Off: deposits are hidden and never "
+"invoiced."
+msgstr "يمكن أن يحمل العقد تأميناً مسترداً يُفوتر على حساب التأمينات ويُسترد عند انتهاء العقد. عند الإيقاف: يُخفى التأمين ولا يُفوتر."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"Contracts can carry a refundable deposit: it is invoiced on a liability "
+"account (not revenue) and refunded from the contract when it ends."
+msgstr "يمكن أن يحمل العقد تأميناً مسترداً: يُفوتر على حساب التزام (لا إيراد) ويُسترد من العقد عند انتهائه."
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Contracts ending in 30 days"
@@ -1808,12 +1934,6 @@ msgstr "العقود: إنشاء / تعديل"
 #: model:res.groups,name:parking_management.group_parking_contract_delete
 msgid "Contracts: Delete"
 msgstr "العقود: حذف"
-
-#. module: parking_management
-#. odoo-python
-#: code:addons/parking_management/models/parking_vehicle.py:0
-msgid "Could not deduct '%(item)s': %(error)s"
-msgstr "تعذّر خصم '%(item)s': %(error)s"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_report_graph
@@ -1857,6 +1977,11 @@ msgid "Created"
 msgstr "تاريخ الإنشاء"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Created automatically"
+msgstr "يُنشأ تلقائياً"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__create_uid
@@ -1866,6 +1991,7 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__create_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__create_uid
@@ -1903,6 +2029,7 @@ msgstr "تم بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__create_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__create_date
@@ -1937,11 +2064,20 @@ msgid "Credit note"
 msgstr "إشعار دائن"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_account_bank_statement_line__parking_return_goods
+#: model:ir.model.fields,help:parking_management.field_account_move__parking_return_goods
+msgid ""
+"Credit notes only: bring the storable products back into the branch "
+"warehouse. Leave off for a price correction where nothing comes back."
+msgstr "للإشعارات الدائنة فقط: إرجاع المنتجات المخزنية إلى مستودع الفرع. اتركه غير محدد عند تصحيح السعر دون إرجاع بضاعة."
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__company_currency_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_price_template__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__company_currency_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__company_currency_id
@@ -1995,6 +2131,13 @@ msgid "Customer & Vehicles"
 msgstr "العميل والمركبات"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__deposit_enabled
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_use_deposit
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_use_deposit
+msgid "Customer Deposits"
+msgstr "تأمينات العملاء"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_res_company__parking_deposit_account_id
 #: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_deposit_account_id
 msgid "Customer Deposits Account"
@@ -2033,11 +2176,6 @@ msgstr "توقيع العميل (العودة)"
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__out_signature
 msgid "Customer Signature (Out)"
 msgstr "توقيع العميل (التسليم)"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
-msgid "Customer deposits"
-msgstr "تأمينات العملاء"
 
 #. module: parking_management
 #. odoo-python
@@ -2167,6 +2305,16 @@ msgstr ""
 "آمنة."
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__deduction
+msgid "Deduction"
+msgstr "الخصم"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__income_account_id
+msgid "Deduction Account"
+msgstr "حساب الخصم"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_res_company__parking_phone_country_code
 #: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_phone_country_code
 msgid "Default Country Code"
@@ -2226,6 +2374,17 @@ msgid "Deliver Vehicle (Check Out)"
 msgstr "تسليم المركبة (خروج)"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__res_company__parking_stock_shortage__allow
+msgid "Deliver anyway (stock may go negative)"
+msgstr "التسليم على أي حال (قد يصبح المخزون سالباً)"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Deliver parking sale %s"
+msgstr "سلّم مبيعات المواقف %s"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 msgid "Delivered"
 msgstr "تاريخ التسليم"
@@ -2256,6 +2415,12 @@ msgstr "سُلّمت اليوم"
 
 #. module: parking_management
 #. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Delivered with insufficient stock (available / sold): %s"
+msgstr "سُلّمت مع رصيد غير كافٍ (المتاح / المباع): %s"
+
+#. module: parking_management
+#. odoo-python
 #: code:addons/parking_management/models/parking_vehicle_movement.py:0
 msgid "Delivering a vehicle requires an active contract."
 msgstr "تسليم المركبة يتطلب عقداً نشطاً."
@@ -2281,6 +2446,8 @@ msgid "Delivery to Customer"
 msgstr "التسليم للعميل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__deposit_amount
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move_line__parking_line_kind__deposit
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 msgid "Deposit"
 msgstr "التأمين"
@@ -2295,6 +2462,44 @@ msgstr "مبلغ التأمين"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__deposit_invoiced
 msgid "Deposit Invoiced"
 msgstr "تم إصدار فاتورة الوديعة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__deposit_refund_move_id
+msgid "Deposit Refund"
+msgstr "استرداد التأمين"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__deposit_refunded
+msgid "Deposit Refunded"
+msgstr "تم استرداد التأمين"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Deposit deduction - %(ref)s: %(reason)s"
+msgstr "خصم من التأمين - %(ref)s: %(reason)s"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__deposit_refund
+msgid "Deposit refund"
+msgstr "استرداد التأمين"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Deposit refund - %(ref)s"
+msgstr "استرداد التأمين - %(ref)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Deposit refunded: %s"
+msgstr "تم استرداد التأمين: %s"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Deposits account"
+msgstr "حساب التأمينات"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock_move__name
@@ -2354,6 +2559,7 @@ msgstr "العرض"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__display_name
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_notification_rule__display_name
@@ -2387,6 +2593,11 @@ msgid "Distance:"
 msgstr "المسافة:"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__res_company__parking_stock_shortage__block
+msgid "Do not deliver; warn the warehouse"
+msgstr "عدم التسليم وتنبيه المستودع"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_checkpoint__category__documents
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_form
 msgid "Documents"
@@ -2414,6 +2625,18 @@ msgstr "مسودة"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Draft Contracts"
 msgstr "العقود المسودة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Draft credit note %s for unused prepaid months: review and post it."
+msgstr "إشعار دائن مسودة %s للأشهر المدفوعة مقدماً غير المستهلكة: راجعه ورحّله."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Draft invoices: %s. Post or cancel them."
+msgstr "فواتير مسودة: %s. رحّلها أو ألغِها."
 
 #. module: parking_management
 #: model:ir.model,name:parking_management.model_parking_driver
@@ -2693,6 +2916,11 @@ msgid "Filters"
 msgstr "التصفية"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__final
+msgid "Final invoice"
+msgstr "فاتورة ختامية"
+
+#. module: parking_management
 #: model:ir.ui.menu,name:parking_management.menu_parking_reports_finance
 msgid "Finance"
 msgstr "المالية"
@@ -2891,6 +3119,12 @@ msgid "Generic HTTP API"
 msgstr "واجهة HTTP عامة"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_deposit_refund_wizard.py:0
+msgid "Give the reason for the deduction."
+msgstr "اذكر سبب الخصم."
+
+#. module: parking_management
 #: model_terms:parking.terms.conditions,content:parking_management.parking_terms_default
 msgid ""
 "Governing Law: This contract is governed by the laws of the Kingdom of Saudi"
@@ -2959,6 +3193,7 @@ msgstr "طريقة HTTP"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__id
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__id
@@ -3087,6 +3322,11 @@ msgid "Included Washes"
 msgstr "عدد الغسلات المتضمنة"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_deposit_refund_wizard__income_account_id
+msgid "Income account credited with the deduction."
+msgstr "حساب الإيراد الذي يُقيد فيه الخصم."
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_vehicle_movement__needs_review
 msgid ""
 "Inconsistent times recorded before this was enforced (return before exit, "
@@ -3207,6 +3447,18 @@ msgid "Invoice"
 msgstr "الفاتورة"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Invoice %(inv)s cancelled: %(what)s."
+msgstr "أُلغيت الفاتورة %(inv)s: %(what)s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Invoice %s cancelled"
+msgstr "أُلغيت الفاتورة %s"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__invoice_count
 msgid "Invoice Count"
 msgstr "عدد الفواتير"
@@ -3226,6 +3478,11 @@ msgstr "حالة الفاتورة"
 #: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_invoice_lang
 msgid "Invoice Texts Language"
 msgstr "لغة نصوص الفواتير"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__cancel
+msgid "Invoice cancelled"
+msgstr "فاتورة ملغاة"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_message_log__event__invoice_created
@@ -3362,6 +3619,17 @@ msgid "Journal Entry"
 msgstr "قيود اليومية"
 
 #. module: parking_management
+#: model:ir.model,name:parking_management.model_account_move_line
+msgid "Journal Item"
+msgstr "عنصر اليومية"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_deposit_refund_wizard__deduction
+msgid ""
+"Kept from the deposit, e.g. damages or unpaid fees. It is booked as income."
+msgstr "المبلغ المحتجز من التأمين، مثل الأضرار أو رسوم غير مدفوعة، ويُقيد إيراداً."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
 msgid "Key"
 msgstr "المفتاح"
@@ -3392,14 +3660,18 @@ msgstr "رقم بطاقة المفتاح"
 msgid ""
 "Language of the descriptions the parking module writes on invoices (period, "
 "spot, dates). Leave empty to use each customer's language."
-msgstr "لغة الأوصاف التي يكتبها موديول المواقف في الفواتير (الفترة، الموقف، التواريخ). اتركها فارغة لاستخدام لغة كل عميل."
+msgstr ""
+"لغة الأوصاف التي يكتبها موديول المواقف في الفواتير (الفترة، الموقف، "
+"التواريخ). اتركها فارغة لاستخدام لغة كل عميل."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid ""
 "Language of the period, spot and dates written on parking invoice lines. "
 "Leave empty to use each customer's language."
-msgstr "لغة الفترة والموقف والتواريخ في بنود فواتير المواقف. اتركها فارغة لاستخدام لغة كل عميل."
+msgstr ""
+"لغة الفترة والموقف والتواريخ في بنود فواتير المواقف. اتركها فارغة لاستخدام "
+"لغة كل عميل."
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_price_template__spot_type__large
@@ -3443,6 +3715,7 @@ msgstr "نتيجة آخر اختبار"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__write_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__write_uid
@@ -3480,6 +3753,7 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_dashboard__write_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_driver__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_location__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_message_log__write_date
@@ -4152,6 +4426,12 @@ msgstr "لا توجد مركبات مسجلة في هذا العقد."
 
 #. module: parking_management
 #. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "No warehouse for branch %s: supplies were not taken from stock."
+msgstr "لا يوجد مستودع للفرع %s: لم تُصرف المواد من المخزون."
+
+#. module: parking_management
+#. odoo-python
 #: code:addons/parking_management/models/account_move.py:0
 msgid "No warehouse found for branch %s; stock was not moved."
 msgstr "لا يوجد مستودع للفرع %s؛ لم يتم تحريك المخزون."
@@ -4218,6 +4498,12 @@ msgstr "لا شيء للفوترة"
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_contract_unpaid
 msgid "Nothing to collect"
 msgstr "لا شيء للتحصيل"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Nothing to return: the original invoice delivered no stock."
+msgstr "لا يوجد ما يُرجع: الفاتورة الأصلية لم تسلّم بضاعة."
 
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_notification_rule
@@ -4664,10 +4950,26 @@ msgid "Parking Detailed Report Wizard"
 msgstr "معالج التقرير المفصل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_move_reversal__parking_has_contract
+msgid "Parking Has Contract"
+msgstr "مرتبطة بعقد مواقف"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_invoice_kind
+#: model:ir.model.fields,field_description:parking_management.field_account_move__parking_invoice_kind
+msgid "Parking Invoice Type"
+msgstr "نوع فاتورة المواقف"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Parking Invoices"
 msgstr "فواتير المواقف"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_move_line__parking_line_kind
+msgid "Parking Line Type"
+msgstr "نوع بند المواقف"
 
 #. module: parking_management
 #: model:ir.module.category,description:parking_management.module_category_parking
@@ -4720,6 +5022,12 @@ msgid "Parking Stock Transfer"
 msgstr "حركة مخزون المواقف"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Parking Wash Consumption"
+msgstr "استهلاك غسيل المواقف"
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_users__parking_location_ids
 msgid ""
 "Parking branches this user is allowed to see and operate. Leave empty to "
@@ -4729,6 +5037,7 @@ msgstr ""
 "فارغاً لمنح الوصول إلى جميع الفروع."
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move_line__parking_line_kind__rent
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Parking rent"
 msgstr "إيجار الموقف"
@@ -4745,7 +5054,9 @@ msgstr "إيجار موقف %(spot)s لمدة %(days)s يوم، من %(start)s �
 msgid ""
 "Parking rent %(spot)s - %(months)s month(s) paid in advance (%(start)s - "
 "%(end)s)"
-msgstr "إيجار موقف %(spot)s لمدة %(months)s شهر مدفوعة مقدماً، من %(start)s إلى %(end)s"
+msgstr ""
+"إيجار موقف %(spot)s لمدة %(months)s شهر مدفوعة مقدماً، من %(start)s إلى "
+"%(end)s"
 
 #. module: parking_management
 #. odoo-python
@@ -5077,6 +5388,12 @@ msgid "Product already exists in this branch stock!"
 msgstr "المنتج موجود مسبقاً في مخزون هذا الفرع!"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_prorate
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_prorate
+msgid "Prorate Partial Periods"
+msgstr "احتساب الفترات الجزئية بالأيام"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__provider
 msgid "Provider"
 msgstr "المزود"
@@ -5177,6 +5494,11 @@ msgid "Rear View"
 msgstr "الواجهة الخلفية"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__reason
+msgid "Reason"
+msgstr "السبب"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_status_log__reason
 msgid "Reason / Notes"
 msgstr "السبب / ملاحظات"
@@ -5271,10 +5593,34 @@ msgid "Refreshes every minute"
 msgstr "يتحدث كل دقيقة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_deposit_refund_wizard_form
+msgid "Refund"
+msgstr "استرداد"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_deposit_refund_wizard
+msgid "Refund Contract Deposit"
+msgstr "استرداد تأمين العقد"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_deposit_refund_wizard_form
+msgid "Refund Deposit"
+msgstr "استرداد التأمين"
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Refund paid for %s"
 msgstr "مبلغ مسترد عن %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Refund the deposit"
+msgstr "استرد التأمين"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
@@ -5290,11 +5636,15 @@ msgstr "تأمين مسترد للعقد %(ref)s"
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_deposit_account_id
 #: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_deposit_account_id
-#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid ""
 "Refundable deposits are invoiced on this liability account instead of "
 "revenue."
 msgstr "تُفوتر التأمينات المستردة على حساب الالتزامات هذا بدلاً من الإيراد."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_deposit_refund_wizard__refund_amount
+msgid "Refunded to Customer"
+msgstr "المسترد للعميل"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__do_inspection
@@ -5338,6 +5688,11 @@ msgstr "المتبقي"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Remaining term %(start)s - %(end)s"
 msgstr "المدة المتبقية من %(start)s إلى %(end)s"
+
+#. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__prepaid
+msgid "Remaining term paid in advance"
+msgstr "المدة المتبقية مدفوعة مقدماً"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
@@ -5458,6 +5813,17 @@ msgid "Return"
 msgstr "العودة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_return_goods
+#: model:ir.model.fields,field_description:parking_management.field_account_move__parking_return_goods
+msgid "Return Goods to Stock"
+msgstr "إرجاع البضاعة للمخزون"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_move_reversal__parking_return_goods
+msgid "Return goods to stock"
+msgstr "إرجاع البضاعة للمخزون"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_movement__state__returned
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 msgid "Returned"
@@ -5480,6 +5846,18 @@ msgstr "الإيرادات والتحصيل"
 msgid ""
 "Revenue of this branch is distributed to this analytic account on invoices."
 msgstr "يُوزَّع إيراد هذا الفرع على هذا الحساب التحليلي في الفواتير."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Reversal of %s"
+msgstr "عكس %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Review draft invoices of a closed contract"
+msgstr "راجع الفواتير المسودة لعقد منتهٍ"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__image_right
@@ -5633,6 +6011,11 @@ msgid "Sent Date"
 msgstr "تاريخ الإرسال"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__sale
+msgid "Separate sale"
+msgstr "مبيعات مستقلة"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_messaging_gateway__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__sequence
@@ -5656,6 +6039,11 @@ msgid "Service / Product"
 msgstr "الخدمة / المنتج"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move_line__parking_line_kind__service
+msgid "Service / product"
+msgstr "خدمة / منتج"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__service_center_address
 msgid "Service Center Address"
 msgstr "عنوان مركز الخدمة"
@@ -5671,9 +6059,21 @@ msgid "Service Center Phone"
 msgstr "هاتف مركز الخدمة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_period_start
+#: model:ir.model.fields,field_description:parking_management.field_account_move__parking_period_start
+msgid "Service From"
+msgstr "الخدمة من"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_service__name
 msgid "Service Name"
 msgstr "اسم الخدمة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_period_end
+#: model:ir.model.fields,field_description:parking_management.field_account_move__parking_period_end
+msgid "Service To"
+msgstr "الخدمة إلى"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_spot_type__product_id
@@ -5697,6 +6097,20 @@ msgstr "الخدمات"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
 msgid "Services Total"
 msgstr "إجمالي الخدمات"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Set the customer deposits account in Parking settings before invoicing the "
+"deposit of %s."
+msgstr "حدد حساب تأمينات العملاء في إعدادات المواقف قبل فوترة تأمين العقد %s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "Set the customer deposits account in Parking settings first."
+msgstr "حدد حساب تأمينات العملاء في إعدادات المواقف أولاً."
 
 #. module: parking_management
 #. odoo-python
@@ -6024,6 +6438,24 @@ msgstr "حركات المخزون"
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/account_move.py:0
+msgid "Stock is short, nothing was delivered: %s"
+msgstr "الرصيد غير كافٍ، لم يُسلَّم شيء: %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Stock transfer %(old)s could not be reversed: %(err)s"
+msgstr "تعذر عكس التحويل المخزني %(old)s: %(err)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "Stock transfer %(old)s reversed by %(new)s."
+msgstr "عُكس التحويل المخزني %(old)s بالتحويل %(new)s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
 msgid "Stock transfer %s done."
 msgstr "تمت حركة المخزون %s."
 
@@ -6066,6 +6498,11 @@ msgid "Subscription Type"
 msgstr "نوع الاشتراك"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__period
+msgid "Subscription period"
+msgstr "فترة اشتراك"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_service_line__price_subtotal
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__price_subtotal
 msgid "Subtotal"
@@ -6090,15 +6527,51 @@ msgid "Supplies Consumption"
 msgstr "استهلاك المستلزمات"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Supplies could not be put back in stock: %s"
+msgstr "تعذر إعادة المواد إلى المخزون: %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Supplies could not be taken from stock: %s"
+msgstr "تعذر صرف المواد من المخزون: %s"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Supplies low on stock"
 msgstr "مستلزمات منخفضة المخزون"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Supplies short, nothing taken from stock: %s"
+msgstr "المواد غير كافية، لم يُصرف شيء من المخزون: %s"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract_wash__stock_move_ids
+msgid ""
+"Supplies taken from the branch warehouse for this wash (and put back if it "
+"was cancelled)."
+msgstr "المواد المصروفة من مستودع الفرع لهذه الغسلة (وتُعاد إذا أُلغيت)."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract_wash.py:0
+msgid "Supplies taken with insufficient stock (available / used): %s"
+msgstr "صُرفت المواد مع رصيد غير كافٍ (المتاح / المستخدم): %s"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash_line__product_id
 msgid "Supply Item"
 msgstr "صنف المادة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__stock_move_ids
+msgid "Supply Moves"
+msgstr "حركات المواد"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_terms_conditions_form
@@ -6181,6 +6654,12 @@ msgstr "رقم الاختبار"
 #: code:addons/parking_management/models/parking_messaging.py:0
 msgid "Test message from %s"
 msgstr "رسالة تجريبية من %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/wizard/parking_deposit_refund_wizard.py:0
+msgid "The deduction must be between 0 and the deposit amount."
+msgstr "يجب أن يكون الخصم بين صفر ومبلغ التأمين."
 
 #. module: parking_management
 #. odoo-python
@@ -6541,6 +7020,18 @@ msgid "Unused monthly washes expired"
 msgstr "انتهاء الغسلات الشهرية غير المستخدمة"
 
 #. module: parking_management
+#: model:ir.model.fields.selection,name:parking_management.selection__account_move__parking_invoice_kind__prepaid_refund
+msgid "Unused prepaid months"
+msgstr "أشهر مدفوعة مقدماً غير مستهلكة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"Unused prepaid parking %(spot)s - %(months)s month(s) (%(start)s - %(end)s)"
+msgstr "إيجار موقف %(spot)s مدفوع مقدماً وغير مستهلك لمدة %(months)s شهر، من %(start)s إلى %(end)s"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Updated at"
@@ -6850,6 +7341,14 @@ msgid "View parking spots summary."
 msgstr "عرض ملخص المواقف."
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_wash_location_id
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_wash_location_id
+msgid ""
+"Virtual location wash supplies are moved to. Its valuation accounts decide "
+"the expense account. Created automatically when left empty."
+msgstr "الموقع الافتراضي الذي تُنقل إليه مواد الغسيل، وحسابات تقييمه تحدد حساب المصروف. يُنشأ تلقائياً إذا تُرك فارغاً."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
 msgid "Waiting 1-4h"
 msgstr "انتظار 1-4 س"
@@ -6903,6 +7402,12 @@ msgid "Wash Consumed Supply Line"
 msgstr "المواد المستهلكة في الغسيل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_wash_location_id
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_wash_location_id
+msgid "Wash Consumption Location"
+msgstr "موقع استهلاك الغسيل"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__wash_date
 msgid "Wash Date"
 msgstr "تاريخ الغسيل"
@@ -6922,6 +7427,11 @@ msgstr "بند مستلزمات الغسيل (لكل غسلة)"
 #: model:ir.ui.menu,name:parking_management.menu_parking_wash_kit
 msgid "Wash Kit Items"
 msgstr "مواد النظافة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Wash kit (supplies per wash)"
+msgstr "حقيبة الغسيل (المواد لكل غسلة)"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__washed_by
@@ -6998,6 +7508,14 @@ msgid "Website communication history"
 msgstr "سجل التواصل في الموقع"
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_stock_shortage
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_stock_shortage
+msgid ""
+"What happens when a posted parking invoice sells more than the branch "
+"warehouse holds."
+msgstr "ما يحدث عندما تبيع فاتورة مواقف مرحّلة أكثر من رصيد مستودع الفرع."
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_message_log__channel__whatsapp
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__channel__whatsapp
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_notification_rule__channel__whatsapp
@@ -7041,6 +7559,12 @@ msgid "Wheels / Rims"
 msgstr "العجلات / الجنوط"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_stock_shortage
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_stock_shortage
+msgid "When Stock Is Short"
+msgstr "عند نقص الرصيد"
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_invoice_stock_moves
 #: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_invoice_stock_moves
 msgid ""
@@ -7068,6 +7592,11 @@ msgid ""
 "contracts"
 msgstr ""
 "عند التفعيل، يؤدي تعديل هذا القالب إلى تحديث جميع العقود المرتبطة تلقائياً"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "When stock is short"
+msgstr "عند نقص الرصيد"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_vehicle__key_slot
@@ -7201,6 +7730,18 @@ msgid "days)"
 msgstr "يوم)"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "deposit back to billing"
+msgstr "أُعيد التأمين للفوترة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "deposit refund undone"
+msgstr "أُلغي استرداد التأمين"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
 msgid "e.g. Unifonic SMS"
 msgstr "مثال: Unifonic SMS"
@@ -7240,6 +7781,18 @@ msgstr "كم."
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_report
 msgid "movement(s)"
 msgstr "حركة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "one-time items back to billing: %s"
+msgstr "أُعيدت البنود لمرة واحدة للفوترة: %s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid "periodic invoicing resumed"
+msgstr "استؤنفت الفوترة الدورية"
 
 #. module: parking_management
 #. odoo-python

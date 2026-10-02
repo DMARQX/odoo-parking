@@ -20,6 +20,7 @@ class ParkingWashCredit(models.Model):
         ("purchase", "Purchased"),
         ("manual", "Manual adjustment"),
         ("expiry", "Expired (no carry-over)"),
+        ("cancel", "Invoice cancelled"),
     ], string="Type", required=True, default="manual")
     invoice_id = fields.Many2one("account.move", string="Invoice", readonly=True)
     note = fields.Char(string="Note")

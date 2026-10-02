@@ -16,6 +16,16 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.parking_invoice_stock_moves", readonly=False)
     parking_invoice_lang = fields.Selection(
         related="company_id.parking_invoice_lang", readonly=False)
+    parking_use_deposit = fields.Boolean(
+        related="company_id.parking_use_deposit", readonly=False)
+    parking_prorate = fields.Boolean(
+        related="company_id.parking_prorate", readonly=False)
+    parking_stock_shortage = fields.Selection(
+        related="company_id.parking_stock_shortage", readonly=False)
+    parking_wash_consume_stock = fields.Boolean(
+        related="company_id.parking_wash_consume_stock", readonly=False)
+    parking_wash_location_id = fields.Many2one(
+        related="company_id.parking_wash_location_id", readonly=False)
     parking_wash_carry_over = fields.Boolean(
         related="company_id.parking_wash_carry_over", readonly=False)
     parking_phone_country_code = fields.Char(

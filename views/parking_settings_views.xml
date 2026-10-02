@@ -10,8 +10,16 @@
                 <app data-string="Parking" string="Parking" name="parking_management"
                      groups="parking_management.group_parking_manager">
                     <block title="Accounting" name="parking_accounting">
-                        <setting string="Customer deposits" help="Refundable deposits are invoiced on this liability account instead of revenue.">
-                            <field name="parking_deposit_account_id" options="{'no_create': True}"/>
+                        <setting help="Contracts can carry a refundable deposit: it is invoiced on a liability account (not revenue) and refunded from the contract when it ends.">
+                            <field name="parking_use_deposit"/>
+                            <div class="mt-2" invisible="not parking_use_deposit">
+                                <label for="parking_deposit_account_id" string="Deposits account" class="o_light_label me-2"/>
+                                <field name="parking_deposit_account_id" options="{'no_create': True}"
+                                       required="parking_use_deposit"/>
+                            </div>
+                        </setting>
+                        <setting help="A contract that starts or ends inside an invoice period pays only for its days in that period.">
+                            <field name="parking_prorate"/>
                         </setting>
                         <setting help="Post contract invoices as soon as they are generated; otherwise they stay as drafts for review.">
                             <field name="parking_auto_post_invoices"/>
@@ -28,6 +36,10 @@
                         </setting>
                         <setting help="When a parking invoice is posted, storable products on it are delivered from the branch warehouse and a credit note brings them back. Set each branch's warehouse on the branch form.">
                             <field name="parking_invoice_stock_moves"/>
+                            <div class="mt-2" invisible="not parking_invoice_stock_moves">
+                                <label for="parking_stock_shortage" string="When stock is short" class="o_light_label me-2"/>
+                                <field name="parking_stock_shortage"/>
+                            </div>
                         </setting>
                         <setting string="Invoice texts language" help="Language of the period, spot and dates written on parking invoice lines. Leave empty to use each customer's language.">
                             <field name="parking_invoice_lang" placeholder="Customer's language"/>
@@ -36,6 +48,17 @@
                     <block title="Car Washes" name="parking_washes">
                         <setting help="On: washes left from a month stay in the contract's balance. Off: unused monthly washes expire when the next month's washes are added. Purchased washes never expire.">
                             <field name="parking_wash_carry_over"/>
+                        </setting>
+                        <setting help="A completed wash takes its supplies (the wash kit, or the lines entered on the wash) out of the branch warehouse and books their cost; cancelling the wash puts them back.">
+                            <field name="parking_wash_consume_stock"/>
+                            <div class="mt-2" invisible="not parking_wash_consume_stock">
+                                <label for="parking_wash_location_id" string="Consumption location" class="o_light_label me-2"/>
+                                <field name="parking_wash_location_id" options="{'no_create': True}" placeholder="Created automatically"/>
+                                <div class="mt-1">
+                                    <button name="%(parking_management.action_parking_wash_kit_item)d" type="action"
+                                            string="Wash kit (supplies per wash)" icon="fa-arrow-right" class="btn-link"/>
+                                </div>
+                            </div>
                         </setting>
                     </block>
                     <block title="Customer Notifications" name="parking_notifications">

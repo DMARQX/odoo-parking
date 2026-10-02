@@ -46,6 +46,9 @@ class ParkingContract(models.Model):
     amount_total = fields.Monetary(string="Total Amount", compute="_compute_totals", currency_field="company_currency_id", store=True, tracking=True)
     deposit_amount = fields.Monetary(string="Deposit Amount", currency_field="company_currency_id", tracking=True)
     deposit_invoiced = fields.Boolean(string="Deposit Invoiced", default=False, copy=False, help="Whether the deposit/insurance line has been added to a customer invoice.")
+    deposit_enabled = fields.Boolean(related="company_id.parking_use_deposit")
+    deposit_refunded = fields.Boolean(string="Deposit Refunded", readonly=True, copy=False)
+    deposit_refund_move_id = fields.Many2one("account.move", string="Deposit Refund", readonly=True, copy=False)
 
     user_id = fields.Many2one("res.users", string="Responsible Employee", default=lambda self: self.env.user, tracking=True)
 
@@ -218,10 +221,13 @@ class ParkingContract(models.Model):
             if not vals.get("name") or vals.get("name") in ("New", "جديد", "/", _("New")):
                 vals["name"] = contract_seq.next_by_code("parking.contract") or _("New")
             self._check_spot_availability(vals)
-            if not vals.get("parking_product_id") and vals.get("spot_id"):
-                product = self.env["parking.spot"].browse(vals["spot_id"]).spot_type_id.product_id
-                if product:
-                    vals["parking_product_id"] = product.id
+            if vals.get("spot_id"):
+                spot = self.env["parking.spot"].browse(vals["spot_id"])
+                if not vals.get("parking_product_id") and spot.spot_type_id.product_id:
+                    vals["parking_product_id"] = spot.spot_type_id.product_id.id
+                if spot.location_id.company_id:
+                    # Invoices go out under the branch's company (its VAT number and journals).
+                    vals["company_id"] = spot.location_id.company_id.id
         records = super().create(vals_list)
         for record in records:
             if record.auto_invoice:
@@ -337,16 +343,28 @@ class ParkingContract(models.Model):
                      spot=self.spot_id.name, days=self.booking_days,
                      start=fmt(self.start_date), end=fmt(self.end_date))
         else:
+            price = price if price > 0 else self.price_per_month or 0
+            start, end = period_start, period_end
+            if months is None and period_start and period_end and self.company_id.parking_prorate:
+                # Pay only the contract's days inside the period: days x the period's daily rate.
+                start = max(period_start, self.start_date or period_start)
+                end = min(period_end, self.end_date or period_end)
+                period_days = (period_end - period_start).days + 1
+                days = (end - start).days + 1
+                if 0 < days < period_days:
+                    price = round(price * qty / period_days, 2)
+                    qty = float(days)
             name = _("Parking rent %(spot)s - %(period)s (%(start)s - %(end)s)",
                      spot=self.spot_id.name, period=period_label,
-                     start=fmt(period_start), end=fmt(period_end))
+                     start=fmt(start), end=fmt(end))
 
         lines.append((0, 0, dict(acc_vals, **{
             "name": name,
             "quantity": qty,
-            "price_unit": price if price > 0 else self.price_per_month or 0,
+            "price_unit": price,
             "product_id": product_id,
             "tax_ids": self._get_invoice_tax_ids(product),
+            "parking_line_kind": "rent",
         })))
 
         service_acc_vals = self._get_line_accounting_vals()
@@ -360,21 +378,20 @@ class ParkingContract(models.Model):
                 "price_unit": line.price_unit,
                 "product_id": line.product_id.id or False,
                 "tax_ids": self._get_invoice_tax_ids(line.product_id),
+                "parking_line_kind": "service",
             })))
 
-        if self.deposit_amount and not self.deposit_invoiced:
+        if self._deposit_due():
             deposit_account = self.company_id.parking_deposit_account_id
             deposit_line = {
                 "name": _("Refundable deposit - %(ref)s", ref=self.name),
                 "quantity": 1.0,
                 "price_unit": self.deposit_amount,
                 "tax_ids": [(5, 0, 0)],
-            }
-            if deposit_account:
                 # A refundable deposit is owed back to the customer: a liability, not revenue.
-                deposit_line["account_id"] = deposit_account.id
-            else:
-                deposit_line["product_id"] = product_id
+                "account_id": deposit_account.id,
+                "parking_line_kind": "deposit",
+            }
             lines.append((0, 0, deposit_line))
 
         return lines
@@ -386,18 +403,15 @@ class ParkingContract(models.Model):
         contract = self._invoice_ctx()
         period_start, period_end, label = contract._get_invoice_period_dates(invoice_date)
         origin = "%s - %s" % (self.name, label)
-        period_origins = self._period_origins(invoice_date)
-        if self.invoice_ids.filtered(lambda m: m.state != "cancel" and m.invoice_origin in period_origins):
+        if self._period_invoiced(period_start, invoice_date):
             raise UserError(_("An invoice for %s already exists. Cancel it first to issue a new one.", origin))
-        invoice_vals = {
+        invoice_vals = dict(self._invoice_header_vals("period", period_start, period_end), **{
             "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
             "invoice_date": invoice_date,
-            "parking_contract_id": self.id,
             "invoice_origin": origin,
             "invoice_line_ids": contract._get_invoice_lines_vals(label, period_start, period_end),
             "invoice_payment_term_id": self._get_payment_term().id,
-        }
+        })
         one_time = self.service_line_ids._is_billable().filtered(lambda l: l.billing_type == "one_time")
         # Issued by the system: contract staff activate contracts without
         # holding accounting rights, and the recurring cron has none either.
@@ -407,14 +421,36 @@ class ParkingContract(models.Model):
         if self.company_id.parking_auto_post_invoices and invoice.amount_total > 0:
             invoice.action_post()
         self.env["parking.notification.rule"]._notify("invoice_created", invoice, self.partner_id)
-        if self.deposit_amount and not self.deposit_invoiced:
+        if invoice._parking_has_deposit():
             self.write({"deposit_invoiced": True})
         self.write({
             "last_invoiced_date": invoice_date,
-            "recurring_next_date": self._compute_next_invoice_date(invoice_date),
+            # From the period, not the invoice date: a late run must not shift the billing day.
+            "recurring_next_date": self._compute_next_invoice_date(period_start),
         })
         self._send_invoice_notification(invoice)
         return invoice
+
+    def _period_invoiced(self, period_start, invoice_date):
+        """An invoice (not cancelled) already bills this period."""
+        self.ensure_one()
+        live = self.invoice_ids.filtered(lambda m: m.state != "cancel" and m.move_type == "out_invoice")
+        if live.filtered(lambda m: m.parking_invoice_kind == "period" and m.parking_period_start == period_start):
+            return True
+        # Invoices issued before 18.0.5.0.0 carry the period only in their source text.
+        origins = self._period_origins(invoice_date)
+        return bool(live.filtered(lambda m: not m.parking_invoice_kind and m.invoice_origin in origins))
+
+    def _deposit_due(self):
+        """The deposit goes on the next invoice: feature on, amount set, not billed yet."""
+        self.ensure_one()
+        if not (self.company_id.parking_use_deposit and self.deposit_amount and not self.deposit_invoiced):
+            return False
+        if not self.company_id.parking_deposit_account_id:
+            raise UserError(_(
+                "Set the customer deposits account in Parking settings before invoicing the deposit of %s.",
+                self.name))
+        return True
 
     def _compute_next_invoice_date(self, from_date):
         self.ensure_one()
@@ -452,21 +488,41 @@ class ParkingContract(models.Model):
             ("recurring_next_date", "<=", today),
         ])
         for contract in contracts:
-            if contract.end_date and contract.recurring_next_date > contract.end_date:
-                contract.recurring_next_date = False
+            # Catch up every period that fell due (e.g. after the server was down), oldest first.
+            for _i in range(36):
+                due = contract.recurring_next_date
+                if not due or due > today or contract.state != "active" or contract.prepaid_until:
+                    break
+                if contract.end_date and due > contract.end_date:
+                    contract.recurring_next_date = False
+                    break
+                try:
+                    with self.env.cr.savepoint():
+                        contract._auto_create_invoice(due)
+                except Exception as e:
+                    contract.env["ir.logging"].sudo().create({
+                        "name": "Parking Invoice Cron",
+                        "type": "server",
+                        "level": "error",
+                        "message": "%s: %s" % (contract.name, e),
+                        "path": "parking_contract._cron_generate_recurring_invoices",
+                        "func": "_cron_generate_recurring_invoices",
+                        "line": "0",  # required: without it this log crashed the whole run
+                    })
+                    contract._billing_alert(_("Automatic invoice failed"), str(e))
+                    break
+                if contract.recurring_next_date == due:
+                    break
+
+    def _billing_alert(self, summary, note):
+        """To-do for the contract's responsible: billing needs a human (once per open alert)."""
+        for contract in self:
+            open_same = contract.activity_ids.filtered(lambda a: a.summary == summary)
+            if open_same:
                 continue
-            try:
-                with self.env.cr.savepoint():
-                    contract._auto_create_invoice(today)
-            except Exception as e:
-                contract.env["ir.logging"].sudo().create({
-                    "name": "Parking Invoice Cron",
-                    "type": "server",
-                    "level": "error",
-                    "message": str(e),
-                    "path": "parking_contract._cron_generate_recurring_invoices",
-                    "func": "_cron_generate_recurring_invoices",
-                })
+            contract.sudo().activity_schedule(
+                "mail.mail_activity_data_todo", summary=summary, note=note,
+                user_id=(contract.user_id or self.env.user).id)
 
     @api.onchange("subscription_type")
     def _onchange_subscription_type(self):
@@ -506,8 +562,19 @@ class ParkingContract(models.Model):
                 or self.env.ref("parking_management.product_parking_service", False)
                 or self.env["product.product"])
 
+    @api.constrains("company_id", "spot_id")
+    def _check_branch_company(self):
+        for r in self:
+            branch_company = r.location_id.company_id
+            if branch_company and r.company_id != branch_company:
+                raise ValidationError(_(
+                    "Contract %(name)s must belong to %(company)s, the company of branch %(branch)s.",
+                    name=r.name, company=branch_company.name, branch=r.location_id.display_name))
+
     @api.onchange("spot_id")
     def _onchange_spot_id_pricing(self):
+        if self.spot_id.location_id.company_id:
+            self.company_id = self.spot_id.location_id.company_id
         if self.spot_id.spot_type_id.product_id:
             self.parking_product_id = self.spot_id.spot_type_id.product_id
         if self.spot_id.price_tmpl_id and not self.price_tmpl_id:
@@ -520,7 +587,8 @@ class ParkingContract(models.Model):
             tmpl = self.price_tmpl_id
             self.price_per_month = tmpl.price_per_month or self.price_per_month
             self.price_per_day = tmpl.price_per_day or self.price_per_day
-            self.deposit_amount = tmpl.deposit_amount if (tmpl.deposit_amount and not self.deposit_invoiced) else self.deposit_amount
+            if self.company_id.parking_use_deposit and tmpl.deposit_amount and not self.deposit_invoiced:
+                self.deposit_amount = tmpl.deposit_amount
             if tmpl.tax_id:
                 self.tax_ids = [(6, 0, [tmpl.tax_id.id])]
         elif not self.price_tmpl_id:
@@ -660,13 +728,152 @@ class ParkingContract(models.Model):
 
     def action_expire(self):
         self._check_state(("active", "confirmed"), _("expire"))
+        was_active = self.filtered(lambda c: c.state == "active")
         self.write({"state": "expired"})
         self.spot_id._update_status_from_contracts()
+        was_active._close_billing()
 
     def action_cancel(self):
         self._check_state(("draft", "confirmed", "active"), _("cancel"))
-        self.write({"state": "cancelled"})
+        was_active = self.filtered(lambda c: c.state == "active")
+        self.write({"state": "cancelled", "recurring_next_date": False})
         self.spot_id._update_status_from_contracts()
+        was_active._close_billing(early=True)
+
+    def _close_billing(self, early=False):
+        """Settle a contract that stops: bill what was sold but not invoiced, credit prepaid months
+        that will not be used, and leave to-dos for drafts and the deposit."""
+        today = fields.Date.context_today(self)
+        for contract in self:
+            pending = contract.service_line_ids.filtered(lambda l: l.billing_type == "one_time" and not l.invoice_id)
+            if pending:
+                invoice = contract._create_charge_invoice([{
+                    "service": l.service_id, "product": l.product_id, "name": l.name,
+                    "quantity": l.quantity, "price_unit": l.price_unit,
+                } for l in pending], kind="final", credit_washes=False)
+                pending.sudo().write({"invoice_id": invoice.id})
+            if early and contract.prepaid_until and contract.prepaid_until > today:
+                contract._credit_unused_prepaid(today)
+            drafts = contract.invoice_ids.filtered(lambda m: m.state == "draft")
+            if drafts:
+                contract._billing_alert(
+                    _("Review draft invoices of a closed contract"),
+                    _("Draft invoices: %s. Post or cancel them.", ", ".join(d.name or _("Draft") for d in drafts)))
+            if contract.deposit_enabled and contract.deposit_invoiced and not contract.deposit_refunded:
+                contract._billing_alert(_("Refund the deposit"),
+                                        _("Contract %s has ended: refund its deposit.", contract.name))
+
+    def _credit_unused_prepaid(self, today):
+        """Draft credit note for the whole prepaid months after this one."""
+        self.ensure_one()
+        prepaid = self.invoice_ids.filtered(lambda m: m.parking_invoice_kind == "prepaid" and m.state == "posted")[-1:]
+        rent = prepaid.invoice_line_ids.filtered(lambda l: l.parking_line_kind == "rent")[:1]
+        start = today.replace(day=1) + relativedelta(months=1)
+        if not rent or start > self.prepaid_until:
+            return False
+        delta = relativedelta(self.prepaid_until + timedelta(days=1), start)
+        months = delta.years * 12 + delta.months
+        if months <= 0:
+            return False
+        end = start + relativedelta(months=months) - timedelta(days=1)
+        contract = self._invoice_ctx()
+        refund = self.env["account.move"].sudo().with_company(self.company_id).create(
+            dict(self._invoice_header_vals("prepaid_refund", start, end), **{
+                "move_type": "out_refund",
+                "invoice_date": today,
+                "invoice_origin": contract._unused_prepaid_text(start, end, months),
+                "reversed_entry_id": prepaid.id,
+                "invoice_line_ids": [(0, 0, dict(self._get_line_accounting_vals(), **{
+                    "name": contract._unused_prepaid_text(start, end, months),
+                    "quantity": float(months),
+                    "price_unit": rent.price_unit,
+                    "discount": rent.discount,
+                    "product_id": rent.product_id.id,
+                    "tax_ids": [(6, 0, rent.tax_ids.ids)],
+                    "parking_line_kind": "rent",
+                }))],
+            }))
+        self.prepaid_until = today
+        self._billing_alert(_("Check the prepaid refund"),
+                            _("Draft credit note %s for unused prepaid months: review and post it.", refund.name or ""))
+        return refund
+
+    def _unused_prepaid_text(self, start, end, months):
+        fmt = self._format_invoice_date
+        return _("Unused prepaid parking %(spot)s - %(months)s month(s) (%(start)s - %(end)s)",
+                 spot=self.spot_id.name, months=months, start=fmt(start), end=fmt(end))
+
+    def action_refund_deposit(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Refund Deposit"),
+            "res_model": "parking.deposit.refund.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_contract_id": self.id},
+        }
+
+    def _refund_deposit(self, deduction=0.0, reason=False, income_account=False):
+        """Give the deposit back: a credit note on the deposits account for the refundable part,
+        and a journal entry moving any deduction (damages, unpaid fees) from the liability to income."""
+        self.ensure_one()
+        account = self.company_id.parking_deposit_account_id
+        if not account:
+            raise UserError(_("Set the customer deposits account in Parking settings first."))
+        if not self.deposit_invoiced or self.deposit_refunded:
+            raise UserError(_("Contract %s has no invoiced deposit left to refund.", self.name))
+        deduction = max(0.0, min(deduction or 0.0, self.deposit_amount))
+        refund_amount = self.deposit_amount - deduction
+        contract = self._invoice_ctx()
+        moves = self.env["account.move"]
+        if refund_amount > 0:
+            moves |= self.env["account.move"].sudo().with_company(self.company_id).create(
+                dict(self._invoice_header_vals("deposit_refund"), **{
+                    "move_type": "out_refund",
+                    "invoice_date": fields.Date.context_today(self),
+                    "invoice_origin": contract._deposit_refund_text(),
+                    "invoice_line_ids": [(0, 0, {
+                        "name": contract._deposit_refund_text(),
+                        "quantity": 1.0,
+                        "price_unit": refund_amount,
+                        "account_id": account.id,
+                        "tax_ids": [(5, 0, 0)],
+                        "parking_line_kind": "deposit",
+                    })],
+                }))
+        if deduction > 0:
+            if not income_account:
+                raise UserError(_("Choose the income account for the deduction."))
+            journal = self.env["account.journal"].sudo().search(
+                [("type", "=", "general"), ("company_id", "=", self.company_id.id)], limit=1)
+            label = contract._deposit_deduction_text(reason)
+            moves |= self.env["account.move"].sudo().with_company(self.company_id).create({
+                "move_type": "entry",
+                "journal_id": journal.id,
+                "date": fields.Date.context_today(self),
+                "ref": label,
+                "parking_contract_id": self.id,
+                "parking_invoice_kind": "deposit_refund",
+                "line_ids": [
+                    (0, 0, {"name": label, "account_id": account.id, "partner_id": self.partner_id.id,
+                            "debit": deduction, "credit": 0.0}),
+                    (0, 0, dict(self._get_line_accounting_vals(), **{
+                        "name": label, "account_id": income_account.id, "partner_id": self.partner_id.id,
+                        "debit": 0.0, "credit": deduction})),
+                ],
+            })
+        moves.filtered(lambda m: m.move_type == "entry" or self.company_id.parking_auto_post_invoices).action_post()
+        self.write({"deposit_refunded": True, "deposit_refund_move_id": moves[:1].id})
+        self.activity_ids.filtered(lambda a: a.summary == _("Refund the deposit")).action_done()
+        self._message_log(body=_("Deposit refunded: %s", ", ".join(m._get_html_link() for m in moves)))
+        return moves
+
+    def _deposit_refund_text(self):
+        return _("Deposit refund - %(ref)s", ref=self.name)
+
+    def _deposit_deduction_text(self, reason):
+        return _("Deposit deduction - %(ref)s: %(reason)s", ref=self.name, reason=reason or "-")
 
     def action_check_out(self):
         """Register vehicle check-out (exit) for the contract's spot."""
@@ -696,7 +903,28 @@ class ParkingContract(models.Model):
             taxes = product.taxes_id.filtered(lambda t: t.company_id == self.company_id)
         if not taxes:
             taxes = self.company_id.account_sale_tax_id
+        fiscal_position = self._get_fiscal_position()
+        if fiscal_position:
+            # Exempt or export customers get their mapped (e.g. zero-rated) taxes.
+            taxes = fiscal_position.map_tax(taxes)
         return [(6, 0, taxes.ids)]
+
+    def _get_fiscal_position(self):
+        self.ensure_one()
+        return self.env["account.fiscal.position"].sudo().with_company(self.company_id)._get_fiscal_position(
+            self.partner_id)
+
+    def _invoice_header_vals(self, kind, period_start=False, period_end=False):
+        """Fields every parking invoice carries."""
+        self.ensure_one()
+        return {
+            "partner_id": self.partner_id.id,
+            "parking_contract_id": self.id,
+            "parking_invoice_kind": kind,
+            "parking_period_start": period_start,
+            "parking_period_end": period_end,
+            "fiscal_position_id": self._get_fiscal_position().id,
+        }
 
     def _is_arabic_context(self):
         return (self.env.context.get("lang") or self.env.user.lang or "").startswith("ar")
@@ -788,7 +1016,7 @@ class ParkingContract(models.Model):
             return int((service.included_washes or 1) * quantity)
         return 0
 
-    def _create_charge_invoice(self, charges, payment_term=None):
+    def _create_charge_invoice(self, charges, payment_term=None, kind="sale", credit_washes=True):
         """Invoice one sale on its own invoice, linked to the contract.
 
         charges: list of dicts with service, product, name, quantity, price_unit.
@@ -804,17 +1032,17 @@ class ParkingContract(models.Model):
                 "price_unit": ch.get("price_unit") or 0.0,
                 "product_id": product.id or False,
                 "tax_ids": self._get_invoice_tax_ids(product),
+                "parking_line_kind": "service",
             })))
-        invoice = self.env["account.move"].sudo().with_company(self.company_id).create({
-            "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
-            "invoice_date": fields.Date.context_today(self),
-            "parking_contract_id": self.id,
-            "invoice_origin": self._invoice_ctx()._sale_origin(),
-            "invoice_line_ids": lines,
-            "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
-        })
-        for ch in charges:
+        invoice = self.env["account.move"].sudo().with_company(self.company_id).create(
+            dict(self._invoice_header_vals(kind), **{
+                "move_type": "out_invoice",
+                "invoice_date": fields.Date.context_today(self),
+                "invoice_origin": self._invoice_ctx()._sale_origin(),
+                "invoice_line_ids": lines,
+                "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
+            }))
+        for ch in charges if credit_washes else []:
             self._add_wash_credit(self._wash_credits_for(ch.get("service"), ch.get("quantity") or 1),
                                   "purchase", invoice)
         if self.company_id.parking_auto_post_invoices and invoice.amount_total > 0:
@@ -866,17 +1094,16 @@ class ParkingContract(models.Model):
                 and "deferred_start_date" in self.env["account.move.line"]._fields):
             main.update({"deferred_start_date": start, "deferred_end_date": end})
         one_time = self.service_line_ids._is_billable().filtered(lambda l: l.billing_type == "one_time")
-        invoice = self.env["account.move"].sudo().with_company(self.company_id).create({
-            "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
-            "invoice_date": fields.Date.context_today(self),
-            "parking_contract_id": self.id,
-            "invoice_origin": "%s - %s" % (self.name, label),
-            "invoice_line_ids": lines,
-            "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
-        })
+        invoice = self.env["account.move"].sudo().with_company(self.company_id).create(
+            dict(self._invoice_header_vals("prepaid", start, end), **{
+                "move_type": "out_invoice",
+                "invoice_date": fields.Date.context_today(self),
+                "invoice_origin": "%s - %s" % (self.name, label),
+                "invoice_line_ids": lines,
+                "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
+            }))
         one_time.sudo().write({"invoice_id": invoice.id})
-        if self.deposit_amount and not self.deposit_invoiced:
+        if any(l[2].get("parking_line_kind") == "deposit" for l in lines):
             self.deposit_invoiced = True
         self._grant_period_washes(months, invoice, expire=False)
         self.write({"recurring_next_date": False, "prepaid_until": end,
