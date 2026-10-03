@@ -46,6 +46,7 @@ class ParkingDashboard(models.TransientModel):
         points = self.env["stock.warehouse.orderpoint"].search([("warehouse_id", "in", warehouses.ids)])
         return points.filtered(lambda p: p.qty_forecast < p.product_min_qty).ids
 
+    @api.model
     def get_dashboard_data(self, location_id=False, period="month"):
         period = period if period in PERIODS else "month"
         today = fields.Date.context_today(self)
