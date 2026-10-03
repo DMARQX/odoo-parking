@@ -62,3 +62,7 @@ access_parking_charge_wizard_contract,Charge Wizard Contract,model_parking_contr
 access_parking_charge_wizard_ops,Charge Wizard Front Desk,model_parking_contract_charge_wizard,group_parking_checkinout,1,1,1,1
 access_parking_prepay_wizard_invoicing,Prepay Wizard,model_parking_contract_prepay_wizard,group_parking_invoicing,1,1,1,1
 access_parking_deposit_refund_wizard_invoicing,Deposit Refund Wizard,model_parking_deposit_refund_wizard,group_parking_invoicing,1,1,1,1
+access_parking_vehicle_brand_user,Read Vehicle Brand,model_parking_vehicle_brand,group_parking_user,1,0,0,0
+access_parking_vehicle_brand_ops,Add Vehicle Brand,model_parking_vehicle_brand,group_parking_checkinout,1,1,1,0
+access_parking_vehicle_brand_config,Manage Vehicle Brand,model_parking_vehicle_brand,group_parking_config_location,1,1,1,1
+access_parking_vehicle_brand_admin,Admin Vehicle Brand,model_parking_vehicle_brand,base.group_system,1,1,1,1

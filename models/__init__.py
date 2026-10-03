@@ -1,6 +1,7 @@
 from . import parking_location
 from . import parking_spot
 from . import parking_spot_type
+from . import parking_vehicle_brand
 from . import parking_vehicle
 from . import parking_service
 from . import parking_price_template

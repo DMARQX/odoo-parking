@@ -37,12 +37,21 @@ class ParkingSpot(models.Model):
     current_vehicle_model = fields.Char(string="Model", compute="_compute_current_vehicle", store=False)
     current_owner_id = fields.Many2one("res.partner", string="Owner", compute="_compute_current_vehicle", store=False)
     current_owner_mobile = fields.Char(string="Owner Mobile", compute="_compute_current_vehicle", store=False)
+    current_vehicle_id = fields.Many2one("parking.vehicle", string="Vehicle", compute="_compute_current_vehicle")
+    current_vehicle_count = fields.Integer(compute="_compute_current_vehicle")
+    current_brand_id = fields.Many2one("parking.vehicle.brand", string="Vehicle Brand", compute="_compute_current_vehicle")
+    current_brand_logo = fields.Image(string="Brand Logo", compute="_compute_current_vehicle")
+    current_brand_color = fields.Char(compute="_compute_current_vehicle")
+    current_brand_initials = fields.Char(compute="_compute_current_vehicle")
+    current_contract_end = fields.Date(string="Contract Ends", compute="_compute_current_vehicle")
+    current_days_left = fields.Integer(string="Days Left", compute="_compute_current_vehicle")
     status_log_ids = fields.One2many("parking.spot.status.log", "spot_id", string="Status History")
     movement_ids = fields.One2many("parking.vehicle.movement", "spot_id", string="Vehicle Movements")
     last_movement_id = fields.Many2one("parking.vehicle.movement", string="Last Movement", compute="_compute_last_movement")
     last_movement_out = fields.Datetime(string="Last Check Out", compute="_compute_last_movement")
     last_movement_in = fields.Datetime(string="Last Check In", compute="_compute_last_movement")
     waiting_hours = fields.Float(string="Waiting Hours", compute="_compute_waiting_hours", search="_search_waiting_hours")
+    waiting_label = fields.Char(string="Out For", compute="_compute_waiting_hours")
     _sql_constraints = [
         ("spot_name_location_unique", "unique(location_id, name)", "Spot number must be unique within the same branch!"),
     ]
@@ -91,21 +100,27 @@ class ParkingSpot(models.Model):
             elif spot.status in ("occupied", "client_out", "reserved"):
                 spot._set_status("available")
 
-    @api.depends("current_contract_id", "current_contract_id.vehicle_ids", "current_contract_id.partner_id")
+    @api.depends("current_contract_id", "current_contract_id.vehicle_ids", "current_contract_id.partner_id",
+                 "current_contract_id.vehicle_ids.brand_id", "current_contract_id.end_date")
     def _compute_current_vehicle(self):
+        today = fields.Date.context_today(self)
         for r in self:
             contract = r.current_contract_id
-            if contract and contract.vehicle_ids:
-                v = contract.vehicle_ids[0]
-                r.current_vehicle_plate = v.license_plate
-                r.current_vehicle_brand = v.brand
-                r.current_vehicle_model = v.model
-            else:
-                r.current_vehicle_plate = ""
-                r.current_vehicle_brand = ""
-                r.current_vehicle_model = ""
+            v = contract.vehicle_ids[:1] if contract else self.env["parking.vehicle"]
+            brand = v.brand_id
+            r.current_vehicle_id = v
+            r.current_vehicle_count = len(contract.vehicle_ids) if contract else 0
+            r.current_vehicle_plate = v.license_plate or ""
+            r.current_vehicle_brand = brand.name or v.brand or ""
+            r.current_vehicle_model = v.model or ""
+            r.current_brand_id = brand
+            r.current_brand_logo = brand.logo
+            r.current_brand_color = brand.color or "#64748b"
+            r.current_brand_initials = brand.initials or (v.brand or "")[:2].upper()
             r.current_owner_id = contract.partner_id if contract else False
-            r.current_owner_mobile = contract.partner_id.mobile if contract and contract.partner_id else ""
+            r.current_owner_mobile = (contract.partner_id.mobile or contract.partner_id.phone or "") if contract else ""
+            r.current_contract_end = contract.end_date if contract else False
+            r.current_days_left = (contract.end_date - today).days if contract and contract.end_date else 0
 
     def action_check_in(self):
         self._set_status("occupied")
@@ -219,5 +234,13 @@ class ParkingSpot(models.Model):
             if r.status == "client_out" and r.last_movement_out:
                 delta = now - r.last_movement_out
                 r.waiting_hours = delta.total_seconds() / 3600
+                hours = int(r.waiting_hours)
+                if hours < 1:
+                    r.waiting_label = _("%s min", max(int(delta.total_seconds() // 60), 1))
+                elif hours < 48:
+                    r.waiting_label = _("%s h", hours)
+                else:
+                    r.waiting_label = _("%s days", hours // 24)
             else:
                 r.waiting_hours = 0
+                r.waiting_label = False

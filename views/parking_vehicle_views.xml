@@ -5,8 +5,9 @@
         <field name="model">parking.vehicle</field>
         <field name="arch" type="xml">
             <list>
+                <field name="brand_logo" widget="image" options="{'size': [24, 24]}" nolabel="1"/>
                 <field name="license_plate"/>
-                <field name="brand"/>
+                <field name="brand_id"/>
                 <field name="model"/>
                 <field name="color"/>
                 <field name="owner_id"/>
@@ -52,7 +53,14 @@
                     <group>
                         <group>
                             <field name="license_plate"/>
-                            <field name="brand"/>
+                            <label for="brand_id"/>
+                            <div class="d-flex align-items-center gap-2">
+                                <field name="brand_logo" widget="image" options="{'size': [28, 28]}"
+                                       invisible="not brand_logo" nolabel="1"/>
+                                <field name="brand_id" options="{'no_quick_create': True}"
+                                       placeholder="e.g. Toyota" nolabel="1"/>
+                            </div>
+                            <field name="brand" invisible="brand_id" string="Brand (typed)"/>
                             <field name="model"/>
                         </group>
                         <group>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:08+0000\n"
-"PO-Revision-Date: 2026-10-02 10:08+0000\n"
+"POT-Creation-Date: 2026-10-03 19:55+0000\n"
+"PO-Revision-Date: 2026-10-03 19:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,24 @@ msgstr "%(hours)s ساعة"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "%s - Sale"
 msgstr "%s - مبيعات"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_spot.py:0
+msgid "%s days"
+msgstr "%s يوم"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_spot.py:0
+msgid "%s h"
+msgstr "%s ساعة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_spot.py:0
+msgid "%s min"
+msgstr "%s دقيقة"
 
 #. module: parking_management
 #. odoo-python
@@ -239,14 +257,30 @@ msgstr ""
 "<b>دخول المركبات:</b> يُسمح فقط للمركبات المسجلة في العقد باستخدام الموقف."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-building-o\" title=\"Branch\"/>"
-msgstr "<i class=\"fa fa-building-o\" title=\"الفرع\"/>"
+msgid ""
+"<i class=\"fa fa-bookmark\" title=\"Reserved\"/>\n"
+"                                <span>Reserved, vehicle not arrived yet</span>"
+msgstr ""
+"<i class=\"fa fa-bookmark\" title=\"محجوز\"/>\n"
+"                                <span>محجوز، لم تصل المركبة بعد</span>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-car\" title=\"Vehicle\" aria-hidden=\"true\"/>"
-msgstr "<i class=\"fa fa-car\" title=\"المركبة\" aria-hidden=\"true\"/>"
+msgid "<i class=\"fa fa-building-o me-1\" title=\"Floor\"/>"
+msgstr "<i class=\"fa fa-building-o me-1\" title=\"الطابق\"/>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid ""
+"<i class=\"fa fa-check-circle\" title=\"Available\"/>\n"
+"                                <span>Free spot</span>"
+msgstr ""
+"<i class=\"fa fa-check-circle\" title=\"متاح\"/>\n"
+"                                <span>موقف شاغر</span>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -258,11 +292,6 @@ msgstr ""
 "                    ينتهي هذا العقد خلال"
 
 #. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-clock-o\" title=\"Check Out\"/>"
-msgstr "<i class=\"fa fa-clock-o\" title=\"وقت الخروج\"/>"
-
-#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Overdue\"/>\n"
@@ -272,14 +301,10 @@ msgstr ""
 "                    انقضى تاريخ النهاية؛ سيتم إنهاء العقد تلقائياً."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-hourglass-half\" title=\"Waiting\"/>"
-msgstr "<i class=\"fa fa-hourglass-half\" title=\"مدة الانتظار\"/>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-layer-group\" title=\"Floor\"/>"
-msgstr "<i class=\"fa fa-layer-group\" title=\"الطابق\"/>"
+msgid "<i class=\"fa fa-file-text-o me-1\" title=\"Contract\"/>"
+msgstr "<i class=\"fa fa-file-text-o me-1\" title=\"العقد\"/>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
@@ -287,34 +312,63 @@ msgid "<i class=\"fa fa-long-arrow-right mx-2\" title=\"to\"/>"
 msgstr "<i class=\"fa fa-long-arrow-right mx-2\" title=\"إلى\"/>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid "<i class=\"fa fa-map-marker me-1\" title=\"Branch\"/>"
+msgstr "<i class=\"fa fa-map-marker me-1\" title=\"الفرع\"/>"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_kanban
 msgid "<i class=\"fa fa-map-marker me-1\" title=\"Spot\"/>"
 msgstr "<i class=\"fa fa-map-marker me-1\" title=\"الموقف\"/>"
 
 #. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-map-marker\" title=\"Spot\"/>"
-msgstr "<i class=\"fa fa-map-marker\" title=\"الموقف\"/>"
-
-#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
 msgid "<i class=\"fa fa-phone\" title=\"Call\"/>"
 msgstr "<i class=\"fa fa-phone\" title=\"اتصال\"/>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-sign-in\" title=\"Check In\"/> Check In"
-msgstr "<i class=\"fa fa-sign-in\" title=\"استلام\"/> استلام"
+msgid ""
+"<i class=\"fa fa-road me-1\" title=\"With the customer\"/>\n"
+"                                <span>With the customer for</span>"
+msgstr "<i class=\"fa fa-road me-1\" title=\"مع العميل\"/>\n                                <span>مع العميل منذ</span>"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-sign-out\" title=\"Check Out\"/> Check Out"
-msgstr "<i class=\"fa fa-sign-out\" title=\"تسليم\"/> تسليم"
+msgid "<i class=\"fa fa-sign-in me-1\" title=\"Receive\"/>Receive back"
+msgstr "<i class=\"fa fa-sign-in me-1\" title=\"استلام\"/>استلام المركبة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
-msgid "<i class=\"fa fa-user\" title=\"Owner\"/>"
-msgstr "<i class=\"fa fa-user\" title=\"المالك\"/>"
+msgid "<i class=\"fa fa-sign-out me-1\" title=\"Deliver\"/>Deliver to customer"
+msgstr "<i class=\"fa fa-sign-out me-1\" title=\"تسليم\"/>تسليم للعميل"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid "<i class=\"fa fa-tag me-1\" title=\"Spot type\"/>"
+msgstr "<i class=\"fa fa-tag me-1\" title=\"نوع الموقف\"/>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid "<i class=\"fa fa-user me-1\" title=\"Customer\"/>"
+msgstr "<i class=\"fa fa-user me-1\" title=\"العميل\"/>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid ""
+"<i class=\"fa fa-wrench\" title=\"Maintenance\"/>\n"
+"                                <span>Under maintenance</span>"
+msgstr ""
+"<i class=\"fa fa-wrench\" title=\"صيانة\"/>\n"
+"                                <span>تحت الصيانة</span>"
 
 #. module: parking_management
 #: model:mail.template,body_html:parking_management.email_template_invoice_created
@@ -429,33 +483,9 @@ msgstr "<span>إلى</span>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Branch:</strong>"
-msgstr "<strong>الفرع:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Brand:</strong>"
-msgstr "<strong>الماركة:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Contract:</strong>"
-msgstr "<strong>العقد:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Owner:</strong>"
-msgstr "<strong>المالك:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Plate:</strong>"
-msgstr "<strong>اللوحة:</strong>"
-
-#. module: parking_management
-#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
-msgid "<strong>Status:</strong>"
-msgstr "<strong>الحالة:</strong>"
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid "<span>days</span>"
+msgstr "<span>يوم</span>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
@@ -472,7 +502,9 @@ msgid ""
 "A completed wash takes its supplies (the wash kit, or the lines entered on "
 "the wash) out of the branch warehouse and books their cost; cancelling the "
 "wash puts them back."
-msgstr "الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
+msgstr ""
+"الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من "
+"مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_wash_consume_stock
@@ -481,7 +513,9 @@ msgid ""
 "A completed wash takes its supplies (wash kit, or the lines entered on the "
 "wash) out of the branch warehouse, booking their cost; cancelling the wash "
 "puts them back."
-msgstr "الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
+msgstr ""
+"الغسلة المكتملة تصرف موادها (حقيبة الغسيل أو البنود المدخلة على الغسلة) من "
+"مستودع الفرع وتُسجل تكلفتها، وإلغاء الغسلة يُعيدها."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_prorate
@@ -489,21 +523,25 @@ msgstr "الغسلة المكتملة تصرف موادها (حقيبة الغس
 msgid ""
 "A contract starting or ending inside an invoice period pays only its days in"
 " that period."
-msgstr "العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
+msgstr ""
+"العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid ""
 "A contract that starts or ends inside an invoice period pays only for its "
 "days in that period."
-msgstr "العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
+msgstr ""
+"العقد الذي يبدأ أو ينتهي داخل فترة الفاتورة يدفع أيامه فقط من تلك الفترة."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_deposit_refund_wizard_form
 msgid ""
 "A credit note on the deposits account is issued for the refunded amount; register the\n"
 "                    outgoing payment on it. A deduction is moved from the deposits account to income."
-msgstr "يصدر إشعار دائن على حساب التأمينات بالمبلغ المسترد، سجّل عليه الدفعة الصادرة للعميل. أما الخصم فيُنقل من حساب التأمينات إلى الإيراد."
+msgstr ""
+"يصدر إشعار دائن على حساب التأمينات بالمبلغ المسترد، سجّل عليه الدفعة الصادرة"
+" للعميل. أما الخصم فيُنقل من حساب التأمينات إلى الإيراد."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
@@ -585,6 +623,7 @@ msgstr "تفعيل"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__active
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__active
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__active
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__active
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__active
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__active
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__state__active
@@ -837,9 +876,21 @@ msgstr ""
 " لإرسال النص."
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__name_ar
+msgid "Arabic Name"
+msgstr "الاسم بالعربي"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
+msgid "Arabic name"
+msgstr "الاسم بالعربي"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_driver_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_location_form
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_search
 msgid "Archived"
 msgstr "مؤرشف"
 
@@ -954,6 +1005,16 @@ msgstr "رجوع"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_form
 msgid "Back in Service"
 msgstr "إعادة للخدمة"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_vehicle_brand__color
+msgid "Background of the initials badge shown while the brand has no logo."
+msgstr "لون خلفية شارة الأحرف التي تظهر حتى يُضاف شعار للعلامة."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__color
+msgid "Badge Colour"
+msgstr "لون الشارة"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.statement_table
@@ -1129,7 +1190,8 @@ msgstr "الفروع"
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_vehicle_brand
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__brand
-#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__brand
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__brand_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__name
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
 #: model_terms:ir.ui.view,arch_db:parking_management.pm_vehicles_table
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
@@ -1139,16 +1201,34 @@ msgid "Brand"
 msgstr "الماركة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
+msgid "Brand (typed)"
+msgstr "العلامة (نص مكتوب)"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_by_vehicle
 msgid "Brand / Model"
 msgstr "العلامة / الطراز"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_brand_logo
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__brand_logo
+msgid "Brand Logo"
+msgstr "شعار العلامة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__brand
+msgid "Brand Name"
+msgstr "الماركة"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_account_move_reversal__parking_return_goods
 msgid ""
 "Bring the storable products of the parking invoice back into the branch "
 "warehouse. Untick for a price correction where nothing is returned."
-msgstr "إرجاع المنتجات المخزنية في فاتورة المواقف إلى مستودع الفرع. ألغِ التحديد عند تصحيح السعر دون إرجاع بضاعة."
+msgstr ""
+"إرجاع المنتجات المخزنية في فاتورة المواقف إلى مستودع الفرع. ألغِ التحديد عند"
+" تصحيح السعر دون إرجاع بضاعة."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_report_search
@@ -1509,6 +1589,15 @@ msgid "Comma-separated placeholder names filled into the template, in order."
 msgstr "أسماء المتغيرات مفصولة بفواصل، تُملأ في القالب بالترتيب."
 
 #. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_vehicle_brand__aliases
+msgid ""
+"Comma-separated spellings matched when a brand is typed, e.g. \"bmw, بي ام, "
+"بي ام دبليو\"."
+msgstr ""
+"كتابات أخرى للعلامة مفصولة بفواصل، تُطابق عند كتابة العلامة، مثل \"bmw, بي "
+"ام, بي ام دبليو\"."
+
+#. module: parking_management
 #: model:ir.model,name:parking_management.model_res_company
 msgid "Companies"
 msgstr "الشركات"
@@ -1710,7 +1799,8 @@ msgstr "انتهى العقد %(name)s للموقف %(spot)s بتاريخ %(date
 msgid ""
 "Contract %(name)s must belong to %(company)s, the company of branch "
 "%(branch)s."
-msgstr "يجب أن يتبع العقد %(name)s شركة %(company)s، وهي شركة الفرع %(branch)s."
+msgstr ""
+"يجب أن يتبع العقد %(name)s شركة %(company)s، وهي شركة الفرع %(branch)s."
 
 #. module: parking_management
 #. odoo-python
@@ -1752,6 +1842,11 @@ msgstr "عدد العقود"
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 msgid "Contract Details"
 msgstr "تفاصيل العقد"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_contract_end
+msgid "Contract Ends"
+msgstr "نهاية العقد"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__contract_found
@@ -1893,14 +1988,18 @@ msgid ""
 "Contracts can carry a refundable deposit, invoiced on the deposits account "
 "and refunded when the contract ends. Off: deposits are hidden and never "
 "invoiced."
-msgstr "يمكن أن يحمل العقد تأميناً مسترداً يُفوتر على حساب التأمينات ويُسترد عند انتهاء العقد. عند الإيقاف: يُخفى التأمين ولا يُفوتر."
+msgstr ""
+"يمكن أن يحمل العقد تأميناً مسترداً يُفوتر على حساب التأمينات ويُسترد عند "
+"انتهاء العقد. عند الإيقاف: يُخفى التأمين ولا يُفوتر."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
 msgid ""
 "Contracts can carry a refundable deposit: it is invoiced on a liability "
 "account (not revenue) and refunded from the contract when it ends."
-msgstr "يمكن أن يحمل العقد تأميناً مسترداً: يُفوتر على حساب التزام (لا إيراد) ويُسترد من العقد عند انتهائه."
+msgstr ""
+"يمكن أن يحمل العقد تأميناً مسترداً: يُفوتر على حساب التزام (لا إيراد) "
+"ويُسترد من العقد عند انتهائه."
 
 #. module: parking_management
 #. odoo-javascript
@@ -2009,6 +2108,7 @@ msgstr "يُنشأ تلقائياً"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__create_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__create_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__create_uid
@@ -2047,6 +2147,7 @@ msgstr "تم بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__create_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__create_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__create_date
@@ -2069,7 +2170,9 @@ msgstr "إشعار دائن"
 msgid ""
 "Credit notes only: bring the storable products back into the branch "
 "warehouse. Leave off for a price correction where nothing comes back."
-msgstr "للإشعارات الدائنة فقط: إرجاع المنتجات المخزنية إلى مستودع الفرع. اتركه غير محدد عند تصحيح السعر دون إرجاع بضاعة."
+msgstr ""
+"للإشعارات الدائنة فقط: إرجاع المنتجات المخزنية إلى مستودع الفرع. اتركه غير "
+"محدد عند تصحيح السعر دون إرجاع بضاعة."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__company_currency_id
@@ -2086,6 +2189,16 @@ msgid "Currency"
 msgstr "العملة"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_brand_color
+msgid "Current Brand Color"
+msgstr "لون العلامة الحالية"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_brand_initials
+msgid "Current Brand Initials"
+msgstr "أحرف العلامة الحالية"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_contract_id
 msgid "Current Contract"
 msgstr "العقد الحالي"
@@ -2094,6 +2207,11 @@ msgstr "العقد الحالي"
 #: model:ir.model.fields,field_description:parking_management.field_parking_branch_stock__quantity
 msgid "Current Quantity"
 msgstr "الكمية الحالية"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_vehicle_count
+msgid "Current Vehicle Count"
+msgstr "عدد المركبات الحالية"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_messaging_gateway__auth_type__header
@@ -2235,6 +2353,11 @@ msgstr "اليوم"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__booking_days
 msgid "Days"
 msgstr "الأيام"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_days_left
+msgid "Days Left"
+msgstr "الأيام المتبقية"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__days_remaining
@@ -2573,6 +2696,7 @@ msgstr "العرض"
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__display_name
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__display_name
@@ -2630,7 +2754,8 @@ msgstr "العقود المسودة"
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Draft credit note %s for unused prepaid months: review and post it."
-msgstr "إشعار دائن مسودة %s للأشهر المدفوعة مقدماً غير المستهلكة: راجعه ورحّله."
+msgstr ""
+"إشعار دائن مسودة %s للأشهر المدفوعة مقدماً غير المستهلكة: راجعه ورحّله."
 
 #. module: parking_management
 #. odoo-python
@@ -2745,6 +2870,12 @@ msgstr "تاريخ النهاية"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
 msgid "End Month"
 msgstr "شهر الانتهاء"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
+msgid "Ended"
+msgstr "انتهى"
 
 #. module: parking_management
 #. odoo-javascript
@@ -3211,6 +3342,7 @@ msgstr "طريقة HTTP"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__id
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__id
@@ -3334,6 +3466,11 @@ msgid ""
 msgstr ""
 "أوقات غير متسقة سُجّلت قبل تطبيق التحقق (عودة قبل الخروج، أو عودة بلا خروج، "
 "أو بلا أوقات). راجعها وصححها."
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__initials
+msgid "Initials"
+msgstr "الأحرف"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__inspection_id
@@ -3627,7 +3764,8 @@ msgstr "عنصر اليومية"
 #: model:ir.model.fields,help:parking_management.field_parking_deposit_refund_wizard__deduction
 msgid ""
 "Kept from the deposit, e.g. damages or unpaid fees. It is booked as income."
-msgstr "المبلغ المحتجز من التأمين، مثل الأضرار أو رسوم غير مدفوعة، ويُقيد إيراداً."
+msgstr ""
+"المبلغ المحتجز من التأمين، مثل الأضرار أو رسوم غير مدفوعة، ويُقيد إيراداً."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
@@ -3733,6 +3871,7 @@ msgstr "نتيجة آخر اختبار"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__write_uid
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__write_uid
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__write_uid
@@ -3771,6 +3910,7 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_transporter_vehicle__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__write_date
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__write_date
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__write_date
@@ -3864,6 +4004,7 @@ msgid "Log Count"
 msgstr "عدد الرسائل"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__logo
 #: model_terms:ir.ui.view,arch_db:parking_management.external_layout_parking
 msgid "Logo"
 msgstr "الشعار"
@@ -4785,11 +4926,21 @@ msgid "Other Product"
 msgstr "منتج آخر"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__aliases
+msgid "Other Spellings"
+msgstr "كتابات أخرى"
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_branch_stock_move__move_type__out
 msgid "Out"
 msgstr "صادر"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__waiting_label
+msgid "Out For"
+msgstr "خارج منذ"
 
 #. module: parking_management
 #. odoo-javascript
@@ -6021,6 +6172,7 @@ msgstr "مبيعات مستقلة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__sequence
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_checkpoint__sequence
 #: model:ir.model.fields,field_description:parking_management.field_parking_wash_kit_item__sequence
 msgid "Sequence"
@@ -6762,6 +6914,11 @@ msgstr ""
 "الاشتراك اليومي للفوترة باليوم."
 
 #. module: parking_management
+#: model:ir.model.constraint,message:parking_management.constraint_parking_vehicle_brand_name_unique
+msgid "This brand already exists."
+msgstr "هذه العلامة موجودة مسبقاً."
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_vehicle_movement.py:0
 msgid "This vehicle is not out with the customer."
@@ -7029,13 +7186,24 @@ msgstr "أشهر مدفوعة مقدماً غير مستهلكة"
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid ""
 "Unused prepaid parking %(spot)s - %(months)s month(s) (%(start)s - %(end)s)"
-msgstr "إيجار موقف %(spot)s مدفوع مقدماً وغير مستهلك لمدة %(months)s شهر، من %(start)s إلى %(end)s"
+msgstr ""
+"إيجار موقف %(spot)s مدفوع مقدماً وغير مستهلك لمدة %(months)s شهر، من "
+"%(start)s إلى %(end)s"
 
 #. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Updated at"
 msgstr "آخر تحديث"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
+msgid ""
+"Upload the brand logo (PNG or SVG with a transparent background looks best). Until a logo is\n"
+"                        set, cards show the brand initials on the badge colour."
+msgstr ""
+"ارفع شعار العلامة (يظهر أفضل بصيغة PNG أو SVG بخلفية شفافة). حتى يُضاف "
+"الشعار تعرض الكروت أحرف العلامة على لون الشارة."
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_terms_conditions__is_default
@@ -7088,12 +7256,15 @@ msgstr "VIP"
 #: model:ir.model,name:parking_management.model_parking_vehicle
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__vehicle_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__vehicle_id
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_vehicle_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__display_name
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection__vehicle_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_inspection_line__vehicle_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_movement__vehicle_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__vehicle_id
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_wash_search
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_inspection_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_transfer_search
@@ -7136,6 +7307,18 @@ msgstr "المركبة %s خارج الموقف مع العميل بالفعل؛
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 msgid "Vehicle / Plate"
 msgstr "المركبة / اللوحة"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_vehicle_brand
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_brand_id
+msgid "Vehicle Brand"
+msgstr "علامة المركبة"
+
+#. module: parking_management
+#: model:ir.actions.act_window,name:parking_management.action_parking_vehicle_brand
+#: model:ir.ui.menu,name:parking_management.menu_parking_vehicle_brand
+msgid "Vehicle Brands"
+msgstr "علامات المركبات"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__vehicle_count
@@ -7272,7 +7455,9 @@ msgstr "استلام المركبة (دخول)"
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_vehicle
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__vehicle_ids
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_brand__vehicle_count
 #: model:ir.ui.menu,name:parking_management.menu_parking_vehicle
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_contract_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicle_detail
 #: model_terms:ir.ui.view,arch_db:parking_management.portal_vehicles_page
@@ -7346,7 +7531,9 @@ msgstr "عرض ملخص المواقف."
 msgid ""
 "Virtual location wash supplies are moved to. Its valuation accounts decide "
 "the expense account. Created automatically when left empty."
-msgstr "الموقع الافتراضي الذي تُنقل إليه مواد الغسيل، وحسابات تقييمه تحدد حساب المصروف. يُنشأ تلقائياً إذا تُرك فارغاً."
+msgstr ""
+"الموقع الافتراضي الذي تُنقل إليه مواد الغسيل، وحسابات تقييمه تحدد حساب "
+"المصروف. يُنشأ تلقائياً إذا تُرك فارغاً."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_search_checkin_checkout
@@ -7646,6 +7833,11 @@ msgid "With the customer"
 msgstr "مع العميل"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_search
+msgid "Without logo"
+msgstr "بدون شعار"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_service_line__wizard_id
 msgid "Wizard"
 msgstr "المعالج"
@@ -7740,6 +7932,12 @@ msgstr "أُعيد التأمين للفوترة"
 #: code:addons/parking_management/models/account_move.py:0
 msgid "deposit refund undone"
 msgstr "أُلغي استرداد التأمين"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
+msgid "e.g. Toyota"
+msgstr "مثال: تويوتا"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_messaging_gateway_form

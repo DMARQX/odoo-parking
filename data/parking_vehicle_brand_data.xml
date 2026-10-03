@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="brand_toyota" model="parking.vehicle.brand">
+        <field name="name">Toyota</field>
+        <field name="name_ar">تويوتا</field>
+        <field name="aliases">toyota, تيوتا, تويوتا</field>
+        <field name="color">#d71921</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="brand_hyundai" model="parking.vehicle.brand">
+        <field name="name">Hyundai</field>
+        <field name="name_ar">هيونداي</field>
+        <field name="aliases">hyundai, هونداي, هيونداى, هيونداي</field>
+        <field name="color">#002c5f</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="brand_nissan" model="parking.vehicle.brand">
+        <field name="name">Nissan</field>
+        <field name="name_ar">نيسان</field>
+        <field name="aliases">nissan, نيسان</field>
+        <field name="color">#c3002f</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="brand_kia" model="parking.vehicle.brand">
+        <field name="name">Kia</field>
+        <field name="name_ar">كيا</field>
+        <field name="aliases">kia, كيا</field>
+        <field name="color">#05141f</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="brand_lexus" model="parking.vehicle.brand">
+        <field name="name">Lexus</field>
+        <field name="name_ar">لكزس</field>
+        <field name="aliases">lexus, لكزس, لكسز</field>
+        <field name="color">#1a1a1a</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="brand_chevrolet" model="parking.vehicle.brand">
+        <field name="name">Chevrolet</field>
+        <field name="name_ar">شيفروليه</field>
+        <field name="aliases">chevrolet, chevy, شيفروليه, شفر, شفرليت, شيفرولية</field>
+        <field name="color">#c99b2c</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="brand_gmc" model="parking.vehicle.brand">
+        <field name="name">GMC</field>
+        <field name="name_ar">جي ام سي</field>
+        <field name="aliases">gmc, جمس, جي ام سي, جي إم سي</field>
+        <field name="color">#cc0000</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="brand_ford" model="parking.vehicle.brand">
+        <field name="name">Ford</field>
+        <field name="name_ar">فورد</field>
+        <field name="aliases">ford, فورد</field>
+        <field name="color">#003478</field>
+        <field name="sequence">80</field>
+    </record>
+    <record id="brand_mercedes_benz" model="parking.vehicle.brand">
+        <field name="name">Mercedes-Benz</field>
+        <field name="name_ar">مرسيدس</field>
+        <field name="aliases">mercedes, mercedes benz, benz, مرسيدس, مرسيدس بنز, بنز</field>
+        <field name="color">#1f1f1f</field>
+        <field name="sequence">90</field>
+    </record>
+    <record id="brand_bmw" model="parking.vehicle.brand">
+        <field name="name">BMW</field>
+        <field name="name_ar">بي ام دبليو</field>
+        <field name="aliases">bmw, بي ام, بي ام دبليو, بي إم دبليو, بيم</field>
+        <field name="color">#1c69d4</field>
+        <field name="sequence">100</field>
+    </record>
+    <record id="brand_audi" model="parking.vehicle.brand">
+        <field name="name">Audi</field>
+        <field name="name_ar">أودي</field>
+        <field name="aliases">audi, اودي, أودي</field>
+        <field name="color">#bb0a30</field>
+        <field name="sequence">110</field>
+    </record>
+    <record id="brand_porsche" model="parking.vehicle.brand">
+        <field name="name">Porsche</field>
+        <field name="name_ar">بورش</field>
+        <field name="aliases">porsche, بورش, بورشه, بورشة</field>
+        <field name="color">#a58b52</field>
+        <field name="sequence">120</field>
+    </record>
+    <record id="brand_land_rover" model="parking.vehicle.brand">
+        <field name="name">Land Rover</field>
+        <field name="name_ar">لاند روفر</field>
+        <field name="aliases">land rover, landrover, range rover, لاند روفر, رنج روفر, رينج روفر</field>
+        <field name="color">#005a2b</field>
+        <field name="sequence">130</field>
+    </record>
+    <record id="brand_jeep" model="parking.vehicle.brand">
+        <field name="name">Jeep</field>
+        <field name="name_ar">جيب</field>
+        <field name="aliases">jeep, جيب</field>
+        <field name="color">#3b4b2f</field>
+        <field name="sequence">140</field>
+    </record>
+    <record id="brand_dodge" model="parking.vehicle.brand">
+        <field name="name">Dodge</field>
+        <field name="name_ar">دودج</field>
+        <field name="aliases">dodge, دودج, دوج</field>
+        <field name="color">#b31b1b</field>
+        <field name="sequence">150</field>
+    </record>
+    <record id="brand_honda" model="parking.vehicle.brand">
+        <field name="name">Honda</field>
+        <field name="name_ar">هوندا</field>
+        <field name="aliases">honda, هوندا</field>
+        <field name="color">#cc0000</field>
+        <field name="sequence">160</field>
+    </record>
+    <record id="brand_mazda" model="parking.vehicle.brand">
+        <field name="name">Mazda</field>
+        <field name="name_ar">مازدا</field>
+        <field name="aliases">mazda, mezda, مازدا, مزدا</field>
+        <field name="color">#101010</field>
+        <field name="sequence">170</field>
+    </record>
+    <record id="brand_mitsubishi" model="parking.vehicle.brand">
+        <field name="name">Mitsubishi</field>
+        <field name="name_ar">ميتسوبيشي</field>
+        <field name="aliases">mitsubishi, ميتسوبيشي, متسوبيشي</field>
+        <field name="color">#e60012</field>
+        <field name="sequence">180</field>
+    </record>
+    <record id="brand_suzuki" model="parking.vehicle.brand">
+        <field name="name">Suzuki</field>
+        <field name="name_ar">سوزوكي</field>
+        <field name="aliases">suzuki, سوزوكي</field>
+        <field name="color">#1d4f91</field>
+        <field name="sequence">190</field>
+    </record>
+    <record id="brand_isuzu" model="parking.vehicle.brand">
+        <field name="name">Isuzu</field>
+        <field name="name_ar">ايسوزو</field>
+        <field name="aliases">isuzu, ايسوزو, إيسوزو</field>
+        <field name="color">#c8102e</field>
+        <field name="sequence">200</field>
+    </record>
+    <record id="brand_volkswagen" model="parking.vehicle.brand">
+        <field name="name">Volkswagen</field>
+        <field name="name_ar">فولكس فاجن</field>
+        <field name="aliases">volkswagen, vw, فولكس, فولكس فاجن, فولكس واجن</field>
+        <field name="color">#001e50</field>
+        <field name="sequence">210</field>
+    </record>
+    <record id="brand_volvo" model="parking.vehicle.brand">
+        <field name="name">Volvo</field>
+        <field name="name_ar">فولفو</field>
+        <field name="aliases">volvo, فولفو</field>
+        <field name="color">#003057</field>
+        <field name="sequence">220</field>
+    </record>
+    <record id="brand_cadillac" model="parking.vehicle.brand">
+        <field name="name">Cadillac</field>
+        <field name="name_ar">كاديلاك</field>
+        <field name="aliases">cadillac, كاديلاك, كاديلك</field>
+        <field name="color">#7a6a4f</field>
+        <field name="sequence">230</field>
+    </record>
+    <record id="brand_lincoln" model="parking.vehicle.brand">
+        <field name="name">Lincoln</field>
+        <field name="name_ar">لينكولن</field>
+        <field name="aliases">lincoln, لينكولن, لنكولن</field>
+        <field name="color">#2f3b46</field>
+        <field name="sequence">240</field>
+    </record>
+    <record id="brand_infiniti" model="parking.vehicle.brand">
+        <field name="name">Infiniti</field>
+        <field name="name_ar">انفينيتي</field>
+        <field name="aliases">infiniti, انفينيتي, إنفينيتي, انفنتي</field>
+        <field name="color">#2b2b2b</field>
+        <field name="sequence">250</field>
+    </record>
+    <record id="brand_genesis" model="parking.vehicle.brand">
+        <field name="name">Genesis</field>
+        <field name="name_ar">جينيسيس</field>
+        <field name="aliases">genesis, جينيسيس, جنسس</field>
+        <field name="color">#212121</field>
+        <field name="sequence">260</field>
+    </record>
+    <record id="brand_tesla" model="parking.vehicle.brand">
+        <field name="name">Tesla</field>
+        <field name="name_ar">تسلا</field>
+        <field name="aliases">tesla, تسلا</field>
+        <field name="color">#cc0000</field>
+        <field name="sequence">270</field>
+    </record>
+    <record id="brand_mg" model="parking.vehicle.brand">
+        <field name="name">MG</field>
+        <field name="name_ar">ام جي</field>
+        <field name="aliases">mg, ام جي, إم جي</field>
+        <field name="color">#a31f34</field>
+        <field name="sequence">280</field>
+    </record>
+    <record id="brand_changan" model="parking.vehicle.brand">
+        <field name="name">Changan</field>
+        <field name="name_ar">شانجان</field>
+        <field name="aliases">changan, شانجان, شانقان</field>
+        <field name="color">#003a8c</field>
+        <field name="sequence">290</field>
+    </record>
+    <record id="brand_geely" model="parking.vehicle.brand">
+        <field name="name">Geely</field>
+        <field name="name_ar">جيلي</field>
+        <field name="aliases">geely, جيلي</field>
+        <field name="color">#1e3c72</field>
+        <field name="sequence">300</field>
+    </record>
+    <record id="brand_chery" model="parking.vehicle.brand">
+        <field name="name">Chery</field>
+        <field name="name_ar">شيري</field>
+        <field name="aliases">chery, شيري</field>
+        <field name="color">#c8102e</field>
+        <field name="sequence">310</field>
+    </record>
+    <record id="brand_haval" model="parking.vehicle.brand">
+        <field name="name">Haval</field>
+        <field name="name_ar">هافال</field>
+        <field name="aliases">haval, هافال</field>
+        <field name="color">#c8102e</field>
+        <field name="sequence">320</field>
+    </record>
+    <record id="brand_jetour" model="parking.vehicle.brand">
+        <field name="name">Jetour</field>
+        <field name="name_ar">جيتور</field>
+        <field name="aliases">jetour, جيتور</field>
+        <field name="color">#1f2a44</field>
+        <field name="sequence">330</field>
+    </record>
+    <record id="brand_gac" model="parking.vehicle.brand">
+        <field name="name">GAC</field>
+        <field name="name_ar">جي اي سي</field>
+        <field name="aliases">gac, جي اي سي, جاك</field>
+        <field name="color">#b01e23</field>
+        <field name="sequence">340</field>
+    </record>
+    <record id="brand_hongqi" model="parking.vehicle.brand">
+        <field name="name">Hongqi</field>
+        <field name="name_ar">هونشي</field>
+        <field name="aliases">hongqi, هونشي, هونغ تشي</field>
+        <field name="color">#9e1b1b</field>
+        <field name="sequence">350</field>
+    </record>
+    <record id="brand_peugeot" model="parking.vehicle.brand">
+        <field name="name">Peugeot</field>
+        <field name="name_ar">بيجو</field>
+        <field name="aliases">peugeot, بيجو</field>
+        <field name="color">#1d1d1b</field>
+        <field name="sequence">360</field>
+    </record>
+    <record id="brand_renault" model="parking.vehicle.brand">
+        <field name="name">Renault</field>
+        <field name="name_ar">رينو</field>
+        <field name="aliases">renault, رينو</field>
+        <field name="color">#efdf00</field>
+        <field name="sequence">370</field>
+    </record>
+    <record id="brand_subaru" model="parking.vehicle.brand">
+        <field name="name">Subaru</field>
+        <field name="name_ar">سوبارو</field>
+        <field name="aliases">subaru, سوبارو</field>
+        <field name="color">#013c74</field>
+        <field name="sequence">380</field>
+    </record>
+    <record id="brand_jaguar" model="parking.vehicle.brand">
+        <field name="name">Jaguar</field>
+        <field name="name_ar">جاكوار</field>
+        <field name="aliases">jaguar, جاكوار, جاغوار</field>
+        <field name="color">#1f1f1f</field>
+        <field name="sequence">390</field>
+    </record>
+    <record id="brand_maserati" model="parking.vehicle.brand">
+        <field name="name">Maserati</field>
+        <field name="name_ar">مازيراتي</field>
+        <field name="aliases">maserati, مازيراتي, مازراتي</field>
+        <field name="color">#0c2340</field>
+        <field name="sequence">400</field>
+    </record>
+    <record id="brand_bentley" model="parking.vehicle.brand">
+        <field name="name">Bentley</field>
+        <field name="name_ar">بنتلي</field>
+        <field name="aliases">bentley, بنتلي</field>
+        <field name="color">#333f48</field>
+        <field name="sequence">410</field>
+    </record>
+    <record id="brand_rolls_royce" model="parking.vehicle.brand">
+        <field name="name">Rolls-Royce</field>
+        <field name="name_ar">رولز رويس</field>
+        <field name="aliases">rolls royce, rolls-royce, رولز رويس, رولز</field>
+        <field name="color">#1f1f1f</field>
+        <field name="sequence">420</field>
+    </record>
+    <record id="brand_ferrari" model="parking.vehicle.brand">
+        <field name="name">Ferrari</field>
+        <field name="name_ar">فيراري</field>
+        <field name="aliases">ferrari, فيراري</field>
+        <field name="color">#d40000</field>
+        <field name="sequence">430</field>
+    </record>
+    <record id="brand_lamborghini" model="parking.vehicle.brand">
+        <field name="name">Lamborghini</field>
+        <field name="name_ar">لامبورغيني</field>
+        <field name="aliases">lamborghini, لامبورغيني, لمبرجيني</field>
+        <field name="color">#b4975a</field>
+        <field name="sequence">440</field>
+    </record>
+</odoo>

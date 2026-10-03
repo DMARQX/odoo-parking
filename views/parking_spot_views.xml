@@ -4,55 +4,112 @@
         <field name="name">parking.spot.kanban</field>
         <field name="model">parking.spot</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <field name="name" readonly="1"/>
+            <kanban class="o_pm_spot_kanban" sample="1">
+                <field name="name"/>
                 <field name="full_name"/>
                 <field name="status"/>
-                <field name="spot_type_id"/>
                 <field name="location_id"/>
+                <field name="spot_type_id"/>
+                <field name="floor"/>
                 <field name="current_contract_id"/>
+                <field name="current_contract_end"/>
+                <field name="current_days_left"/>
                 <field name="current_vehicle_plate"/>
                 <field name="current_vehicle_brand"/>
                 <field name="current_vehicle_model"/>
+                <field name="current_vehicle_count"/>
+                <field name="current_brand_logo"/>
+                <field name="current_brand_color"/>
+                <field name="current_brand_initials"/>
                 <field name="current_owner_id"/>
+                <field name="current_owner_mobile"/>
+                <field name="last_movement_out"/>
+                <field name="waiting_hours"/>
+                <field name="waiting_label"/>
                 <templates>
                     <t t-name="card">
-                        <div class="oe_kanban_global_click" t-attf-class="oe_kanban_card {{color}}">
-                            <div class="o_kanban_card_header">
-                                <div class="o_primary">
-                                    <span class="o_kanban_card_title">
-                                        <field name="full_name"/>
-                                    </span>
-                                </div>
-                                <div class="o_secondary">
-                                    <field name="spot_type_id"/>
-                                </div>
+                        <t t-set="st" t-value="record.status.raw_value"/>
+                        <div t-attf-class="o_pm_spot o_pm_spot_{{st}}">
+                            <div class="o_pm_spot_head">
+                                <div class="o_pm_spot_code"><field name="name"/></div>
+                                <span class="o_pm_spot_status"><field name="status"/></span>
                             </div>
-                            <div class="oe_kanban_content">
-                                <div class="row">
-                                    <div class="col-6"><strong>Status:</strong></div>
-                                    <div class="col-6"><field name="status"/></div>
+                            <div class="o_pm_spot_meta">
+                                <span><i class="fa fa-map-marker me-1" title="Branch"/><field name="location_id"/></span>
+                                <span t-if="record.spot_type_id.raw_value"><i class="fa fa-tag me-1" title="Spot type"/><field name="spot_type_id"/></span>
+                                <span t-if="record.floor.raw_value"><i class="fa fa-building-o me-1" title="Floor"/><field name="floor"/></span>
+                            </div>
+
+                            <t t-if="record.current_vehicle_plate.raw_value">
+                                <div class="o_pm_spot_vehicle">
+                                    <div class="o_pm_brand">
+                                        <field t-if="record.current_brand_logo.raw_value" name="current_brand_logo" widget="image"
+                                               options="{'size': [44, 44], 'img_class': 'o_pm_brand_img'}"/>
+                                        <span t-elif="record.current_brand_initials.raw_value" class="o_pm_brand_badge"
+                                              t-attf-style="background-color: {{record.current_brand_color.raw_value}};"
+                                              t-esc="record.current_brand_initials.raw_value"/>
+                                        <i t-else="" class="fa fa-car text-muted" title="Vehicle"/>
+                                    </div>
+                                    <div class="o_pm_vehicle_text">
+                                        <div class="o_pm_plate"><t t-esc="record.current_vehicle_plate.raw_value"/></div>
+                                        <div class="o_pm_vehicle_name">
+                                            <t t-esc="(record.current_vehicle_brand.raw_value || '') + ' ' + (record.current_vehicle_model.raw_value || '')"/>
+                                            <span t-if="record.current_vehicle_count.raw_value &gt; 1" class="text-muted">
+                                                +<t t-esc="record.current_vehicle_count.raw_value - 1"/>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6"><strong>Branch:</strong></div>
-                                    <div class="col-6"><field name="location_id"/></div>
-                                </div>
-                                <div class="row" t-if="record.current_vehicle_plate.raw_value">
-                                    <div class="col-6"><strong>Plate:</strong></div>
-                                    <div class="col-6"><field name="current_vehicle_plate"/></div>
-                                </div>
-                                <div class="row" t-if="record.current_vehicle_brand.raw_value">
-                                    <div class="col-6"><strong>Brand:</strong></div>
-                                    <div class="col-6"><field name="current_vehicle_brand"/></div>
-                                </div>
-                                <div class="row" t-if="record.current_owner_id.raw_value">
-                                    <div class="col-6"><strong>Owner:</strong></div>
-                                    <div class="col-6"><field name="current_owner_id"/></div>
-                                </div>
-                                <div class="row" t-if="record.current_contract_id.raw_value and !record.current_vehicle_plate.raw_value">
-                                    <div class="col-6"><strong>Contract:</strong></div>
-                                    <div class="col-6"><field name="current_contract_id"/></div>
-                                </div>
+                            </t>
+
+                            <div t-if="record.current_owner_id.raw_value" class="o_pm_spot_line">
+                                <i class="fa fa-user me-1" title="Customer"/>
+                                <span class="text-truncate"><field name="current_owner_id"/></span>
+                                <a t-if="record.current_owner_mobile.raw_value" class="o_pm_phone"
+                                   t-attf-href="tel:{{record.current_owner_mobile.raw_value}}">
+                                    <i class="fa fa-phone" title="Call"/>
+                                </a>
+                            </div>
+                            <div t-if="record.current_contract_id.raw_value" class="o_pm_spot_line">
+                                <i class="fa fa-file-text-o me-1" title="Contract"/>
+                                <span><field name="current_contract_id"/></span>
+                                <span t-if="record.current_contract_end.raw_value"
+                                      t-attf-class="o_pm_days {{record.current_days_left.raw_value &lt; 0 ? 'o_pm_days_late' : (record.current_days_left.raw_value &lt;= 7 ? 'o_pm_days_soon' : '')}}">
+                                    <t t-if="record.current_days_left.raw_value &lt; 0">Ended</t>
+                                    <t t-else=""><t t-esc="record.current_days_left.raw_value"/> <span>days</span></t>
+                                </span>
+                            </div>
+                            <div t-if="st == 'client_out' and record.last_movement_out.raw_value"
+                                 t-attf-class="o_pm_spot_out {{record.waiting_hours.raw_value &gt; 4 ? 'o_pm_out_long' : ''}}">
+                                <i class="fa fa-road me-1" title="With the customer"/>
+                                <span>With the customer for</span>
+                                <strong t-esc="record.waiting_label.raw_value"/>
+                            </div>
+
+                            <div t-if="st == 'available'" class="o_pm_spot_empty">
+                                <i class="fa fa-check-circle" title="Available"/>
+                                <span>Free spot</span>
+                            </div>
+                            <div t-if="st == 'maintenance'" class="o_pm_spot_empty">
+                                <i class="fa fa-wrench" title="Maintenance"/>
+                                <span>Under maintenance</span>
+                            </div>
+                            <div t-if="st == 'reserved' and !record.current_vehicle_plate.raw_value" class="o_pm_spot_empty">
+                                <i class="fa fa-bookmark" title="Reserved"/>
+                                <span>Reserved, vehicle not arrived yet</span>
+                            </div>
+
+                            <div t-if="st == 'occupied' or st == 'client_out'" class="o_pm_spot_actions">
+                                <button t-if="st == 'occupied'" name="action_vehicle_checkout" type="object"
+                                        groups="parking_management.group_parking_checkinout"
+                                        class="btn btn-sm btn-outline-primary">
+                                    <i class="fa fa-sign-out me-1" title="Deliver"/>Deliver to customer
+                                </button>
+                                <button t-if="st == 'client_out'" name="action_vehicle_checkin" type="object"
+                                        groups="parking_management.group_parking_checkinout"
+                                        class="btn btn-sm btn-success">
+                                    <i class="fa fa-sign-in me-1" title="Receive"/>Receive back
+                                </button>
                             </div>
                         </div>
                     </t>

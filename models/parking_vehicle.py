@@ -8,7 +8,10 @@ class ParkingVehicle(models.Model):
     _order = "license_plate"
 
     license_plate = fields.Char(string="License Plate", required=True, tracking=True)
-    brand = fields.Char(string="Brand")
+    brand_id = fields.Many2one("parking.vehicle.brand", string="Brand", tracking=True, index=True)
+    brand_logo = fields.Image(related="brand_id.logo", string="Brand Logo")
+    # Free-text brand kept for reports and imports; it follows brand_id, and typed text finds its brand.
+    brand = fields.Char(string="Brand Name")
     model = fields.Char(string="Model")
     color = fields.Char(string="Color")
     year = fields.Integer(string="Year")
@@ -49,6 +52,25 @@ class ParkingVehicle(models.Model):
     wash_count = fields.Integer(string="Total Washes", compute="_compute_wash_count", store=True)
     last_wash_date = fields.Datetime(string="Last Wash Date", compute="_compute_last_wash", store=True)
     next_allowed_wash = fields.Datetime(string="Next Wash", compute="_compute_next_allowed_wash", store=True)
+
+    @api.model
+    def _sync_brand_vals(self, vals):
+        Brand = self.env["parking.vehicle.brand"]
+        if vals.get("brand_id"):
+            if "brand" not in vals:
+                vals["brand"] = Brand.browse(vals["brand_id"]).name
+        elif vals.get("brand") and "brand_id" not in vals:
+            match = Brand._match(vals["brand"])
+            if match:
+                vals["brand_id"] = match.id
+        return vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create([self._sync_brand_vals(dict(v)) for v in vals_list])
+
+    def write(self, vals):
+        return super().write(self._sync_brand_vals(dict(vals)))
 
     @api.depends("license_plate", "brand", "model", "color")
     def _compute_display_name(self):

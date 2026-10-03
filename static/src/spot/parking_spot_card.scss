@@ -1,0 +1,195 @@
+// Parking spot cards (spots board and check-in / check-out board).
+
+$pm-available: #16a34a;
+$pm-reserved: #d97706;
+$pm-occupied: #2563eb;
+$pm-client-out: #9333ea;
+$pm-maintenance: #64748b;
+
+.o_pm_spot_kanban {
+    .o_kanban_record {
+        padding: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+}
+
+.o_pm_spot {
+    --pm-status: #{$pm-available};
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 150px;
+    padding: 10px 12px 10px 12px;
+    border-inline-start: 5px solid var(--pm-status);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.015), transparent 40%);
+
+    &.o_pm_spot_available { --pm-status: #{$pm-available}; }
+    &.o_pm_spot_reserved { --pm-status: #{$pm-reserved}; }
+    &.o_pm_spot_occupied { --pm-status: #{$pm-occupied}; }
+    &.o_pm_spot_client_out { --pm-status: #{$pm-client-out}; }
+    &.o_pm_spot_maintenance { --pm-status: #{$pm-maintenance}; }
+
+    .o_pm_spot_head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .o_pm_spot_code {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        direction: ltr;
+        unicode-bidi: isolate;
+    }
+    .o_pm_spot_status {
+        margin-inline-start: auto;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--pm-status);
+        background-color: color-mix(in srgb, var(--pm-status) 12%, transparent);
+        white-space: nowrap;
+    }
+    .o_pm_spot_meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 12px;
+        font-size: 0.78rem;
+        color: $text-muted;
+    }
+
+    .o_pm_spot_vehicle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: color-mix(in srgb, var(--pm-status) 6%, transparent);
+    }
+    .o_pm_brand {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        .o_pm_brand_img {
+            max-width: 36px;
+            max-height: 36px;
+            object-fit: contain;
+        }
+        .o_field_image img {
+            max-width: 36px;
+            max-height: 36px;
+            object-fit: contain;
+        }
+    }
+    .o_pm_brand_badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.03em;
+    }
+    .o_pm_vehicle_text {
+        min-width: 0;
+    }
+    // Plate styled like a Saudi number plate.
+    .o_pm_plate {
+        display: inline-block;
+        padding: 1px 8px;
+        border: 2px solid #1f2937;
+        border-radius: 5px;
+        background: #fff;
+        color: #111827;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        direction: ltr;
+        unicode-bidi: isolate;
+    }
+    .o_pm_vehicle_name {
+        margin-top: 2px;
+        font-size: 0.8rem;
+        color: $text-muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .o_pm_spot_line {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.82rem;
+        min-width: 0;
+    }
+    .o_pm_phone {
+        margin-inline-start: auto;
+        padding: 0 6px;
+        color: $pm-available;
+    }
+    .o_pm_days {
+        margin-inline-start: auto;
+        padding: 0 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        background-color: rgba(100, 116, 139, 0.12);
+        color: #475569;
+        white-space: nowrap;
+        &.o_pm_days_soon {
+            background-color: rgba(217, 119, 6, 0.15);
+            color: #b45309;
+        }
+        &.o_pm_days_late {
+            background-color: rgba(220, 38, 38, 0.14);
+            color: #b91c1c;
+        }
+    }
+    .o_pm_spot_out {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        font-size: 0.8rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+        color: $pm-client-out;
+        background-color: rgba(147, 51, 234, 0.08);
+        &.o_pm_out_long {
+            color: #b91c1c;
+            background-color: rgba(220, 38, 38, 0.1);
+        }
+    }
+    .o_pm_spot_empty {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: var(--pm-status);
+        font-size: 0.85rem;
+        .fa {
+            font-size: 1.6rem;
+            opacity: 0.85;
+        }
+    }
+    .o_pm_spot_actions {
+        margin-top: auto;
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+}
