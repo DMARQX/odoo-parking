@@ -68,32 +68,38 @@ $pm-maintenance: #64748b;
         border-radius: 8px;
         background-color: color-mix(in srgb, var(--pm-status) 6%, transparent);
     }
+    // Rounded box rather than a circle: wide wordmark logos (Dodge, Lincoln) stay readable.
     .o_pm_brand {
-        flex: 0 0 44px;
-        width: 44px;
-        height: 44px;
+        flex: 0 0 58px;
+        width: 58px;
+        height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
+        border-radius: 10px;
         background: #fff;
         box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
         overflow: hidden;
-        .o_pm_brand_img {
-            max-width: 36px;
-            max-height: 36px;
-            object-fit: contain;
+        .o_field_image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
+        .o_pm_brand_img,
         .o_field_image img {
-            max-width: 36px;
-            max-height: 36px;
+            width: auto !important;
+            height: auto !important;
+            max-width: 50px;
+            max-height: 38px;
             object-fit: contain;
         }
     }
     .o_pm_brand_badge {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
