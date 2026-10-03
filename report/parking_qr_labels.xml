@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sheets of labels: no company header, small margins. -->
+    <record id="paperformat_parking_labels" model="report.paperformat">
+        <field name="name">A4 - Parking Labels</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_vehicle_qr_tag" model="ir.actions.report">
+        <field name="name">Vehicle QR Tags</field>
+        <field name="model">parking.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_vehicle_qr_tag</field>
+        <field name="report_file">parking_management.report_vehicle_qr_tag</field>
+        <field name="print_report_name">'Vehicle-QR-Tags'</field>
+        <field name="paperformat_id" ref="paperformat_parking_labels"/>
+        <field name="binding_model_id" ref="model_parking_vehicle"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_spot_qr_label" model="ir.actions.report">
+        <field name="name">Spot QR Labels</field>
+        <field name="model">parking.spot</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">parking_management.report_spot_qr_label</field>
+        <field name="report_file">parking_management.report_spot_qr_label</field>
+        <field name="print_report_name">'Spot-QR-Labels'</field>
+        <field name="paperformat_id" ref="paperformat_parking_labels"/>
+        <field name="binding_model_id" ref="model_parking_spot"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="pm_qr_img">
+        <img t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=%s&amp;height=%s' % (url, size, size)"
+             t-attf-style="width: {{mm}}mm; height: {{mm}}mm;" alt="QR"/>
+    </template>
+
+    <!-- Vehicle tags: 2 x 5 per sheet, for the key ring or the windscreen. -->
+    <template id="report_vehicle_qr_tag">
+        <t t-call="web.basic_layout">
+            <t t-set="company" t-value="env.company"/>
+            <div class="page o_pm_labels">
+                <t t-foreach="range(0, len(docs), 10)" t-as="start">
+                    <table class="o_pm_tag_sheet" t-attf-style="{{'page-break-after: always;' if start + 10 &lt; len(docs) else ''}}">
+                        <t t-foreach="range(start, min(start + 10, len(docs)), 2)" t-as="row">
+                            <tr>
+                                <t t-foreach="docs[row:row + 2]" t-as="v">
+                                    <td class="o_pm_tag">
+                                        <table class="o_pm_tag_inner">
+                                            <tr>
+                                                <td class="o_pm_tag_qr">
+                                                    <t t-call="parking_management.pm_qr_img">
+                                                        <t t-set="url" t-value="v.qr_url"/>
+                                                        <t t-set="size" t-value="300"/>
+                                                        <t t-set="mm" t-value="34"/>
+                                                    </t>
+                                                </td>
+                                                <td class="o_pm_tag_info">
+                                                    <div class="o_pm_tag_company">
+                                                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"/>
+                                                        <span t-esc="company.name"/>
+                                                    </div>
+                                                    <div class="o_pm_tag_plate" t-esc="v.license_plate"/>
+                                                    <div class="o_pm_tag_vehicle">
+                                                        <img t-if="v.brand_id.logo" t-att-src="image_data_uri(v.brand_id.logo)"/>
+                                                        <span><t t-esc="v.brand_id.name or v.brand or ''"/> <t t-esc="v.model or ''"/></span>
+                                                    </div>
+                                                    <div class="o_pm_tag_line" t-if="v.owner_id"><t t-esc="v.owner_id.display_name"/></div>
+                                                    <div class="o_pm_tag_line" t-if="v.key_tag"><span>Key tag</span>: <strong t-esc="v.key_tag"/></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </t>
+                                <td t-if="len(docs[row:row + 2]) == 1" class="o_pm_tag o_pm_tag_blank"/>
+                            </tr>
+                        </t>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Spot labels: 2 per sheet, mounted at the spot. -->
+    <template id="report_spot_qr_label">
+        <t t-call="web.basic_layout">
+            <t t-set="company" t-value="env.company"/>
+            <div class="page o_pm_labels">
+                <t t-foreach="docs" t-as="s">
+                    <div class="o_pm_spot_label" t-attf-style="{{'page-break-after: always;' if s_index % 2 == 1 and not s_last else ''}}">
+                        <table class="o_pm_spot_label_inner">
+                            <tr>
+                                <td class="o_pm_spot_label_text">
+                                    <div class="o_pm_spot_label_company">
+                                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"/>
+                                        <span t-esc="company.name"/>
+                                    </div>
+                                    <div class="o_pm_spot_label_code" t-esc="s.name"/>
+                                    <div class="o_pm_spot_label_meta">
+                                        <span t-esc="s.location_id.name"/>
+                                        <t t-if="s.floor"> · <span t-esc="s.floor"/></t>
+                                        <t t-if="s.spot_type_id"> · <span t-esc="s.spot_type_id.name"/></t>
+                                    </div>
+                                    <div class="o_pm_spot_label_hint">Scan to open this spot</div>
+                                </td>
+                                <td class="o_pm_spot_label_qr">
+                                    <t t-call="parking_management.pm_qr_img">
+                                        <t t-set="url" t-value="s.qr_url"/>
+                                        <t t-set="size" t-value="500"/>
+                                        <t t-set="mm" t-value="80"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.6.0.0",
+    "version": "18.0.7.0.0",
     "depends": ["base", "mail", "account", "sale_management", "portal", "sms", "stock"],
     "data": [
         "security/parking_security.xml",
@@ -28,6 +28,7 @@
         "report/parking_inspection_report.xml",
         "report/parking_handover_report.xml",
         "report/parking_statement_report.xml",
+        "report/parking_qr_labels.xml",
         "views/parking_portal_templates.xml",
         "views/parking_checkpoint_views.xml",
         "views/parking_terms_conditions_views.xml",
@@ -47,6 +48,7 @@
         "wizard/parking_report_wizard_views.xml",
         "wizard/parking_reception_wizard_views.xml",
         "wizard/parking_contract_charge_views.xml",
+        "views/parking_attendant_views.xml",
     ],
     "demo": [],
     "assets": {
@@ -56,11 +58,13 @@
         "web.assets_backend": [
             "parking_management/static/src/dashboard/parking_dashboard.scss",
             "parking_management/static/src/spot/parking_spot_card.scss",
+            "parking_management/static/src/attendant/parking_attendant.scss",
+            "parking_management/static/src/attendant/parking_attendant.js",
+            "parking_management/static/src/attendant/parking_attendant.xml",
             "parking_management/static/src/dashboard/parking_dashboard.js",
             "parking_management/static/src/dashboard/parking_dashboard.xml",
         ],
     },
-    'controllers': ['controllers/__init__.py'],
     "installable": True,
     "application": True,
     "auto_install": False,

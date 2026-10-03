@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 19:55+0000\n"
-"PO-Revision-Date: 2026-10-03 19:55+0000\n"
+"POT-Creation-Date: 2026-10-03 22:17+0000\n"
+"PO-Revision-Date: 2026-10-03 22:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -170,6 +170,11 @@ msgid "'Services-Report'"
 msgstr "'تقرير-الخدمات-%s' % (time.strftime('%%Y-%%m-%%d'))"
 
 #. module: parking_management
+#: model:ir.actions.report,print_report_name:parking_management.action_report_spot_qr_label
+msgid "'Spot-QR-Labels'"
+msgstr "'ملصقات-المواقف'"
+
+#. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_spots_summary
 msgid "'Spots-Summary'"
 msgstr "'ملخص-المواقف-%s' % (time.strftime('%%Y-%%m-%%d'))"
@@ -188,6 +193,11 @@ msgstr "'حركة-مركبة-%s' % (object.name or object.id)"
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicle_movement
 msgid "'Vehicle-Movements'"
 msgstr "'تقرير-حركة-المركبات-%s' % (time.strftime('%%Y-%%m-%%d'))"
+
+#. module: parking_management
+#: model:ir.actions.report,print_report_name:parking_management.action_report_vehicle_qr_tag
+msgid "'Vehicle-QR-Tags'"
+msgstr "'بطاقات-المركبات'"
 
 #. module: parking_management
 #: model:ir.actions.report,print_report_name:parking_management.action_report_parking_vehicles_registry
@@ -334,7 +344,9 @@ msgstr "<i class=\"fa fa-phone\" title=\"اتصال\"/>"
 msgid ""
 "<i class=\"fa fa-road me-1\" title=\"With the customer\"/>\n"
 "                                <span>With the customer for</span>"
-msgstr "<i class=\"fa fa-road me-1\" title=\"مع العميل\"/>\n                                <span>مع العميل منذ</span>"
+msgstr ""
+"<i class=\"fa fa-road me-1\" title=\"مع العميل\"/>\n"
+"                                <span>مع العميل منذ</span>"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
@@ -470,6 +482,11 @@ msgstr "<span>س.ت</span>:"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
 msgid "<span>Contracts</span>:"
 msgstr "<span>العقود</span>:"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_qr_tag
+msgid "<span>Key tag</span>:"
+msgstr "<span>رقم بطاقة المفتاح</span>:"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.pm_title
@@ -919,6 +936,16 @@ msgid "Attempts"
 msgstr "المحاولات"
 
 #. module: parking_management
+#: model:ir.actions.client,name:parking_management.action_parking_attendant
+msgid "Attendant"
+msgstr "عامل الموقف"
+
+#. module: parking_management
+#: model:ir.ui.menu,name:parking_management.menu_parking_attendant
+msgid "Attendant (Mobile)"
+msgstr "عامل الموقف (الجوال)"
+
+#. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_interior_05
 msgid "Audio System"
 msgstr "النظام الصوتي"
@@ -993,6 +1020,12 @@ msgstr "المواقف المتاحة"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Average time out"
 msgstr "متوسط مدة الخروج"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.js:0
+msgid "Awaiting arrival"
+msgstr "بانتظار الوصول"
 
 #. module: parking_management
 #. odoo-javascript
@@ -1265,6 +1298,12 @@ msgid ""
 msgstr ""
 "بتوقيعك على هذا العقد فإنك تقر بأنك قرأت وفهمت ووافقت على جميع الشروط "
 "والأحكام الواردة أعلاه."
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Call"
+msgstr "اتصال"
 
 #. module: parking_management
 #: model:res.groups,comment:parking_management.group_parking_contract
@@ -1559,6 +1598,12 @@ msgid "Client Out"
 msgstr "خرج العميل"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__code
 #: model:ir.model.fields,field_description:parking_management.field_parking_transfer_type__code
 msgid "Code"
@@ -1761,6 +1806,7 @@ msgstr "المحتوى"
 
 #. module: parking_management
 #. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_charge_wizard__contract_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_prepay_wizard__contract_id
@@ -2508,6 +2554,12 @@ msgid "Deliver parking sale %s"
 msgstr "سلّم مبيعات المواقف %s"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Deliver to customer"
+msgstr "تسليم للعميل"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_movement_search
 msgid "Delivered"
 msgstr "تاريخ التسليم"
@@ -2872,6 +2924,8 @@ msgid "End Month"
 msgstr "شهر الانتهاء"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_kanban_dashboard
 msgid "Ended"
@@ -3443,6 +3497,12 @@ msgid "In key box"
 msgstr "في صندوق المفاتيح"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.js:0
+msgid "In spots"
+msgstr "في المواقف"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_driver_search
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_transporter_vehicle_search
 msgid "Inactive"
@@ -3791,6 +3851,24 @@ msgstr "حالة المفتاح"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Key Tag No."
 msgstr "رقم بطاقة المفتاح"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Key box"
+msgstr "خانة المفتاح"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Key tag"
+msgstr "بطاقة المفتاح"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_form_qr
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form_qr
+msgid "Labels printed with the current code will stop working. Continue?"
+msgstr "الملصقات المطبوعة بالرمز الحالي ستتوقف عن العمل. هل تريد المتابعة؟"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_invoice_lang
@@ -4340,6 +4418,12 @@ msgid "New Contracts"
 msgstr "العقود الجديدة"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_spot_form_qr
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form_qr
+msgid "New QR code"
+msgstr "رمز QR جديد"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_status_log__new_status
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_status_log_search
 msgid "New Status"
@@ -4357,6 +4441,12 @@ msgstr "العقود الجديدة"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "New contracts, last 12 months"
 msgstr "العقود الجديدة، آخر 12 شهراً"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "New vehicle"
+msgstr "مركبة جديدة"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
@@ -4550,6 +4640,18 @@ msgstr "لا توجد حركات مركبات بعد"
 
 #. module: parking_management
 #. odoo-python
+#: code:addons/parking_management/models/parking_attendant.py:0
+msgid "No vehicle on spot %s."
+msgstr "لا توجد مركبة في الموقف %s."
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.js:0
+msgid "No vehicle or spot found for this code."
+msgstr "لم يُعثر على مركبة أو موقف لهذا الرمز."
+
+#. module: parking_management
+#. odoo-python
 #: code:addons/parking_management/models/parking_spot.py:0
 msgid "No vehicles found in the active contract."
 msgstr "لم يتم العثور على مركبات في العقد النشط."
@@ -4623,6 +4725,12 @@ msgstr "ملاحظة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_vehicle_handover
 msgid "Notes"
 msgstr "ملاحظات"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Nothing here."
+msgstr "لا يوجد شيء هنا."
 
 #. module: parking_management
 #. odoo-python
@@ -4886,6 +4994,12 @@ msgid "Open balance of this contract's posted customer invoices."
 msgstr "الرصيد المفتوح لفواتير العميل المرحّلة لهذا العقد."
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Open spot"
+msgstr "فتح الموقف"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_wash_credit__kind__opening
 msgid "Opening balance"
 msgstr "رصيد افتتاحي"
@@ -4944,6 +5058,7 @@ msgstr "خارج منذ"
 
 #. module: parking_management
 #. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Out for"
 msgstr "مدة الخروج"
@@ -5036,6 +5151,11 @@ msgstr "المواقف - تم إنشاء فاتورة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_partner_statement
 msgid "Parking Account Statement"
 msgstr "كشف حساب المواقف"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_attendant
+msgid "Parking Attendant Screen"
+msgstr "شاشة عامل الموقف"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_account_bank_statement_line__parking_location_id
@@ -5133,6 +5253,11 @@ msgstr "نظام إدارة المواقف - التحكم في صلاحيات ك
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_type__product_id
 msgid "Parking Product"
 msgstr "منتج المواقف"
+
+#. module: parking_management
+#: model:ir.model,name:parking_management.model_parking_qr_mixin
+msgid "Parking QR Code"
+msgstr "رمز QR للمواقف"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_revenue_graph
@@ -5366,6 +5491,12 @@ msgid "Plate"
 msgstr "اللوحة"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Plate, spot or customer"
+msgstr "اللوحة أو الموقف أو العميل"
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Please capture the customer signature before signing."
@@ -5576,6 +5707,25 @@ msgid "Q%(q)s %(y)s"
 msgstr "الربع %(q)s %(y)s"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.pm_qr_img
+msgid "QR"
+msgstr "QR"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_qr_mixin__qr_url
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__qr_url
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__qr_url
+msgid "QR Link"
+msgstr "رابط QR"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_qr_mixin__qr_token
+#: model:ir.model.fields,field_description:parking_management.field_parking_spot__qr_token
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle__qr_token
+msgid "QR Token"
+msgstr "رمز QR"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.pm_services_table
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document
 msgid "Qty"
@@ -5674,6 +5824,12 @@ msgstr "استلام المركبة"
 
 #. module: parking_management
 #. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Receive back"
+msgstr "استلام المركبة"
+
+#. module: parking_management
+#. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Received (in)"
 msgstr "تم الاستلام (دخول)"
@@ -5728,6 +5884,7 @@ msgstr "المرجع"
 
 #. module: parking_management
 #. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 msgid "Refresh"
 msgstr "تحديث"
@@ -5808,6 +5965,12 @@ msgstr "تسجيل فحص"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
 msgid "Register Payment"
 msgstr "تسجيل دفعة"
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Register wash"
+msgstr "تسجيل غسلة"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot_status_log__contract_id
@@ -6075,6 +6238,17 @@ msgid "Sale invoiced separately: %s"
 msgstr "مبيعات فُوترت بفاتورة مستقلة: %s"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Scan QR"
+msgstr "مسح QR"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.report_spot_qr_label
+msgid "Scan to open this spot"
+msgstr "امسح الرمز لفتح هذا الموقف"
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_reception_wizard_form
 msgid "Scratches, damage, items left in the car..."
 msgstr "خدوش، أضرار، أغراض متروكة في السيارة..."
@@ -6320,6 +6494,7 @@ msgstr "الموقف المصدر"
 
 #. module: parking_management
 #. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.xml:0
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__spot_id
 #: model:ir.model.fields,field_description:parking_management.field_parking_reception_wizard__spot_id
@@ -6347,6 +6522,11 @@ msgstr "الموقف والفترة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__name
 msgid "Spot Number"
 msgstr "رقم الموقف"
+
+#. module: parking_management
+#: model:ir.actions.report,name:parking_management.action_report_spot_qr_label
+msgid "Spot QR Labels"
+msgstr "ملصقات QR للمواقف"
 
 #. module: parking_management
 #: model:ir.model,name:parking_management.model_parking_spot_status_log
@@ -6473,6 +6653,8 @@ msgid "State"
 msgstr "الحالة"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__state
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract_wash__state
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__status
@@ -6808,6 +6990,12 @@ msgid "Test message from %s"
 msgstr "رسالة تجريبية من %s"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.js:0
+msgid "The camera could not be opened."
+msgstr "تعذر فتح الكاميرا."
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/wizard/parking_deposit_refund_wizard.py:0
 msgid "The deduction must be between 0 and the deposit amount."
@@ -6917,6 +7105,12 @@ msgstr ""
 #: model:ir.model.constraint,message:parking_management.constraint_parking_vehicle_brand_name_unique
 msgid "This brand already exists."
 msgstr "هذه العلامة موجودة مسبقاً."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_attendant.py:0
+msgid "This spot no longer exists."
+msgstr "هذا الموقف لم يعد موجوداً."
 
 #. module: parking_management
 #. odoo-python
@@ -7166,6 +7360,12 @@ msgid "Unit Price"
 msgstr "سعر الوحدة"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_attendant.py:0
+msgid "Unknown operation."
+msgstr "عملية غير معروفة."
+
+#. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_search
 msgid "Unpaid"
 msgstr "غير مدفوع"
@@ -7298,6 +7498,12 @@ msgstr ""
 
 #. module: parking_management
 #. odoo-python
+#: code:addons/parking_management/models/parking_attendant.py:0
+msgid "Vehicle %s has no active contract with a spot."
+msgstr "المركبة %s ليس لها عقد نشط بموقف."
+
+#. module: parking_management
+#. odoo-python
 #: code:addons/parking_management/models/parking_vehicle_movement.py:0
 msgid "Vehicle %s is already out with the customer; receive it back first."
 msgstr "المركبة %s خارج الموقف مع العميل بالفعل؛ استلمها أولاً."
@@ -7390,6 +7596,11 @@ msgstr "تقرير حركة المركبات"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_vehicle_movement_report
 msgid "Vehicle Movements"
 msgstr "حركات المركبة"
+
+#. module: parking_management
+#: model:ir.actions.report,name:parking_management.action_report_vehicle_qr_tag
+msgid "Vehicle QR Tags"
+msgstr "بطاقات QR للمركبات"
 
 #. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_reception_wizard
@@ -7662,6 +7873,12 @@ msgstr ""
 "فاتورة اشتراك."
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "Washes left"
+msgstr "الغسلات المتبقية"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__free_wash_count
 msgid "Washes per Month"
 msgstr "رصيد الغسيل المجاني"
@@ -7822,6 +8039,12 @@ msgid "With customer"
 msgstr "مع العميل"
 
 #. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.js:0
+msgid "With customers"
+msgstr "مع العملاء"
+
+#. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle__key_status__with_driver
 msgid "With driver"
 msgstr "مع السائق"
@@ -7915,6 +8138,12 @@ msgid ""
 msgstr ""
 "يوم.\n"
 "                    استخدم <strong>تجديد</strong> لتجهيز الفترة التالية."
+
+#. module: parking_management
+#. odoo-javascript
+#: code:addons/parking_management/static/src/attendant/parking_attendant.xml:0
+msgid "days"
+msgstr "يوم"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contract_document

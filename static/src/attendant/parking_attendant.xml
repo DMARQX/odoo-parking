@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="parking_management.AttendantBrand">
+        <div class="o_pm_att_brand">
+            <img t-if="item.logo" t-att-src="item.logo" alt=""/>
+            <span t-elif="item.initials" class="o_pm_att_badge" t-attf-style="background-color: {{item.brand_color}};"
+                  t-esc="item.initials"/>
+            <i t-else="" class="fa fa-car text-muted"/>
+        </div>
+    </t>
+
+    <t t-name="parking_management.ParkingAttendant">
+        <div class="o_pm_att o_action">
+            <div class="o_pm_att_top">
+                <div class="o_pm_att_search">
+                    <i class="fa fa-search"/>
+                    <input type="search" class="form-control" t-model="state.search"
+                           t-on-keyup="onSearch" placeholder="Plate, spot or customer"/>
+                </div>
+                <button t-if="scannerSupported" class="btn btn-primary o_pm_att_scan" t-on-click="scan" title="Scan QR">
+                    <i class="fa fa-qrcode"/>
+                </button>
+                <button class="btn btn-secondary o_pm_att_scan" t-on-click="() => this.load()" title="Refresh">
+                    <i class="fa fa-refresh"/>
+                </button>
+            </div>
+
+            <!-- Selected car -->
+            <div t-if="state.selected" t-attf-class="o_pm_att_detail o_pm_att_{{state.selected.status}}">
+                <t t-set="item" t-value="state.selected"/>
+                <div class="o_pm_att_detail_head">
+                    <t t-call="parking_management.AttendantBrand"/>
+                    <div class="o_pm_att_detail_title">
+                        <div class="o_pm_att_plate" t-esc="item.plate or '—'"/>
+                        <div class="o_pm_att_sub"><t t-esc="item.brand"/> <t t-esc="item.model"/> <t t-if="item.color">· <t t-esc="item.color"/></t></div>
+                    </div>
+                    <button class="btn btn-link o_pm_att_close" t-on-click="closeDetail" title="Close"><i class="fa fa-times"/></button>
+                </div>
+                <div class="o_pm_att_facts">
+                    <div><span>Spot</span><strong t-esc="item.spot"/></div>
+                    <div><span>Status</span><strong t-esc="item.status_label"/></div>
+                    <div t-if="item.key_slot"><span>Key box</span><strong t-esc="item.key_slot"/></div>
+                    <div t-if="item.key_tag"><span>Key tag</span><strong t-esc="item.key_tag"/></div>
+                    <div t-if="item.waiting_label"><span>Out for</span><strong t-esc="item.waiting_label"/></div>
+                    <div t-if="item.contract"><span>Contract</span>
+                        <strong><t t-esc="item.contract"/>
+                            <span t-if="item.days_left !== false" t-attf-class="o_pm_days {{daysClass(item)}}">
+                                <t t-if="item.days_left &lt; 0">Ended</t><t t-else=""><t t-esc="item.days_left"/> days</t>
+                            </span>
+                        </strong>
+                    </div>
+                    <div t-if="item.remaining_washes"><span>Washes left</span><strong t-esc="item.remaining_washes"/></div>
+                </div>
+                <div t-if="item.customer" class="o_pm_att_customer">
+                    <i class="fa fa-user me-2"/><span t-esc="item.customer"/>
+                    <a t-if="item.mobile" class="btn btn-success btn-sm ms-auto" t-attf-href="tel:{{item.mobile}}">
+                        <i class="fa fa-phone me-1"/>Call
+                    </a>
+                </div>
+                <div class="o_pm_att_actions" t-if="state.canOperate">
+                    <button t-if="item.status == 'occupied'" class="btn btn-primary btn-lg" t-on-click="() => this.run('deliver')">
+                        <i class="fa fa-sign-out me-2"/>Deliver to customer
+                    </button>
+                    <button t-if="item.status == 'client_out'" class="btn btn-success btn-lg" t-on-click="() => this.run('receive')">
+                        <i class="fa fa-sign-in me-2"/>Receive back
+                    </button>
+                    <button t-if="item.vehicle_id and item.status != 'reserved'" class="btn btn-outline-secondary btn-lg"
+                            t-on-click="() => this.run('wash')">
+                        <i class="fa fa-tint me-2"/>Register wash
+                    </button>
+                    <button class="btn btn-outline-secondary btn-lg" t-on-click="() => this.run('open')">
+                        <i class="fa fa-external-link me-2"/>Open spot
+                    </button>
+                </div>
+            </div>
+
+            <div class="o_pm_att_tabs">
+                <button t-foreach="tabs" t-as="tab" t-key="tab.key"
+                        t-attf-class="o_pm_att_tab {{state.tab == tab.key ? 'active' : ''}}"
+                        t-on-click="() => this.setTab(tab.key)">
+                    <i t-attf-class="fa {{tab.icon}}"/>
+                    <span t-esc="tab.label"/>
+                    <span class="o_pm_att_count" t-esc="(state.board[tab.key] || []).length"/>
+                </button>
+            </div>
+
+            <div class="o_pm_att_list">
+                <div t-if="!state.loading and !items.length" class="o_pm_att_empty">
+                    <i class="fa fa-check-circle"/>
+                    <span>Nothing here.</span>
+                </div>
+                <div t-foreach="items" t-as="item" t-key="item.spot_id"
+                     t-attf-class="o_pm_att_item o_pm_att_{{item.status}} {{state.selected and state.selected.spot_id == item.spot_id ? 'selected' : ''}}"
+                     t-on-click="() => this.select(item.spot_id)">
+                    <t t-call="parking_management.AttendantBrand"/>
+                    <div class="o_pm_att_item_main">
+                        <div class="o_pm_att_item_row">
+                            <span class="o_pm_att_plate small" t-esc="item.plate or '—'"/>
+                            <span class="o_pm_att_spot" t-esc="item.spot"/>
+                        </div>
+                        <div class="o_pm_att_sub text-truncate">
+                            <t t-esc="item.customer"/>
+                            <t t-if="item.brand"> · <t t-esc="item.brand"/></t>
+                        </div>
+                    </div>
+                    <span t-if="item.waiting_label" t-attf-class="o_pm_att_wait {{item.waiting_hours &gt; 4 ? 'late' : ''}}"
+                          t-esc="item.waiting_label"/>
+                </div>
+            </div>
+
+            <button t-if="state.canOperate" class="btn btn-primary o_pm_att_fab" t-on-click="newReception">
+                <i class="fa fa-plus me-2"/>New vehicle
+            </button>
+        </div>
+    </t>
+</templates>

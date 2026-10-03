@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_parking_attendant" model="ir.actions.client">
+        <field name="name">Attendant</field>
+        <field name="tag">parking_management.attendant</field>
+    </record>
+
+    <menuitem id="menu_parking_attendant" name="Attendant (Mobile)"
+              parent="parking_management.menu_parking_operations"
+              action="action_parking_attendant" sequence="1"
+              groups="parking_management.group_parking_checkinout"/>
+
+    <!-- QR code on the vehicle and spot forms -->
+    <record id="parking_vehicle_form_qr" model="ir.ui.view">
+        <field name="name">parking.vehicle.form.qr</field>
+        <field name="model">parking.vehicle</field>
+        <field name="inherit_id" ref="parking_management.parking_vehicle_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="qr_token" invisible="1"/>
+                <field name="qr_url" widget="url" readonly="1" groups="parking_management.group_parking_checkinout"/>
+                <button name="action_reset_qr" type="object" string="New QR code" icon="fa-refresh" class="btn-link"
+                        groups="parking_management.group_parking_contract"
+                        confirm="Labels printed with the current code will stop working. Continue?"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="parking_spot_form_qr" model="ir.ui.view">
+        <field name="name">parking.spot.form.qr</field>
+        <field name="model">parking.spot</field>
+        <field name="inherit_id" ref="parking_management.parking_spot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='current_contract_id']" position="after">
+                <field name="qr_token" invisible="1"/>
+                <field name="qr_url" widget="url" readonly="1" groups="parking_management.group_parking_checkinout"/>
+                <button name="action_reset_qr" type="object" string="New QR code" icon="fa-refresh" class="btn-link"
+                        groups="parking_management.group_parking_contract"
+                        confirm="Labels printed with the current code will stop working. Continue?"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
