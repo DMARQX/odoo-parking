@@ -1,7 +1,7 @@
 {
     "name": "Parking Management System",
     "icon": "static/description/icon.png",
-    "version": "18.0.7.0.1",
+    "version": "18.0.7.0.2",
     "depends": ["base", "mail", "account", "sale_management", "portal", "sms", "stock"],
     "data": [
         "security/parking_security.xml",

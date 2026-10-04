@@ -85,7 +85,7 @@
     <record id="menu_parking_config" model="ir.ui.menu">
         <field name="name">Configuration</field>
         <field name="parent_id" ref="menu_parking_root"/>
-        <field name="sequence">50</field>
+        <field name="sequence">90</field>
         <field name="groups_id" eval="[(6, 0, [ref('group_parking_config_location'), ref('group_parking_config_pricing'), ref('group_parking_config_checkpoint'), ref('group_parking_terms_conditions'), ref('group_parking_manager')])]"/>
     </record>
     <record id="menu_parking_location" model="ir.ui.menu">
