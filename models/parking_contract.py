@@ -92,7 +92,11 @@ class ParkingContract(models.Model):
     amount_paid = fields.Monetary(string="Paid", compute="_compute_amount_due",
         currency_field="company_currency_id")
     statement_html = fields.Html(string="Account Statement", compute="_compute_statement_html", sanitize=False)
-    wash_interval_days = fields.Integer(string="Wash Interval (Days)", default=0)
+    draft_invoice_count = fields.Integer(string="Draft Invoices", compute="_compute_draft_invoice_count")
+    wash_interval_days = fields.Integer(
+        string="Wash Interval (Days)", default=lambda self: self.env.company.parking_wash_interval_days,
+        help="Minimum days between two washes of the same vehicle. 0 = no minimum. "
+             "New contracts take the default from Parking settings.")
     invoice_period = fields.Selection([
         ("monthly", "Monthly"),
         ("quarterly", "Quarterly"),
@@ -1147,16 +1151,55 @@ class ParkingContract(models.Model):
         overdue = sum(m.amount_residual_signed for m in moves
                       if m.move_type == "out_invoice" and m.invoice_date_due and m.invoice_date_due < today)
         currency = (self[:1].company_currency_id or self.env.company.currency_id)
+        drafts = self.sudo().invoice_ids.filtered(
+            lambda m: m.state == "draft" and m.move_type in ("out_invoice", "out_refund")).sorted(
+            lambda m: (m.invoice_date or m.date or today, m.id))
+        draft_rows = [{
+            "date": m.invoice_date or m.date, "contract": m.parking_contract_id.name,
+            "label": m.invoice_origin or _("Invoice"),
+            "amount": m.amount_total_signed, "untaxed": m.amount_untaxed_signed, "tax": m.amount_tax_signed,
+            "no_tax": m.move_type == "out_invoice" and not m.amount_tax and m.amount_untaxed > 0,
+        } for m in drafts]
+        draft_total = sum(r["amount"] for r in draft_rows)
         return {
+            "drafts": draft_rows,
+            "draft_total": draft_total,
             "rows": rows,
             "invoiced": sum(r["debit"] for r in rows if r["kind"] != "payment") - sum(
                 r["credit"] for r in rows if r["kind"] == "refund"),
             "paid": sum(r["credit"] for r in rows if r["kind"] == "payment") - sum(
                 r["debit"] for r in rows if r["kind"] == "payment"),
             "balance": balance,
+            "balance_with_drafts": balance + draft_total,
             "overdue": overdue,
             "currency": currency,
             "today": today,
+        }
+
+    @api.depends("invoice_ids.state")
+    def _compute_draft_invoice_count(self):
+        for r in self:
+            r.draft_invoice_count = len(r.invoice_ids.filtered(lambda m: m.state == "draft"))
+
+    def action_post_draft_invoices(self):
+        """Post every draft invoice of the contract; the ones that cannot be posted are reported."""
+        self.ensure_one()
+        drafts = self.invoice_ids.filtered(lambda m: m.state == "draft")
+        failed = []
+        for move in drafts:
+            try:
+                with self.env.cr.savepoint():
+                    move.action_post()
+            except UserError as e:
+                failed.append("%s: %s" % (move.invoice_origin or move.id, e.args[0] if e.args else e))
+        posted = len(drafts) - len(failed)
+        if failed:
+            raise UserError(_("%(posted)s invoice(s) posted. These could not be posted:\n%(failed)s",
+                              posted=posted, failed="\n".join(failed)))
+        return {
+            "type": "ir.actions.client", "tag": "display_notification",
+            "params": {"type": "success", "message": _("%s invoice(s) posted.", posted),
+                       "next": {"type": "ir.actions.client", "tag": "soft_reload"}},
         }
 
     def _compute_statement_html(self):

@@ -49,6 +49,14 @@
                         <setting help="On: washes left from a month stay in the contract's balance. Off: unused monthly washes expire when the next month's washes are added. Purchased washes never expire.">
                             <field name="parking_wash_carry_over"/>
                         </setting>
+                        <setting string="Days between washes" help="Minimum days between two washes of the same vehicle, given to new contracts (each contract can change it). 0 = no minimum.">
+                            <field name="parking_wash_interval_days"/>
+                            <div class="mt-1">
+                                <button name="action_parking_apply_wash_interval" type="object" icon="fa-arrow-right"
+                                        string="Apply to current contracts" class="btn-link"
+                                        confirm="Set this interval on every draft, confirmed and active contract of the company?"/>
+                            </div>
+                        </setting>
                         <setting help="A completed wash takes its supplies (the wash kit, or the lines entered on the wash) out of the branch warehouse and books their cost; cancelling the wash puts them back.">
                             <field name="parking_wash_consume_stock"/>
                             <div class="mt-2" invisible="not parking_wash_consume_stock">

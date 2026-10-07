@@ -22,6 +22,8 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.parking_prorate", readonly=False)
     parking_stock_shortage = fields.Selection(
         related="company_id.parking_stock_shortage", readonly=False)
+    parking_wash_interval_days = fields.Integer(
+        related="company_id.parking_wash_interval_days", readonly=False)
     parking_wash_consume_stock = fields.Boolean(
         related="company_id.parking_wash_consume_stock", readonly=False)
     parking_wash_location_id = fields.Many2one(
@@ -47,4 +49,17 @@ class ResConfigSettings(models.TransientModel):
                 "message": _("%(count)s branch analytic account(s) created.", count=len(created)),
                 "sticky": False,
             },
+        }
+
+    def action_parking_apply_wash_interval(self):
+        """Give the default interval to the company's current contracts (draft, confirmed, active)."""
+        self.ensure_one()
+        contracts = self.env["parking.contract"].search([
+            ("company_id", "=", self.company_id.id), ("state", "in", ("draft", "confirmed", "active"))])
+        contracts.write({"wash_interval_days": self.parking_wash_interval_days})
+        return {
+            "type": "ir.actions.client", "tag": "display_notification",
+            "params": {"type": "success", "message": _(
+                "%(count)s contract(s) now allow a wash every %(days)s day(s).",
+                count=len(contracts), days=self.parking_wash_interval_days)},
         }

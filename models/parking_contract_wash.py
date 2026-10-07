@@ -55,8 +55,8 @@ class ParkingContractWash(models.Model):
                 ("vehicle_id", "=", vehicle.id),
                 ("state", "=", "done"),
             ], order="wash_date desc", limit=1)
-            if last_wash:
-                interval_days = contract.wash_interval_days or 4
+            interval_days = contract.wash_interval_days
+            if last_wash and interval_days > 0:
                 next_allowed = last_wash.wash_date + timedelta(days=interval_days)
                 if fields.Datetime.now() < next_allowed:
                     remaining_hours = (next_allowed - fields.Datetime.now()).total_seconds() / 3600

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from odoo import models, fields, api, _
 
 class ParkingVehicle(models.Model):
@@ -153,12 +155,9 @@ class ParkingVehicle(models.Model):
             if not r.last_wash_date:
                 r.next_allowed_wash = fields.Datetime.now()
             else:
-                interval = 4
                 active_contracts = r.contract_ids.filtered(lambda c: c.state == "active")
-                if active_contracts:
-                    interval = max(c.wash_interval_days for c in active_contracts) if active_contracts else 4
-                from datetime import timedelta
-                r.next_allowed_wash = r.last_wash_date + timedelta(days=interval if interval else 4)
+                interval = max(active_contracts.mapped("wash_interval_days") or [0])
+                r.next_allowed_wash = r.last_wash_date + timedelta(days=max(interval, 0))
 
     def action_register_wash(self):
         self.ensure_one()

@@ -52,6 +52,10 @@ class ResCompany(models.Model):
         help="On: washes left from a month stay in the balance. Off: unused monthly washes expire "
              "when the next month's washes are added (purchased washes never expire).")
 
+    parking_wash_interval_days = fields.Integer(
+        string="Days Between Washes", default=4,
+        help="Default minimum number of days between two washes of the same vehicle, given to new "
+             "contracts. 0 = no minimum.")
     parking_wash_consume_stock = fields.Boolean(
         string="Consume Wash Supplies From Stock",
         help="A completed wash takes its supplies (wash kit, or the lines entered on the wash) out of "

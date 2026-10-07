@@ -28,7 +28,7 @@ class ResPartner(models.Model):
             ("account_id.account_type", "=", "asset_receivable"),
             ("amount_residual", "<", 0),
             ("move_id.move_type", "=", "entry"),
-            ("company_id", "=", self.env.company.id),
+            ("company_id", "in", (contracts.company_id | self.env.company).ids),
         ])
         for line in unallocated:
             data["rows"].append({
@@ -43,6 +43,7 @@ class ResPartner(models.Model):
             row["balance"] = balance
         data["paid"] += sum(-l.amount_residual for l in unallocated)
         data["balance"] = balance
+        data["balance_with_drafts"] = balance + data["draft_total"]
         data["contracts"] = contracts
         return data
 

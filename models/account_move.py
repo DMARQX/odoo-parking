@@ -1,6 +1,7 @@
 import logging
 
 from odoo import api, models, fields, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ class AccountMove(models.Model):
     # Posting, cancelling, resetting
     # ------------------------------------------------------------------
     def _post(self, soft=True):
+        self.filtered("parking_contract_id")._parking_check_vat()
         posted = super()._post(soft=soft)
         for move in posted.filtered(lambda m: m.parking_contract_id and not m.parking_picking_id
                                     and m.company_id.parking_invoice_stock_moves
@@ -47,6 +49,29 @@ class AccountMove(models.Model):
                 _logger.exception("Parking stock transfer for %s failed", move.name)
                 move.sudo()._message_log(body=_("Stock transfer could not be created: %s", e))
         return posted
+
+    def _parking_check_vat(self):
+        """A parking sale line without VAT is an error (ZATCA), unless a fiscal position exempts the customer.
+
+        Deposit lines carry no VAT by nature; credit notes reversing an invoice mirror it as it was.
+        """
+        problems = []
+        for move in self.filtered(lambda m: m.move_type in ("out_invoice", "out_refund")
+                                  and not m.fiscal_position_id and not m.reversed_entry_id):
+            deposit_account = move.company_id.parking_deposit_account_id
+            for line in move.invoice_line_ids.filtered(lambda l: l.display_type == "product"):
+                if line.tax_ids or not line.price_subtotal or line.parking_line_kind == "deposit":
+                    continue
+                if deposit_account and line.account_id == deposit_account:
+                    continue
+                name = (line.name or "").lower()
+                if not line.parking_line_kind and any(w in name for w in ("deposit", "insurance", "تأمين")):
+                    continue  # deposit lines of invoices issued before the line type existed
+                problems.append("%s: %s" % (move.invoice_origin or move.name or _("Draft"), line.name))
+        if problems:
+            raise UserError(_(
+                "These parking invoice lines have no VAT:\n%s\n\nAdd the VAT (15%%) to the lines, or set the "
+                "customer's fiscal position on the invoice if the customer is exempt.", "\n".join(problems)))
 
     def button_draft(self):
         parking = self.filtered("parking_contract_id")

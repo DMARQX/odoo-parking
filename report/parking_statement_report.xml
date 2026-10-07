@@ -54,6 +54,40 @@
                 </tbody>
             </table>
             <p t-else="" class="text-muted mb-0">No posted invoices or payments yet.</p>
+            <div t-if="drafts" class="alert alert-warning mt-3 mb-0 o_pm_drafts">
+                <strong><t t-esc="len(drafts)"/> draft invoice(s) not posted yet</strong>
+                <span> (</span><span t-esc="draft_total" t-options="{'widget': 'monetary', 'display_currency': currency}"/><span> incl. VAT)</span>.
+                <span>They are not part of the balance above until they are posted.</span>
+                <table class="table table-sm mb-1 mt-2 o_pm_table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th t-if="contracts[1:]">Contract</th>
+                            <th>Description</th>
+                            <th class="text-end">Untaxed</th>
+                            <th class="text-end">VAT</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="drafts" t-as="d">
+                            <td t-esc="d['date'] or ''" class="text-nowrap"/>
+                            <td t-if="contracts[1:]" t-esc="d['contract']"/>
+                            <td>
+                                <t t-esc="d['label']"/>
+                                <span t-if="d['no_tax']" class="badge text-bg-danger ms-1">No VAT</span>
+                            </td>
+                            <td class="text-end text-nowrap" t-esc="d['untaxed']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                            <td class="text-end text-nowrap" t-esc="d['tax']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                            <td class="text-end text-nowrap" t-esc="d['amount']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <span>Balance once they are posted</span>:
+                    <strong t-esc="balance_with_drafts" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+            </div>
         </div>
     </template>
 
@@ -87,6 +121,9 @@
                             <t t-set="balance" t-value="data['balance']"/>
                             <t t-set="overdue" t-value="data['overdue']"/>
                             <t t-set="currency" t-value="data['currency']"/>
+                            <t t-set="drafts" t-value="data['drafts']"/>
+                            <t t-set="draft_total" t-value="data['draft_total']"/>
+                            <t t-set="balance_with_drafts" t-value="data['balance_with_drafts']"/>
                             <t t-set="contracts" t-value="o"/>
                         </t>
                     </div>
@@ -123,6 +160,9 @@
                             <t t-set="balance" t-value="data['balance']"/>
                             <t t-set="overdue" t-value="data['overdue']"/>
                             <t t-set="currency" t-value="data['currency']"/>
+                            <t t-set="drafts" t-value="data['drafts']"/>
+                            <t t-set="draft_total" t-value="data['draft_total']"/>
+                            <t t-set="balance_with_drafts" t-value="data['balance_with_drafts']"/>
                             <t t-set="contracts" t-value="data['contracts']"/>
                         </t>
                     </div>

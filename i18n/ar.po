@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 22:17+0000\n"
-"PO-Revision-Date: 2026-10-03 22:17+0000\n"
+"POT-Creation-Date: 2026-10-07 20:58+0000\n"
+"PO-Revision-Date: 2026-10-07 20:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -75,6 +75,12 @@ msgid "%(count)s branch analytic account(s) created."
 msgstr "تم إنشاء %(count)s حساب تحليلي للفروع."
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/res_config_settings.py:0
+msgid "%(count)s contract(s) now allow a wash every %(days)s day(s)."
+msgstr "%(count)s عقد صار يسمح بغسلة كل %(days)s يوم."
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "%(count)s invoices"
@@ -107,6 +113,14 @@ msgstr "%(hours)s ساعة"
 #. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
+msgid ""
+"%(posted)s invoice(s) posted. These could not be posted:\n"
+"%(failed)s"
+msgstr "رُحّلت %(posted)s فاتورة. تعذر ترحيل هذه الفواتير:\n%(failed)s"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
 msgid "%s - Sale"
 msgstr "%s - مبيعات"
 
@@ -121,6 +135,12 @@ msgstr "%s يوم"
 #: code:addons/parking_management/models/parking_spot.py:0
 msgid "%s h"
 msgstr "%s ساعة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_contract.py:0
+msgid "%s invoice(s) posted."
+msgstr "رُحّلت %s فاتورة."
 
 #. module: parking_management
 #. odoo-python
@@ -472,6 +492,23 @@ msgstr "<span class=\"o_stat_text\">حركة المخزون</span>"
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_form
 msgid "<span class=\"o_stat_text\">Transfers</span>"
 msgstr "<span class=\"o_stat_text\">عمليات النقل</span>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "<span> (</span>"
+msgstr "<span> (</span>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid ""
+"<span> incl. VAT)</span>.\n"
+"                <span>They are not part of the balance above until they are posted.</span>"
+msgstr "<span> شامل الضريبة)</span>.\n                <span>ولا تدخل في الرصيد أعلاه حتى تُرحّل.</span>"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "<span>Balance once they are posted</span>:"
+msgstr "<span>الرصيد بعد ترحيلها</span>:"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.external_layout_parking
@@ -882,6 +919,11 @@ msgstr "الحساب التحليلي"
 #: model:ir.model.fields,help:parking_management.field_parking_contract_charge_wizard__product_id
 msgid "Any product not set up as a parking service."
 msgstr "أي منتج غير معرّف كخدمة مواقف."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Apply to current contracts"
+msgstr "تطبيق على العقود الحالية"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_notification_rule__wa_template
@@ -2401,6 +2443,12 @@ msgid "Days"
 msgstr "الأيام"
 
 #. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_res_company__parking_wash_interval_days
+#: model:ir.model.fields,field_description:parking_management.field_res_config_settings__parking_wash_interval_days
+msgid "Days Between Washes"
+msgstr "الأيام بين الغسلات"
+
+#. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_spot__current_days_left
 msgid "Days Left"
 msgstr "الأيام المتبقية"
@@ -2409,6 +2457,11 @@ msgstr "الأيام المتبقية"
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__days_remaining
 msgid "Days Remaining"
 msgstr "الأيام المتبقية"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid "Days between washes"
+msgstr "الأيام بين الغسلات"
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_contract__days_remaining
@@ -2498,6 +2551,14 @@ msgstr "الكمية الافتراضية لكل غسلة"
 #: model:ir.model.fields,field_description:parking_management.field_parking_price_template__tax_id
 msgid "Default Tax"
 msgstr "الضريبة الافتراضية"
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_res_company__parking_wash_interval_days
+#: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_wash_interval_days
+msgid ""
+"Default minimum number of days between two washes of the same vehicle, given"
+" to new contracts. 0 = no minimum."
+msgstr "الحد الأدنى الافتراضي للأيام بين غسلتين للمركبة نفسها، ويُعطى للعقود الجديدة. صفر = بدون حد أدنى."
 
 #. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_parking_branch_stock__uom_id
@@ -2786,6 +2847,8 @@ msgid "Done"
 msgstr "تم"
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract__state__draft
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_contract_wash__state__draft
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_vehicle_inspection__state__draft
@@ -2801,6 +2864,11 @@ msgstr "مسودة"
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "Draft Contracts"
 msgstr "العقود المسودة"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_contract__draft_invoice_count
+msgid "Draft Invoices"
+msgstr "فواتير مسودة"
 
 #. module: parking_management
 #. odoo-python
@@ -4234,6 +4302,20 @@ msgid "Minimum Quantity"
 msgstr "الحد الأدنى"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"Minimum days between two washes of the same vehicle, given to new contracts "
+"(each contract can change it). 0 = no minimum."
+msgstr "الحد الأدنى للأيام بين غسلتين للمركبة نفسها، ويُعطى للعقود الجديدة (ويمكن تغييره في كل عقد). صفر = بدون حد أدنى."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_contract__wash_interval_days
+msgid ""
+"Minimum days between two washes of the same vehicle. 0 = no minimum. New "
+"contracts take the default from Parking settings."
+msgstr "الحد الأدنى للأيام بين غسلتين للمركبة نفسها. صفر = بدون حد أدنى. العقود الجديدة تأخذ القيمة الافتراضية من إعدادات المواقف."
+
+#. module: parking_management
 #: model:parking.vehicle.checkpoint,name:parking_management.checkpoint_exterior_06
 msgid "Mirrors"
 msgstr "المرايا"
@@ -4520,6 +4602,11 @@ msgstr "الغسيل التالي"
 #: code:addons/parking_management/models/parking_messaging.py:0
 msgid "No %s gateway configured."
 msgstr "لا توجد بوابة %s مُعدّة."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "No VAT"
+msgstr "بدون ضريبة"
 
 #. module: parking_management
 #. odoo-python
@@ -5543,6 +5630,18 @@ msgid "Post Automatic Invoices"
 msgstr "ترحيل الفواتير التلقائية"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid "Post Draft Invoices"
+msgstr "ترحيل الفواتير المسودة"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_form
+msgid ""
+"Post all draft invoices of this contract? Posted invoices are reported to "
+"ZATCA and can only be corrected by a credit note."
+msgstr "ترحيل كل الفواتير المسودة لهذا العقد؟ الفواتير المرحّلة تُبلّغ للزكاة ولا تُصحّح إلا بإشعار دائن."
+
+#. module: parking_management
 #: model:ir.model.fields,help:parking_management.field_res_company__parking_auto_post_invoices
 #: model:ir.model.fields,help:parking_management.field_res_config_settings__parking_auto_post_invoices
 msgid ""
@@ -6445,6 +6544,13 @@ msgid "Set the endpoint URL of gateway %s."
 msgstr "حدّد رابط الخدمة للبوابة %s."
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.res_config_settings_view_form_parking
+msgid ""
+"Set this interval on every draft, confirmed and active contract of the "
+"company?"
+msgstr "تطبيق هذه المدة على كل عقود الشركة المسودة والمؤكدة والنشطة؟"
+
+#. module: parking_management
 #: model:ir.actions.act_window,name:parking_management.action_parking_config_settings
 #: model:ir.ui.menu,name:parking_management.menu_parking_settings
 msgid "Settings"
@@ -7068,6 +7174,16 @@ msgid ""
 msgstr "لا توجد فاتورة مفتوحة للسداد على هذا العقد. أنشئ فاتورة أولاً."
 
 #. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/account_move.py:0
+msgid ""
+"These parking invoice lines have no VAT:\n"
+"%s\n"
+"\n"
+"Add the VAT (15%%) to the lines, or set the customer's fiscal position on the invoice if the customer is exempt."
+msgstr "بنود فواتير المواقف هذه بدون ضريبة:\n%s\n\nأضف الضريبة (15%%) للبنود، أو حدد الوضع الضريبي للعميل في الفاتورة إذا كان معفى."
+
+#. module: parking_management
 #. odoo-javascript
 #: code:addons/parking_management/static/src/dashboard/parking_dashboard.js:0
 msgid "This Month"
@@ -7164,6 +7280,7 @@ msgstr "أعلى الأرصدة المستحقة"
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_comprehensive
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_contracts_summary
 #: model_terms:ir.ui.view,arch_db:parking_management.report_parking_spots_summary
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
 msgid "Total"
 msgstr "المجموع"
 
@@ -7371,6 +7488,11 @@ msgid "Unpaid"
 msgstr "غير مدفوع"
 
 #. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "Untaxed"
+msgstr "بدون ضريبة"
+
+#. module: parking_management
 #. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Unused monthly washes expired"
@@ -7442,6 +7564,11 @@ msgid ""
 "are needed."
 msgstr ""
 "يستخدم خدمة الرسائل من Odoo ورصيدها المسبق (IAP). لا يحتاج إعدادات أخرى."
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "VAT"
+msgstr "الضريبة"
 
 #. module: parking_management
 #: model:ir.model.fields.selection,name:parking_management.selection__parking_price_template__spot_type__vip
@@ -8161,6 +8288,11 @@ msgstr "أُعيد التأمين للفوترة"
 #: code:addons/parking_management/models/account_move.py:0
 msgid "deposit refund undone"
 msgstr "أُلغي استرداد التأمين"
+
+#. module: parking_management
+#: model_terms:ir.ui.view,arch_db:parking_management.statement_table
+msgid "draft invoice(s) not posted yet"
+msgstr "فاتورة مسودة لم تُرحّل بعد"
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_vehicle_brand_form
