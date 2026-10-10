@@ -8,7 +8,7 @@ class ParkingContractServiceLine(models.Model):
 
     contract_id = fields.Many2one("parking.contract", string="Contract", required=True, ondelete="cascade")
     service_id = fields.Many2one("parking.service", string="Service", required=True,
-        domain="[('company_id', '=', company_id)]")
+        domain="['|', ('company_id', '=', False), ('company_id', 'parent_of', company_id)]")
     product_id = fields.Many2one("product.product", string="Product", related="service_id.product_id",
         readonly=True)
     name = fields.Char(string="Description", related="service_id.name", readonly=True)

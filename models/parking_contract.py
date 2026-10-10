@@ -35,7 +35,7 @@ class ParkingContract(models.Model):
         help="Number of days from the start date to the end date, both included.")
 
     price_tmpl_id = fields.Many2one("parking.price.template", string="Price Template", tracking=True)
-    tax_ids = fields.Many2many("account.tax", string="Taxes", domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]", tracking=True,
+    tax_ids = fields.Many2many("account.tax", string="Taxes", domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', company_id)]", tracking=True,
         default=lambda self: self.env.company.account_sale_tax_id,
         help="Leave empty to use each product's sales tax (the company default VAT when the product has none).")
     price_per_month = fields.Monetary(string="Price/Month", currency_field="company_currency_id", tracking=True)
@@ -1284,7 +1284,8 @@ class ParkingContract(models.Model):
     def action_add_washes(self):
         self.ensure_one()
         wash = self.env["parking.service"].search(
-            [("category", "=", "wash"), ("company_id", "in", [False, self.company_id.id])], limit=1)
+            [("category", "=", "wash"), "|", ("company_id", "=", False),
+             ("company_id", "parent_of", self.company_id.id)], limit=1)
         return {
             "name": _("Add Washes"),
             "type": "ir.actions.act_window",

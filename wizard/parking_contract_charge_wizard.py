@@ -12,7 +12,7 @@ class ParkingContractChargeWizard(models.TransientModel):
     company_id = fields.Many2one(related="contract_id.company_id")
     company_currency_id = fields.Many2one(related="contract_id.company_currency_id")
     service_id = fields.Many2one("parking.service", string="Service / Product",
-                                 domain="[('company_id', 'in', [False, company_id])]")
+                                 domain="['|', ('company_id', '=', False), ('company_id', 'parent_of', company_id)]")
     product_id = fields.Many2one("product.product", string="Other Product",
                                  help="Any product not set up as a parking service.")
     name = fields.Char(string="Description")
