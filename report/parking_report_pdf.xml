@@ -158,7 +158,7 @@
                     <t t-call="parking_management.pm_contracts_table">
                         <t t-set="contracts" t-value="docs"/>
                     </t>
-                    <div class="o_pm_note">Amounts are per invoice period and exclude VAT.</div>
+                    <div class="o_pm_note">Amounts are per month (per booking for daily contracts); they exclude VAT and one-time services.</div>
                 </div>
             </t>
         </t>

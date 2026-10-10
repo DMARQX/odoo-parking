@@ -67,6 +67,8 @@
                             <field name="color"/>
                             <field name="year"/>
                             <field name="owner_id"/>
+                            <field name="current_contract_id" invisible="not current_contract_id"/>
+                            <field name="customer_id" invisible="not customer_id or customer_id == owner_id"/>
                         </group>
                     </group>
                     <group string="Key">

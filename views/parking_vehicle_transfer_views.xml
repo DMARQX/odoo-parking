@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="parking_vehicle_transfer_search" model="ir.ui.view">
         <field name="name">parking.vehicle.transfer.search</field>
         <field name="model">parking.vehicle.transfer</field>
@@ -9,10 +8,20 @@
                 <field name="name" string="Reference"/>
                 <field name="vehicle_id" string="Vehicle"/>
                 <field name="partner_id" string="Customer"/>
-                <field name="state" string="Status"/>
+                <field name="driver_id"/>
+                <field name="transfer_type_id"/>
+                <filter name="filter_open" string="Open" domain="[('state', 'in', ('draft', 'in_transit'))]"/>
+                <filter name="filter_in_transit" string="In Transit" domain="[('state', '=', 'in_transit')]"/>
+                <filter name="filter_completed" string="Completed" domain="[('state', '=', 'completed')]"/>
                 <separator/>
+                <filter name="filter_to_invoice" string="To Invoice"
+                        domain="[('state', '=', 'completed'), ('price', '&gt;', 0), ('invoice_id', '=', False)]"/>
+                <separator/>
+                <filter name="filter_date" string="Transfer Date" date="transfer_date"/>
                 <group expand="0" string="Group By">
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Transfer Type" context="{'group_by': 'transfer_type_id'}"/>
+                    <filter name="group_driver" string="Driver" context="{'group_by': 'driver_id'}"/>
                     <filter name="group_date" string="Transfer Date" context="{'group_by': 'transfer_date'}"/>
                 </group>
             </search>
@@ -28,8 +37,15 @@
                 <field name="transfer_date"/>
                 <field name="vehicle_id"/>
                 <field name="partner_id"/>
-                <field name="state" widget="badge" decoration-success="state == 'completed'" decoration-warning="state == 'in_transit'" decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'"/>
-                <field name="operator_id"/>
+                <field name="transfer_type_id"/>
+                <field name="driver_id" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="price" widget="monetary" sum="Total" optional="show"/>
+                <field name="invoice_id" optional="hide" groups="parking_management.group_parking_invoicing"/>
+                <field name="state" widget="badge" decoration-success="state == 'completed'"
+                       decoration-warning="state == 'in_transit'" decoration-info="state == 'draft'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="operator_id" optional="hide" widget="many2one_avatar_user"/>
             </list>
         </field>
     </record>
@@ -40,29 +56,89 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_in_transit" string="Start Transfer" type="object" class="btn-warning"
-                            invisible="state != 'draft'"/>
+                    <button name="action_in_transit" string="Start Transfer" type="object" class="btn-primary"
+                            invisible="state != 'draft'" groups="parking_management.group_parking_checkinout"/>
                     <button name="action_complete" string="Complete" type="object" class="btn-success"
-                            invisible="state != 'in_transit'"/>
-                    <button name="action_cancel" string="Cancel Transfer" type="object" class="btn-danger"
-                            invisible="state not in ('draft', 'in_transit')"/>
-                    <button name="action_draft" string="Reset to Draft" type="object" class="btn-default"
-                            invisible="state != 'cancelled'"/>
+                            invisible="state != 'in_transit'" groups="parking_management.group_parking_checkinout"
+                            confirm="Complete this transfer? The customer is invoiced for it if it has a price."/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
+                            invisible="state != 'completed' or price &lt;= 0 or (invoice_id and invoice_state != 'cancel')"
+                            groups="parking_management.group_parking_checkinout"/>
+                    <button name="action_cancel" string="Cancel Transfer" type="object"
+                            invisible="state not in ('draft', 'in_transit')"
+                            groups="parking_management.group_parking_checkinout" confirm="Cancel this transfer?"/>
+                    <button name="action_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'" groups="parking_management.group_parking_checkinout"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_transit,completed"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                                invisible="not invoice_id" groups="parking_management.group_parking_invoicing">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                                <span class="o_stat_value" invisible="invoice_state != 'posted'"><field name="invoice_payment_state"/></span>
+                                <span class="o_stat_value" invisible="invoice_state == 'posted'"><field name="invoice_state"/></span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1" placeholder="New transfer"/></h1>
+                    </div>
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="destination_kind" invisible="1"/>
+                    <field name="invoice_state" invisible="1"/>
                     <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="partner_id" options="{'no_create': True}"/>
-                            <field name="vehicle_id" options="{'no_create': True}"/>
-                            <field name="transfer_date"/>
-                            <field name="operator_id"/>
+                        <group string="Vehicle and Customer">
+                            <field name="vehicle_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="partner_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="contract_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Transfer">
+                            <field name="transfer_type_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="transfer_date" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="completed_date" invisible="not completed_date"/>
+                            <field name="price" widget="monetary" readonly="state in ('completed', 'cancelled') and invoice_id"/>
+                            <field name="invoice_id" invisible="not invoice_id" groups="parking_management.group_parking_invoicing"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="From">
+                            <field name="source_location_id" options="{'no_create': True}" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="source_spot_id" options="{'no_create': True}" readonly="state in ('completed', 'cancelled')"/>
+                        </group>
+                        <group string="To">
+                            <field name="destination_location_id" options="{'no_create': True}"
+                                   invisible="destination_kind != 'branch'" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="destination_spot_id" options="{'no_create': True}"
+                                   invisible="destination_kind != 'branch'" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="service_center_name" invisible="destination_kind != 'service_center'"
+                                   readonly="state in ('completed', 'cancelled')"/>
+                            <field name="service_center_phone" widget="phone" invisible="destination_kind != 'service_center'"
+                                   readonly="state in ('completed', 'cancelled')"/>
+                            <field name="service_center_address" invisible="destination_kind != 'service_center'"
+                                   readonly="state in ('completed', 'cancelled')"/>
+                            <field name="destination_partner_id" options="{'no_create': True}"
+                                   invisible="destination_kind != 'customer'" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="destination_address" invisible="destination_kind not in ('customer', 'other')"
+                                   readonly="state in ('completed', 'cancelled')"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Driver">
+                            <field name="driver_id" options="{'no_create': True}" readonly="state in ('completed', 'cancelled')"/>
+                            <field name="transporter_vehicle_id" options="{'no_create': True}"
+                                   readonly="state in ('completed', 'cancelled')"/>
+                            <field name="operator_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Driver Notes">
+                            <field name="transporter_notes" nolabel="1" colspan="2" placeholder="Notes for the driver..."/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Notes">
-                            <field name="notes"/>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Remarks about this transfer..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -76,6 +152,12 @@
         <field name="res_model">parking.vehicle.transfer</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="parking_vehicle_transfer_search"/>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Record a vehicle transfer</p>
+            <p>Choose the vehicle: its customer and contract come with it. Then choose the transfer type; the
+               customer is invoiced by the price of that type when the transfer is completed.</p>
+        </field>
     </record>
 
     <menuitem id="menu_parking_vehicle_transfer"
@@ -84,5 +166,4 @@
               action="action_parking_vehicle_transfer"
               sequence="36"
               groups="parking_management.group_parking_user"/>
-
 </odoo>

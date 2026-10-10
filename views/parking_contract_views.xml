@@ -296,8 +296,13 @@
                         </page>
                     </notebook>
                     <group class="oe_subtotal_footer">
-                        <field name="services_total" widget="monetary"/>
+                        <field name="rent_amount" widget="monetary"/>
+                        <field name="recurring_services_total" widget="monetary" invisible="not recurring_services_total"/>
                         <field name="amount_total" widget="monetary" class="oe_subtotal_footer_separator"/>
+                        <field name="amount_tax" widget="monetary"/>
+                        <field name="amount_total_incl" widget="monetary" class="oe_subtotal_footer_separator fw-bold"/>
+                        <field name="one_time_services_total" widget="monetary" class="text-muted"
+                               invisible="not one_time_services_total"/>
                     </group>
                 </sheet>
                 <chatter/>

@@ -9,6 +9,7 @@ class ParkingVehicleInspection(models.Model):
 
     name = fields.Char(string="Reference", readonly=True, copy=False)
     vehicle_id = fields.Many2one("parking.vehicle", string="Vehicle", required=True)
+    customer_id = fields.Many2one(related="vehicle_id.customer_id", string="Customer")
     date = fields.Datetime(string="Inspection Date", default=fields.Datetime.now, required=True)
     inspector_id = fields.Many2one("res.users", string="Inspector", default=lambda self: self.env.user, required=True, tracking=True)
     state = fields.Selection([

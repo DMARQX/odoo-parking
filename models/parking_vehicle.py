@@ -23,6 +23,13 @@ class ParkingVehicle(models.Model):
     display_name = fields.Char(string="Vehicle", compute="_compute_display_name", store=True)
 
     contract_ids = fields.Many2many("parking.contract", string="Contracts")
+    current_contract_id = fields.Many2one(
+        "parking.contract", string="Current Contract", compute="_compute_customer",
+        help="The vehicle's active contract (or its confirmed one, waiting to start).")
+    customer_id = fields.Many2one(
+        "res.partner", string="Customer", compute="_compute_customer",
+        help="Customer of the current contract; without one, the registered owner. "
+             "Forms that take a vehicle fill their customer from here.")
 
     image_front = fields.Binary(string="Front View", attachment=True)
     image_back = fields.Binary(string="Rear View", attachment=True)
@@ -54,6 +61,14 @@ class ParkingVehicle(models.Model):
     wash_count = fields.Integer(string="Total Washes", compute="_compute_wash_count", store=True)
     last_wash_date = fields.Datetime(string="Last Wash Date", compute="_compute_last_wash", store=True)
     next_allowed_wash = fields.Datetime(string="Next Wash", compute="_compute_next_allowed_wash", store=True)
+
+    @api.depends("contract_ids.state", "contract_ids.partner_id", "owner_id")
+    def _compute_customer(self):
+        for vehicle in self:
+            open_contracts = vehicle.contract_ids.filtered(lambda c: c.state in ("active", "confirmed"))
+            contract = open_contracts.filtered(lambda c: c.state == "active")[:1] or open_contracts[:1]
+            vehicle.current_contract_id = contract
+            vehicle.customer_id = contract.partner_id or vehicle.owner_id
 
     @api.model
     def _sync_brand_vals(self, vals):

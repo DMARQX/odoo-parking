@@ -9,6 +9,19 @@ class ParkingTransferType(models.Model):
 
     name = fields.Char(string="Type Name", required=True, translate=True)
     code = fields.Char(string="Code", required=True)
+    destination_kind = fields.Selection([
+        ("branch", "Another branch"),
+        ("service_center", "Service center / workshop"),
+        ("customer", "Customer address"),
+        ("other", "Other"),
+    ], string="Destination", required=True, default="branch",
+        help="Decides which destination fields a transfer of this type asks for.")
+    price = fields.Monetary(string="Price", currency_field="currency_id",
+        help="Charged to the customer for each transfer of this type (excludes VAT). 0 = not invoiced.")
+    product_id = fields.Many2one(
+        "product.product", string="Invoice Product", domain="[('type', '=', 'service')]",
+        help="Service product on the transfer's invoice line: its income account and taxes are used.")
+    currency_id = fields.Many2one(related="company_id.currency_id")
     description = fields.Text(string="Description")
     sequence = fields.Integer(string="Sequence", default=10)
     active = fields.Boolean(string="Active", default=True)

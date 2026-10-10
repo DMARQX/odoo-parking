@@ -33,6 +33,20 @@ class ParkingContractWash(models.Model):
     stock_move_ids = fields.Many2many("stock.move", string="Supply Moves", readonly=True, copy=False,
         help="Supplies taken from the branch warehouse for this wash (and put back if it was cancelled).")
 
+    @api.onchange("vehicle_id")
+    def _onchange_vehicle_id(self):
+        vehicle = self.vehicle_id
+        if vehicle and vehicle.current_contract_id and vehicle not in self.contract_id.vehicle_ids:
+            self.contract_id = vehicle.current_contract_id
+
+    @api.onchange("contract_id")
+    def _onchange_contract_id(self):
+        # Only fills an empty vehicle (a contract with a single vehicle); a vehicle the employee
+        # has chosen is never cleared.
+        vehicles = self.contract_id.vehicle_ids
+        if not self.vehicle_id and len(vehicles) == 1:
+            self.vehicle_id = vehicles
+
     @api.depends("vehicle_id", "wash_date", "wash_number")
     def _compute_display_name(self):
         for r in self:

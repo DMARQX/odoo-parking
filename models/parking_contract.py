@@ -41,9 +41,29 @@ class ParkingContract(models.Model):
     price_per_month = fields.Monetary(string="Price/Month", currency_field="company_currency_id", tracking=True)
     service_line_ids = fields.One2many("parking.contract.service.line", "contract_id", string="Additional Services", tracking=True)
     wash_ids = fields.One2many("parking.contract.wash", "contract_id", string="Car Washes")
-    services_total = fields.Monetary(string="Services Total", compute="_compute_totals", currency_field="company_currency_id", store=True)
-
-    amount_total = fields.Monetary(string="Total Amount", compute="_compute_totals", currency_field="company_currency_id", store=True, tracking=True)
+    # Totals of the contract itself (they do not change when something gets invoiced).
+    rent_amount = fields.Monetary(
+        string="Rent", compute="_compute_totals", currency_field="company_currency_id", store=True,
+        help="Rent of one month; for a daily booking, the rent of the whole booking. Excludes VAT.")
+    recurring_services_total = fields.Monetary(
+        string="Recurring Services", compute="_compute_totals", currency_field="company_currency_id", store=True,
+        help="Services billed with every invoice (\"Every invoice\" lines), per month. Excludes VAT.")
+    one_time_services_total = fields.Monetary(
+        string="One-time Services", compute="_compute_totals", currency_field="company_currency_id", store=True,
+        help="Services billed once (\"Once\" lines), invoiced or not. Not part of the period amount.")
+    services_total = fields.Monetary(
+        string="Services Total", compute="_compute_totals", currency_field="company_currency_id", store=True,
+        help="All services on the contract: recurring plus one-time.")
+    amount_total = fields.Monetary(
+        string="Period Amount (untaxed)", compute="_compute_totals", currency_field="company_currency_id",
+        store=True, tracking=True,
+        help="Rent plus recurring services for one month (for a daily booking: the whole booking). "
+             "Excludes VAT and one-time services.")
+    amount_tax = fields.Monetary(
+        string="VAT", compute="_compute_amount_tax", currency_field="company_currency_id",
+        help="VAT on the period amount, with the same taxes the invoice uses (customer's fiscal position included).")
+    amount_total_incl = fields.Monetary(
+        string="Period Amount incl. VAT", compute="_compute_amount_tax", currency_field="company_currency_id")
     deposit_amount = fields.Monetary(string="Deposit Amount", currency_field="company_currency_id", tracking=True)
     deposit_invoiced = fields.Boolean(string="Deposit Invoiced", default=False, copy=False, help="Whether the deposit/insurance line has been added to a customer invoice.")
     deposit_enabled = fields.Boolean(related="company_id.parking_use_deposit")
@@ -201,20 +221,45 @@ class ParkingContract(models.Model):
         monthly = self.price_per_month or self.price_tmpl_id.price_per_month
         return self.price_per_day or self.price_tmpl_id.price_per_day or round((monthly or 0) / 30.0, 2)
 
+    def _get_month_price(self):
+        self.ensure_one()
+        return self.price_per_month or (self.price_tmpl_id.price_per_month if self.price_tmpl_id else 0.0)
+
     @api.depends("service_line_ids", "service_line_ids.price_subtotal", "service_line_ids.billing_type",
-                 "service_line_ids.invoice_id", "price_tmpl_id", "price_per_month",
-                 "price_per_day", "subscription_type", "start_date", "end_date")
+                 "price_tmpl_id", "price_per_month", "price_per_day", "subscription_type", "start_date", "end_date")
     def _compute_totals(self):
         for r in self:
             if r.subscription_type == "daily":
                 # A daily booking is billed once for all its days.
-                base = r._get_day_price() * r.booking_days
+                rent = r._get_day_price() * r.booking_days
             else:
-                base = r.price_per_month or (r.price_tmpl_id.price_per_month if r.price_tmpl_id else 0)
-            # What the next invoice will bill: add-ons plus one-time items not billed yet.
-            svc_total = sum(r.service_line_ids._is_billable().mapped("price_subtotal"))
-            r.services_total = svc_total
-            r.amount_total = base + svc_total
+                rent = r._get_month_price()
+            recurring = sum(r.service_line_ids.filtered(lambda l: l.billing_type == "recurring").mapped("price_subtotal"))
+            one_time = sum(r.service_line_ids.filtered(lambda l: l.billing_type != "recurring").mapped("price_subtotal"))
+            r.rent_amount = rent
+            r.recurring_services_total = recurring
+            r.one_time_services_total = one_time
+            r.services_total = recurring + one_time
+            r.amount_total = rent + recurring
+
+    @api.depends("rent_amount", "recurring_services_total", "service_line_ids.price_subtotal",
+                 "service_line_ids.billing_type", "tax_ids", "partner_id", "parking_product_id", "spot_id")
+    def _compute_amount_tax(self):
+        Tax = self.env["account.tax"]
+        for r in self:
+            amounts = [(r.rent_amount, r._get_parking_product())] + [
+                (l.price_subtotal, l.product_id)
+                for l in r.service_line_ids.filtered(lambda l: l.billing_type == "recurring")]
+            tax = 0.0
+            for amount, product in amounts:
+                if not amount:
+                    continue
+                taxes = Tax.browse(r._get_invoice_tax_ids(product)[0][2])
+                res = taxes.compute_all(amount, currency=r.company_currency_id, quantity=1.0,
+                                        product=product, partner=r.partner_id)
+                tax += res["total_included"] - res["total_excluded"]
+            r.amount_tax = tax
+            r.amount_total_incl = r.amount_total + tax
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -337,7 +382,7 @@ class ParkingContract(models.Model):
         acc_vals = self._get_line_accounting_vals(period_start, period_end, deferrable=True)
 
         qty = self._get_period_months()
-        price = self.amount_total - self.services_total
+        price = self._get_month_price()
         fmt = self._format_invoice_date
         if self.subscription_type == "daily":
             # One line for the whole booking: days x daily price.
@@ -347,7 +392,6 @@ class ParkingContract(models.Model):
                      spot=self.spot_id.name, days=self.booking_days,
                      start=fmt(self.start_date), end=fmt(self.end_date))
         else:
-            price = price if price > 0 else self.price_per_month or 0
             start, end = period_start, period_end
             if months is None and period_start and period_end and self.company_id.parking_prorate:
                 # Pay only the contract's days inside the period: days x the period's daily rate.
@@ -620,10 +664,25 @@ class ParkingContract(models.Model):
 
     @api.onchange("vehicle_ids")
     def _onchange_vehicle_ids_autofill(self):
-        if self.vehicle_ids and not self.partner_id:
-            first = self.vehicle_ids[:1]
-            if first.owner_id:
-                self.partner_id = first.owner_id
+        """A vehicle brings its customer. With a customer already chosen he is kept, and a vehicle
+        registered to somebody else is pointed out (it can be right: a new owner, a family car)."""
+        if not self.vehicle_ids:
+            return
+        if not self.partner_id:
+            self.partner_id = self.vehicle_ids.mapped("customer_id")[:1]
+            return
+        partner = self.partner_id.commercial_partner_id
+        others = self.vehicle_ids.filtered(
+            lambda v: v.customer_id and v.customer_id.commercial_partner_id != partner)
+        if others:
+            return {"warning": {
+                "title": _("Vehicle of another customer"),
+                "message": _("%(vehicles)s is registered to %(customers)s, not to %(partner)s. "
+                             "Check the customer or the vehicle.",
+                             vehicles=", ".join(others.mapped("display_name")),
+                             customers=", ".join(others.mapped("customer_id.display_name")),
+                             partner=self.partner_id.display_name),
+            }}
 
     @api.onchange("terms_id")
     def _onchange_terms_id(self):
@@ -1020,7 +1079,7 @@ class ParkingContract(models.Model):
             return int((service.included_washes or 1) * quantity)
         return 0
 
-    def _create_charge_invoice(self, charges, payment_term=None, kind="sale", credit_washes=True):
+    def _create_charge_invoice(self, charges, payment_term=None, kind="sale", credit_washes=True, origin=None):
         """Invoice one sale on its own invoice, linked to the contract.
 
         charges: list of dicts with service, product, name, quantity, price_unit.
@@ -1042,7 +1101,7 @@ class ParkingContract(models.Model):
             dict(self._invoice_header_vals(kind), **{
                 "move_type": "out_invoice",
                 "invoice_date": fields.Date.context_today(self),
-                "invoice_origin": self._invoice_ctx()._sale_origin(),
+                "invoice_origin": origin or self._invoice_ctx()._sale_origin(),
                 "invoice_line_ids": lines,
                 "invoice_payment_term_id": (payment_term or self._get_payment_term()).id,
             }))

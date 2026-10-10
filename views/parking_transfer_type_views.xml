@@ -8,7 +8,11 @@
             <list>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="code"/>
+                <field name="code" optional="hide"/>
+                <field name="destination_kind"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="price" widget="monetary"/>
+                <field name="product_id" optional="show"/>
                 <field name="active"/>
             </list>
         </field>
@@ -24,6 +28,12 @@
                         <group>
                             <field name="name" required="1"/>
                             <field name="code" required="1"/>
+                            <field name="destination_kind"/>
+                        </group>
+                        <group string="Invoicing">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="price" widget="monetary"/>
+                            <field name="product_id" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="sequence"/>

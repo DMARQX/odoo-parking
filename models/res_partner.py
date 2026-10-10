@@ -17,6 +17,15 @@ class ResPartner(models.Model):
         return self.env["parking.contract"].sudo().search(
             [("partner_id", "child_of", self.commercial_partner_id.id)])
 
+    def _parking_vehicles(self):
+        """Vehicles of the customer: the ones he owns and the ones on his open contracts."""
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        owned = self.env["parking.vehicle"].search([("owner_id", "child_of", partner.id)])
+        contracts = self.env["parking.contract"].search(
+            [("partner_id", "child_of", partner.id), ("state", "in", ("active", "confirmed"))])
+        return owned | contracts.vehicle_ids
+
     def _get_parking_statement_data(self):
         """All parking contracts of the customer, plus payments not yet matched to an invoice."""
         self.ensure_one()
