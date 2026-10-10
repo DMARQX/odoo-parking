@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import babel_locale_parse, get_lang
+from odoo.tools import is_html_empty
 from babel.dates import get_month_names
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -86,8 +87,10 @@ class ParkingContract(models.Model):
     notes = fields.Text(string="Notes")
 
     # Signature & Terms
-    terms_id = fields.Many2one("parking.terms.conditions", string="T&C Template", tracking=True)
-    terms_conditions = fields.Html(string="Terms & Conditions", translate=True)
+    terms_id = fields.Many2one("parking.terms.conditions", string="T&C Template", tracking=True,
+        default=lambda self: self.env["parking.terms.conditions"]._get_default(self.env.company))
+    terms_conditions = fields.Html(string="Terms & Conditions", translate=True,
+        default=lambda self: self.env["parking.terms.conditions"]._get_default(self.env.company).content)
     customer_signature = fields.Binary(string="Customer Signature", attachment=True)
     authorized_signature = fields.Binary(string="Authorized Signature", attachment=True)
     signature_date = fields.Date(string="Signature Date")
@@ -277,6 +280,17 @@ class ParkingContract(models.Model):
                 if spot.location_id.company_id:
                     # Invoices go out under the branch's company (its VAT number and journals).
                     vals["company_id"] = spot.location_id.company_id.id
+            # Terms: the chosen template, else the default one of the contract's company. Text typed
+            # on the contract itself is kept.
+            Terms = self.env["parking.terms.conditions"]
+            if "terms_id" not in vals:
+                company = self.env["res.company"].browse(vals.get("company_id")) or self.env.company
+                vals["terms_id"] = Terms._get_default(company).id
+            if vals.get("terms_id") and is_html_empty(vals.get("terms_conditions")):
+                vals["terms_conditions"] = Terms.browse(vals["terms_id"]).content
+            elif not vals.get("terms_id"):
+                # No template wanted: the default text does not sneak in either.
+                vals.setdefault("terms_conditions", False)
         records = super().create(vals_list)
         for record in records:
             if record.auto_invoice:

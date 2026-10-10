@@ -21,6 +21,28 @@ class ParkingTermsConditions(models.Model):
     contract_ids = fields.One2many("parking.contract", "terms_id", string="Linked Contracts")
     contract_count = fields.Integer(string="Contract Count", compute="_compute_contract_count")
 
+    @api.model
+    def _get_default(self, company=None):
+        """The default template of a company: its own first, then its parent's, then a shared one."""
+        company = company or self.env.company
+        companies = company | company.sudo().parent_ids
+        templates = self.sudo().search([("is_default", "=", True), ("company_id", "in", companies.ids + [False])])
+        ordered = templates.sorted(lambda t: (
+            0 if t.company_id == company else 1 if t.company_id else 2, t.sequence, t.id))
+        return ordered[:1].with_env(self.env)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records.filtered("is_default")._keep_single_default()
+        return records
+
+    def _keep_single_default(self):
+        """One default per company: marking a template as default unmarks the previous one."""
+        for record in self:
+            (self.sudo().search([("is_default", "=", True), ("company_id", "=", record.company_id.id)]) - record
+             ).write({"is_default": False})
+
     @api.depends("contract_ids")
     def _compute_contract_count(self):
         for r in self:
@@ -28,6 +50,8 @@ class ParkingTermsConditions(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if vals.get("is_default"):
+            self[-1:]._keep_single_default()
         if "content" in vals:
             for record in self:
                 if record.auto_sync and record.contract_ids:
