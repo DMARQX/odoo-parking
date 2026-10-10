@@ -23,7 +23,8 @@ class ParkingVehicle(models.Model):
     notes = fields.Text(string="Notes")
     display_name = fields.Char(string="Vehicle", compute="_compute_display_name", store=True)
 
-    contract_ids = fields.Many2many("parking.contract", string="Contracts")
+    # copy=False: a duplicated vehicle is a new car, it is not on the original's contracts.
+    contract_ids = fields.Many2many("parking.contract", string="Contracts", copy=False)
     current_contract_id = fields.Many2one(
         "parking.contract", string="Current Contract", compute="_compute_customer",
         help="The vehicle's active contract (or its confirmed one, waiting to start).")

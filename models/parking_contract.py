@@ -23,6 +23,10 @@ class ParkingContract(models.Model):
     spot_id = fields.Many2one("parking.spot", string="Spot", required=True, tracking=True)
     location_id = fields.Many2one("parking.location", string="Branch", related="spot_id.location_id", store=True, tracking=True)
     vehicle_details = fields.Char(string="Vehicle Details", compute="_compute_vehicle_details")
+    # Spots and vehicles already held by another confirmed/active contract in this contract's
+    # period: the form does not offer them, and saving one is refused.
+    busy_spot_ids = fields.Many2many("parking.spot", compute="_compute_busy")
+    busy_vehicle_ids = fields.Many2many("parking.vehicle", compute="_compute_busy")
 
     start_date = fields.Date(string="Start Date", required=True, default=fields.Date.today, tracking=True)
     end_date = fields.Date(string="End Date", required=True, tracking=True)
@@ -632,6 +636,47 @@ class ParkingContract(models.Model):
         return (self.parking_product_id or self.spot_id.spot_type_id.product_id
                 or self.env.ref("parking_management.product_parking_service", False)
                 or self.env["product.product"])
+
+    def _overlapping_contracts(self):
+        """Confirmed/active contracts, other than this one, whose period overlaps this one's."""
+        self.ensure_one()
+        start = self.start_date or fields.Date.context_today(self)
+        end = self.end_date or start
+        domain = [("state", "in", ("confirmed", "active")), ("start_date", "<=", end), ("end_date", ">=", start)]
+        own_id = self._origin.id or (self.id if isinstance(self.id, int) else False)
+        if own_id:
+            domain.append(("id", "!=", own_id))
+        return self.env["parking.contract"].sudo().search(domain)
+
+    @api.depends("start_date", "end_date")
+    def _compute_busy(self):
+        for r in self:
+            others = r._overlapping_contracts()
+            r.busy_spot_ids = others.spot_id
+            r.busy_vehicle_ids = others.vehicle_ids
+
+    @api.constrains("spot_id", "vehicle_ids", "state", "start_date", "end_date")
+    def _check_no_double_booking(self):
+        """One contract per spot and per vehicle at a time."""
+        fmt = self._format_invoice_date
+        for r in self.filtered(lambda c: c.state in ("draft", "confirmed", "active")):
+            others = r._overlapping_contracts()
+            clash = others.filtered(lambda c: c.spot_id == r.spot_id)[:1]
+            if clash:
+                raise ValidationError(_(
+                    "Spot %(spot)s is already on contract %(contract)s (%(customer)s, %(start)s - %(end)s). "
+                    "A spot can hold one contract at a time: choose another spot or another period.",
+                    spot=r.spot_id.full_name, contract=clash.name, customer=clash.partner_id.display_name,
+                    start=fmt(clash.start_date), end=fmt(clash.end_date)))
+            for other in others:
+                shared = other.vehicle_ids & r.vehicle_ids
+                if shared:
+                    raise ValidationError(_(
+                        "Vehicle %(vehicle)s is already on contract %(contract)s (%(customer)s, %(start)s - %(end)s). "
+                        "A vehicle can be on one contract at a time.",
+                        vehicle=", ".join(shared.mapped("display_name")), contract=other.name,
+                        customer=other.partner_id.display_name,
+                        start=fmt(other.start_date), end=fmt(other.end_date)))
 
     @api.constrains("company_id", "spot_id")
     def _check_branch_company(self):

@@ -161,7 +161,10 @@
                             <field name="partner_id" widget="res_partner_many2one"
                                    context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
                                    readonly="state in ('expired', 'cancelled')"/>
+                            <field name="busy_vehicle_ids" invisible="1"/>
+                            <field name="busy_spot_ids" invisible="1"/>
                             <field name="vehicle_ids" widget="many2many_tags"
+                                   domain="[('id', 'not in', busy_vehicle_ids)]"
                                    context="{'default_owner_id': partner_id}"
                                    readonly="state in ('expired', 'cancelled')"/>
                             <field name="vehicle_details" readonly="1" invisible="not vehicle_ids"/>
@@ -169,6 +172,7 @@
                         </group>
                         <group string="Spot &amp; Period">
                             <field name="spot_id" options="{'no_create': True}"
+                                   domain="[('id', 'not in', busy_spot_ids), ('status', '!=', 'maintenance')]"
                                    readonly="state in ('active', 'expired', 'cancelled')"/>
                             <field name="location_id"/>
                             <field name="subscription_type" readonly="state in ('expired', 'cancelled')"/>
