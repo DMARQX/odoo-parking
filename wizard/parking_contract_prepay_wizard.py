@@ -30,7 +30,7 @@ class ParkingContractPrepayWizard(models.TransientModel):
     def _compute_term(self):
         for w in self:
             start, end, months = w.contract_id._get_remaining_term() if w.contract_id else (False, False, 0)
-            price = w.contract_id.price_per_month or w.contract_id.price_tmpl_id.price_per_month or 0.0
+            price = w.contract_id._get_month_price() if w.contract_id else 0.0
             w.start_date, w.end_date, w.months, w.monthly_price = start, end, months, price
             w.amount = months * price * (1 - (w.discount or 0.0) / 100.0)
 

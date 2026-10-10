@@ -73,7 +73,7 @@
                 <div class="o_pm_section">
                     <div class="o_pm_section_title">Fees</div>
                     <t t-set="daily" t-value="o.subscription_type == 'daily'"/>
-                    <t t-set="rent" t-value="o._get_day_price() * o.booking_days if daily else (o.price_per_month or o.price_tmpl_id.price_per_month)"/>
+                    <t t-set="rent" t-value="o._get_day_price() * o.booking_days if daily else o._get_month_price()"/>
                     <t t-set="recurring_lines" t-value="o.service_line_ids.filtered(lambda l: l.billing_type == 'recurring')"/>
                     <t t-set="once_lines" t-value="o.service_line_ids - recurring_lines"/>
                     <table class="o_pm_table o_ignore_layout_styling">

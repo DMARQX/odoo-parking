@@ -221,12 +221,21 @@ class ParkingContract(models.Model):
 
     def _get_day_price(self):
         self.ensure_one()
-        monthly = self.price_per_month or self.price_tmpl_id.price_per_month
+        monthly = self.price_per_month or self._template_month_price()
         return self.price_per_day or self.price_tmpl_id.price_per_day or round((monthly or 0) / 30.0, 2)
 
     def _get_month_price(self):
         self.ensure_one()
-        return self.price_per_month or (self.price_tmpl_id.price_per_month if self.price_tmpl_id else 0.0)
+        return self.price_per_month or self._template_month_price()
+
+    def _template_month_price(self):
+        """Monthly price of the price template for this contract: a yearly subscription takes the
+        template's yearly price spread over 12 months, when the template has one."""
+        self.ensure_one()
+        tmpl = self.price_tmpl_id
+        if self.subscription_type == "yearly" and tmpl.price_per_year:
+            return round(tmpl.price_per_year / 12.0, 2)
+        return tmpl.price_per_month or 0.0
 
     @api.depends("service_line_ids", "service_line_ids.price_subtotal", "service_line_ids.billing_type",
                  "price_tmpl_id", "price_per_month", "price_per_day", "subscription_type", "start_date", "end_date")
@@ -639,15 +648,16 @@ class ParkingContract(models.Model):
             self.company_id = self.spot_id.location_id.company_id
         if self.spot_id.spot_type_id.product_id:
             self.parking_product_id = self.spot_id.spot_type_id.product_id
-        if self.spot_id.price_tmpl_id and not self.price_tmpl_id:
+        # The spot decides the price template: another spot (standard -> VIP) brings its own prices.
+        if self.spot_id.price_tmpl_id and self.spot_id.price_tmpl_id != self.price_tmpl_id:
             self.price_tmpl_id = self.spot_id.price_tmpl_id
             self._onchange_price_tmpl_id()
 
-    @api.onchange("price_tmpl_id")
+    @api.onchange("price_tmpl_id", "subscription_type")
     def _onchange_price_tmpl_id(self):
         if self.price_tmpl_id:
             tmpl = self.price_tmpl_id
-            self.price_per_month = tmpl.price_per_month or self.price_per_month
+            self.price_per_month = self._template_month_price() or self.price_per_month
             self.price_per_day = tmpl.price_per_day or self.price_per_day
             if self.company_id.parking_use_deposit and tmpl.deposit_amount and not self.deposit_invoiced:
                 self.deposit_amount = tmpl.deposit_amount
@@ -1163,7 +1173,7 @@ class ParkingContract(models.Model):
         main = lines[0][2]
         main.update({
             "quantity": float(months),
-            "price_unit": self.price_per_month or self.price_tmpl_id.price_per_month or 0.0,
+            "price_unit": self._get_month_price(),
             "discount": discount or 0.0,
             "name": name,
         })
