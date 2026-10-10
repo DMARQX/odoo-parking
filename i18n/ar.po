@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0-20260609\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 13:09+0000\n"
-"PO-Revision-Date: 2026-10-10 13:09+0000\n"
+"POT-Creation-Date: 2026-10-10 13:51+0000\n"
+"PO-Revision-Date: 2026-10-10 13:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -542,6 +542,13 @@ msgid ""
 "A credit note on the deposits account is issued for the refunded amount; register the\n"
 "                    outgoing payment on it. A deduction is moved from the deposits account to income."
 msgstr "يصدر إشعار دائن على حساب التأمينات بالمبلغ المسترد، سجّل عليه الدفعة الصادرة للعميل. أما الخصم فيُنقل من حساب التأمينات إلى الإيراد."
+
+#. module: parking_management
+#: model:ir.model.fields,help:parking_management.field_parking_vehicle_transfer__destination_spot_id
+msgid ""
+"A free spot in the destination branch. When the transfer is completed the "
+"vehicle's contract moves to it, provided it is still available."
+msgstr "موقف متاح في الفرع المنقول إليه. عند إكمال النقل ينتقل عقد المركبة إليه بشرط أن يكون ما زال متاحاً."
 
 #. module: parking_management
 #: model_terms:ir.ui.view,arch_db:parking_management.parking_contract_charge_wizard_form
@@ -1869,6 +1876,21 @@ msgstr "العقد"
 
 #. module: parking_management
 #. odoo-python
+#: code:addons/parking_management/models/parking_vehicle_transfer.py:0
+msgid ""
+"Contract %(contract)s moved from spot %(old)s to spot %(new)s by transfer "
+"%(ref)s."
+msgstr "نُقل العقد %(contract)s من الموقف %(old)s إلى الموقف %(new)s بعملية النقل %(ref)s."
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_vehicle_transfer.py:0
+msgid ""
+"Contract %(contract)s was not moved: %(reason)s. It stays on spot %(old)s."
+msgstr "لم يُنقل العقد %(contract)s: %(reason)s. يبقى على الموقف %(old)s."
+
+#. module: parking_management
+#. odoo-python
 #: code:addons/parking_management/models/parking_contract.py:0
 msgid "Contract %(name)s expires in %(days)d day(s)"
 msgstr "ينتهي العقد %(name)s خلال %(days)d يوم"
@@ -1942,6 +1964,11 @@ msgstr "تم العثور على عقد"
 #: model:ir.actions.act_window,name:parking_management.action_parking_contract_invoices
 msgid "Contract Invoices"
 msgstr "الفواتير"
+
+#. module: parking_management
+#: model:ir.model.fields,field_description:parking_management.field_parking_vehicle_transfer__contract_moved
+msgid "Contract Moved"
+msgstr "تم نقل العقد"
 
 #. module: parking_management
 #: model:ir.model.fields,field_description:parking_management.field_parking_contract__name
@@ -4658,6 +4685,12 @@ msgstr "لا توجد عقود."
 #: model_terms:ir.actions.act_window,help:parking_management.action_parking_contract_analysis
 msgid "No contracts yet"
 msgstr "لا توجد عقود بعد"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_vehicle_transfer.py:0
+msgid "No destination spot was chosen: contract %s stays on spot %s."
+msgstr "لم يُحدد موقف في الوجهة: العقد %s يبقى على الموقف %s."
 
 #. module: parking_management
 #. odoo-python
@@ -8491,6 +8524,18 @@ msgstr "تجديد"
 #: code:addons/parking_management/models/parking_vehicle_transfer.py:0
 msgid "reset to draft"
 msgstr "إعادة إلى مسودة"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_vehicle_transfer.py:0
+msgid "spot %(spot)s belongs to another company (%(company)s)"
+msgstr "الموقف %(spot)s يتبع شركة أخرى (%(company)s)"
+
+#. module: parking_management
+#. odoo-python
+#: code:addons/parking_management/models/parking_vehicle_transfer.py:0
+msgid "spot %s is not available"
+msgstr "الموقف %s غير متاح"
 
 #. module: parking_management
 #. odoo-python

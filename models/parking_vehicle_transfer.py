@@ -1,7 +1,7 @@
 import logging
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -41,7 +41,10 @@ class ParkingVehicleTransfer(models.Model):
 
     destination_location_id = fields.Many2one("parking.location", string="Destination Branch")
     destination_spot_id = fields.Many2one("parking.spot", string="Destination Spot",
-        domain="[('location_id', '=', destination_location_id)]", tracking=True)
+        domain="[('location_id', '=', destination_location_id), ('status', '=', 'available')]", tracking=True,
+        help="A free spot in the destination branch. When the transfer is completed the vehicle's "
+             "contract moves to it, provided it is still available.")
+    contract_moved = fields.Boolean(string="Contract Moved", readonly=True, copy=False)
 
     service_center_name = fields.Char(string="Service Center Name")
     service_center_phone = fields.Char(string="Service Center Phone")
@@ -171,6 +174,8 @@ class ParkingVehicleTransfer(models.Model):
     def action_complete(self):
         self._check_state(("in_transit",), _("complete"))
         self.write({"state": "completed", "completed_date": fields.Datetime.now()})
+        for r in self:
+            r._move_contract_spot()
         for r in self.filtered(lambda t: t.price > 0 and not t._live_invoice()):
             # The vehicle has arrived either way: an accounting problem must not undo the completion.
             try:
@@ -182,6 +187,43 @@ class ParkingVehicleTransfer(models.Model):
             except Exception as e:
                 _logger.exception("Invoice of transfer %s failed", r.name)
                 r._message_log(body=_("The invoice could not be created: %s Use \"Create Invoice\" once this is fixed.", e))
+
+    def _move_contract_spot(self):
+        """Branch transfer: the contract follows the vehicle to the destination spot, only when that
+        spot is available. Otherwise the contract stays where it is and the reason is logged."""
+        self.ensure_one()
+        contract, spot = self.contract_id.sudo(), self.destination_spot_id.sudo()
+        if self.destination_kind != "branch" or not contract or contract.state not in ("active", "confirmed"):
+            return
+        if not spot:
+            self._message_log(body=_("No destination spot was chosen: contract %s stays on spot %s.",
+                                     contract.name, contract.spot_id.full_name))
+            return
+        if spot == contract.spot_id:
+            return
+        reason = False
+        if spot.status != "available":
+            reason = _("spot %s is not available", spot.full_name)
+        elif spot.location_id.company_id and spot.location_id.company_id != contract.company_id:
+            reason = _("spot %(spot)s belongs to another company (%(company)s)",
+                       spot=spot.full_name, company=spot.location_id.company_id.name)
+        if not reason:
+            old_spot = contract.spot_id
+            try:
+                with self.env.cr.savepoint():
+                    contract.write({"spot_id": spot.id})
+                    spot._set_status("occupied" if contract.state == "active" else "reserved")
+            except (UserError, ValidationError) as e:
+                reason = e.args[0] if e.args else str(e)
+            else:
+                self.sudo().contract_moved = True
+                body = _("Contract %(contract)s moved from spot %(old)s to spot %(new)s by transfer %(ref)s.",
+                         contract=contract.name, old=old_spot.full_name, new=spot.full_name, ref=self.name)
+                self._message_log(body=body)
+                contract._message_log(body=body)
+                return
+        self._message_log(body=_("Contract %(contract)s was not moved: %(reason)s. It stays on spot %(old)s.",
+                                 contract=contract.name, reason=reason, old=contract.spot_id.full_name))
 
     def action_cancel(self):
         self._check_state(("draft", "in_transit"), _("cancel"))

@@ -99,6 +99,7 @@
                             <field name="transfer_type_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                             <field name="transfer_date" readonly="state in ('completed', 'cancelled')"/>
                             <field name="completed_date" invisible="not completed_date"/>
+                            <field name="contract_moved" invisible="not contract_moved"/>
                             <field name="price" widget="monetary" readonly="state in ('completed', 'cancelled') and invoice_id"/>
                             <field name="invoice_id" invisible="not invoice_id" groups="parking_management.group_parking_invoicing"/>
                         </group>
